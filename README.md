@@ -1,3 +1,3 @@
 # vardhman_b2b
 
-Vardhman Yarns and Threads.
+VYTL B2B app.
