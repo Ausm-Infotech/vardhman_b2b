@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class LabdipOrdersView extends StatelessWidget {
-  final List<Map<String, String>> labdipOrders;
+class PendingInvoicesView extends StatelessWidget {
+  final List<Map<String, String>> pendingInvoices;
 
-  const LabdipOrdersView({
+  const PendingInvoicesView({
     super.key,
-    required this.labdipOrders,
+    required this.pendingInvoices,
   });
 
   @override
@@ -21,7 +21,7 @@ class LabdipOrdersView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const Text(
-            'LABDIP ORDERS',
+            'PENDING INVOICES',
             textAlign: TextAlign.center,
           ),
           Flexible(
@@ -30,14 +30,14 @@ class LabdipOrdersView extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  columns: labdipOrders.first.keys
+                  columns: pendingInvoices.first.keys
                       .map(
                         (e) => DataColumn(
                           label: Text(e),
                         ),
                       )
                       .toList(),
-                  rows: labdipOrders
+                  rows: pendingInvoices
                       .map(
                         (labdipOrderMap) => DataRow(
                           cells: labdipOrderMap.values

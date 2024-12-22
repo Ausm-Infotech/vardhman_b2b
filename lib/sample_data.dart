@@ -408,3 +408,126 @@ const bulkOrders = [
     "Order Status": "Pending"
   }
 ];
+
+const pendingInvoices = [
+  {
+    "Invoice Id": "23000098",
+    "Customer": "100124",
+    "Actual Amount": "8440.3",
+    "Outstanding Amount": "8440.3",
+    "Status": "Open",
+    "Date": "11-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000099",
+    "Customer": "100124",
+    "Actual Amount": "1213",
+    "Outstanding Amount": "223",
+    "Status": "Partially Paid",
+    "Date": "12-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000101",
+    "Customer": "100124",
+    "Actual Amount": "21423",
+    "Outstanding Amount": "111",
+    "Status": "Partially Paid",
+    "Date": "14-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000102",
+    "Customer": "100124",
+    "Actual Amount": "4234",
+    "Outstanding Amount": "4234",
+    "Status": "Open",
+    "Date": "15-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000103",
+    "Customer": "100124",
+    "Actual Amount": "341",
+    "Outstanding Amount": "341",
+    "Status": "Open",
+    "Date": "16-09-2023",
+    "Action": ""
+  }
+];
+
+const paidInvoices = [
+  {
+    "Invoice Id": "23000098",
+    "Customer": "100124",
+    "Actual Amount": "8440.3",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "11-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000099",
+    "Customer": "100124",
+    "Actual Amount": "1213",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "12-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000100",
+    "Customer": "100124",
+    "Actual Amount": "13234",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "13-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000101",
+    "Customer": "100124",
+    "Actual Amount": "21423",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "14-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000102",
+    "Customer": "100124",
+    "Actual Amount": "4234",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "15-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000103",
+    "Customer": "100124",
+    "Actual Amount": "341",
+    "Outstanding Amount": "0",
+    "Status": "Paid",
+    "Date": "16-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000099",
+    "Customer": "100124",
+    "Actual Amount": "1213",
+    "Outstanding Amount": "223",
+    "Status": "Partially Paid",
+    "Date": "12-09-2023",
+    "Action": ""
+  },
+  {
+    "Invoice Id": "23000101",
+    "Customer": "100124",
+    "Actual Amount": "21423",
+    "Outstanding Amount": "111",
+    "Status": "Partially Paid",
+    "Date": "14-09-2023",
+    "Action": ""
+  }
+];
