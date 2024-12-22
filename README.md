@@ -1,3 +1,3 @@
 # vardhman_b2b
 
-A new Flutter project.
+Vardhman Yarns and Threads.
