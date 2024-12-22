@@ -79,7 +79,13 @@ class _MainAppState extends State<MainApp> {
                     const SizedBox(
                       height: 16,
                     ),
-                    const Text('ORDERS'),
+                    const Text(
+                      'ORDERS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
@@ -120,7 +126,13 @@ class _MainAppState extends State<MainApp> {
                     const SizedBox(
                       height: 16,
                     ),
-                    const Text('PAYMENTS'),
+                    const Text(
+                      'PAYMENTS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
