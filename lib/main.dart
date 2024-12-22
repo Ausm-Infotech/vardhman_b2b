@@ -173,10 +173,11 @@ class _MainAppState extends State<MainApp> {
                             dtmOrders: dtmOrders,
                           )
                         : mainViewIndex == 3
-                            ? PendingInvoicesView(
+                            ? const PendingInvoicesView(
                                 pendingInvoices: pendingInvoices)
                             : mainViewIndex == 4
-                                ? PaidInvoicesView(paidInvoices: paidInvoices)
+                                ? const PaidInvoicesView(
+                                    paidInvoices: paidInvoices)
                                 : const DashboardView(),
               ),
             ],
