@@ -80,10 +80,9 @@ class _MainAppState extends State<MainApp> {
                       height: 16,
                     ),
                     const Text(
-                      'ORDERS',
-                      textAlign: TextAlign.center,
+                      '         ORDERS',
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     MouseRegion(
@@ -127,10 +126,9 @@ class _MainAppState extends State<MainApp> {
                       height: 16,
                     ),
                     const Text(
-                      'PAYMENTS',
-                      textAlign: TextAlign.center,
+                      '         PAYMENTS',
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     MouseRegion(
