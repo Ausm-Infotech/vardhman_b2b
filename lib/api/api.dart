@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -31,13 +30,17 @@ class Api {
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
-  )..httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        return HttpClient()
-          ..badCertificateCallback =
-              (X509Certificate cert, String host, int port) => true;
-      },
-    );
+  );
+
+  // ..httpClientAdapter = kIsWeb
+  //     ? BrowserHttpClientAdapter()
+  //     : IOHttpClientAdapter(
+  //         createHttpClient: () {
+  //           return HttpClient()
+  //             ..badCertificateCallback =
+  //                 (X509Certificate cert, String host, int port) => true;
+  //         },
+  //       );
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
     final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
@@ -109,6 +112,8 @@ class Api {
     String userId,
   ) async {
     try {
+      log('fetchUserData - $userId');
+
       final response = await _dio.post(
         '/orchestrator/ORCH5541001_GetUserData',
         data: {

@@ -30,9 +30,9 @@ class OrdersController extends GetxController
 
   final orderNumberTextEditingController = TextEditingController();
 
-  final rxSelectedOrder = Rxn<OrderStatusData>();
+  final rxSelectedLabdipOrder = Rxn<OrderStatusData>();
 
-  final rxSelectedOrderDetails = <OrderDetailLine>[].obs;
+  final rxSelectedLabdipOrderDetails = <OrderDetailLine>[].obs;
 
   late final tabController = TabController(length: 4, vsync: this);
 
@@ -112,6 +112,17 @@ class OrdersController extends GetxController
         );
 
         filterOrders();
+
+        if (labdipOrders.isNotEmpty) {
+          if (rxSelectedLabdipOrder.value == null ||
+              !labdipOrders.contains(rxSelectedLabdipOrder.value)) {
+            selectLabdipOrder(labdipOrders.first);
+          }
+        } else {
+          rxSelectedLabdipOrder.value = null;
+
+          rxSelectedLabdipOrderDetails.clear();
+        }
       }
     });
 
@@ -120,8 +131,10 @@ class OrdersController extends GetxController
     isRefreshing.value = false;
   }
 
-  Future<void> selectOrder(OrderStatusData orderStatusData) async {
-    rxSelectedOrder.value = orderStatusData;
+  Future<void> selectLabdipOrder(OrderStatusData orderStatusData) async {
+    rxSelectedLabdipOrder.value = orderStatusData;
+
+    rxSelectedLabdipOrderDetails.clear();
 
     final orderDetailLines = await Api.fetchOrderDetails(
       orderNumber: orderStatusData.orderNumber,
@@ -129,13 +142,7 @@ class OrdersController extends GetxController
       orderCompany: orderStatusData.orderCompany,
     );
 
-    if (orderDetailLines.isNotEmpty) {
-      rxSelectedOrder.value = orderStatusData;
-
-      rxSelectedOrderDetails.clear();
-
-      rxSelectedOrderDetails.addAll(orderDetailLines);
-    }
+    rxSelectedLabdipOrderDetails.addAll(orderDetailLines);
   }
 
   List<OrderStatusData> get inProgressOrders => _rxFilteredOrderStatuses
@@ -175,7 +182,7 @@ class OrdersController extends GetxController
   Map<String, Article> get selectedOrderArticlesMap {
     final articleMap = <String, Article>{};
 
-    for (var orderDetailLine in rxSelectedOrderDetails) {
+    for (var orderDetailLine in rxSelectedLabdipOrderDetails) {
       final item = orderDetailLine.item;
 
       List<String> itemParts = item.split(RegExp('\\s+'));

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -16,7 +14,8 @@ class LabdipView extends StatelessWidget {
 
     return const Row(
       children: <Widget>[
-        Flexible(
+        Expanded(
+          flex: 1,
           child: LabdipOrdersView(),
         ),
         VerticalDivider(
@@ -24,7 +23,8 @@ class LabdipView extends StatelessWidget {
           width: 1,
           color: VardhmanColors.dividerGrey,
         ),
-        Flexible(
+        Expanded(
+          flex: 2,
           child: LabdipOrderDetails(),
         ),
       ],

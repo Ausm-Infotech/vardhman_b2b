@@ -19,12 +19,12 @@ class MyHttpOverrides extends HttpOverrides {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // final sharedPrefs = await SharedPreferences.getInstance();
+  final sharedPrefs = await SharedPreferences.getInstance();
 
-  // Get.put(
-  //   sharedPrefs,
-  //   permanent: true,
-  // );
+  Get.put(
+    sharedPrefs,
+    permanent: true,
+  );
 
   Get.put(
     Database(),

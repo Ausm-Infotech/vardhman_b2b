@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -64,6 +66,8 @@ class LoginController extends GetxController {
   }
 
   Future<void> validateUser() async {
+    log('validateUser');
+
     _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
 
     if (_userDetailsCompanion != null) {
