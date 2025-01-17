@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pure_ftp/pure_ftp.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 
 class VardhmanColors {
   static const green = Color(0xff008b47);
+
+  static const lightBlue = Color(0xffD9F0FF);
 
   static const darkGrey = Color(0xFF424242);
 
@@ -122,3 +125,13 @@ String getItemNumber(
     {required String article, required String uom, required String shade}) {
   return '${article.padRight(7)}${uom.padRight(5)}$shade';
 }
+
+const ftpAuthOptions = FtpAuthOptions(
+  username: 'vytl',
+  password: 'Nov#2021',
+);
+
+const ftpSocketInitOptions = FtpSocketInitOptions(
+  host: '172.33.3.45',
+  port: 21,
+);

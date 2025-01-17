@@ -438,281 +438,6 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
   }
 }
 
-class $RelatedCustomersTable extends RelatedCustomers
-    with TableInfo<$RelatedCustomersTable, RelatedCustomer> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RelatedCustomersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _managerSoldToMeta =
-      const VerificationMeta('managerSoldTo');
-  @override
-  late final GeneratedColumn<String> managerSoldTo = GeneratedColumn<String>(
-      'manager_sold_to', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerSoldToMeta =
-      const VerificationMeta('customerSoldTo');
-  @override
-  late final GeneratedColumn<String> customerSoldTo = GeneratedColumn<String>(
-      'customer_sold_to', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerNameMeta =
-      const VerificationMeta('customerName');
-  @override
-  late final GeneratedColumn<String> customerName = GeneratedColumn<String>(
-      'customer_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, managerSoldTo, customerSoldTo, customerName];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'related_customers';
-  @override
-  VerificationContext validateIntegrity(Insertable<RelatedCustomer> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('manager_sold_to')) {
-      context.handle(
-          _managerSoldToMeta,
-          managerSoldTo.isAcceptableOrUnknown(
-              data['manager_sold_to']!, _managerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_managerSoldToMeta);
-    }
-    if (data.containsKey('customer_sold_to')) {
-      context.handle(
-          _customerSoldToMeta,
-          customerSoldTo.isAcceptableOrUnknown(
-              data['customer_sold_to']!, _customerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_customerSoldToMeta);
-    }
-    if (data.containsKey('customer_name')) {
-      context.handle(
-          _customerNameMeta,
-          customerName.isAcceptableOrUnknown(
-              data['customer_name']!, _customerNameMeta));
-    } else if (isInserting) {
-      context.missing(_customerNameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RelatedCustomer map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RelatedCustomer(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      managerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}manager_sold_to'])!,
-      customerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}customer_sold_to'])!,
-      customerName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}customer_name'])!,
-    );
-  }
-
-  @override
-  $RelatedCustomersTable createAlias(String alias) {
-    return $RelatedCustomersTable(attachedDatabase, alias);
-  }
-}
-
-class RelatedCustomer extends DataClass implements Insertable<RelatedCustomer> {
-  final int id;
-  final String managerSoldTo;
-  final String customerSoldTo;
-  final String customerName;
-  const RelatedCustomer(
-      {required this.id,
-      required this.managerSoldTo,
-      required this.customerSoldTo,
-      required this.customerName});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['manager_sold_to'] = Variable<String>(managerSoldTo);
-    map['customer_sold_to'] = Variable<String>(customerSoldTo);
-    map['customer_name'] = Variable<String>(customerName);
-    return map;
-  }
-
-  RelatedCustomersCompanion toCompanion(bool nullToAbsent) {
-    return RelatedCustomersCompanion(
-      id: Value(id),
-      managerSoldTo: Value(managerSoldTo),
-      customerSoldTo: Value(customerSoldTo),
-      customerName: Value(customerName),
-    );
-  }
-
-  factory RelatedCustomer.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RelatedCustomer(
-      id: serializer.fromJson<int>(json['id']),
-      managerSoldTo: serializer.fromJson<String>(json['managerSoldTo']),
-      customerSoldTo: serializer.fromJson<String>(json['customerSoldTo']),
-      customerName: serializer.fromJson<String>(json['customerName']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'managerSoldTo': serializer.toJson<String>(managerSoldTo),
-      'customerSoldTo': serializer.toJson<String>(customerSoldTo),
-      'customerName': serializer.toJson<String>(customerName),
-    };
-  }
-
-  RelatedCustomer copyWith(
-          {int? id,
-          String? managerSoldTo,
-          String? customerSoldTo,
-          String? customerName}) =>
-      RelatedCustomer(
-        id: id ?? this.id,
-        managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-        customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-        customerName: customerName ?? this.customerName,
-      );
-  RelatedCustomer copyWithCompanion(RelatedCustomersCompanion data) {
-    return RelatedCustomer(
-      id: data.id.present ? data.id.value : this.id,
-      managerSoldTo: data.managerSoldTo.present
-          ? data.managerSoldTo.value
-          : this.managerSoldTo,
-      customerSoldTo: data.customerSoldTo.present
-          ? data.customerSoldTo.value
-          : this.customerSoldTo,
-      customerName: data.customerName.present
-          ? data.customerName.value
-          : this.customerName,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomer(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, managerSoldTo, customerSoldTo, customerName);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RelatedCustomer &&
-          other.id == this.id &&
-          other.managerSoldTo == this.managerSoldTo &&
-          other.customerSoldTo == this.customerSoldTo &&
-          other.customerName == this.customerName);
-}
-
-class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
-  final Value<int> id;
-  final Value<String> managerSoldTo;
-  final Value<String> customerSoldTo;
-  final Value<String> customerName;
-  const RelatedCustomersCompanion({
-    this.id = const Value.absent(),
-    this.managerSoldTo = const Value.absent(),
-    this.customerSoldTo = const Value.absent(),
-    this.customerName = const Value.absent(),
-  });
-  RelatedCustomersCompanion.insert({
-    this.id = const Value.absent(),
-    required String managerSoldTo,
-    required String customerSoldTo,
-    required String customerName,
-  })  : managerSoldTo = Value(managerSoldTo),
-        customerSoldTo = Value(customerSoldTo),
-        customerName = Value(customerName);
-  static Insertable<RelatedCustomer> custom({
-    Expression<int>? id,
-    Expression<String>? managerSoldTo,
-    Expression<String>? customerSoldTo,
-    Expression<String>? customerName,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (managerSoldTo != null) 'manager_sold_to': managerSoldTo,
-      if (customerSoldTo != null) 'customer_sold_to': customerSoldTo,
-      if (customerName != null) 'customer_name': customerName,
-    });
-  }
-
-  RelatedCustomersCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? managerSoldTo,
-      Value<String>? customerSoldTo,
-      Value<String>? customerName}) {
-    return RelatedCustomersCompanion(
-      id: id ?? this.id,
-      managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-      customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-      customerName: customerName ?? this.customerName,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (managerSoldTo.present) {
-      map['manager_sold_to'] = Variable<String>(managerSoldTo.value);
-    }
-    if (customerSoldTo.present) {
-      map['customer_sold_to'] = Variable<String>(customerSoldTo.value);
-    }
-    if (customerName.present) {
-      map['customer_name'] = Variable<String>(customerName.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomersCompanion(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $BillingDetailsTable extends BillingDetails
     with TableInfo<$BillingDetailsTable, BillingDetail> {
   @override
@@ -1590,6 +1315,281 @@ class DeliveryDetailsCompanion extends UpdateCompanion<DeliveryDetail> {
   }
 }
 
+class $RelatedCustomersTable extends RelatedCustomers
+    with TableInfo<$RelatedCustomersTable, RelatedCustomer> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RelatedCustomersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _managerSoldToMeta =
+      const VerificationMeta('managerSoldTo');
+  @override
+  late final GeneratedColumn<String> managerSoldTo = GeneratedColumn<String>(
+      'manager_sold_to', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _customerSoldToMeta =
+      const VerificationMeta('customerSoldTo');
+  @override
+  late final GeneratedColumn<String> customerSoldTo = GeneratedColumn<String>(
+      'customer_sold_to', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _customerNameMeta =
+      const VerificationMeta('customerName');
+  @override
+  late final GeneratedColumn<String> customerName = GeneratedColumn<String>(
+      'customer_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, managerSoldTo, customerSoldTo, customerName];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'related_customers';
+  @override
+  VerificationContext validateIntegrity(Insertable<RelatedCustomer> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('manager_sold_to')) {
+      context.handle(
+          _managerSoldToMeta,
+          managerSoldTo.isAcceptableOrUnknown(
+              data['manager_sold_to']!, _managerSoldToMeta));
+    } else if (isInserting) {
+      context.missing(_managerSoldToMeta);
+    }
+    if (data.containsKey('customer_sold_to')) {
+      context.handle(
+          _customerSoldToMeta,
+          customerSoldTo.isAcceptableOrUnknown(
+              data['customer_sold_to']!, _customerSoldToMeta));
+    } else if (isInserting) {
+      context.missing(_customerSoldToMeta);
+    }
+    if (data.containsKey('customer_name')) {
+      context.handle(
+          _customerNameMeta,
+          customerName.isAcceptableOrUnknown(
+              data['customer_name']!, _customerNameMeta));
+    } else if (isInserting) {
+      context.missing(_customerNameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RelatedCustomer map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RelatedCustomer(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      managerSoldTo: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}manager_sold_to'])!,
+      customerSoldTo: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}customer_sold_to'])!,
+      customerName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}customer_name'])!,
+    );
+  }
+
+  @override
+  $RelatedCustomersTable createAlias(String alias) {
+    return $RelatedCustomersTable(attachedDatabase, alias);
+  }
+}
+
+class RelatedCustomer extends DataClass implements Insertable<RelatedCustomer> {
+  final int id;
+  final String managerSoldTo;
+  final String customerSoldTo;
+  final String customerName;
+  const RelatedCustomer(
+      {required this.id,
+      required this.managerSoldTo,
+      required this.customerSoldTo,
+      required this.customerName});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['manager_sold_to'] = Variable<String>(managerSoldTo);
+    map['customer_sold_to'] = Variable<String>(customerSoldTo);
+    map['customer_name'] = Variable<String>(customerName);
+    return map;
+  }
+
+  RelatedCustomersCompanion toCompanion(bool nullToAbsent) {
+    return RelatedCustomersCompanion(
+      id: Value(id),
+      managerSoldTo: Value(managerSoldTo),
+      customerSoldTo: Value(customerSoldTo),
+      customerName: Value(customerName),
+    );
+  }
+
+  factory RelatedCustomer.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RelatedCustomer(
+      id: serializer.fromJson<int>(json['id']),
+      managerSoldTo: serializer.fromJson<String>(json['managerSoldTo']),
+      customerSoldTo: serializer.fromJson<String>(json['customerSoldTo']),
+      customerName: serializer.fromJson<String>(json['customerName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'managerSoldTo': serializer.toJson<String>(managerSoldTo),
+      'customerSoldTo': serializer.toJson<String>(customerSoldTo),
+      'customerName': serializer.toJson<String>(customerName),
+    };
+  }
+
+  RelatedCustomer copyWith(
+          {int? id,
+          String? managerSoldTo,
+          String? customerSoldTo,
+          String? customerName}) =>
+      RelatedCustomer(
+        id: id ?? this.id,
+        managerSoldTo: managerSoldTo ?? this.managerSoldTo,
+        customerSoldTo: customerSoldTo ?? this.customerSoldTo,
+        customerName: customerName ?? this.customerName,
+      );
+  RelatedCustomer copyWithCompanion(RelatedCustomersCompanion data) {
+    return RelatedCustomer(
+      id: data.id.present ? data.id.value : this.id,
+      managerSoldTo: data.managerSoldTo.present
+          ? data.managerSoldTo.value
+          : this.managerSoldTo,
+      customerSoldTo: data.customerSoldTo.present
+          ? data.customerSoldTo.value
+          : this.customerSoldTo,
+      customerName: data.customerName.present
+          ? data.customerName.value
+          : this.customerName,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RelatedCustomer(')
+          ..write('id: $id, ')
+          ..write('managerSoldTo: $managerSoldTo, ')
+          ..write('customerSoldTo: $customerSoldTo, ')
+          ..write('customerName: $customerName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, managerSoldTo, customerSoldTo, customerName);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RelatedCustomer &&
+          other.id == this.id &&
+          other.managerSoldTo == this.managerSoldTo &&
+          other.customerSoldTo == this.customerSoldTo &&
+          other.customerName == this.customerName);
+}
+
+class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
+  final Value<int> id;
+  final Value<String> managerSoldTo;
+  final Value<String> customerSoldTo;
+  final Value<String> customerName;
+  const RelatedCustomersCompanion({
+    this.id = const Value.absent(),
+    this.managerSoldTo = const Value.absent(),
+    this.customerSoldTo = const Value.absent(),
+    this.customerName = const Value.absent(),
+  });
+  RelatedCustomersCompanion.insert({
+    this.id = const Value.absent(),
+    required String managerSoldTo,
+    required String customerSoldTo,
+    required String customerName,
+  })  : managerSoldTo = Value(managerSoldTo),
+        customerSoldTo = Value(customerSoldTo),
+        customerName = Value(customerName);
+  static Insertable<RelatedCustomer> custom({
+    Expression<int>? id,
+    Expression<String>? managerSoldTo,
+    Expression<String>? customerSoldTo,
+    Expression<String>? customerName,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (managerSoldTo != null) 'manager_sold_to': managerSoldTo,
+      if (customerSoldTo != null) 'customer_sold_to': customerSoldTo,
+      if (customerName != null) 'customer_name': customerName,
+    });
+  }
+
+  RelatedCustomersCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? managerSoldTo,
+      Value<String>? customerSoldTo,
+      Value<String>? customerName}) {
+    return RelatedCustomersCompanion(
+      id: id ?? this.id,
+      managerSoldTo: managerSoldTo ?? this.managerSoldTo,
+      customerSoldTo: customerSoldTo ?? this.customerSoldTo,
+      customerName: customerName ?? this.customerName,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (managerSoldTo.present) {
+      map['manager_sold_to'] = Variable<String>(managerSoldTo.value);
+    }
+    if (customerSoldTo.present) {
+      map['customer_sold_to'] = Variable<String>(customerSoldTo.value);
+    }
+    if (customerName.present) {
+      map['customer_name'] = Variable<String>(customerName.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RelatedCustomersCompanion(')
+          ..write('id: $id, ')
+          ..write('managerSoldTo: $managerSoldTo, ')
+          ..write('customerSoldTo: $customerSoldTo, ')
+          ..write('customerName: $customerName')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $OrderStatusTable extends OrderStatus
     with TableInfo<$OrderStatusTable, OrderStatusData> {
   @override
@@ -2288,11 +2288,11 @@ abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
   late final $UserDetailsTable userDetails = $UserDetailsTable(this);
-  late final $RelatedCustomersTable relatedCustomers =
-      $RelatedCustomersTable(this);
   late final $BillingDetailsTable billingDetails = $BillingDetailsTable(this);
   late final $DeliveryDetailsTable deliveryDetails =
       $DeliveryDetailsTable(this);
+  late final $RelatedCustomersTable relatedCustomers =
+      $RelatedCustomersTable(this);
   late final $OrderStatusTable orderStatus = $OrderStatusTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -2300,9 +2300,9 @@ abstract class _$Database extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         userDetails,
-        relatedCustomers,
         billingDetails,
         deliveryDetails,
+        relatedCustomers,
         orderStatus
       ];
 }
@@ -2514,163 +2514,6 @@ typedef $$UserDetailsTableProcessedTableManager = ProcessedTableManager<
     $$UserDetailsTableUpdateCompanionBuilder,
     (UserDetail, BaseReferences<_$Database, $UserDetailsTable, UserDetail>),
     UserDetail,
-    PrefetchHooks Function()>;
-typedef $$RelatedCustomersTableCreateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  required String managerSoldTo,
-  required String customerSoldTo,
-  required String customerName,
-});
-typedef $$RelatedCustomersTableUpdateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  Value<String> managerSoldTo,
-  Value<String> customerSoldTo,
-  Value<String> customerName,
-});
-
-class $$RelatedCustomersTableFilterComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => ColumnFilters(column));
-}
-
-class $$RelatedCustomersTableOrderingComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get customerName => $composableBuilder(
-      column: $table.customerName,
-      builder: (column) => ColumnOrderings(column));
-}
-
-class $$RelatedCustomersTableAnnotationComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => column);
-
-  GeneratedColumn<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo, builder: (column) => column);
-
-  GeneratedColumn<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => column);
-}
-
-class $$RelatedCustomersTableTableManager extends RootTableManager<
-    _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
-    (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
-    ),
-    RelatedCustomer,
-    PrefetchHooks Function()> {
-  $$RelatedCustomersTableTableManager(
-      _$Database db, $RelatedCustomersTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$RelatedCustomersTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$RelatedCustomersTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$RelatedCustomersTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> managerSoldTo = const Value.absent(),
-            Value<String> customerSoldTo = const Value.absent(),
-            Value<String> customerName = const Value.absent(),
-          }) =>
-              RelatedCustomersCompanion(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String managerSoldTo,
-            required String customerSoldTo,
-            required String customerName,
-          }) =>
-              RelatedCustomersCompanion.insert(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
-    _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
-    (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
-    ),
-    RelatedCustomer,
     PrefetchHooks Function()>;
 typedef $$BillingDetailsTableCreateCompanionBuilder = BillingDetailsCompanion
     Function({
@@ -3113,6 +2956,163 @@ typedef $$DeliveryDetailsTableProcessedTableManager = ProcessedTableManager<
     ),
     DeliveryDetail,
     PrefetchHooks Function()>;
+typedef $$RelatedCustomersTableCreateCompanionBuilder
+    = RelatedCustomersCompanion Function({
+  Value<int> id,
+  required String managerSoldTo,
+  required String customerSoldTo,
+  required String customerName,
+});
+typedef $$RelatedCustomersTableUpdateCompanionBuilder
+    = RelatedCustomersCompanion Function({
+  Value<int> id,
+  Value<String> managerSoldTo,
+  Value<String> customerSoldTo,
+  Value<String> customerName,
+});
+
+class $$RelatedCustomersTableFilterComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get customerName => $composableBuilder(
+      column: $table.customerName, builder: (column) => ColumnFilters(column));
+}
+
+class $$RelatedCustomersTableOrderingComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get customerName => $composableBuilder(
+      column: $table.customerName,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$RelatedCustomersTableAnnotationComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo, builder: (column) => column);
+
+  GeneratedColumn<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo, builder: (column) => column);
+
+  GeneratedColumn<String> get customerName => $composableBuilder(
+      column: $table.customerName, builder: (column) => column);
+}
+
+class $$RelatedCustomersTableTableManager extends RootTableManager<
+    _$Database,
+    $RelatedCustomersTable,
+    RelatedCustomer,
+    $$RelatedCustomersTableFilterComposer,
+    $$RelatedCustomersTableOrderingComposer,
+    $$RelatedCustomersTableAnnotationComposer,
+    $$RelatedCustomersTableCreateCompanionBuilder,
+    $$RelatedCustomersTableUpdateCompanionBuilder,
+    (
+      RelatedCustomer,
+      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+    ),
+    RelatedCustomer,
+    PrefetchHooks Function()> {
+  $$RelatedCustomersTableTableManager(
+      _$Database db, $RelatedCustomersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RelatedCustomersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RelatedCustomersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RelatedCustomersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> managerSoldTo = const Value.absent(),
+            Value<String> customerSoldTo = const Value.absent(),
+            Value<String> customerName = const Value.absent(),
+          }) =>
+              RelatedCustomersCompanion(
+            id: id,
+            managerSoldTo: managerSoldTo,
+            customerSoldTo: customerSoldTo,
+            customerName: customerName,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String managerSoldTo,
+            required String customerSoldTo,
+            required String customerName,
+          }) =>
+              RelatedCustomersCompanion.insert(
+            id: id,
+            managerSoldTo: managerSoldTo,
+            customerSoldTo: customerSoldTo,
+            customerName: customerName,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $RelatedCustomersTable,
+    RelatedCustomer,
+    $$RelatedCustomersTableFilterComposer,
+    $$RelatedCustomersTableOrderingComposer,
+    $$RelatedCustomersTableAnnotationComposer,
+    $$RelatedCustomersTableCreateCompanionBuilder,
+    $$RelatedCustomersTableUpdateCompanionBuilder,
+    (
+      RelatedCustomer,
+      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+    ),
+    RelatedCustomer,
+    PrefetchHooks Function()>;
 typedef $$OrderStatusTableCreateCompanionBuilder = OrderStatusCompanion
     Function({
   Value<int> id,
@@ -3431,12 +3431,12 @@ class $DatabaseManager {
   $DatabaseManager(this._db);
   $$UserDetailsTableTableManager get userDetails =>
       $$UserDetailsTableTableManager(_db, _db.userDetails);
-  $$RelatedCustomersTableTableManager get relatedCustomers =>
-      $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
   $$BillingDetailsTableTableManager get billingDetails =>
       $$BillingDetailsTableTableManager(_db, _db.billingDetails);
   $$DeliveryDetailsTableTableManager get deliveryDetails =>
       $$DeliveryDetailsTableTableManager(_db, _db.deliveryDetails);
+  $$RelatedCustomersTableTableManager get relatedCustomers =>
+      $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
   $$OrderStatusTableTableManager get orderStatus =>
       $$OrderStatusTableTableManager(_db, _db.orderStatus);
 }

@@ -23,6 +23,8 @@ _$InvoiceInfoImpl _$$InvoiceInfoImplFromJson(Map<String, dynamic> json) =>
       discountDueDate: DateTime.parse(json['discountDueDate'] as String),
       isOpen: json['isOpen'] as bool,
       status: $enumDecode(_$InvoiceStatusEnumMap, json['status']),
+      receiptNumber: json['receiptNumber'] as String,
+      receiptDate: DateTime.parse(json['receiptDate'] as String),
     );
 
 Map<String, dynamic> _$$InvoiceInfoImplToJson(_$InvoiceInfoImpl instance) =>
@@ -42,6 +44,8 @@ Map<String, dynamic> _$$InvoiceInfoImplToJson(_$InvoiceInfoImpl instance) =>
       'discountDueDate': instance.discountDueDate.toIso8601String(),
       'isOpen': instance.isOpen,
       'status': _$InvoiceStatusEnumMap[instance.status]!,
+      'receiptNumber': instance.receiptNumber,
+      'receiptDate': instance.receiptDate.toIso8601String(),
     };
 
 const _$InvoiceStatusEnumMap = {

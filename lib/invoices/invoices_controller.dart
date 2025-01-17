@@ -25,6 +25,12 @@ class InvoicesController extends GetxController
 
   final invoiceNumberTextEditingController = TextEditingController();
 
+  final rxAdvancePaymentAmount = 0.0.obs;
+
+  final advancePaymentInputController = TextEditingController(
+    text: '0',
+  );
+
   late final tabController = TabController(
     length: 2,
     vsync: this,
@@ -65,12 +71,12 @@ class InvoicesController extends GetxController
                 .contains(rxInvoiceNumberInput.value) &&
             invoiceInfo.date.isAfter(
               rxFromDate.value.subtract(
-                const Duration(days: 1),
+                Duration(days: 1),
               ),
             ) &&
             invoiceInfo.date.isBefore(
               rxToDate.value.add(
-                const Duration(days: 1),
+                Duration(days: 1),
               ),
             ),
       ),

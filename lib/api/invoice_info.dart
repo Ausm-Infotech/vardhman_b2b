@@ -23,6 +23,8 @@ class InvoiceInfo with _$InvoiceInfo {
     required DateTime discountDueDate,
     required bool isOpen,
     required InvoiceStatus status,
+    required String receiptNumber,
+    required DateTime receiptDate,
   }) = _InvoiceInfo;
 
   factory InvoiceInfo.fromJson(Map<String, dynamic> json) =>
@@ -104,7 +106,7 @@ double _getDiscountAmount(InvoiceInfo invoiceInfo) {
   double discountAmount = 0;
 
   DateTime discountExpiryDate = invoiceInfo.date.add(
-    const Duration(days: 7),
+    Duration(days: 7),
   );
 
   if (DateTime.now().isBefore(discountExpiryDate)) {

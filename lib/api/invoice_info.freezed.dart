@@ -35,6 +35,8 @@ mixin _$InvoiceInfo {
   DateTime get discountDueDate => throw _privateConstructorUsedError;
   bool get isOpen => throw _privateConstructorUsedError;
   InvoiceStatus get status => throw _privateConstructorUsedError;
+  String get receiptNumber => throw _privateConstructorUsedError;
+  DateTime get receiptDate => throw _privateConstructorUsedError;
 
   /// Serializes this InvoiceInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -67,7 +69,9 @@ abstract class $InvoiceInfoCopyWith<$Res> {
       DateTime date,
       DateTime discountDueDate,
       bool isOpen,
-      InvoiceStatus status});
+      InvoiceStatus status,
+      String receiptNumber,
+      DateTime receiptDate});
 }
 
 /// @nodoc
@@ -100,6 +104,8 @@ class _$InvoiceInfoCopyWithImpl<$Res, $Val extends InvoiceInfo>
     Object? discountDueDate = null,
     Object? isOpen = null,
     Object? status = null,
+    Object? receiptNumber = null,
+    Object? receiptDate = null,
   }) {
     return _then(_value.copyWith(
       openAmount: null == openAmount
@@ -162,6 +168,14 @@ class _$InvoiceInfoCopyWithImpl<$Res, $Val extends InvoiceInfo>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as InvoiceStatus,
+      receiptNumber: null == receiptNumber
+          ? _value.receiptNumber
+          : receiptNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      receiptDate: null == receiptDate
+          ? _value.receiptDate
+          : receiptDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -189,7 +203,9 @@ abstract class _$$InvoiceInfoImplCopyWith<$Res>
       DateTime date,
       DateTime discountDueDate,
       bool isOpen,
-      InvoiceStatus status});
+      InvoiceStatus status,
+      String receiptNumber,
+      DateTime receiptDate});
 }
 
 /// @nodoc
@@ -220,6 +236,8 @@ class __$$InvoiceInfoImplCopyWithImpl<$Res>
     Object? discountDueDate = null,
     Object? isOpen = null,
     Object? status = null,
+    Object? receiptNumber = null,
+    Object? receiptDate = null,
   }) {
     return _then(_$InvoiceInfoImpl(
       openAmount: null == openAmount
@@ -282,6 +300,14 @@ class __$$InvoiceInfoImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as InvoiceStatus,
+      receiptNumber: null == receiptNumber
+          ? _value.receiptNumber
+          : receiptNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      receiptDate: null == receiptDate
+          ? _value.receiptDate
+          : receiptDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -304,7 +330,9 @@ class _$InvoiceInfoImpl implements _InvoiceInfo {
       required this.date,
       required this.discountDueDate,
       required this.isOpen,
-      required this.status});
+      required this.status,
+      required this.receiptNumber,
+      required this.receiptDate});
 
   factory _$InvoiceInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvoiceInfoImplFromJson(json);
@@ -339,10 +367,14 @@ class _$InvoiceInfoImpl implements _InvoiceInfo {
   final bool isOpen;
   @override
   final InvoiceStatus status;
+  @override
+  final String receiptNumber;
+  @override
+  final DateTime receiptDate;
 
   @override
   String toString() {
-    return 'InvoiceInfo(openAmount: $openAmount, grossAmount: $grossAmount, discountAmount: $discountAmount, taxableAmount: $taxableAmount, tax: $tax, customerNumber: $customerNumber, company: $company, docType: $docType, invoiceNumber: $invoiceNumber, salesOrderNumber: $salesOrderNumber, salesOrderType: $salesOrderType, date: $date, discountDueDate: $discountDueDate, isOpen: $isOpen, status: $status)';
+    return 'InvoiceInfo(openAmount: $openAmount, grossAmount: $grossAmount, discountAmount: $discountAmount, taxableAmount: $taxableAmount, tax: $tax, customerNumber: $customerNumber, company: $company, docType: $docType, invoiceNumber: $invoiceNumber, salesOrderNumber: $salesOrderNumber, salesOrderType: $salesOrderType, date: $date, discountDueDate: $discountDueDate, isOpen: $isOpen, status: $status, receiptNumber: $receiptNumber, receiptDate: $receiptDate)';
   }
 
   @override
@@ -373,7 +405,11 @@ class _$InvoiceInfoImpl implements _InvoiceInfo {
             (identical(other.discountDueDate, discountDueDate) ||
                 other.discountDueDate == discountDueDate) &&
             (identical(other.isOpen, isOpen) || other.isOpen == isOpen) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.receiptNumber, receiptNumber) ||
+                other.receiptNumber == receiptNumber) &&
+            (identical(other.receiptDate, receiptDate) ||
+                other.receiptDate == receiptDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -394,7 +430,9 @@ class _$InvoiceInfoImpl implements _InvoiceInfo {
       date,
       discountDueDate,
       isOpen,
-      status);
+      status,
+      receiptNumber,
+      receiptDate);
 
   /// Create a copy of InvoiceInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -428,7 +466,9 @@ abstract class _InvoiceInfo implements InvoiceInfo {
       required final DateTime date,
       required final DateTime discountDueDate,
       required final bool isOpen,
-      required final InvoiceStatus status}) = _$InvoiceInfoImpl;
+      required final InvoiceStatus status,
+      required final String receiptNumber,
+      required final DateTime receiptDate}) = _$InvoiceInfoImpl;
 
   factory _InvoiceInfo.fromJson(Map<String, dynamic> json) =
       _$InvoiceInfoImpl.fromJson;
@@ -463,6 +503,10 @@ abstract class _InvoiceInfo implements InvoiceInfo {
   bool get isOpen;
   @override
   InvoiceStatus get status;
+  @override
+  String get receiptNumber;
+  @override
+  DateTime get receiptDate;
 
   /// Create a copy of InvoiceInfo
   /// with the given fields replaced by the non-null parameter values.

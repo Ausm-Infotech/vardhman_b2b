@@ -14,6 +14,8 @@ part 'database.g.dart';
     UserDetails,
     BillingDetails,
     DeliveryDetails,
+    RelatedCustomers,
+    OrderStatus,
   ],
 )
 class Database extends _$Database {

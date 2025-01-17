@@ -1,15 +1,17 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pure_ftp/pure_ftp.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart' as api;
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
+import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
 
@@ -24,23 +26,13 @@ class Api {
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept': '*/*',
       },
-      sendTimeout: const Duration(seconds: 60),
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(minutes: 5),
+      sendTimeout: Duration(seconds: 60),
+      connectTimeout: Duration(seconds: 60),
+      receiveTimeout: Duration(minutes: 5),
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
   );
-
-  // ..httpClientAdapter = kIsWeb
-  //     ? BrowserHttpClientAdapter()
-  //     : IOHttpClientAdapter(
-  //         createHttpClient: () {
-  //           return HttpClient()
-  //             ..badCertificateCallback =
-  //                 (X509Certificate cert, String host, int port) => true;
-  //         },
-  //       );
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
     final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
@@ -112,8 +104,6 @@ class Api {
     String userId,
   ) async {
     try {
-      log('fetchUserData - $userId');
-
       final response = await _dio.post(
         '/orchestrator/ORCH5541001_GetUserData',
         data: {
@@ -556,6 +546,57 @@ class Api {
     return docNumbers;
   }
 
+  static Future<Map<int, Map<String, dynamic>>> fetchInvoiceReceiptDetailsMap(
+      String addressNumber) async {
+    final invoiceReceiptDetailsMap = <int, Map<String, dynamic>>{};
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F03B14",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F03B14.CKNU|F03B14.DOC|F03B14.DMTJ",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": addressNumber, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F03B14.AN8",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F03B14']['data']['gridData']
+            ['rowset'] as List;
+
+        for (var row in rowset) {
+          var dateString = row['F03B14_DMTJ'];
+
+          dateString =
+              '${dateString.substring(0, 4)}/${dateString.substring(4, 6)}/${dateString.substring(6, 8)}';
+
+          final receiptDate = DateFormat('yyyy/MM/dd').parse(dateString);
+          invoiceReceiptDetailsMap[row['F03B14_DOC']] = {
+            'receiptNumber': row['F03B14_CKNU'],
+            'receiptDate': receiptDate,
+          };
+        }
+      }
+    } catch (e) {
+      log('fetchReceiptNumbers error - $e');
+    }
+
+    return invoiceReceiptDetailsMap;
+  }
+
   static Future<List<api.InvoiceInfo>> fetchInvoices({
     required String customerNumber,
     required String company,
@@ -572,6 +613,9 @@ class Api {
       );
 
       if (response.statusCode == 200) {
+        final invoiceReceiptNumbersMap =
+            await fetchInvoiceReceiptDetailsMap(customerNumber);
+
         final openInvoicesData = response.data['OpenInvoices'] as List;
 
         for (final openInvoiceData in openInvoicesData) {
@@ -595,6 +639,14 @@ class Api {
             ),
             isOpen: true,
             status: api.InvoiceStatus.processing,
+            receiptNumber:
+                invoiceReceiptNumbersMap[openInvoiceData['InvoiceNumber']]
+                        ?['receiptNumber'] ??
+                    '',
+            receiptDate:
+                invoiceReceiptNumbersMap[openInvoiceData['InvoiceNumber']]
+                        ?['receiptDate'] ??
+                    DateTime.now(),
           );
 
           invoiceDetailsCompanions.add(openInvoiceInfo);
@@ -623,6 +675,14 @@ class Api {
             ),
             isOpen: false,
             status: api.InvoiceStatus.processing,
+            receiptNumber:
+                invoiceReceiptNumbersMap[paidInvoiceData['InvoiceNumber']]
+                        ?['receiptNumber'] ??
+                    '',
+            receiptDate:
+                invoiceReceiptNumbersMap[paidInvoiceData['InvoiceNumber']]
+                        ?['receiptDate'] ??
+                    DateTime.now(),
           );
 
           invoiceDetailsCompanions.add(paidInvoiceInfo);
@@ -769,38 +829,126 @@ class Api {
     return false;
   }
 
-  static Future<Uint8List?> downloadCatalog(String articleName) async {
+  static Future<Uint8List?> downloadCatalog({
+    required String articleName,
+    Function(int, int, double)? onReceiveProgress,
+  }) async {
     try {
-      final client = HttpClient()
-        ..connectionTimeout = const Duration(seconds: 60)
-        ..badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
+      final directory = await getApplicationDocumentsDirectory();
+      final localPath = '${directory.path}/$articleName-CAT.pdf';
+      final localFile = File(localPath);
 
-      final response = await post(
-        Uri.parse('https://172.22.250.11:7081/jderest/v2/file/download'),
-        headers: {
-          'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
-          'Connection': 'keep-alive',
-          'Content-Type': 'application/json',
-        },
-        body: utf8.encode(
-          json.encode(
-            {
-              "moStructure": "GT0005",
-              "moKey": ["40|PM|B022-CAT"],
-              "formName": "P0004A_W0004AA",
-              "version": "ZJDE0001",
-              "sequence": 1
-            },
-          ),
-        ),
+      if (await localFile.exists()) {
+        return await localFile.readAsBytes();
+      }
+
+      final ftpClient = FtpClient(
+        socketInitOptions: ftpSocketInitOptions,
+        authOptions: ftpAuthOptions,
+        logCallback: print,
       );
 
-      if (response.statusCode == 200) {
-        return response.bodyBytes;
-      }
+      await ftpClient.connect();
+
+      final file =
+          ftpClient.getFile('/MobileApp/Catalogs/$articleName-CAT.pdf');
+
+      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
+        file,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      await ftpClient.disconnect();
+
+      await localFile.writeAsBytes(fileData);
+
+      return Uint8List.fromList(fileData);
     } catch (e) {
       log('downloadCatalogPdf error - $e');
+    }
+
+    return null;
+  }
+
+  static Future<Uint8List?> downloadShadeCard({
+    required String articleName,
+    Function(int, int, double)? onReceiveProgress,
+  }) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final localPath = '${directory.path}/$articleName-SHADE.pdf';
+      final localFile = File(localPath);
+
+      if (await localFile.exists()) {
+        return await localFile.readAsBytes();
+      }
+
+      final ftpClient = FtpClient(
+        socketInitOptions: ftpSocketInitOptions,
+        authOptions: ftpAuthOptions,
+        logCallback: print,
+      );
+
+      await ftpClient.connect();
+
+      final file =
+          ftpClient.getFile('/MobileApp/ShadeCards/$articleName-SHADE.pdf');
+
+      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
+        file,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      await ftpClient.disconnect();
+
+      await localFile.writeAsBytes(fileData);
+
+      return Uint8List.fromList(fileData);
+    } catch (e) {
+      log('downloadShadeCard error - $e');
+    }
+
+    return null;
+  }
+
+  static Future<Uint8List?> downloadInvoice({
+    required int invoiceNumber,
+    required String invoiceType,
+    Function(int, int, double)? onReceiveProgress,
+  }) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final localPath =
+          '${directory.path}/${invoiceNumber}_$invoiceType-INVOICE.pdf';
+      final localFile = File(localPath);
+
+      if (await localFile.exists()) {
+        return await localFile.readAsBytes();
+      }
+
+      final ftpClient = FtpClient(
+        socketInitOptions: ftpSocketInitOptions,
+        authOptions: ftpAuthOptions,
+        logCallback: print,
+      );
+
+      await ftpClient.connect();
+
+      final file =
+          ftpClient.getFile('/CAMSInvoicing/${invoiceNumber}_$invoiceType.pdf');
+
+      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
+        file,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      await ftpClient.disconnect();
+
+      await localFile.writeAsBytes(fileData);
+
+      return Uint8List.fromList(fileData);
+    } catch (e) {
+      log('downloadInvoice error - $e');
     }
 
     return null;
@@ -809,17 +957,36 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        '/orchestrator/ORCH55_EncryptDecryptInputString',
+        '/orchestrator/ORCH55_ICICIEncrypt',
         data: {
-          "paramPlainTxt": plainText,
+          "plainText": plainText,
         },
       );
 
       if (response.statusCode == 200) {
-        return response.data["Output String"];
+        return response.data["encryptedText"];
       }
     } catch (e) {
       log('encryptInputString error - $e');
+    }
+
+    return null;
+  }
+
+  static Future<String?> getPaymentStatus(String receiptNumber) async {
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55_GetPaymentWrapper',
+        data: {
+          "ReceiptNumber": 'txn-id=$receiptNumber|',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data["decryptedText"];
+      }
+    } catch (e) {
+      log('getPaymentStatus error - $e');
     }
 
     return null;
