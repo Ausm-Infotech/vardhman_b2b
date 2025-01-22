@@ -5,10 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter",
+      "name": "Chrome",
       "request": "launch",
       "type": "dart",
       "args": ["--web-port", "8000"]
+    },
+    {
+      "name": "Web Server",
+      "request": "launch",
+      "type": "dart",
+      "args": ["-d", "web-server", "--web-port", "8000"]
     }
   ]
 }

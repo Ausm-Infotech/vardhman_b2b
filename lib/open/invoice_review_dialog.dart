@@ -9,7 +9,6 @@ import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
-import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 import 'package:js/js.dart';
@@ -112,8 +111,6 @@ class InvoiceReviewDialog extends StatelessWidget {
                           final plainText =
                               'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount}|txn-for=payment|wallet-payment-mode=2|return-url=http://localhost:8000|cancel-url=http://localhost:8000|';
 
-                          // const encryptedString =
-                          //     'FhpljUfUCmCkqJ2ezhpH0TtvgIjbrg6vTP88k30RN+pAm9kdBlX2yxCuIvCP+3RNaVmCSJhc13RAoBFz1Bm5U5SzMps/DaNNkpURTPnzd2KJC4HnlmFmwK2FyQXIznnPBzFYst/4zot/RfDmKMEvMrC+socWc/T4WoW7sLsv0B6gaHmgDlTY3A3SrHOAlpfBYjHgWBVb2d3sdtEnZqNEwYequd0alFGbV0eyTzzGPf7wMLGeoI96M5b6al4VOL0E0jkX0i0iDjadS1+JM0EH6JbU8FywO1fjy2eWCIUGMKYZXg4H9Y0p/g93Zuo5ZgfeG5lsLRbGsbgzkQoIKhyxqLXuCoSavK7H+8VZwdTvTcj7cglajB36pGFDikDSjTxlUbLVlMYIyMCarxrg1BOaUyB5JlC+cwQd6LevjC3ZQq80k7pwnjCasu6hszAEvExzVmT20HPXYQTMS8mWutkPbMEggzP48mozW2DgyoS2f7NBSusxtxwqw0SBxs+cwd2g3SEpirrafxD9pJwdREXdEOJKrzOOrBXnaGq5xMMsDWU69rcHkYbWzwlrXECW7Q37OsAhDLQE+y05Oqq+LzKIdjN2/eOHWE5EBqiJ7wtw5hSsgISpYM3Tpsupwub/l1mQgp7Nd5NsY1baBbd+1nC7iN/Sj9lm84GQ8Kl7f+CfZjo=';
                           final encryptedString =
                               await Api.encryptInputString(plainText);
 
@@ -149,13 +146,6 @@ class InvoiceReviewDialog extends StatelessWidget {
                             paymentFormElement
                                 .appendChild(walletRequestMessageInput);
 
-                            // final submitButton =
-                            //     web.document.createElement('button')
-                            //       ..setAttribute('type', 'submit')
-                            //       ..text = 'Submit';
-
-                            // paymentFormElement.appendChild(submitButton);
-
                             final paymentForm = web.document.body
                                     ?.appendChild(paymentFormElement)
                                 as html.FormElement;
@@ -163,78 +153,87 @@ class InvoiceReviewDialog extends StatelessWidget {
                             paymentForm.submit();
                           }
 
-                          final paymentStatus =
-                              await Api.getPaymentStatus(receiptNumber);
+                          // final paymentStatus =
+                          //     await Api.getPaymentStatus(receiptNumber);
 
-                          if (paymentStatus != null) {
-                            walletTxnStatus =
-                                RegExp(r'wallet-txn-status=([^|]+)')
-                                        .firstMatch(paymentStatus)
-                                        ?.group(1) ??
-                                    '';
+                          // if (paymentStatus != null) {
+                          //   walletTxnStatus =
+                          //       RegExp(r'wallet-txn-status=([^|]+)')
+                          //               .firstMatch(paymentStatus)
+                          //               ?.group(1) ??
+                          //           '';
 
-                            walletBankRefId =
-                                RegExp(r'wallet-bank-ref-id=([^|]+)')
-                                        .firstMatch(paymentStatus)
-                                        ?.group(1) ??
-                                    '';
+                          //   walletBankRefId =
+                          //       RegExp(r'wallet-bank-ref-id=([^|]+)')
+                          //               .firstMatch(paymentStatus)
+                          //               ?.group(1) ??
+                          //           '';
 
-                            walletTxnRemarks =
-                                RegExp(r'wallet-txn-remarks=([^|]+)')
-                                        .firstMatch(paymentStatus)
-                                        ?.group(1) ??
-                                    '';
+                          //   walletTxnRemarks =
+                          //       RegExp(r'wallet-txn-remarks=([^|]+)')
+                          //               .firstMatch(paymentStatus)
+                          //               ?.group(1) ??
+                          //           '';
 
-                            paymentSuccessful = walletTxnStatus == '100';
-                          }
+                          //   paymentSuccessful = walletTxnStatus == '100';
+                          // }
                         }
 
-                        await Api.updateInvoicePaymentRequest(
-                          batchNumber: batchNumber,
-                          receiptNumber: receiptNumber,
-                          company:
-                              userController.rxCustomerDetail.value.companyCode,
-                          customerNumber: userController
-                              .rxCustomerDetail.value.soldToNumber,
-                          sp: paymentSuccessful
-                              ? ''
-                              : walletTxnStatus == '106'
-                                  ? 'I'
-                                  : 'E',
-                          paymentReference: walletBankRefId,
-                          paymentRemark: walletTxnRemarks,
-                        );
+                        // await Api.updateInvoicePaymentRequest(
+                        //   batchNumber: batchNumber,
+                        //   receiptNumber: receiptNumber,
+                        //   company:
+                        //       userController.rxCustomerDetail.value.companyCode,
+                        //   customerNumber: userController
+                        //       .rxCustomerDetail.value.soldToNumber,
+                        //   sp: paymentSuccessful
+                        //       ? ''
+                        //       : walletTxnStatus == '106'
+                        //           ? 'I'
+                        //           : 'E',
+                        //   paymentReference: walletBankRefId,
+                        //   paymentRemark: walletTxnRemarks,
+                        // );
 
-                        Get.back();
+                        // Get.back();
 
-                        if (paymentSuccessful) {
-                          invoicesController.refreshInvoices();
+                        // Get.back();
 
-                          invoicesController.rxSelectedInvoiceInfos.clear();
+                        // Get.snackbar(
+                        //   'Payment will be confirmed within 15 minutes',
+                        //   '',
+                        //   backgroundColor: Colors.white,
+                        //   colorText: VardhmanColors.green,
+                        // );
 
-                          Get.back();
+                        // if (paymentSuccessful) {
+                        //   invoicesController.refreshInvoices();
 
-                          Get.snackbar(
-                            'Payment was successful',
-                            '',
-                            backgroundColor: Colors.white,
-                            colorText: VardhmanColors.green,
-                          );
-                        } else if (walletTxnStatus == '106') {
-                          Get.snackbar(
-                            'Awaiting payment',
-                            '',
-                            backgroundColor: Colors.white,
-                            colorText: VardhmanColors.orange,
-                          );
-                        } else {
-                          Get.snackbar(
-                            'Payment failed',
-                            '',
-                            backgroundColor: Colors.white,
-                            colorText: VardhmanColors.red,
-                          );
-                        }
+                        //   invoicesController.rxSelectedInvoiceInfos.clear();
+
+                        //   Get.back();
+
+                        //   Get.snackbar(
+                        //     'Payment was successful',
+                        //     '',
+                        //     backgroundColor: Colors.white,
+                        //     colorText: VardhmanColors.green,
+                        //   );
+                        // } else if (walletTxnStatus == '106') {
+                        //   Get.snackbar(
+                        //     'Awaiting payment',
+                        //     '',
+                        //     backgroundColor: Colors.white,
+                        //     colorText: VardhmanColors.orange,
+                        //   );
+                        // } else {
+                        //   Get.snackbar(
+                        //     'Payment failed',
+                        //     '',
+                        //     backgroundColor: Colors.white,
+                        //     colorText: VardhmanColors.red,
+                        //   );
+                        // }
                       }
                     }
                   },

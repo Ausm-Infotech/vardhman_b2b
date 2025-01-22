@@ -45,9 +45,13 @@ class OrdersController extends GetxController
       (_) async {
         await refreshOrders();
 
-        rxFirstDate.value = _orderStatuses.first.orderDate;
+        final earliestOrderDate = _orderStatuses.isNotEmpty
+            ? _orderStatuses.first.orderDate
+            : oldestDateTime;
 
-        rxFromDate.value = _orderStatuses.first.orderDate;
+        rxFirstDate.value = earliestOrderDate;
+
+        rxFromDate.value = earliestOrderDate;
       },
     );
 
