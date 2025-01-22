@@ -16,7 +16,7 @@ class LabelRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: color,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
         style: TextStyle(

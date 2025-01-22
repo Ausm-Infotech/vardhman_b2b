@@ -106,7 +106,7 @@ double _getDiscountAmount(InvoiceInfo invoiceInfo) {
   double discountAmount = 0;
 
   DateTime discountExpiryDate = invoiceInfo.date.add(
-    Duration(days: 7),
+    const Duration(days: 7),
   );
 
   if (DateTime.now().isBefore(discountExpiryDate)) {

@@ -81,7 +81,7 @@ class _PdfDialogState extends State<PdfDialog> {
           Align(
             alignment: Alignment.topRight,
             child: IconButton.outlined(
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
                   VardhmanColors.darkGrey,
                 ),
@@ -89,7 +89,7 @@ class _PdfDialogState extends State<PdfDialog> {
               onPressed: () {
                 Get.back();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.white,
               ),

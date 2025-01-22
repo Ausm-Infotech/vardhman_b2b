@@ -125,7 +125,44 @@ class NavRail extends StatelessWidget {
               PrimaryButton(
                 iconData: Icons.logout,
                 text: 'Logout',
-                onPressed: () async {},
+                onPressed: () async {
+                  // final paymentFormElement = web.document.createElement('form')
+                  //   ..setAttribute('id', 'paymentFormId')
+                  //   ..setAttribute('method', "POST")
+                  //   ..setAttribute(
+                  //       'action', "https://demo.b2biz.co.in/ws/payment")
+                  //   ..setAttribute('target', '_blank');
+
+                  // final walletClientCodeInput =
+                  //     web.document.createElement('input')
+                  //       ..setAttribute('type', 'text')
+                  //       ..setAttribute('id', 'walletClientCode')
+                  //       ..setAttribute('value', 'WT-1474');
+
+                  // paymentFormElement.appendChild(walletClientCodeInput);
+
+                  // final walletRequestMessageInput =
+                  //     web.document.createElement('input')
+                  //       ..setAttribute('type', 'text')
+                  //       ..setAttribute('id', 'walletRequestMessage')
+                  //       ..setAttribute(
+                  //         'value',
+                  //         '',
+                  //       );
+
+                  // paymentFormElement.appendChild(walletRequestMessageInput);
+
+                  // final submitButton = web.document.createElement('button')
+                  //   ..setAttribute('type', 'submit')
+                  //   ..text = 'Submit';
+
+                  // paymentFormElement.appendChild(submitButton);
+
+                  // final paymentForm = web.document.body
+                  //     ?.appendChild(paymentFormElement) as html.FormElement;
+
+                  // paymentForm.submit();
+                },
               ),
             ],
           ),

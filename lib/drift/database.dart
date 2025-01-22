@@ -28,8 +28,8 @@ class Database extends _$Database {
     return driftDatabase(
       name: 'vytl',
       web: DriftWebOptions(
-        sqlite3Wasm: Uri.parse('/sqlite3.wasm'),
-        driftWorker: Uri.parse('/drift_worker.js'),
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.js'),
       ),
     );
   }

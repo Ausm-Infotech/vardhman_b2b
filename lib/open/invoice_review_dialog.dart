@@ -1,5 +1,7 @@
-import 'dart:developer';
+@JS()
+library stringify;
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +11,19 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
-import 'package:vardhman_b2b/open/pay2corp_view.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
+import 'package:js/js.dart';
+import 'dart:html' as html;
+import 'package:web/web.dart' as web;
+
+@JS('JSON.stringify')
+external String stringify(Object obj);
+
+@JS('alert')
+external void alert(String message);
+
+@JS('open')
+external void open(String url, String target);
 
 class InvoiceReviewDialog extends StatelessWidget {
   const InvoiceReviewDialog({
@@ -28,7 +41,7 @@ class InvoiceReviewDialog extends StatelessWidget {
     return Dialog(
       child: Obx(
         () => Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -38,13 +51,13 @@ class InvoiceReviewDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Text('You are about to initiate a payment of '),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               RupeeText(
                 amount: invoicesController.selectedDiscountedAmount,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Align(
@@ -96,19 +109,58 @@ class InvoiceReviewDialog extends StatelessWidget {
                         if (invoicesController.selectedDiscountedAmount == 0) {
                           paymentSuccessful = true;
                         } else {
-                          final encryptedString = await Api.encryptInputString(
-                            'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount}|txn-for=payment|wallet-payment-mode=2|return-url=https://www.vardhmanthreads.com/|cancel-url=https://www.vardhmanthreads.com/|',
-                          );
+                          final plainText =
+                              'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount}|txn-for=payment|wallet-payment-mode=2|return-url=http://localhost:8000|cancel-url=http://localhost:8000|';
+
+                          // const encryptedString =
+                          //     'FhpljUfUCmCkqJ2ezhpH0TtvgIjbrg6vTP88k30RN+pAm9kdBlX2yxCuIvCP+3RNaVmCSJhc13RAoBFz1Bm5U5SzMps/DaNNkpURTPnzd2KJC4HnlmFmwK2FyQXIznnPBzFYst/4zot/RfDmKMEvMrC+socWc/T4WoW7sLsv0B6gaHmgDlTY3A3SrHOAlpfBYjHgWBVb2d3sdtEnZqNEwYequd0alFGbV0eyTzzGPf7wMLGeoI96M5b6al4VOL0E0jkX0i0iDjadS1+JM0EH6JbU8FywO1fjy2eWCIUGMKYZXg4H9Y0p/g93Zuo5ZgfeG5lsLRbGsbgzkQoIKhyxqLXuCoSavK7H+8VZwdTvTcj7cglajB36pGFDikDSjTxlUbLVlMYIyMCarxrg1BOaUyB5JlC+cwQd6LevjC3ZQq80k7pwnjCasu6hszAEvExzVmT20HPXYQTMS8mWutkPbMEggzP48mozW2DgyoS2f7NBSusxtxwqw0SBxs+cwd2g3SEpirrafxD9pJwdREXdEOJKrzOOrBXnaGq5xMMsDWU69rcHkYbWzwlrXECW7Q37OsAhDLQE+y05Oqq+LzKIdjN2/eOHWE5EBqiJ7wtw5hSsgISpYM3Tpsupwub/l1mQgp7Nd5NsY1baBbd+1nC7iN/Sj9lm84GQ8Kl7f+CfZjo=';
+                          final encryptedString =
+                              await Api.encryptInputString(plainText);
 
                           log('Encrypted String: $encryptedString');
 
                           if (encryptedString != null) {
-                            paymentSuccessful = await Get.to<bool>(
-                                  () => Pay2corpView(
-                                    walletRequestMessage: encryptedString,
-                                  ),
-                                ) ??
-                                false;
+                            final paymentFormElement =
+                                web.document.createElement('form')
+                                  ..setAttribute('id', 'paymentForm')
+                                  ..setAttribute('method', "POST")
+                                  ..setAttribute('action',
+                                      "https://demo.b2biz.co.in/ws/payment")
+                                  ..setAttribute('target', '_self');
+
+                            final walletClientCodeInput =
+                                web.document.createElement('input')
+                                  ..setAttribute('type', 'text')
+                                  ..setAttribute('name', 'walletClientCode')
+                                  ..setAttribute('value', 'WT-1474');
+
+                            paymentFormElement
+                                .appendChild(walletClientCodeInput);
+
+                            final walletRequestMessageInput =
+                                web.document.createElement('input')
+                                  ..setAttribute('type', 'text')
+                                  ..setAttribute('name', 'walletRequestMessage')
+                                  ..setAttribute(
+                                    'value',
+                                    encryptedString,
+                                  );
+
+                            paymentFormElement
+                                .appendChild(walletRequestMessageInput);
+
+                            // final submitButton =
+                            //     web.document.createElement('button')
+                            //       ..setAttribute('type', 'submit')
+                            //       ..text = 'Submit';
+
+                            // paymentFormElement.appendChild(submitButton);
+
+                            final paymentForm = web.document.body
+                                    ?.appendChild(paymentFormElement)
+                                as html.FormElement;
+
+                            paymentForm.submit();
                           }
 
                           final paymentStatus =

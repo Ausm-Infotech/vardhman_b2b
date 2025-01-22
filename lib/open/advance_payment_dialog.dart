@@ -26,7 +26,7 @@ class AdvancePaymentDialog extends StatelessWidget {
     return Dialog(
       child: Obx(
         () => Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -36,7 +36,7 @@ class AdvancePaymentDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Text('You are about to initiate a payment of '),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               TextField(
@@ -45,7 +45,7 @@ class AdvancePaymentDialog extends StatelessWidget {
                   invoicesController.rxAdvancePaymentAmount.value =
                       double.tryParse(value) ?? 0;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   label: Text(
                     'Amount',
@@ -55,7 +55,7 @@ class AdvancePaymentDialog extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Align(

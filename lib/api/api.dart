@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,9 +25,9 @@ class Api {
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept': '*/*',
       },
-      sendTimeout: Duration(seconds: 60),
-      connectTimeout: Duration(seconds: 60),
-      receiveTimeout: Duration(minutes: 5),
+      sendTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(minutes: 5),
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),

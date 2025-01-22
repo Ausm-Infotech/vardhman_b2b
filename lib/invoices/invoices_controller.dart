@@ -71,12 +71,12 @@ class InvoicesController extends GetxController
                 .contains(rxInvoiceNumberInput.value) &&
             invoiceInfo.date.isAfter(
               rxFromDate.value.subtract(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ) &&
             invoiceInfo.date.isBefore(
               rxToDate.value.add(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ),
       ),

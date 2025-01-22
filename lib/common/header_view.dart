@@ -32,17 +32,17 @@ class HeaderView extends StatelessWidget {
               children: <Widget>[
                 if (leading != null) leading!,
                 if (title != null) ...[
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: title!,
                   ),
                 ],
-                if (trailing != null) ...[SizedBox(width: 8), trailing!],
+                if (trailing != null) ...[const SizedBox(width: 8), trailing!],
               ],
             ),
           ),
           if (tabBar != null) ...[
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             tabBar!

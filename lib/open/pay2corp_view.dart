@@ -26,22 +26,22 @@ class Pay2corpView extends StatelessWidget {
             useShouldInterceptFetchRequest: true,
             isInspectable: true,
           ),
-          initialUrlRequest: URLRequest(
-            url: WebUri('https://demo.b2biz.co.in/ws/payment'),
-          ),
-          // initialData: InAppWebViewInitialData(
-          //   data: '''<!DOCTYPE html>
-          //         <html lang="en">
-          //         <head></head>
-          //         <body>
-          //             <form hidden method="post" id="form" action="https://demo.b2biz.co.in/ws/payment">
-          //                 <input type="text" name="walletClientCode" value="WT-1474">
-          //                 <input type="text" id="walletRequestMessage" name="walletRequestMessage" value="$walletRequestMessage">
-          //                 <button type="submit">Send Data</button>
-          //             </form>
-          //         </body>
-          //         </html>''',
+          // initialUrlRequest: URLRequest(
+          //   url: WebUri('https://demo.b2biz.co.in/ws/payment'),
           // ),
+          initialData: InAppWebViewInitialData(
+            data: '''<!DOCTYPE html>
+                  <html lang="en">
+                  <head></head>
+                  <body>
+                      <form method="post" id="form" action="https://demo.b2biz.co.in/ws/payment">
+                          <input type="text" id="walletClientCode" name="walletClientCode" value="WT-1474">
+                          <input type="text" id="walletRequestMessage" name="walletRequestMessage" value="$walletRequestMessage">
+                          <button type="submit">Send Data</button>
+                      </form>
+                  </body>
+                  </html>''',
+          ),
           onLoadStart: (controller, url) {
             log('onLoadStart $url');
           },
@@ -49,8 +49,8 @@ class Pay2corpView extends StatelessWidget {
             log('onLoadStop url $url');
 
             if (url.toString().contains('about:blank')) {
-              controller.evaluateJavascript(
-                  source: 'document.getElementById("form").submit();');
+              // controller.evaluateJavascript(
+              //     source: 'document.getElementById("form").submit();');
             } else if (url.toString().contains('returnPGPayment')) {
               Get.back(
                 result: true,

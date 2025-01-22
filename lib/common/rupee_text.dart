@@ -24,7 +24,7 @@ class RupeeText extends StatelessWidget {
       children: <Widget>[
         if (label.isNotEmpty) ...[
           Text(label),
-          SizedBox(
+          const SizedBox(
             width: 8,
           )
         ],
@@ -52,7 +52,7 @@ class RupeeText extends StatelessWidget {
           ),
         ),
         if (discountAmount.isGreaterThan(0)) ...[
-          SizedBox(
+          const SizedBox(
             width: 4,
           ),
           Text(
