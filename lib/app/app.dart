@@ -81,20 +81,24 @@ class App extends StatelessWidget {
         () => loginController.rxIsProcessing.value
             ? Scaffold(
                 body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset('assets/digital-nws.png'),
-                        const SizedBox(
-                          height: 24,
-                        ),
-                        const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation(VardhmanColors.red),
-                        )
-                      ],
+                  child: Center(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 400),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/digital-nws.png'),
+                          const SizedBox(
+                            height: 36,
+                          ),
+                          const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation(VardhmanColors.red),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

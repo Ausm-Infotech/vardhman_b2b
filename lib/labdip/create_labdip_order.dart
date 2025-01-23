@@ -31,7 +31,7 @@ class CreateOrderController extends GetxController {
     }
   ].obs;
 
-  var shadeNumbers = List.generate(9, (index) => 'SWT${index + 1}').obs;
+  final shadeNumbers = List.generate(9, (index) => 'SWT${index + 1}').obs;
 
   var articles = [
     {

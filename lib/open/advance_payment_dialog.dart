@@ -77,7 +77,7 @@ class AdvancePaymentDialog extends StatelessWidget {
                                   "Batch_Number": batchNumber,
                                   "Company": userController
                                       .rxCustomerDetail.value.companyCode,
-                                  "Source_Mobile_Portal": "M",
+                                  "Source_Mobile_Portal": "B",
                                   "Customer_Number": userController
                                       .rxCustomerDetail.value.soldToNumber,
                                   "Receipt_Number": receiptNumber,

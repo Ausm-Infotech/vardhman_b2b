@@ -83,10 +83,10 @@ class LabdipOrderDetails extends StatelessWidget {
                                 Text(catalogItem.brandDesc),
                               ),
                               DataCell(
-                                Text(catalogItem.value3),
+                                Text(catalogItem.ticket),
                               ),
                               DataCell(
-                                Text(catalogItem.value4),
+                                Text(catalogItem.tex),
                               ),
                               DataCell(
                                 Text(shade),

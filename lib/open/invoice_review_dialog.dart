@@ -40,6 +40,9 @@ class InvoiceReviewDialog extends StatelessWidget {
     return Dialog(
       child: Obx(
         () => Container(
+          constraints: BoxConstraints(
+            maxWidth: 600,
+          ),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -78,7 +81,7 @@ class InvoiceReviewDialog extends StatelessWidget {
                               (invoiceInfo) => {
                                 "Batch_Number": batchNumber,
                                 "Company": invoiceInfo.company,
-                                "Source_Mobile_Portal": "M",
+                                "Source_Mobile_Portal": "B",
                                 "Customer_Number": invoiceInfo.customerNumber,
                                 "Invoice_Number": invoiceInfo.invoiceNumber,
                                 "Invoice_Type": invoiceInfo.docType,
@@ -238,7 +241,12 @@ class InvoiceReviewDialog extends StatelessWidget {
                     }
                   },
                 ),
-              )
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              const Text(
+                  'Payment confirmation will be sent via E-mail/SMS in some time.'),
             ],
           ),
         ),

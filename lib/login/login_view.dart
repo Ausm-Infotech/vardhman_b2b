@@ -14,33 +14,39 @@ class LoginView extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Obx(
         () => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset('assets/digital-nws.png'),
-                const SizedBox(
-                  height: 24,
-                ),
-                TextField(
-                  controller: loginController.userIdTextEditingController,
-                  decoration: const InputDecoration(
-                    labelText: 'User ID',
-                    border: OutlineInputBorder(),
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/digital-nws.png',
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                PrimaryButton(
-                  iconData: Icons.login_outlined,
-                  text: 'Login',
-                  onPressed: loginController.rxUserId.value.isEmpty
-                      ? null
-                      : loginController.validateUser,
-                ),
-              ],
+                  const SizedBox(
+                    height: 36,
+                  ),
+                  TextField(
+                    controller: loginController.userIdTextEditingController,
+                    decoration: const InputDecoration(
+                      labelText: 'User ID',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 36,
+                  ),
+                  PrimaryButton(
+                    iconData: Icons.login_outlined,
+                    text: 'Login',
+                    onPressed: loginController.rxUserId.value.isEmpty
+                        ? null
+                        : loginController.validateUser,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

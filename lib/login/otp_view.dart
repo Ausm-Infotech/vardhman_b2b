@@ -14,33 +14,39 @@ class OtpView extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Obx(
         () => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset('assets/digital-nws.png'),
-                const SizedBox(
-                  height: 24,
-                ),
-                TextField(
-                  controller: loginController.otpTextEditingController,
-                  decoration: const InputDecoration(
-                    labelText: 'OTP',
-                    border: OutlineInputBorder(),
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/digital-nws.png',
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                PrimaryButton(
-                  iconData: Icons.check,
-                  text: 'Verify',
-                  onPressed: loginController.rxOtp.value.isEmpty
-                      ? null
-                      : loginController.validateOtp,
-                ),
-              ],
+                  const SizedBox(
+                    height: 36,
+                  ),
+                  TextField(
+                    controller: loginController.otpTextEditingController,
+                    decoration: const InputDecoration(
+                      labelText: 'OTP',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 36,
+                  ),
+                  PrimaryButton(
+                    iconData: Icons.check,
+                    text: 'Verify',
+                    onPressed: loginController.rxOtp.value.isEmpty
+                        ? null
+                        : loginController.validateOtp,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

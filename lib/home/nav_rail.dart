@@ -5,6 +5,7 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
+import 'package:vardhman_b2b/user/user_controller.dart';
 
 class NavRail extends StatelessWidget {
   const NavRail({
@@ -126,42 +127,7 @@ class NavRail extends StatelessWidget {
                 iconData: Icons.logout,
                 text: 'Logout',
                 onPressed: () async {
-                  // final paymentFormElement = web.document.createElement('form')
-                  //   ..setAttribute('id', 'paymentFormId')
-                  //   ..setAttribute('method', "POST")
-                  //   ..setAttribute(
-                  //       'action', "https://demo.b2biz.co.in/ws/payment")
-                  //   ..setAttribute('target', '_blank');
-
-                  // final walletClientCodeInput =
-                  //     web.document.createElement('input')
-                  //       ..setAttribute('type', 'text')
-                  //       ..setAttribute('id', 'walletClientCode')
-                  //       ..setAttribute('value', 'WT-1474');
-
-                  // paymentFormElement.appendChild(walletClientCodeInput);
-
-                  // final walletRequestMessageInput =
-                  //     web.document.createElement('input')
-                  //       ..setAttribute('type', 'text')
-                  //       ..setAttribute('id', 'walletRequestMessage')
-                  //       ..setAttribute(
-                  //         'value',
-                  //         '',
-                  //       );
-
-                  // paymentFormElement.appendChild(walletRequestMessageInput);
-
-                  // final submitButton = web.document.createElement('button')
-                  //   ..setAttribute('type', 'submit')
-                  //   ..text = 'Submit';
-
-                  // paymentFormElement.appendChild(submitButton);
-
-                  // final paymentForm = web.document.body
-                  //     ?.appendChild(paymentFormElement) as html.FormElement;
-
-                  // paymentForm.submit();
+                  Get.find<UserController>(tag: 'userController').logOut();
                 },
               ),
             ],

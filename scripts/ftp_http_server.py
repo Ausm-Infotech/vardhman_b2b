@@ -11,7 +11,7 @@ FTP_PASS = 'Nov#2021'
 FTP_DIRECTORY = ''
 HTTP_PORT = 8080
 USERNAME = 'arjun'
-PASSWORD = 'Kajrare@1'
+PASSWORD = 'arjun'
 
 def get_ftp_files(directory):
     """Fetches the list of files and directories from the FTP server."""

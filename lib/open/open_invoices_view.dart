@@ -266,24 +266,23 @@ class OpenInvoicesView extends StatelessWidget {
                           border: const OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yyyy').format(
-                            invoicesController.rxFromDate.value,
+                            invoicesController.rxInvoiceFromDate.value,
                           ),
                           prefixStyle: TextStyle(
-                            color: invoicesController.rxFromDate.value
+                            color: invoicesController.rxInvoiceFromDate.value
                                     .isAtSameMomentAs(oldestDateTime)
                                 ? Colors.white
                                 : VardhmanColors.darkGrey,
                           ),
                         ),
                         dateFormat: DateFormat('d MMM yyyy'),
-                        firstDate: invoicesController.rxFirstDate.value,
-                        lastDate: invoicesController.rxToDate.value,
-                        value: invoicesController.rxFromDate.value,
+                        firstDate:
+                            invoicesController.rxEarliestInvoiceDate.value,
+                        lastDate: invoicesController.rxInvoiceToDate.value,
+                        value: invoicesController.rxInvoiceFromDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            invoicesController.rxFromDate.value = date;
-
-                            invoicesController.refreshInvoices();
+                            invoicesController.rxInvoiceFromDate.value = date;
                           }
                         },
                       ),
@@ -300,23 +299,21 @@ class OpenInvoicesView extends StatelessWidget {
                           border: const OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yyyy').format(
-                            invoicesController.rxToDate.value,
+                            invoicesController.rxInvoiceToDate.value,
                           ),
                           prefixStyle: const TextStyle(
                             color: VardhmanColors.darkGrey,
                           ),
                         ),
                         dateFormat: DateFormat('d MMM yyyy'),
-                        firstDate: invoicesController.rxFromDate.value,
+                        firstDate: invoicesController.rxInvoiceFromDate.value,
                         lastDate: DateTime.now(),
-                        value: invoicesController.rxToDate.value,
+                        value: invoicesController.rxInvoiceToDate.value,
                         initialPickerDateTime:
-                            invoicesController.rxToDate.value,
+                            invoicesController.rxInvoiceToDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            invoicesController.rxToDate.value = date;
-
-                            invoicesController.refreshInvoices();
+                            invoicesController.rxInvoiceToDate.value = date;
                           }
                         },
                       ),
@@ -328,7 +325,9 @@ class OpenInvoicesView extends StatelessWidget {
                       text: '',
                       onPressed: invoicesController.hasFilters
                           ? null
-                          : invoicesController.clearFilters,
+                          : () async {
+                              invoicesController.clearOpenFilters();
+                            },
                       iconData: FontAwesomeIcons.arrowRotateLeft,
                     ),
                   ],

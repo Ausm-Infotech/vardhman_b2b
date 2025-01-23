@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
@@ -15,6 +16,21 @@ import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
 
 class Api {
+  static final _fileDownloadDio = Dio(
+    BaseOptions(
+      baseUrl: 'http://localhost:8080',
+      headers: {
+        'Authorization': 'Basic YXJqdW46YXJqdW4=',
+        'Accept': 'application/pdf',
+      },
+      sendTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(minutes: 5),
+      validateStatus: (status) => true,
+      receiveDataWhenStatusError: true,
+    ),
+  );
+
   static final _dio = Dio(
     BaseOptions(
       baseUrl: 'http://172.22.250.11:7082/jderest',
@@ -383,26 +399,11 @@ class Api {
               brandDesc: itemCatalogInfoData['Brand_Desc'],
               substrate: itemCatalogInfoData['Substrate'],
               substrateDesc: itemCatalogInfoData['Substrate_Desc'],
-              value1: itemCatalogInfoData['Value_1'],
-              value2: itemCatalogInfoData['Value_2'],
-              value3: itemCatalogInfoData['Value_3'],
-              value4: itemCatalogInfoData['Value_4'],
-              value5: itemCatalogInfoData['Value_5'],
-              value6: itemCatalogInfoData['Value_6'],
-              value7: itemCatalogInfoData['Value_7'],
-              value8: itemCatalogInfoData['Value_8'],
-              value9: itemCatalogInfoData['Value_9'],
-              value10: itemCatalogInfoData['Value_10'],
-              text1: itemCatalogInfoData['Text_1'],
-              text2: itemCatalogInfoData['Text_2'],
-              text3: itemCatalogInfoData['Text_3'],
-              text4: itemCatalogInfoData['Text_4'],
-              text5: itemCatalogInfoData['Text_5'],
-              text6: itemCatalogInfoData['Text_6'],
-              text7: itemCatalogInfoData['Text_7'],
-              text8: itemCatalogInfoData['Text_8'],
-              text9: itemCatalogInfoData['Text_9'],
-              text10: itemCatalogInfoData['Text_10'],
+              count: itemCatalogInfoData['Value_1'],
+              length: itemCatalogInfoData['Value_2'],
+              ticket: itemCatalogInfoData['Value_3'],
+              tex: itemCatalogInfoData['Value_4'],
+              variant: itemCatalogInfoData['Value_5'],
             ),
           );
         }
@@ -916,36 +917,27 @@ class Api {
     Function(int, int, double)? onReceiveProgress,
   }) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final localPath =
-          '${directory.path}/${invoiceNumber}_$invoiceType-INVOICE.pdf';
-      final localFile = File(localPath);
+      final fileName = '${invoiceNumber}_$invoiceType.pdf';
 
-      if (await localFile.exists()) {
-        return await localFile.readAsBytes();
-      }
+      // final response = await _fileDownloadDio.get(
+      //   '/CAMSInvoicing/$fileName',
+      //   options: Options(responseType: ResponseType.bytes),
+      // );
 
-      final ftpClient = FtpClient(
-        socketInitOptions: ftpSocketInitOptions,
-        authOptions: ftpAuthOptions,
-        logCallback: print,
+      await FileSaver.instance.saveFile(
+        name: fileName,
+        link: LinkDetails(
+          // headers: {"Authorization": 'Basic YXJqdW46YXJqdW4='},
+          link: '/download/CAMSInvoicing/$fileName',
+        ),
+        dioClient: _fileDownloadDio,
       );
 
-      await ftpClient.connect();
+      // final fileData = response.data;
 
-      final file =
-          ftpClient.getFile('/CAMSInvoicing/${invoiceNumber}_$invoiceType.pdf');
+      // await localFile.writeAsBytes(fileData);
 
-      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
-        file,
-        onReceiveProgress: onReceiveProgress,
-      );
-
-      await ftpClient.disconnect();
-
-      await localFile.writeAsBytes(fileData);
-
-      return Uint8List.fromList(fileData);
+      // return Uint8List.fromList(fileData);
     } catch (e) {
       log('downloadInvoice error - $e');
     }

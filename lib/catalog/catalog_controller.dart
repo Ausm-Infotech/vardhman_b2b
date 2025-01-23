@@ -44,7 +44,7 @@ class CatalogController extends GetxController
         final length = lengthEditingController.text.trim().toLowerCase();
         final article = articleTextEditingController.text.trim().toLowerCase();
 
-        return item.value2.toLowerCase().contains(length) &&
+        return item.length.toLowerCase().contains(length) &&
             item.substrateDesc.toLowerCase().contains(subStrate) &&
             item.brandDesc.toLowerCase().contains(brandName) &&
             item.article.toLowerCase().contains(article);

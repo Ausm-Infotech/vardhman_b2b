@@ -9,15 +9,19 @@ class InvoicesController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final _userController = Get.find<UserController>(tag: 'userController');
 
-  final _rxFilteredinvoiceInfos = RxList<InvoiceInfo>();
+  final _rxInvoiceInfos = RxList<InvoiceInfo>();
 
-  final _allInvoices = <InvoiceInfo>[];
+  final rxEarliestInvoiceDate = oldestDateTime.obs;
 
-  final rxFirstDate = oldestDateTime.obs;
+  final rxInvoiceFromDate = oldestDateTime.obs;
 
-  final rxFromDate = oldestDateTime.obs;
+  final rxInvoiceToDate = DateTime.now().obs;
 
-  final rxToDate = DateTime.now().obs;
+  final rxEarliestReceiptDate = oldestDateTime.obs;
+
+  final rxReceiptFromDate = oldestDateTime.obs;
+
+  final rxReceiptToDate = DateTime.now().obs;
 
   final rxInvoiceNumberInput = ''.obs;
 
@@ -45,47 +49,16 @@ class InvoicesController extends GetxController
   Future<void> init() async {
     _userController.rxCustomerDetail.listenAndPump(
       (_) async {
-        await clearFilters();
+        await refreshInvoices();
 
-        rxFirstDate.value = _allInvoices.first.date;
+        clearOpenFilters();
 
-        rxFromDate.value = _allInvoices.first.date;
+        clearPaidFilters();
       },
-    );
-
-    rxInvoiceNumberInput.listenAndPump(
-      (_) {
-        filterInvoices();
-      },
-    );
-  }
-
-  void filterInvoices() {
-    _rxFilteredinvoiceInfos.clear();
-
-    _rxFilteredinvoiceInfos.addAll(
-      _allInvoices.where(
-        (invoiceInfo) =>
-            invoiceInfo.invoiceNumber
-                .toString()
-                .contains(rxInvoiceNumberInput.value) &&
-            invoiceInfo.date.isAfter(
-              rxFromDate.value.subtract(
-                const Duration(days: 1),
-              ),
-            ) &&
-            invoiceInfo.date.isBefore(
-              rxToDate.value.add(
-                const Duration(days: 1),
-              ),
-            ),
-      ),
     );
   }
 
   Future<void> refreshInvoices() async {
-    _allInvoices.clear();
-
     final customerSoldToNumber =
         _userController.rxCustomerDetail.value.soldToNumber;
 
@@ -100,75 +73,65 @@ class InvoicesController extends GetxController
 
       final processedInvoiceInfos = invoiceInfos.map(
         (invoiceInfo) {
-          InvoiceInfo invoiceInfoWithStatusAndDiscount =
+          InvoiceInfo processedInvoiceInfo =
               getInvoiceInfoWithStatusAndDiscount(invoiceInfo);
 
-          if (invoicesInProcessing.contains(invoiceInfo.invoiceNumber)) {
-            return invoiceInfoWithStatusAndDiscount.copyWith(
+          if (invoiceInfo.isOpen &&
+              invoicesInProcessing.contains(invoiceInfo.invoiceNumber)) {
+            processedInvoiceInfo = processedInvoiceInfo.copyWith(
               status: InvoiceStatus.processing,
             );
-          } else {
-            return invoiceInfoWithStatusAndDiscount;
           }
+
+          return processedInvoiceInfo;
         },
-      );
+      ).toList();
 
-      _allInvoices.addAll(
-        processedInvoiceInfos,
-      );
+      _rxInvoiceInfos.clear();
 
-      _allInvoices.sort(
-        (a, b) => a.discountDueDate.compareTo(b.discountDueDate),
-      );
+      _rxInvoiceInfos.addAll(processedInvoiceInfos);
 
-      filterInvoices();
+      rxEarliestInvoiceDate.value = openInvoices.first.date;
+
+      rxEarliestReceiptDate.value = paidInvoices.last.receiptDate;
+    } else {
+      _rxInvoiceInfos.clear();
+
+      rxEarliestInvoiceDate.value = oldestDateTime;
+
+      rxEarliestReceiptDate.value = oldestDateTime;
     }
   }
 
-  List<InvoiceInfo> get openInvoices => _rxFilteredinvoiceInfos
-      .where(
-        (invoiceInfo) => invoiceInfo.status != InvoiceStatus.paid,
-      )
-      .toList();
-
-  List<InvoiceInfo> get creditNotes => _rxFilteredinvoiceInfos
+  List<InvoiceInfo> get creditNotes => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.creditNote,
       )
       .toList();
 
-  List<InvoiceInfo> get overdueInvoices => _rxFilteredinvoiceInfos
+  List<InvoiceInfo> get overdueInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.overdue,
       )
       .toList();
 
-  List<InvoiceInfo> get notDueInvoices => _rxFilteredinvoiceInfos
+  List<InvoiceInfo> get notDueInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.notDue,
       )
       .toList();
 
-  List<InvoiceInfo> get discountedInvoices => _rxFilteredinvoiceInfos
+  List<InvoiceInfo> get discountedInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.discounted,
       )
       .toList();
 
-  List<InvoiceInfo> get processingInvoices => _rxFilteredinvoiceInfos
+  List<InvoiceInfo> get processingInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.processing,
       )
       .toList();
-
-  List<InvoiceInfo> get newToOldPaidInvoices => _rxFilteredinvoiceInfos
-      .where(
-        (invoiceInfo) => invoiceInfo.status == InvoiceStatus.paid,
-      )
-      .toList()
-    ..sort(
-      (a, b) => b.date.compareTo(a.date),
-    );
 
   void addInvoiceToSelected(InvoiceInfo invoiceInfo) {
     if (!rxSelectedInvoiceInfos.contains(invoiceInfo)) {
@@ -184,7 +147,7 @@ class InvoicesController extends GetxController
     rxSelectedInvoiceInfos.remove(invoiceInfo);
   }
 
-  double get totalOverdueAmount => _allInvoices
+  double get totalOverdueAmount => _rxInvoiceInfos
       .fold(
         0.0,
         (previousValue, invoiceInfo) =>
@@ -195,21 +158,24 @@ class InvoicesController extends GetxController
       )
       .toPrecision(2);
 
-  double get totalOutstandingAmount => _allInvoices
+  List<InvoiceInfo> get openInvoices => _rxInvoiceInfos
+      .where((invoiceInfo) => invoiceInfo.status != InvoiceStatus.paid)
+      .toList()
+    ..sort(
+      (a, b) => a.date.compareTo(b.date),
+    );
+
+  double get totalOpenAmount => openInvoices
+      .where(
+        (invoiceInfo) => invoiceInfo.status != InvoiceStatus.processing,
+      )
       .fold(
         0.0,
         (previousValue, invoiceInfo) =>
             previousValue +
-            (invoiceInfo.status != InvoiceStatus.paid
-                ? invoiceInfo.openAmount
-                : 0),
-      )
-      .toPrecision(2);
-
-  double get totalOpenAmount => openInvoices
-      .fold(
-        0.0,
-        (previousValue, invoiceInfo) => previousValue + invoiceInfo.openAmount,
+            (invoiceInfo.status == InvoiceStatus.discounted
+                ? invoiceInfo.discountAmount
+                : invoiceInfo.openAmount),
       )
       .toPrecision(2);
 
@@ -223,7 +189,7 @@ class InvoicesController extends GetxController
   double get selectedDiscountedAmount => rxSelectedInvoiceInfos.fold(
         0.0,
         (previousValue, invoiceInfo) {
-          if (invoiceInfo.discountAmount.isGreaterThan(0)) {
+          if (invoiceInfo.status == InvoiceStatus.discounted) {
             return previousValue + invoiceInfo.discountAmount;
           } else {
             return previousValue + invoiceInfo.openAmount;
@@ -233,21 +199,78 @@ class InvoicesController extends GetxController
 
   bool get hasFilters =>
       areDatesEqual(
-        rxFromDate.value,
-        rxFirstDate.value,
+        rxInvoiceFromDate.value,
+        rxEarliestInvoiceDate.value,
       ) &&
-      areDatesEqual(rxToDate.value, DateTime.now()) &&
+      areDatesEqual(rxInvoiceToDate.value, DateTime.now()) &&
       rxInvoiceNumberInput.value.isEmpty;
 
-  Future<void> clearFilters() async {
-    rxFromDate.value = rxFirstDate.value;
+  void clearOpenFilters() {
+    rxInvoiceFromDate.value = rxEarliestInvoiceDate.value;
 
-    rxToDate.value = DateTime.now();
+    rxInvoiceToDate.value = DateTime.now();
 
     rxInvoiceNumberInput.value = '';
 
     invoiceNumberTextEditingController.clear();
-
-    await refreshInvoices();
   }
+
+  void clearPaidFilters() {
+    rxReceiptFromDate.value = rxEarliestReceiptDate.value;
+
+    rxReceiptToDate.value = DateTime.now();
+
+    rxInvoiceNumberInput.value = '';
+
+    invoiceNumberTextEditingController.clear();
+  }
+
+  List<InvoiceInfo> get paidInvoices => _rxInvoiceInfos
+      .where((invoiceInfo) => invoiceInfo.status == InvoiceStatus.paid)
+      .toList()
+    ..sort(
+      (a, b) => b.receiptDate.compareTo(a.receiptDate),
+    );
+
+  List<InvoiceInfo> get filteredPaidInvoices {
+    List<InvoiceInfo> filteredInvoices = paidInvoices
+        .where(
+          (invoiceInfo) =>
+              invoiceInfo.invoiceNumber
+                  .toString()
+                  .contains(rxInvoiceNumberInput.value) &&
+              invoiceInfo.receiptDate.isAfter(
+                rxReceiptFromDate.value.subtract(
+                  Duration(days: 1),
+                ),
+              ) &&
+              invoiceInfo.receiptDate.isBefore(
+                rxReceiptToDate.value.add(
+                  Duration(days: 1),
+                ),
+              ),
+        )
+        .toList();
+
+    return filteredInvoices;
+  }
+
+  List<InvoiceInfo> get filteredOpenInvoices => openInvoices
+      .where(
+        (invoiceInfo) =>
+            invoiceInfo.invoiceNumber
+                .toString()
+                .contains(rxInvoiceNumberInput.value) &&
+            invoiceInfo.date.isAfter(
+              rxInvoiceFromDate.value.subtract(
+                Duration(days: 1),
+              ),
+            ) &&
+            invoiceInfo.date.isBefore(
+              rxInvoiceToDate.value.add(
+                Duration(days: 1),
+              ),
+            ),
+      )
+      .toList();
 }

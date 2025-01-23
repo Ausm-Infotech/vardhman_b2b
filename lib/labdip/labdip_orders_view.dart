@@ -2,7 +2,9 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
+import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/labdip/create_labdip_order.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
@@ -18,18 +20,28 @@ class LabdipOrdersView extends StatelessWidget {
     return Obx(
       () => Column(
         children: [
-          PrimaryButton(
-            text: 'New Order',
-            onPressed: () async {
-              Get.dialog(CreateOrderView());
-            },
+          HeaderView(
+            leading: SecondaryButton(
+              iconData: Icons.refresh,
+              text: 'Refresh',
+              onPressed: ordersController.refreshOrders,
+            ),
+            title: const Text(
+              'Labdip Orders',
+              textAlign: TextAlign.center,
+            ),
+            trailing: PrimaryButton(
+              text: 'New Order',
+              onPressed: () async {
+                Get.dialog(CreateOrderView());
+              },
+            ),
           ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
               child: DataTable2(
                 showCheckboxColumn: false,
