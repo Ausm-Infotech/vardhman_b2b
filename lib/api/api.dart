@@ -7,6 +7,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
+import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart' as api;
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
@@ -488,6 +489,61 @@ class Api {
     }
 
     return false;
+  }
+
+  static Future<List<BuyerInfo>> fetchBuyerInfos() async {
+    final buyerInfos = <BuyerInfo>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.KY|F00092.RMK|F00092.RMK2|F00092.RMK3",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "BY", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "BY", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+
+        for (var row in rowset) {
+          buyerInfos.add(
+            BuyerInfo(
+              code: row['F00092_KY'],
+              firstLightSource: row['F00092_RMK'],
+              secondLightSource: row['F00092_RMK2'],
+              name: row['F00092_RMK3'],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchBuyerInfos error - $e');
+    }
+
+    return buyerInfos;
   }
 
   static Future<List<int>> fetchInvoicesInProcessing(

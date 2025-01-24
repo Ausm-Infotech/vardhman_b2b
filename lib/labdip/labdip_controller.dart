@@ -1,111 +1,200 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vardhman_b2b/api/api.dart';
+import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
 
 class LabdipController extends GetxController {
   final rxMerchandiser = ''.obs;
 
+  final rxColor = ''.obs;
+
+  final rxShade = ''.obs;
+
   final rxBuyer = ''.obs;
+
+  final rxBuyerInfo = Rxn<BuyerInfo>();
 
   final rxFirstLightSource = ''.obs;
 
   final rxSecondLightSource = ''.obs;
 
-  final rxColor = ''.obs;
-
-  final rxShade = ''.obs;
-
   final rxSubstrate = ''.obs;
-
-  final rxTex = ''.obs;
-
-  final rxBrand = ''.obs;
-
-  final rxArticle = ''.obs;
 
   final rxTicket = ''.obs;
 
-  final rxRemarks = ''.obs;
+  final rxTex = ''.obs;
 
-  final merchandiserTextController = TextEditingController();
+  final rxArticle = ''.obs;
 
-  final buyerTextController = TextEditingController();
+  final rxBrand = ''.obs;
 
-  final firstLightSourceTextController = TextEditingController();
-
-  final secondLightSourceTextController = TextEditingController();
-
-  final colorTextController = TextEditingController();
-
-  final shadeTextController = TextEditingController();
-
-  final substrateTextController = TextEditingController();
-
-  final texTextController = TextEditingController();
-
-  final brandTextController = TextEditingController();
-
-  final articleTextController = TextEditingController();
-
-  final ticketTextController = TextEditingController();
-
-  final remarksTextController = TextEditingController();
+  final rxRemark = ''.obs;
 
   final lapdipOrderLines = <LabdipOrderLine>[].obs;
 
   final catalogController = Get.find<CatalogController>();
 
+  final rxBuyerInfos = <BuyerInfo>[].obs;
+
+  LabdipController() {
+    Api.fetchBuyerInfos().then(
+      (buyerInfos) => rxBuyerInfos.addAll(buyerInfos),
+    );
+
+    rxBuyer.listen(
+      (buyer) {
+        if (buyer.isNotEmpty) {
+          final buyerInfo =
+              rxBuyerInfos.firstWhere((buyerInfo) => buyerInfo.name == buyer);
+
+          rxFirstLightSource.value = buyerInfo.firstLightSource;
+
+          rxSecondLightSource.value = buyerInfo.secondLightSource;
+        } else {
+          rxFirstLightSource.value = '';
+
+          rxSecondLightSource.value = '';
+        }
+      },
+    );
+  }
+
+  bool get canAddOrderLine =>
+      rxMerchandiser.value.isNotEmpty &&
+      rxColor.value.isNotEmpty &&
+      rxShade.value.isNotEmpty &&
+      rxBuyer.value.isNotEmpty &&
+      rxFirstLightSource.value.isNotEmpty &&
+      rxSecondLightSource.value.isNotEmpty &&
+      rxSubstrate.value.isNotEmpty &&
+      rxTicket.value.isNotEmpty &&
+      rxTex.value.isNotEmpty &&
+      rxArticle.value.isNotEmpty &&
+      rxBrand.value.isNotEmpty &&
+      rxRemark.value.isNotEmpty;
+
   void addLapdipOrderLine() {
     final labdipOrderLine = LabdipOrderLine(
-      merchandiser: merchandiserTextController.text,
-      buyer: buyerTextController.text,
-      firstLightSource: firstLightSourceTextController.text,
-      secondLightSource: secondLightSourceTextController.text,
-      color: colorTextController.text,
-      shade: shadeTextController.text,
+      merchandiser: rxMerchandiser.value,
+      color: rxColor.value,
+      shade: rxShade.value,
+      buyer: rxBuyer.value,
+      firstLightSource: rxFirstLightSource.value,
+      secondLightSource: rxSecondLightSource.value,
       substrate: rxSubstrate.value,
-      tex: texTextController.text,
-      brand: brandTextController.text,
+      ticket: rxTicket.value,
+      tex: rxTex.value,
       article: rxArticle.value,
-      ticket: ticketTextController.text,
-      remarks: remarksTextController.text,
-      lineNumber: lapdipOrderLines.length.toString(),
+      brand: rxBrand.value,
+      remark: rxRemark.value,
     );
 
     lapdipOrderLines.add(labdipOrderLine);
   }
 
-  List<String> get filteredBrands => catalogController.industryItems
+  BuyerInfo? get buyerInfo =>
+      rxBuyerInfos.firstWhere((buyerInfo) => buyerInfo.name == rxBuyer.value);
+
+  List<String> get uniqueFilteredArticles => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            itemCatalogInfo.article.contains(rxArticle.value) &&
-            itemCatalogInfo.substrateDesc.contains(rxSubstrate.value) &&
-            itemCatalogInfo.tex.contains(texTextController.text) &&
-            itemCatalogInfo.ticket.contains(ticketTextController.text),
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                : true) &&
+            (rxSubstrate.value.isNotEmpty
+                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                : true) &&
+            (rxTex.value.isNotEmpty
+                ? itemCatalogInfo.tex == (rxTex.value)
+                : true) &&
+            (rxTicket.value.isNotEmpty
+                ? itemCatalogInfo.ticket == (rxTicket.value)
+                : true),
       )
-      .map((e) => e.brandDesc)
+      .map((e) => e.article)
+      .toSet()
       .toList();
 
-  List<String> get filteredArticles => catalogController.industryItems
+  List<String> get uniqueFilteredBrands => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            itemCatalogInfo.brand.contains(brandTextController.text) &&
-            itemCatalogInfo.substrateDesc.contains(rxSubstrate.value) &&
-            itemCatalogInfo.tex.contains(texTextController.text) &&
-            itemCatalogInfo.ticket.contains(ticketTextController.text),
+            (rxArticle.value.isNotEmpty
+                ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxSubstrate.value.isNotEmpty
+                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                : true) &&
+            (rxTex.value.isNotEmpty
+                ? itemCatalogInfo.tex == (rxTex.value)
+                : true) &&
+            (rxTicket.value.isNotEmpty
+                ? itemCatalogInfo.ticket == (rxTicket.value)
+                : true),
       )
       .map((e) => e.brandDesc)
+      .toSet()
       .toList();
 
-  List<String> get filteredSubstrates => catalogController.industryItems
+  List<String> get uniqueFilteredSubstrates => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            itemCatalogInfo.brandDesc.contains(brandTextController.text) &&
-            itemCatalogInfo.article.contains(rxArticle.value) &&
-            itemCatalogInfo.tex.contains(texTextController.text) &&
-            itemCatalogInfo.ticket.contains(ticketTextController.text),
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                : true) &&
+            (rxArticle.value.isNotEmpty
+                ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxTex.value.isNotEmpty
+                ? itemCatalogInfo.tex == (rxTex.value)
+                : true) &&
+            (rxTicket.value.isNotEmpty
+                ? itemCatalogInfo.ticket == (rxTicket.value)
+                : true),
       )
-      .map((e) => e.brandDesc)
+      .map((e) => e.substrateDesc)
+      .toSet()
       .toList();
+
+  List<String> get uniqueFilteredTexs => catalogController.industryItems
+      .where(
+        (itemCatalogInfo) =>
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                : true) &&
+            (rxArticle.value.isNotEmpty
+                ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxSubstrate.value.isNotEmpty
+                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                : true) &&
+            (rxTicket.value.isNotEmpty
+                ? itemCatalogInfo.ticket == (rxTicket.value)
+                : true),
+      )
+      .map((e) => e.tex)
+      .toSet()
+      .toList();
+
+  List<String> get uniqueFilteredTickets => catalogController.industryItems
+      .where(
+        (itemCatalogInfo) =>
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                : true) &&
+            (rxArticle.value.isNotEmpty
+                ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxSubstrate.value.isNotEmpty
+                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                : true) &&
+            (rxTex.value.isNotEmpty
+                ? itemCatalogInfo.tex == (rxTex.value)
+                : true),
+      )
+      .map((e) => e.ticket)
+      .toSet()
+      .toList();
+
+  List<String> shades = List.generate(9, (index) => 'SWT${index + 1}');
 }

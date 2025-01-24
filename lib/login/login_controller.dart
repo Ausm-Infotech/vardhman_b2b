@@ -10,6 +10,7 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/login/otp_view.dart';
 import 'package:vardhman_b2b/orders/order_entry_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
@@ -211,46 +212,65 @@ class LoginController extends GetxController {
       );
     }
 
-    Get.put(
-      UserController(
-        userDetail: userDetail,
-        customerDetail: customerDetail ?? userDetail,
-        relatedCustomers: _relatedCustomers,
-      ),
-      permanent: true,
-      tag: 'userController',
-    );
+    if (!Get.isRegistered<UserController>(tag: 'userController')) {
+      Get.put(
+        UserController(
+          userDetail: userDetail,
+          customerDetail: customerDetail ?? userDetail,
+          relatedCustomers: _relatedCustomers,
+        ),
+        permanent: true,
+        tag: 'userController',
+      );
+    }
 
-    Get.put(
-      OrderReviewController(),
-      permanent: true,
-    );
+    if (!Get.isRegistered<OrderReviewController>()) {
+      Get.put(
+        OrderReviewController(),
+        permanent: true,
+      );
+    }
 
-    Get.put(
-      OrdersController(),
-      permanent: true,
-    );
+    if (!Get.isRegistered<OrdersController>()) {
+      Get.put(
+        OrdersController(),
+        permanent: true,
+      );
+    }
 
-    Get.put(
-      InvoicesController(),
-      permanent: true,
-    );
+    if (!Get.isRegistered<InvoicesController>()) {
+      Get.put(
+        InvoicesController(),
+        permanent: true,
+      );
+    }
 
-    Get.put(
-      CatalogController(),
-      permanent: true,
-    );
+    if (!Get.isRegistered<CatalogController>()) {
+      Get.put(
+        CatalogController(),
+        permanent: true,
+      );
+    }
 
-    Get.put(
-      HomeController(),
-      permanent: true,
-    );
+    if (!Get.isRegistered<HomeController>()) {
+      Get.put(
+        HomeController(),
+        permanent: true,
+      );
+    }
 
-    Get.snackbar(
-      '',
-      'Logged in as ${userDetail.name}',
-      colorText: VardhmanColors.green,
-    );
+    if (!Get.isRegistered<LabdipController>()) {
+      Get.put(
+        LabdipController(),
+        permanent: true,
+      );
+    }
+
+    // Get.snackbar(
+    //   '',
+    //   'Logged in as ${userDetail.name}',
+    //   colorText: VardhmanColors.green,
+    // );
 
     rxUserDetail.value = userDetail;
   }

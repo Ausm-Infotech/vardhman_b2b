@@ -79,7 +79,9 @@ class _SecondaryButtonState extends State<SecondaryButton> {
                     ? const SizedBox(width: 0.0, height: 0.0)
                     : Icon(
                         widget.iconData,
-                        color: VardhmanColors.darkGrey,
+                        color: widget.onPressed != null
+                            ? VardhmanColors.darkGrey
+                            : Colors.white,
                         size: 18,
                       ),
             if ((widget.iconData != null || isProcessing) &&

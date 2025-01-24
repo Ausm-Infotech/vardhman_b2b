@@ -10,8 +10,7 @@ class LabdipOrderLine {
   final String brand;
   final String article;
   final String ticket;
-  final String remarks;
-  final String lineNumber;
+  final String remark;
 
   LabdipOrderLine({
     required this.merchandiser,
@@ -25,7 +24,6 @@ class LabdipOrderLine {
     required this.brand,
     required this.article,
     required this.ticket,
-    required this.remarks,
-    required this.lineNumber,
+    required this.remark,
   });
 }
