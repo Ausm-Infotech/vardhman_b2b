@@ -20,7 +20,7 @@ class CatalogSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
-        margin: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
@@ -28,18 +28,20 @@ class CatalogSearchField extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Text(
-              labelText,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(width: 16),
             Expanded(
               child: SearchField(
+                searchInputDecoration: SearchInputDecoration(
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 0.5,
+                      color: VardhmanColors.dividerGrey,
+                    ),
+                  ),
+                  label: Text(labelText),
+                ),
                 hint: searchList.isNotEmpty
                     ? 'select $labelText'.toLowerCase()
                     : 'no $labelText to select'.toLowerCase(),

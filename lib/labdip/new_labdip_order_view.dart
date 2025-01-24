@@ -123,7 +123,9 @@ class NewLabdipOrderView extends StatelessWidget {
                               text: 'Add Line',
                               onPressed: !labdipController.canAddOrderLine
                                   ? null
-                                  : () async {},
+                                  : () async {
+                                      labdipController.addLapdipOrderLine();
+                                    },
                             ),
                           ),
                           Expanded(

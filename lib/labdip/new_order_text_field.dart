@@ -24,7 +24,7 @@ class NewOrderTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
@@ -32,16 +32,9 @@ class NewOrderTextField extends StatelessWidget {
           width: 0.5,
         ),
       ),
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          Text(
-            labelText,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(width: 16),
           Expanded(
             child: Obx(
               () => TextField(
@@ -56,10 +49,11 @@ class NewOrderTextField extends StatelessWidget {
                   ),
                 ),
                 decoration: InputDecoration(
+                  label: Text(labelText),
                   hintText: hintText,
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(
-                      width: 0.5,
+                      width: 0.1,
                       color: VardhmanColors.dividerGrey,
                     ),
                   ),
@@ -69,7 +63,7 @@ class NewOrderTextField extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
           if (enabled)
             Obx(
               () => SecondaryButton(
