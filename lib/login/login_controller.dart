@@ -72,7 +72,8 @@ class LoginController extends GetxController {
     _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
 
     if (_userDetailsCompanion != null) {
-      // otp = await Api.generateAndSendOtp('9623451355');
+      Api.generateAndSendOtp('9623451355');
+
       otp = '1234';
 
       Get.snackbar(
