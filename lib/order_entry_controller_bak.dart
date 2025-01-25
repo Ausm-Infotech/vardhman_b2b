@@ -5,8 +5,6 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:vardhman_b2b/common/excel_dialog.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/sample_data.dart';
@@ -74,22 +72,9 @@ class OrderEntryController extends GetxController {
 
   final scrollController = ScrollController();
 
-  final speechToText = SpeechToText();
-
   final speechToTextStatus = 'done'.obs;
 
   OrderEntryController() {
-    speechToText.initialize(
-      onError: (errorNotification) {
-        log('Speech error - $errorNotification');
-      },
-      onStatus: (status) {
-        log('Speech status - $status');
-
-        speechToTextStatus.value = status;
-      },
-    );
-
     loadItemData();
 
     articleTextEditingController.addListener(articleEditListener);
@@ -102,99 +87,7 @@ class OrderEntryController extends GetxController {
     quantityFocusNode.addListener(quantityFocusListener);
   }
 
-  Future<void> listen() async {
-    if (canListen()) {
-      if (speechToTextStatus.value == 'listening') {
-        return;
-      } else if (speechToTextStatus.value == 'notListening') {
-        await speechToText.stop();
-      } else if (speechToTextStatus.value == 'done') {
-        final regExp = quantityFocusNode.hasFocus
-            ? RegExp(r'[^0-9]')
-            : RegExp(r'[^a-zA-Z0-9]');
-
-        speechToText.listen(
-          listenOptions: SpeechListenOptions(
-            cancelOnError: true,
-            listenMode: ListenMode.dictation,
-            partialResults: false,
-          ),
-          listenFor: const Duration(seconds: 20),
-          pauseFor: const Duration(seconds: 20),
-          onResult: (result) {
-            final foundAlternates = <String>[];
-
-            for (SpeechRecognitionWords alternate in result.alternates) {
-              log(alternate.recognizedWords);
-
-              final recognizedWords = alternate.recognizedWords
-                  .replaceAll(regExp, '')
-                  .toUpperCase();
-
-              if (suggestions.any(
-                (suggestion) =>
-                    suggestion.toUpperCase().contains(recognizedWords),
-              )) {
-                foundAlternates.add(recognizedWords);
-              }
-            }
-
-            log('Found alternates - ${foundAlternates.toString()}');
-
-            final bestFoundAlternate = foundAlternates.fold(
-              '',
-              (value, element) {
-                return value.length > element.length ? value : element;
-              },
-            );
-
-            final finalResult = bestFoundAlternate.isNotEmpty
-                ? bestFoundAlternate
-                : result.recognizedWords.replaceAll(regExp, '').toUpperCase();
-
-            final shouldFocusNextField = suggestions
-                    .where(
-                      (suggestion) => suggestion.contains(finalResult),
-                    )
-                    .length ==
-                1;
-
-            if (articleFocusNode.hasFocus) {
-              articleTextEditingController.value = TextEditingValue(
-                text: finalResult,
-              );
-
-              if (shouldFocusNextField) {
-                uomFocusNode.requestFocus();
-              }
-            } else if (uomFocusNode.hasFocus) {
-              uomTextEditingController.value = TextEditingValue(
-                text: finalResult,
-              );
-
-              if (shouldFocusNextField) {
-                shadeFocusNode.requestFocus();
-              }
-            } else if (shadeFocusNode.hasFocus) {
-              shadeTextEditingController.value = TextEditingValue(
-                text: finalResult,
-              );
-
-              if (shouldFocusNextField) {
-                quantityFocusNode.requestFocus();
-              }
-            } else if (quantityFocusNode.hasFocus) {
-              quantityTextEditingController.value = TextEditingValue(
-                text: finalResult,
-              );
-            }
-          },
-        );
-      }
-    } else if (speechToTextStatus.value != 'done') {
-      await speechToText.stop();
-    }
-  }
+  Future<void> listen() async {}
 
   void loadItemData() {
     DateTime startTime = DateTime.now();

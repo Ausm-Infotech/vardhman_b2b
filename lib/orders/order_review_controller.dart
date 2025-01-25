@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/orders/order_entry_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class OrderReviewController extends GetxController {
   final _userController = Get.find<UserController>(tag: 'userController');
-
-  final _orderEntryController = Get.find<OrderEntryController>();
 
   final rxOrderNumber = Rxn<int>();
 
@@ -28,71 +26,47 @@ class OrderReviewController extends GetxController {
     );
   }
 
-  Future<void> submit() async {
-    rxIsProcessing.value = true;
+  Future<bool> submitLabdipOrder({
+    required String merchandiserName,
+    required List<LabdipOrderLine> labdipOrderLines,
+  }) async {
+    bool isSubmitted = false;
 
-    final itemQuantityMaps = <Map<String, String>>[];
-
-    for (var article in _orderEntryController.carticleMap.values) {
-      for (var uom in article.uomMap.values) {
-        uom.shadeQuantitiesMap.forEach(
-          (shade, quantity) {
-            itemQuantityMaps.add(
-              {
-                "2nd_Item_Number": getItemNumber(
-                    article: article.name, uom: uom.name, shade: shade),
-                "Quantity_Ordered": quantity.toString(),
-              },
-            );
-          },
-        );
-      }
-    }
-
-    final mappOrderNumber = 'MAPP-${rxOrderNumber.value}';
-
-    final isSubmitted = await Api.submitOrder(
+    isSubmitted = await Api.submitLabdipOrder(
+      b2bOrderNumber: b2bOrderNumber,
+      merchandiserName: merchandiserName,
       branchPlant: _userController.rxDeliveryAddresses
               .firstWhere(
-                (element) => element.deliveryAddressNumber == 0,
+                (userAddress) => userAddress.deliveryAddressNumber == 0,
               )
               .branchPlant ??
           '',
       soldTo: _userController.rxCustomerDetail.value.soldToNumber,
-      shipTo: (_userController.rxDeliveryAddress.value?.deliveryAddressNumber ==
-                  0
-              ? _userController.rxCustomerDetail.value.soldToNumber
-              : _userController.rxDeliveryAddress.value?.deliveryAddressNumber)
-          .toString(),
+      shipTo: _userController.shipTo,
       company: _userController.rxCustomerDetail.value.companyCode,
-      mobileOrderNumber: mappOrderNumber,
-      itemQuantityMaps: itemQuantityMaps,
       orderTakenBy: _userController.rxUserDetail.value.role,
+      labdipOrderLines: labdipOrderLines,
     );
 
     rxIsProcessing.value = false;
 
     if (isSubmitted) {
+      Get.back();
+
       Get.snackbar(
         '',
-        'Order $mappOrderNumber placed successfully!',
+        'Order $b2bOrderNumber placed successfully!',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: VardhmanColors.green,
         colorText: Colors.white,
       );
 
       Api.sendOrderEntrySMS(
-        mappOrderNumber,
+        b2bOrderNumber,
         _userController.rxCustomerDetail.value.mobileNumber,
       );
 
-      _orderEntryController.carticleMap.clear();
-
       fetchOrderNumber();
-
-      Get.back(
-        closeOverlays: true,
-      );
     } else {
       Get.snackbar(
         '',
@@ -102,9 +76,13 @@ class OrderReviewController extends GetxController {
         colorText: Colors.white,
       );
     }
+
+    return isSubmitted;
   }
 
   bool get canSubmit =>
       _userController.rxDeliveryAddress.value != null &&
       rxOrderNumber.value != null;
+
+  String get b2bOrderNumber => 'B2B-${rxOrderNumber.value}';
 }

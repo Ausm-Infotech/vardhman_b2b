@@ -18,22 +18,20 @@ dependencies:
   file_saver: ^0.2.14
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^6.1.5
   font_awesome_flutter: ^10.8.0
   freezed_annotation: ^2.4.4
   get: ^4.6.6
   http: ^1.2.2
   intl: ^0.20.1
-  js: ^0.7.1
+  # js: ^0.7.1
   path_provider: ^2.1.5
   pdfrx: ^1.0.101
   permission_handler: ^11.3.1
   pure_ftp: ^0.7.5
   searchfield: ^1.2.2
   shared_preferences: ^2.3.5
-  speech_to_text: ^7.0.0
   universal_io: ^2.2.2
-  web: ^1.1.0
+  # web: ^1.1.0
 
 dev_dependencies:
   flutter_test:

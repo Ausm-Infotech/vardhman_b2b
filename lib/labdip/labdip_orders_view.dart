@@ -6,6 +6,7 @@ import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/labdip/create_labdip_order.dart';
+import 'package:vardhman_b2b/labdip/new_labdip_order_view.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrdersView extends StatelessWidget {
@@ -33,7 +34,16 @@ class LabdipOrdersView extends StatelessWidget {
             trailing: PrimaryButton(
               text: 'New Order',
               onPressed: () async {
-                Get.dialog(CreateOrderView());
+                Get.dialog(
+                  const Dialog(
+                    insetPadding: EdgeInsets.symmetric(
+                      horizontal: 80,
+                      vertical: 48,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: NewLabdipOrderView(),
+                  ),
+                );
               },
             ),
           ),

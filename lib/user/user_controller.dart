@@ -44,6 +44,10 @@ class UserController extends GetxController {
     _listenRxCustomerDetail();
   }
 
+  String get shipTo => rxDeliveryAddress.value?.deliveryAddressNumber == 0
+      ? rxCustomerDetail.value.soldToNumber
+      : rxDeliveryAddress.value?.deliveryAddressNumber.toString() ?? '';
+
   void _listenRxCustomerDetail() {
     _rxCustomerDetailSubscription = rxCustomerDetail.listenAndPump(
       (customerDetail) async {

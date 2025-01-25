@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -15,6 +16,8 @@ import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
+
+import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
 
 class Api {
   static final _fileDownloadDio = Dio(
@@ -788,37 +791,54 @@ class Api {
     return false;
   }
 
-  static Future<bool> submitOrder({
-    required String mobileOrderNumber,
+  static Future<bool> submitLabdipOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
     required String soldTo,
     required String shipTo,
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<Map<String, String>> itemQuantityMaps,
+    required List<LabdipOrderLine> labdipOrderLines,
   }) async {
+    final payload = {
+      "Detail": labdipOrderLines
+          .map(
+            (labdipOrderLine) => {
+              "BatchNumber": b2bOrderNumber,
+              "Company": company,
+              "SoldTo": soldTo,
+              "ShipTo": shipTo,
+              "BranchPlant": branchPlant,
+              "ItemNumber": getItemNumber(
+                article: labdipOrderLine.article,
+                uom: labdipOrderLine.uom,
+                shade: labdipOrderLine.shade,
+              ),
+              "Quantity": 1,
+              "OrderTakenBy": orderTakenBy,
+              "LineNumber":
+                  (labdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000,
+              "DocumentType": "LD",
+              "SourceFlag": "B",
+              "MerchandiserName": merchandiserName,
+              "LightSourceRemark":
+                  "${labdipOrderLine.firstLightSource} ${labdipOrderLine.secondLightSource}",
+              "ColorRemark":
+                  "${labdipOrderLine.colorName}${labdipOrderLine.comment.isNotEmpty ? '|${labdipOrderLine.comment}' : ''}${labdipOrderLine.lab.isNotEmpty ? '|${labdipOrderLine.lab}' : ''}${labdipOrderLine.requestType.isNotEmpty ? '|${labdipOrderLine.requestType}' : ''}${labdipOrderLine.endUse.isNotEmpty ? '|${labdipOrderLine.endUse}' : ''}",
+              "EndUse": labdipOrderLine.buyerCode,
+              "BillingType": labdipOrderLine.billingType.substring(0, 1),
+            },
+          )
+          .toList(),
+    };
+
+    log(jsonEncode(payload));
+
     try {
       final response = await _dio.post(
         '/orchestrator/ORCH55CreateStagingData',
-        data: {
-          "Detail": itemQuantityMaps
-              .map(
-                (mapEntry) => {
-                  "BatchNumber": mobileOrderNumber,
-                  "Company": company,
-                  "SoldTo": soldTo,
-                  "ShipTo": shipTo,
-                  "BranchPlant": branchPlant,
-                  "ItemNumber": mapEntry['2nd_Item_Number'],
-                  "Quantity": mapEntry['Quantity_Ordered'],
-                  "OrderTakenBy": orderTakenBy,
-                  "LineNumber": (itemQuantityMaps.indexOf(mapEntry) + 1) * 1000,
-                  "DocumentType": "MO",
-                  "SourceFlag": "M"
-                },
-              )
-              .toList(),
-        },
+        data: payload,
       );
 
       if (response.statusCode == 200) {

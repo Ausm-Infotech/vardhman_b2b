@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/labdip/labdip_order_details.dart';
 import 'package:vardhman_b2b/labdip/labdip_orders_view.dart';
-import 'package:vardhman_b2b/labdip/new_labdip_order_view.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipView extends StatelessWidget {
@@ -25,7 +25,7 @@ class LabdipView extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: NewLabdipOrderView(),
+          child: LabdipOrderDetails(),
         ),
       ],
     );

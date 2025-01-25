@@ -1,6 +1,3 @@
-@JS()
-library stringify;
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,18 +8,6 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
-import 'package:js/js.dart';
-import 'dart:html' as html;
-import 'package:web/web.dart' as web;
-
-@JS('JSON.stringify')
-external String stringify(Object obj);
-
-@JS('alert')
-external void alert(String message);
-
-@JS('open')
-external void open(String url, String target);
 
 class InvoiceReviewDialog extends StatelessWidget {
   const InvoiceReviewDialog({
@@ -119,42 +104,42 @@ class InvoiceReviewDialog extends StatelessWidget {
 
                           log('Encrypted String: $encryptedString');
 
-                          if (encryptedString != null) {
-                            final paymentFormElement =
-                                web.document.createElement('form')
-                                  ..setAttribute('id', 'paymentForm')
-                                  ..setAttribute('method', "POST")
-                                  ..setAttribute('action',
-                                      "https://demo.b2biz.co.in/ws/payment")
-                                  ..setAttribute('target', '_self');
+                          // if (encryptedString != null) {
+                          //   final paymentFormElement =
+                          //       web.document.createElement('form')
+                          //         ..setAttribute('id', 'paymentForm')
+                          //         ..setAttribute('method', "POST")
+                          //         ..setAttribute('action',
+                          //             "https://demo.b2biz.co.in/ws/payment")
+                          //         ..setAttribute('target', '_self');
 
-                            final walletClientCodeInput =
-                                web.document.createElement('input')
-                                  ..setAttribute('type', 'text')
-                                  ..setAttribute('name', 'walletClientCode')
-                                  ..setAttribute('value', 'WT-1474');
+                          //   final walletClientCodeInput =
+                          //       web.document.createElement('input')
+                          //         ..setAttribute('type', 'text')
+                          //         ..setAttribute('name', 'walletClientCode')
+                          //         ..setAttribute('value', 'WT-1474');
 
-                            paymentFormElement
-                                .appendChild(walletClientCodeInput);
+                          //   paymentFormElement
+                          //       .appendChild(walletClientCodeInput);
 
-                            final walletRequestMessageInput =
-                                web.document.createElement('input')
-                                  ..setAttribute('type', 'text')
-                                  ..setAttribute('name', 'walletRequestMessage')
-                                  ..setAttribute(
-                                    'value',
-                                    encryptedString,
-                                  );
+                          //   final walletRequestMessageInput =
+                          //       web.document.createElement('input')
+                          //         ..setAttribute('type', 'text')
+                          //         ..setAttribute('name', 'walletRequestMessage')
+                          //         ..setAttribute(
+                          //           'value',
+                          //           encryptedString,
+                          //         );
 
-                            paymentFormElement
-                                .appendChild(walletRequestMessageInput);
+                          //   paymentFormElement
+                          //       .appendChild(walletRequestMessageInput);
 
-                            final paymentForm = web.document.body
-                                    ?.appendChild(paymentFormElement)
-                                as html.FormElement;
+                          //   final paymentForm = web.document.body
+                          //           ?.appendChild(paymentFormElement)
+                          //       as html.FormElement;
 
-                            paymentForm.submit();
-                          }
+                          //   paymentForm.submit();
+                          // }
 
                           // final paymentStatus =
                           //     await Api.getPaymentStatus(receiptNumber);

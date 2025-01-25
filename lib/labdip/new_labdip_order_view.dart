@@ -6,7 +6,10 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/labdip/catalog_search_field.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/labdip/new_order_text_box.dart';
 import 'package:vardhman_b2b/labdip/new_order_text_field.dart';
+import 'package:vardhman_b2b/nav_rail_container.dart';
+import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class NewLabdipOrderView extends StatelessWidget {
   const NewLabdipOrderView({super.key});
@@ -15,117 +18,133 @@ class NewLabdipOrderView extends StatelessWidget {
   Widget build(BuildContext context) {
     final labdipController = Get.find<LabdipController>();
 
+    final OrderReviewController orderReviewController =
+        Get.find<OrderReviewController>();
+
     return Obx(
       () => Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(4),
         child: Column(
           children: <Widget>[
             HeaderView(
               elevation: 0,
               leading: SecondaryButton(
+                wait: false,
                 iconData: Icons.arrow_back_ios_new,
                 text: 'Back',
-                onPressed: () async {},
+                onPressed: () async {
+                  Get.back();
+                },
+              ),
+              title: Text(
+                'New Labdip Order : ${orderReviewController.b2bOrderNumber}',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              trailing: PrimaryButton(
+                text: 'Submit',
+                onPressed: labdipController.submitOrder,
               ),
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                  child: NewOrderTextField(
-                    labelText: 'Merchandiser',
-                    rxString: labdipController.rxMerchandiser,
-                  ),
-                ),
-                Expanded(
-                  child: NewOrderTextField(
-                    labelText: 'Color',
-                    rxString: labdipController.rxColor,
-                  ),
-                ),
-                Expanded(
-                  child: CatalogSearchField(
-                    labelText: 'Shade',
-                    rxString: labdipController.rxShade,
-                    searchList: labdipController.shades,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: CatalogSearchField(
-                    labelText: 'Buyer',
-                    rxString: labdipController.rxBuyer,
-                    searchList: labdipController.rxBuyerInfos
-                        .map((buyerInfo) => buyerInfo.name)
-                        .toList(),
-                  ),
-                ),
-                Expanded(
-                  child: NewOrderTextField(
-                    labelText: 'Light Source 1',
-                    rxString: labdipController.rxFirstLightSource,
-                    enabled: false,
-                  ),
-                ),
-                Expanded(
-                  child: NewOrderTextField(
-                    labelText: 'Light Source 2',
-                    rxString: labdipController.rxSecondLightSource,
-                    enabled: false,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: CatalogSearchField(
-                    labelText: 'Substrate',
-                    rxString: labdipController.rxSubstrate,
-                    searchList: labdipController.uniqueFilteredSubstrates,
-                  ),
-                ),
-                Expanded(
-                  child: CatalogSearchField(
-                    labelText: 'Ticket',
-                    rxString: labdipController.rxTicket,
-                    searchList: labdipController.uniqueFilteredTickets,
-                  ),
-                ),
-                Expanded(
-                  child: CatalogSearchField(
-                    labelText: 'Tex',
-                    rxString: labdipController.rxTex,
-                    searchList: labdipController.uniqueFilteredTexs,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
+                  flex: 2,
                   child: Column(
                     children: <Widget>[
-                      CatalogSearchField(
-                        labelText: 'Brand',
-                        rxString: labdipController.rxBrand,
-                        searchList: labdipController.uniqueFilteredBrands,
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 2,
+                            child: NewOrderTextField(
+                              labelText: 'Merchandiser',
+                              rxString: labdipController.rxMerchandiser,
+                            ),
+                          ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              labelText: 'Billing Type',
+                              rxString: labdipController.rxBillingType,
+                              searchList: labdipController.billingTypes,
+                            ),
+                          ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              labelText: 'Shade',
+                              rxString: labdipController.rxShade,
+                              searchList: labdipController.shades,
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: PrimaryButton(
-                              wait: false,
-                              text: 'Add Line',
-                              onPressed: !labdipController.canAddOrderLine
-                                  ? null
-                                  : () async {
-                                      labdipController.addLapdipOrderLine();
-                                    },
+                          Expanded(
+                            flex: 2,
+                            child: CatalogSearchField(
+                              labelText: 'Buyer',
+                              rxString: labdipController.rxBuyer,
+                              searchList: labdipController.rxBuyerInfos
+                                  .map((buyerInfo) => buyerInfo.name)
+                                  .toList(),
+                            ),
+                          ),
+                          Expanded(
+                            child: NewOrderTextBox(
+                              label: 'Light Source 1',
+                              text: labdipController
+                                      .rxBuyerInfo.value?.firstLightSource ??
+                                  '',
+                            ),
+                          ),
+                          Expanded(
+                            child: NewOrderTextBox(
+                              label: 'Light Source 2',
+                              text: labdipController
+                                      .rxBuyerInfo.value?.secondLightSource ??
+                                  '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 2,
+                            child: CatalogSearchField(
+                              labelText: 'Substrate',
+                              rxString: labdipController.rxSubstrate,
+                              searchList:
+                                  labdipController.uniqueFilteredSubstrates,
+                            ),
+                          ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              labelText: 'Ticket',
+                              rxString: labdipController.rxTicket,
+                              searchList:
+                                  labdipController.uniqueFilteredTickets,
+                            ),
+                          ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              labelText: 'Tex',
+                              rxString: labdipController.rxTex,
+                              searchList: labdipController.uniqueFilteredTexs,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: CatalogSearchField(
+                              labelText: 'Brand',
+                              rxString: labdipController.rxBrand,
+                              searchList: labdipController.uniqueFilteredBrands,
                             ),
                           ),
                           Expanded(
@@ -137,15 +156,79 @@ class NewLabdipOrderView extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            labdipController.rxSelectedLabdipOrderLines.isEmpty
+                                ? PrimaryButton(
+                                    text: 'Add Line',
+                                    onPressed: !labdipController.canAddOrderLine
+                                        ? null
+                                        : () async {
+                                            labdipController
+                                                .addLapdipOrderLine();
+                                          },
+                                  )
+                                : SecondaryButton(
+                                    text: 'Update',
+                                    onPressed: labdipController
+                                                .rxSelectedLabdipOrderLines
+                                                .length ==
+                                            1
+                                        ? () async {
+                                            labdipController
+                                                .updateLapdipOrderLine();
+                                          }
+                                        : null,
+                                  ),
+                            PrimaryButton(
+                              text: 'Delete',
+                              onPressed: labdipController
+                                      .rxSelectedLabdipOrderLines.isEmpty
+                                  ? null
+                                  : () async {
+                                      labdipController.deleteSelectedLines();
+                                    },
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
                 ),
                 Expanded(
-                  child: NewOrderTextField(
-                    labelText: 'Remark',
-                    rxString: labdipController.rxRemark,
-                    minLines: 4,
+                  child: NavRailContainer(
+                    title: 'REMARKS',
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        NewOrderTextField(
+                          labelText: 'Color Name',
+                          rxString: labdipController.rxColor,
+                        ),
+                        CatalogSearchField(
+                          labelText: 'End Use',
+                          rxString: labdipController.rxEndUse,
+                          searchList: labdipController.endUseOptions,
+                        ),
+                        CatalogSearchField(
+                          labelText: 'Request Type',
+                          rxString: labdipController.rxRequestType,
+                          searchList: labdipController.requestTypes,
+                        ),
+                        NewOrderTextField(
+                          labelText: 'L A B',
+                          rxString: labdipController.rxLAB,
+                        ),
+                        NewOrderTextField(
+                          labelText: 'Comment',
+                          rxString: labdipController.rxComment,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -160,20 +243,31 @@ class NewLabdipOrderView extends StatelessWidget {
                   DataColumn2(label: Text('Tex'), size: ColumnSize.S),
                   DataColumn2(label: Text('Brand'), size: ColumnSize.S),
                   DataColumn2(label: Text('Article'), size: ColumnSize.S),
-                  DataColumn2(label: Text('Remark'), size: ColumnSize.L),
+                  DataColumn2(label: Text('Comment'), size: ColumnSize.L),
                 ],
-                rows: labdipController.lapdipOrderLines
+                rows: labdipController.rxLabdipOrderLines
                     .map(
-                      (element) => DataRow(
+                      (labdipOrderLine) => DataRow(
+                        selected: labdipController.rxSelectedLabdipOrderLines
+                            .contains(labdipOrderLine),
+                        onSelectChanged: (isSelected) {
+                          if (isSelected == true) {
+                            labdipController.rxSelectedLabdipOrderLines
+                                .add(labdipOrderLine);
+                          } else {
+                            labdipController.rxSelectedLabdipOrderLines
+                                .remove(labdipOrderLine);
+                          }
+                        },
                         cells: [
-                          DataCell(Text(element.color)),
-                          DataCell(Text(element.buyer)),
-                          DataCell(Text(element.substrate)),
-                          DataCell(Text(element.ticket)),
-                          DataCell(Text(element.tex)),
-                          DataCell(Text(element.brand)),
-                          DataCell(Text(element.article)),
-                          DataCell(Text(element.remark)),
+                          DataCell(Text(labdipOrderLine.colorName)),
+                          DataCell(Text(labdipOrderLine.buyerCode)),
+                          DataCell(Text(labdipOrderLine.substrate)),
+                          DataCell(Text(labdipOrderLine.ticket)),
+                          DataCell(Text(labdipOrderLine.tex)),
+                          DataCell(Text(labdipOrderLine.brand)),
+                          DataCell(Text(labdipOrderLine.article)),
+                          DataCell(Text(labdipOrderLine.comment)),
                         ],
                       ),
                     )

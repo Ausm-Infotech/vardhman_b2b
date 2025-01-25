@@ -42,9 +42,6 @@ class CatalogSearchField extends StatelessWidget {
                   ),
                   label: Text(labelText),
                 ),
-                hint: searchList.isNotEmpty
-                    ? 'select $labelText'.toLowerCase()
-                    : 'no $labelText to select'.toLowerCase(),
                 enabled: searchList.isNotEmpty,
                 suggestions: searchList
                     .map(
@@ -60,7 +57,7 @@ class CatalogSearchField extends StatelessWidget {
                         : SearchFieldListItem(rxString.value),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
             SecondaryButton(
               wait: false,
               iconData: Icons.clear,
