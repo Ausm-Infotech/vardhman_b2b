@@ -8,7 +8,15 @@
       "name": "Chrome",
       "request": "launch",
       "type": "dart",
-      "args": ["--web-port", "8000"]
+      "args": [
+        "-d",
+        "chrome",
+        "--web-port",
+        "8000",
+        "--web-browser-flag",
+        "--ignore-certificate-errors"
+        // "--disable-web-security --ignore-certificate-errors --user-data-dir=\"C:/Chrome dev session\""
+      ]
     },
     {
       "name": "Web Server",

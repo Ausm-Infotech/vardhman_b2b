@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +39,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'http://172.22.250.11:7082/jderest',
+      baseUrl: 'https://172.22.250.11:7081/jderest',
       headers: {
         'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
         'Content-Type': 'application/json',
