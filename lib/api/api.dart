@@ -824,8 +824,7 @@ class Api {
               "MerchandiserName": merchandiserName,
               "LightSourceRemark":
                   "${labdipOrderLine.firstLightSource} ${labdipOrderLine.secondLightSource}",
-              "ColorRemark":
-                  "${labdipOrderLine.colorName}${labdipOrderLine.comment.isNotEmpty ? '|${labdipOrderLine.comment}' : ''}${labdipOrderLine.lab.isNotEmpty ? '|${labdipOrderLine.lab}' : ''}${labdipOrderLine.requestType.isNotEmpty ? '|${labdipOrderLine.requestType}' : ''}${labdipOrderLine.endUse.isNotEmpty ? '|${labdipOrderLine.endUse}' : ''}",
+              "ColorRemark": labdipOrderLine.colorRemark,
               "EndUse": labdipOrderLine.buyerCode,
               "BillingType": labdipOrderLine.billingType.substring(0, 1),
             },

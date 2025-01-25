@@ -34,4 +34,12 @@ class LabdipOrderLine {
     required this.ticket,
     required this.comment,
   });
+
+  String get colorRemark => [
+        if (colorName.isNotEmpty) colorName,
+        if (comment.isNotEmpty) comment,
+        if (lab.isNotEmpty) lab,
+        if (requestType.isNotEmpty) requestType,
+        if (endUse.isNotEmpty) endUse,
+      ].join('|');
 }
