@@ -37,19 +37,10 @@ class OpenInvoicesView extends StatelessWidget {
                   text: 'Refresh',
                   onPressed: invoicesController.refreshInvoices,
                 ),
-                title: invoicesController.rxSelectedInvoiceInfos.isNotEmpty
-                    ? RupeeText(
-                        label: 'Net Outstanding',
-                        amount: invoicesController.totalOpenAmount,
-                      )
-                    : const Text(
-                        'Invoices',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: VardhmanColors.darkGrey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                title: RupeeText(
+                  label: 'Net Outstanding',
+                  amount: invoicesController.totalOpenAmount,
+                ),
                 // trailing: PrimaryButton(
                 //   text: 'Pay',
                 //   onPressed:
