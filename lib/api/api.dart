@@ -89,7 +89,6 @@ class Api {
               "MESSAGE":
                   "use <$otp>  as one time password  (OTP) to login to Vardhman MobileApp account.  Do not share this OTP to anyone for security reason.  Valid for 15 minutes.",
               "MSISDN": mobileNumber,
-              // "MSISDN": '9623451355',
               "CHANNEL": "SMS",
               "CAMPAIGN_NAME": "vardhmant_hu",
               "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",

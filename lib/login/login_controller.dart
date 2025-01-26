@@ -72,7 +72,7 @@ class LoginController extends GetxController {
     _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
 
     if (_userDetailsCompanion != null) {
-      Api.generateAndSendOtp('9623451355');
+      Api.generateAndSendOtp(_userDetailsCompanion!.mobileNumber.value);
 
       otp = '1234';
 
