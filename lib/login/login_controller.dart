@@ -10,7 +10,7 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
-import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/login/otp_view.dart';
 import 'package:vardhman_b2b/orders/order_entry_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
@@ -260,9 +260,9 @@ class LoginController extends GetxController {
       );
     }
 
-    if (!Get.isRegistered<LabdipController>()) {
+    if (!Get.isRegistered<LabdipEntryController>()) {
       Get.put(
-        LabdipController(),
+        LabdipEntryController(),
         permanent: true,
       );
     }

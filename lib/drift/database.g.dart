@@ -1590,12 +1590,12 @@ class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
   }
 }
 
-class $OrderStatusTable extends OrderStatus
-    with TableInfo<$OrderStatusTable, OrderStatusData> {
+class $OrderDetailsTable extends OrderDetails
+    with TableInfo<$OrderDetailsTable, OrderDetail> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $OrderStatusTable(this.attachedDatabase, [this._alias]);
+  $OrderDetailsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1705,9 +1705,9 @@ class $OrderStatusTable extends OrderStatus
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'order_status';
+  static const String $name = 'order_details';
   @override
-  VerificationContext validateIntegrity(Insertable<OrderStatusData> instance,
+  VerificationContext validateIntegrity(Insertable<OrderDetail> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1816,9 +1816,9 @@ class $OrderStatusTable extends OrderStatus
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  OrderStatusData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  OrderDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return OrderStatusData(
+    return OrderDetail(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       soldToNumber: attachedDatabase.typeMapping
@@ -1851,12 +1851,12 @@ class $OrderStatusTable extends OrderStatus
   }
 
   @override
-  $OrderStatusTable createAlias(String alias) {
-    return $OrderStatusTable(attachedDatabase, alias);
+  $OrderDetailsTable createAlias(String alias) {
+    return $OrderDetailsTable(attachedDatabase, alias);
   }
 }
 
-class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
+class OrderDetail extends DataClass implements Insertable<OrderDetail> {
   final int id;
   final String soldToNumber;
   final int orderNumber;
@@ -1871,7 +1871,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
   final int quantityCancelled;
   final String orderStatus;
   final double orderAmount;
-  const OrderStatusData(
+  const OrderDetail(
       {required this.id,
       required this.soldToNumber,
       required this.orderNumber,
@@ -1906,8 +1906,8 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
     return map;
   }
 
-  OrderStatusCompanion toCompanion(bool nullToAbsent) {
-    return OrderStatusCompanion(
+  OrderDetailsCompanion toCompanion(bool nullToAbsent) {
+    return OrderDetailsCompanion(
       id: Value(id),
       soldToNumber: Value(soldToNumber),
       orderNumber: Value(orderNumber),
@@ -1925,10 +1925,10 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
     );
   }
 
-  factory OrderStatusData.fromJson(Map<String, dynamic> json,
+  factory OrderDetail.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return OrderStatusData(
+    return OrderDetail(
       id: serializer.fromJson<int>(json['id']),
       soldToNumber: serializer.fromJson<String>(json['soldToNumber']),
       orderNumber: serializer.fromJson<int>(json['orderNumber']),
@@ -1966,7 +1966,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
     };
   }
 
-  OrderStatusData copyWith(
+  OrderDetail copyWith(
           {int? id,
           String? soldToNumber,
           int? orderNumber,
@@ -1981,7 +1981,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
           int? quantityCancelled,
           String? orderStatus,
           double? orderAmount}) =>
-      OrderStatusData(
+      OrderDetail(
         id: id ?? this.id,
         soldToNumber: soldToNumber ?? this.soldToNumber,
         orderNumber: orderNumber ?? this.orderNumber,
@@ -1997,8 +1997,8 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
         orderStatus: orderStatus ?? this.orderStatus,
         orderAmount: orderAmount ?? this.orderAmount,
       );
-  OrderStatusData copyWithCompanion(OrderStatusCompanion data) {
-    return OrderStatusData(
+  OrderDetail copyWithCompanion(OrderDetailsCompanion data) {
+    return OrderDetail(
       id: data.id.present ? data.id.value : this.id,
       soldToNumber: data.soldToNumber.present
           ? data.soldToNumber.value
@@ -2033,7 +2033,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
 
   @override
   String toString() {
-    return (StringBuffer('OrderStatusData(')
+    return (StringBuffer('OrderDetail(')
           ..write('id: $id, ')
           ..write('soldToNumber: $soldToNumber, ')
           ..write('orderNumber: $orderNumber, ')
@@ -2071,7 +2071,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is OrderStatusData &&
+      (other is OrderDetail &&
           other.id == this.id &&
           other.soldToNumber == this.soldToNumber &&
           other.orderNumber == this.orderNumber &&
@@ -2088,7 +2088,7 @@ class OrderStatusData extends DataClass implements Insertable<OrderStatusData> {
           other.orderAmount == this.orderAmount);
 }
 
-class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
+class OrderDetailsCompanion extends UpdateCompanion<OrderDetail> {
   final Value<int> id;
   final Value<String> soldToNumber;
   final Value<int> orderNumber;
@@ -2103,7 +2103,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
   final Value<int> quantityCancelled;
   final Value<String> orderStatus;
   final Value<double> orderAmount;
-  const OrderStatusCompanion({
+  const OrderDetailsCompanion({
     this.id = const Value.absent(),
     this.soldToNumber = const Value.absent(),
     this.orderNumber = const Value.absent(),
@@ -2119,7 +2119,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
     this.orderStatus = const Value.absent(),
     this.orderAmount = const Value.absent(),
   });
-  OrderStatusCompanion.insert({
+  OrderDetailsCompanion.insert({
     this.id = const Value.absent(),
     required String soldToNumber,
     required int orderNumber,
@@ -2147,7 +2147,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
         quantityCancelled = Value(quantityCancelled),
         orderStatus = Value(orderStatus),
         orderAmount = Value(orderAmount);
-  static Insertable<OrderStatusData> custom({
+  static Insertable<OrderDetail> custom({
     Expression<int>? id,
     Expression<String>? soldToNumber,
     Expression<int>? orderNumber,
@@ -2181,7 +2181,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
     });
   }
 
-  OrderStatusCompanion copyWith(
+  OrderDetailsCompanion copyWith(
       {Value<int>? id,
       Value<String>? soldToNumber,
       Value<int>? orderNumber,
@@ -2196,7 +2196,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
       Value<int>? quantityCancelled,
       Value<String>? orderStatus,
       Value<double>? orderAmount}) {
-    return OrderStatusCompanion(
+    return OrderDetailsCompanion(
       id: id ?? this.id,
       soldToNumber: soldToNumber ?? this.soldToNumber,
       orderNumber: orderNumber ?? this.orderNumber,
@@ -2264,7 +2264,7 @@ class OrderStatusCompanion extends UpdateCompanion<OrderStatusData> {
 
   @override
   String toString() {
-    return (StringBuffer('OrderStatusCompanion(')
+    return (StringBuffer('OrderDetailsCompanion(')
           ..write('id: $id, ')
           ..write('soldToNumber: $soldToNumber, ')
           ..write('orderNumber: $orderNumber, ')
@@ -2293,7 +2293,7 @@ abstract class _$Database extends GeneratedDatabase {
       $DeliveryDetailsTable(this);
   late final $RelatedCustomersTable relatedCustomers =
       $RelatedCustomersTable(this);
-  late final $OrderStatusTable orderStatus = $OrderStatusTable(this);
+  late final $OrderDetailsTable orderDetails = $OrderDetailsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2303,7 +2303,7 @@ abstract class _$Database extends GeneratedDatabase {
         billingDetails,
         deliveryDetails,
         relatedCustomers,
-        orderStatus
+        orderDetails
       ];
 }
 
@@ -3113,7 +3113,7 @@ typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
     ),
     RelatedCustomer,
     PrefetchHooks Function()>;
-typedef $$OrderStatusTableCreateCompanionBuilder = OrderStatusCompanion
+typedef $$OrderDetailsTableCreateCompanionBuilder = OrderDetailsCompanion
     Function({
   Value<int> id,
   required String soldToNumber,
@@ -3130,7 +3130,7 @@ typedef $$OrderStatusTableCreateCompanionBuilder = OrderStatusCompanion
   required String orderStatus,
   required double orderAmount,
 });
-typedef $$OrderStatusTableUpdateCompanionBuilder = OrderStatusCompanion
+typedef $$OrderDetailsTableUpdateCompanionBuilder = OrderDetailsCompanion
     Function({
   Value<int> id,
   Value<String> soldToNumber,
@@ -3148,9 +3148,9 @@ typedef $$OrderStatusTableUpdateCompanionBuilder = OrderStatusCompanion
   Value<double> orderAmount,
 });
 
-class $$OrderStatusTableFilterComposer
-    extends Composer<_$Database, $OrderStatusTable> {
-  $$OrderStatusTableFilterComposer({
+class $$OrderDetailsTableFilterComposer
+    extends Composer<_$Database, $OrderDetailsTable> {
+  $$OrderDetailsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -3204,9 +3204,9 @@ class $$OrderStatusTableFilterComposer
       column: $table.orderAmount, builder: (column) => ColumnFilters(column));
 }
 
-class $$OrderStatusTableOrderingComposer
-    extends Composer<_$Database, $OrderStatusTable> {
-  $$OrderStatusTableOrderingComposer({
+class $$OrderDetailsTableOrderingComposer
+    extends Composer<_$Database, $OrderDetailsTable> {
+  $$OrderDetailsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -3262,9 +3262,9 @@ class $$OrderStatusTableOrderingComposer
       column: $table.orderAmount, builder: (column) => ColumnOrderings(column));
 }
 
-class $$OrderStatusTableAnnotationComposer
-    extends Composer<_$Database, $OrderStatusTable> {
-  $$OrderStatusTableAnnotationComposer({
+class $$OrderDetailsTableAnnotationComposer
+    extends Composer<_$Database, $OrderDetailsTable> {
+  $$OrderDetailsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -3314,31 +3314,28 @@ class $$OrderStatusTableAnnotationComposer
       column: $table.orderAmount, builder: (column) => column);
 }
 
-class $$OrderStatusTableTableManager extends RootTableManager<
+class $$OrderDetailsTableTableManager extends RootTableManager<
     _$Database,
-    $OrderStatusTable,
-    OrderStatusData,
-    $$OrderStatusTableFilterComposer,
-    $$OrderStatusTableOrderingComposer,
-    $$OrderStatusTableAnnotationComposer,
-    $$OrderStatusTableCreateCompanionBuilder,
-    $$OrderStatusTableUpdateCompanionBuilder,
-    (
-      OrderStatusData,
-      BaseReferences<_$Database, $OrderStatusTable, OrderStatusData>
-    ),
-    OrderStatusData,
+    $OrderDetailsTable,
+    OrderDetail,
+    $$OrderDetailsTableFilterComposer,
+    $$OrderDetailsTableOrderingComposer,
+    $$OrderDetailsTableAnnotationComposer,
+    $$OrderDetailsTableCreateCompanionBuilder,
+    $$OrderDetailsTableUpdateCompanionBuilder,
+    (OrderDetail, BaseReferences<_$Database, $OrderDetailsTable, OrderDetail>),
+    OrderDetail,
     PrefetchHooks Function()> {
-  $$OrderStatusTableTableManager(_$Database db, $OrderStatusTable table)
+  $$OrderDetailsTableTableManager(_$Database db, $OrderDetailsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$OrderStatusTableFilterComposer($db: db, $table: table),
+              $$OrderDetailsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$OrderStatusTableOrderingComposer($db: db, $table: table),
+              $$OrderDetailsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$OrderStatusTableAnnotationComposer($db: db, $table: table),
+              $$OrderDetailsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> soldToNumber = const Value.absent(),
@@ -3355,7 +3352,7 @@ class $$OrderStatusTableTableManager extends RootTableManager<
             Value<String> orderStatus = const Value.absent(),
             Value<double> orderAmount = const Value.absent(),
           }) =>
-              OrderStatusCompanion(
+              OrderDetailsCompanion(
             id: id,
             soldToNumber: soldToNumber,
             orderNumber: orderNumber,
@@ -3387,7 +3384,7 @@ class $$OrderStatusTableTableManager extends RootTableManager<
             required String orderStatus,
             required double orderAmount,
           }) =>
-              OrderStatusCompanion.insert(
+              OrderDetailsCompanion.insert(
             id: id,
             soldToNumber: soldToNumber,
             orderNumber: orderNumber,
@@ -3410,20 +3407,17 @@ class $$OrderStatusTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$OrderStatusTableProcessedTableManager = ProcessedTableManager<
+typedef $$OrderDetailsTableProcessedTableManager = ProcessedTableManager<
     _$Database,
-    $OrderStatusTable,
-    OrderStatusData,
-    $$OrderStatusTableFilterComposer,
-    $$OrderStatusTableOrderingComposer,
-    $$OrderStatusTableAnnotationComposer,
-    $$OrderStatusTableCreateCompanionBuilder,
-    $$OrderStatusTableUpdateCompanionBuilder,
-    (
-      OrderStatusData,
-      BaseReferences<_$Database, $OrderStatusTable, OrderStatusData>
-    ),
-    OrderStatusData,
+    $OrderDetailsTable,
+    OrderDetail,
+    $$OrderDetailsTableFilterComposer,
+    $$OrderDetailsTableOrderingComposer,
+    $$OrderDetailsTableAnnotationComposer,
+    $$OrderDetailsTableCreateCompanionBuilder,
+    $$OrderDetailsTableUpdateCompanionBuilder,
+    (OrderDetail, BaseReferences<_$Database, $OrderDetailsTable, OrderDetail>),
+    OrderDetail,
     PrefetchHooks Function()>;
 
 class $DatabaseManager {
@@ -3437,6 +3431,6 @@ class $DatabaseManager {
       $$DeliveryDetailsTableTableManager(_db, _db.deliveryDetails);
   $$RelatedCustomersTableTableManager get relatedCustomers =>
       $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
-  $$OrderStatusTableTableManager get orderStatus =>
-      $$OrderStatusTableTableManager(_db, _db.orderStatus);
+  $$OrderDetailsTableTableManager get orderDetails =>
+      $$OrderDetailsTableTableManager(_db, _db.orderDetails);
 }

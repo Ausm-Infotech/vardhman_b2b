@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class OrderReviewController extends GetxController {
@@ -28,7 +28,7 @@ class OrderReviewController extends GetxController {
 
   Future<bool> submitLabdipOrder({
     required String merchandiserName,
-    required List<LabdipOrderLine> labdipOrderLines,
+    required List<LabdipEntryLine> labdipOrderLines,
   }) async {
     bool isSubmitted = false;
 

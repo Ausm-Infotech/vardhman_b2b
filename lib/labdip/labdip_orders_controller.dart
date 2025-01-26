@@ -10,8 +10,7 @@ import 'package:vardhman_b2b/orders/order_entry_controller.dart';
 import 'package:vardhman_b2b/sample_data.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
-class OrdersController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class LabdipOrdersController extends GetxController {
   final _userController = Get.find<UserController>(tag: 'userController');
 
   final _rxFilteredOrderStatuses = RxList<OrderDetail>();
@@ -34,9 +33,7 @@ class OrdersController extends GetxController
 
   final rxSelectedLabdipOrderDetails = <OrderDetailLine>[].obs;
 
-  late final tabController = TabController(length: 4, vsync: this);
-
-  OrdersController() {
+  LabdipOrdersController() {
     init();
   }
 

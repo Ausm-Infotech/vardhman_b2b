@@ -5,8 +5,8 @@ import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
-class LabdipOrderDetails extends StatelessWidget {
-  const LabdipOrderDetails({
+class LabdipOrderDetailsView extends StatelessWidget {
+  const LabdipOrderDetailsView({
     super.key,
   });
 

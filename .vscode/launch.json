@@ -5,6 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Flutter",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Chrome",
       "request": "launch",
       "type": "dart",
@@ -13,9 +19,8 @@
         "chrome",
         "--web-port",
         "8000",
-        "--web-browser-flag",
-        "--ignore-certificate-errors"
-        // "--disable-web-security --ignore-certificate-errors --user-data-dir=\"C:/Chrome dev session\""
+        "--web-browser-flag=--ignore-certificate-errors",
+        "--web-browser-flag=--disable-web-security"
       ]
     },
     {

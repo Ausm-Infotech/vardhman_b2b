@@ -5,7 +5,7 @@ import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/labdip/catalog_search_field.dart';
-import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/labdip/new_order_text_box.dart';
 import 'package:vardhman_b2b/labdip/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
@@ -16,7 +16,7 @@ class NewLabdipOrderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labdipController = Get.find<LabdipController>();
+    final labdipController = Get.find<LabdipEntryController>();
 
     final OrderReviewController orderReviewController =
         Get.find<OrderReviewController>();
@@ -235,7 +235,7 @@ class NewLabdipOrderView extends StatelessWidget {
             ),
             Expanded(
               child: DataTable2(
-                columns: [
+                columns: const [
                   DataColumn2(label: Text('Color'), size: ColumnSize.S),
                   DataColumn2(label: Text('Buyer'), size: ColumnSize.S),
                   DataColumn2(label: Text('Substrate'), size: ColumnSize.S),

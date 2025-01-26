@@ -83,7 +83,7 @@ class App extends StatelessWidget {
                 body: SafeArea(
                   child: Center(
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: 400),
+                      constraints: const BoxConstraints(maxWidth: 400),
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,

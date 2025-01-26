@@ -25,28 +25,31 @@ class InvoiceReviewView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               HeaderView(
-                leading: SecondaryButton(
-                  iconData: Icons.arrow_back_ios_outlined,
-                  text: '',
-                  onPressed: () async {
-                    Get.back();
-                  },
-                ),
-                title: const Text(
-                  'Review',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: VardhmanColors.darkGrey,
-                  ),
+                leading: invoicesController.rxSelectedInvoiceInfos.isEmpty
+                    ? null
+                    : SecondaryButton(
+                        iconData: Icons.close,
+                        text: 'Clear',
+                        onPressed: () async {
+                          invoicesController.rxSelectedInvoiceInfos.clear();
+                        },
+                        wait: false,
+                      ),
+                title: Text(
+                  '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
                   textAlign: TextAlign.center,
                 ),
                 trailing: PrimaryButton(
-                  text: 'Confirm',
-                  onPressed: () async {
-                    Get.dialog(
-                      const InvoiceReviewDialog(),
-                    );
-                  },
+                  text: 'Pay',
+                  onPressed:
+                      invoicesController.rxSelectedInvoiceInfos.isEmpty ||
+                              invoicesController.selectedDiscountedAmount < 0
+                          ? null
+                          : () async {
+                              Get.dialog(
+                                const InvoiceReviewDialog(),
+                              );
+                            },
                 ),
               ),
               Expanded(

@@ -241,12 +241,12 @@ class InvoicesController extends GetxController
                   .contains(rxInvoiceNumberInput.value) &&
               invoiceInfo.receiptDate.isAfter(
                 rxReceiptFromDate.value.subtract(
-                  Duration(days: 1),
+                  const Duration(days: 1),
                 ),
               ) &&
               invoiceInfo.receiptDate.isBefore(
                 rxReceiptToDate.value.add(
-                  Duration(days: 1),
+                  const Duration(days: 1),
                 ),
               ),
         )
@@ -263,12 +263,12 @@ class InvoicesController extends GetxController
                 .contains(rxInvoiceNumberInput.value) &&
             invoiceInfo.date.isAfter(
               rxInvoiceFromDate.value.subtract(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ) &&
             invoiceInfo.date.isBefore(
               rxInvoiceToDate.value.add(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ),
       )

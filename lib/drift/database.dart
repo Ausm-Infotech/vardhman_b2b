@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:vardhman_b2b/drift/billing_details.dart';
 import 'package:vardhman_b2b/drift/delivery_details.dart';
-import 'package:vardhman_b2b/drift/order_status.dart';
+import 'package:vardhman_b2b/drift/order_details.dart';
 import 'package:vardhman_b2b/drift/related_customers.dart';
 
 import 'user_details.dart';
@@ -15,7 +15,7 @@ part 'database.g.dart';
     BillingDetails,
     DeliveryDetails,
     RelatedCustomers,
-    OrderStatus,
+    OrderDetails,
   ],
 )
 class Database extends _$Database {

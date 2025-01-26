@@ -34,13 +34,13 @@ class OpenInvoicesView extends StatelessWidget {
               HeaderView(
                 leading: SecondaryButton(
                   iconData: FontAwesomeIcons.arrowRotateRight,
-                  text: '',
+                  text: 'Refresh',
                   onPressed: invoicesController.refreshInvoices,
                 ),
                 title: invoicesController.rxSelectedInvoiceInfos.isNotEmpty
                     ? RupeeText(
-                        label: 'Amount',
-                        amount: invoicesController.selectedTotalAmount,
+                        label: 'Net Outstanding',
+                        amount: invoicesController.totalOpenAmount,
                       )
                     : const Text(
                         'Invoices',
@@ -50,65 +50,16 @@ class OpenInvoicesView extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                trailing: PrimaryButton(
-                  text: 'Pay',
-                  onPressed:
-                      invoicesController.rxSelectedInvoiceInfos.isEmpty ||
-                              invoicesController.selectedTotalAmount.isNegative
-                          ? null
-                          : () async {
-                              Get.to(() => const InvoiceReviewView());
-                            },
-                ),
-                tabBar: Row(
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: invoicesController
-                              .rxSelectedInvoiceInfos.isNotEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  SecondaryButton(
-                                    iconData: Icons.close,
-                                    text: '',
-                                    onPressed: () async {
-                                      invoicesController.rxSelectedInvoiceInfos
-                                          .clear();
-                                    },
-                                    wait: false,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Net Outstanding'),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  RupeeText(
-                                    amount: invoicesController.totalOpenAmount,
-                                  )
-                                ],
-                              ),
-                            ),
-                    ),
-                  ],
-                ),
+                // trailing: PrimaryButton(
+                //   text: 'Pay',
+                //   onPressed:
+                //       invoicesController.rxSelectedInvoiceInfos.isEmpty ||
+                //               invoicesController.selectedTotalAmount.isNegative
+                //           ? null
+                //           : () async {
+                //               Get.to(() => const InvoiceReviewView());
+                //             },
+                // ),
               ),
               Expanded(
                 child: Container(

@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-class OrderStatus extends Table {
+class OrderDetails extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get soldToNumber => text()();
   IntColumn get orderNumber => integer().unique()();

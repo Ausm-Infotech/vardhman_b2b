@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:vardhman_b2b/constants.dart';
 
 class NewOrderTextBox extends StatelessWidget {

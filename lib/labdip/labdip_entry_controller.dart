@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
-import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
-class LabdipController extends GetxController {
+class LabdipEntryController extends GetxController {
   final rxMerchandiser = ''.obs;
 
   final rxColor = ''.obs;
@@ -34,7 +34,7 @@ class LabdipController extends GetxController {
 
   final rxComment = ''.obs;
 
-  final rxLabdipOrderLines = <LabdipOrderLine>[].obs;
+  final rxLabdipOrderLines = <LabdipEntryLine>[].obs;
 
   final catalogController = Get.find<CatalogController>();
 
@@ -98,9 +98,9 @@ class LabdipController extends GetxController {
     "Wire & Cable",
   ];
 
-  final rxSelectedLabdipOrderLines = <LabdipOrderLine>[].obs;
+  final rxSelectedLabdipOrderLines = <LabdipEntryLine>[].obs;
 
-  LabdipController() {
+  LabdipEntryController() {
     Api.fetchBuyerInfos().then(
       (buyerInfos) => rxBuyerInfos.addAll(buyerInfos),
     );
@@ -285,7 +285,7 @@ class LabdipController extends GetxController {
     ...List.generate(9, (index) => 'SWT${index + 1}'),
   ];
 
-  LabdipOrderLine get currentLabdipOrderLine => LabdipOrderLine(
+  LabdipEntryLine get currentLabdipOrderLine => LabdipEntryLine(
         colorName: rxColor.value,
         firstLightSource: rxBuyerInfo.value?.firstLightSource ?? '',
         secondLightSource: rxBuyerInfo.value?.secondLightSource ?? '',

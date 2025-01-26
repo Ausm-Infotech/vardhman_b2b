@@ -1,4 +1,4 @@
-class LabdipOrderLine {
+class LabdipEntryLine {
   final String shade;
   final String buyerCode;
   final String firstLightSource;
@@ -16,7 +16,7 @@ class LabdipOrderLine {
   final String uom;
   final String endUse;
 
-  LabdipOrderLine({
+  LabdipEntryLine({
     required this.endUse,
     required this.uom,
     required this.requestType,

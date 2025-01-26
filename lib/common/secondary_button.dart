@@ -90,9 +90,11 @@ class _SecondaryButtonState extends State<SecondaryButton> {
             if (widget.text.isNotEmpty)
               Text(
                 widget.text,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: VardhmanColors.darkGrey,
+                  color: widget.onPressed != null
+                      ? VardhmanColors.darkGrey
+                      : Colors.white,
                 ),
               ),
           ],

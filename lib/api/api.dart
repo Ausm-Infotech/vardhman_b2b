@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
+import 'package:universal_io/io.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart' as api;
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
@@ -18,8 +18,9 @@ import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
+import 'package:dio/io.dart';
 
-import 'package:vardhman_b2b/labdip/labdip_order_line.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 
 class Api {
   static final _fileDownloadDio = Dio(
@@ -37,23 +38,40 @@ class Api {
     ),
   );
 
-  static final _dio = Dio(
-    BaseOptions(
-      baseUrl: 'https://172.22.250.11:7081/jderest',
-      headers: {
-        'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
-        'Content-Type': 'application/json',
-        'Connection': 'keep-alive',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept': '*/*',
-      },
-      sendTimeout: const Duration(seconds: 60),
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(minutes: 5),
-      validateStatus: (status) => true,
-      receiveDataWhenStatusError: true,
-    ),
-  );
+  static get _dio {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: 'http://172.22.250.11:7082/jderest',
+        headers: {
+          'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
+          'Content-Type': 'application/json',
+          'Connection': 'keep-alive',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Accept': '*/*',
+        },
+        sendTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(minutes: 30),
+        validateStatus: (status) => true,
+        receiveDataWhenStatusError: true,
+      ),
+    );
+
+    if (!kIsWeb) {
+      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+        final httpClient = HttpClient();
+
+        httpClient.badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+          return true;
+        };
+
+        return httpClient;
+      };
+    }
+
+    return dio;
+  }
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
     final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
@@ -70,8 +88,8 @@ class Api {
               "OA": "VYTLMA",
               "MESSAGE":
                   "use <$otp>  as one time password  (OTP) to login to Vardhman MobileApp account.  Do not share this OTP to anyone for security reason.  Valid for 15 minutes.",
-              // "MSISDN": mobileNumber,
-              "MSISDN": '9623451355',
+              "MSISDN": mobileNumber,
+              // "MSISDN": '9623451355',
               "CHANNEL": "SMS",
               "CAMPAIGN_NAME": "vardhmant_hu",
               "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",
@@ -273,12 +291,12 @@ class Api {
     return relatedCustomerCompanions;
   }
 
-  static Future<List<OrderStatusCompanion>> fetchOrders({
+  static Future<List<OrderDetailsCompanion>> fetchOrders({
     required String soldToNumber,
     required DateTime fromDate,
     required DateTime toDate,
   }) async {
-    final orderStatusCompanions = <OrderStatusCompanion>[];
+    final orderDetailsCompanions = <OrderDetailsCompanion>[];
 
     try {
       final response = await _dio.post(
@@ -292,8 +310,8 @@ class Api {
 
       if (response.statusCode == 200) {
         for (var orderInfo in response.data["GetOrderStatus"]) {
-          final OrderStatusCompanion orderStatusCompanion =
-              OrderStatusCompanion(
+          final OrderDetailsCompanion orderDetailsCompanion =
+              OrderDetailsCompanion(
             soldToNumber: Value(soldToNumber),
             orderNumber: Value(orderInfo['OrderNumber']),
             orderType: Value(orderInfo['OrType']),
@@ -315,14 +333,14 @@ class Api {
             ),
           );
 
-          orderStatusCompanions.add(orderStatusCompanion);
+          orderDetailsCompanions.add(orderDetailsCompanion);
         }
       }
     } catch (e) {
       log('fetchOrders error - $e');
     }
 
-    return orderStatusCompanions;
+    return orderDetailsCompanions;
   }
 
   static Future<List<OrderDetailLine>> fetchOrderDetails({
@@ -801,7 +819,7 @@ class Api {
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<LabdipOrderLine> labdipOrderLines,
+    required List<LabdipEntryLine> labdipOrderLines,
   }) async {
     final payload = {
       "Detail": labdipOrderLines
@@ -828,7 +846,8 @@ class Api {
                   "${labdipOrderLine.firstLightSource} ${labdipOrderLine.secondLightSource}",
               "ColorRemark": labdipOrderLine.colorRemark,
               "EndUse": labdipOrderLine.buyerCode,
-              "BillingType": labdipOrderLine.billingType.substring(0, 1),
+              "BillingType":
+                  labdipOrderLine.billingType == "Branch" ? "B" : "D",
             },
           )
           .toList(),
