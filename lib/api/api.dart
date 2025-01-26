@@ -41,7 +41,7 @@ class Api {
   static get _dio {
     final dio = Dio(
       BaseOptions(
-        baseUrl: 'http://172.22.250.11:7082/jderest',
+        baseUrl: 'https://172.22.250.11:7081/jderest',
         headers: {
           'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
           'Content-Type': 'application/json',
