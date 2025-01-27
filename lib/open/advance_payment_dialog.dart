@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
+import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
+import 'package:universal_html/html.dart' as html;
 
 class AdvancePaymentDialog extends StatelessWidget {
   const AdvancePaymentDialog({
@@ -90,102 +92,71 @@ class AdvancePaymentDialog extends StatelessWidget {
                             );
 
                             if (paymentEntryCreated) {
-                              bool paymentSuccessful = false;
-
-                              String walletTxnStatus = '',
-                                  walletBankRefId = '',
-                                  walletTxnRemarks = '';
-
                               var encryptedString =
                                   await Api.encryptInputString(
-                                'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.rxAdvancePaymentAmount.value}|txn-for=payment|wallet-payment-mode=2|return-url=https://www.vardhmanthreads.com|cancel-url=https://www.vardhmanthreads.com|',
+                                'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.rxAdvancePaymentAmount.value}|txn-for=payment|wallet-payment-mode=2|return-url=https://arjuntare.github.io/vardhman_b2b/|cancel-url=https://arjuntare.github.io/vardhman_b2b/|',
                               );
 
                               log('Encrypted payment string: $encryptedString');
 
-                              // if (encryptedString != null) {
-                              //   paymentSuccessful = await Get.to<bool>(
-                              //         () => Pay2corpView(
-                              //           walletRequestMessage: encryptedString,
-                              //         ),
-                              //       ) ??
-                              //       false;
-                              // }
+                              if (encryptedString != null) {
+                                final paymentFormElement =
+                                    html.document.createElement('form')
+                                      ..setAttribute('id', 'paymentForm')
+                                      ..setAttribute('method', "POST")
+                                      ..setAttribute('action',
+                                          "https://demo.b2biz.co.in/ws/payment")
+                                      ..setAttribute('target', '_self');
 
-                              // final paymentStatus =
-                              //     await Api.getPaymentStatus(receiptNumber);
+                                final walletClientCodeInput =
+                                    html.document.createElement('input')
+                                      ..setAttribute('type', 'text')
+                                      ..setAttribute('name', 'walletClientCode')
+                                      ..setAttribute('value', 'WT-1474');
 
-                              // if (paymentStatus != null) {
-                              //   walletTxnStatus =
-                              //       RegExp(r'wallet-txn-status=([^|]+)')
-                              //               .firstMatch(paymentStatus)
-                              //               ?.group(1) ??
-                              //           '';
+                                paymentFormElement
+                                    .append(walletClientCodeInput);
 
-                              //   walletBankRefId =
-                              //       RegExp(r'wallet-bank-ref-id=([^|]+)')
-                              //               .firstMatch(paymentStatus)
-                              //               ?.group(1) ??
-                              //           '';
+                                final walletRequestMessageInput = html.document
+                                    .createElement('input')
+                                  ..setAttribute('type', 'text')
+                                  ..setAttribute('name', 'walletRequestMessage')
+                                  ..setAttribute(
+                                    'value',
+                                    encryptedString,
+                                  );
 
-                              //   walletTxnRemarks =
-                              //       RegExp(r'wallet-txn-remarks=([^|]+)')
-                              //               .firstMatch(paymentStatus)
-                              //               ?.group(1) ??
-                              //           '';
+                                paymentFormElement
+                                    .append(walletRequestMessageInput);
 
-                              //   paymentSuccessful = walletTxnStatus == '100';
-                              // }
+                                final paymentForm = html.document.body
+                                        ?.append(paymentFormElement)
+                                    as html.FormElement;
 
-                              // await Api.updateInvoicePaymentRequest(
-                              //   batchNumber: batchNumber,
-                              //   receiptNumber: receiptNumber,
-                              //   company: userController
-                              //       .rxCustomerDetail.value.companyCode,
-                              //   customerNumber: userController
-                              //       .rxCustomerDetail.value.soldToNumber,
-                              //   sp: paymentSuccessful
-                              //       ? ''
-                              //       : walletTxnStatus == '106'
-                              //           ? 'I'
-                              //           : 'E',
-                              //   paymentReference: walletBankRefId,
-                              //   paymentRemark: walletTxnRemarks,
-                              // );
+                                paymentForm.submit();
+                              }
 
-                              // Get.back();
+                              Get.back();
 
-                              // if (paymentSuccessful) {
-                              //   invoicesController.refreshInvoices();
+                              Get.back();
 
-                              //   invoicesController.rxSelectedInvoiceInfos
-                              //       .clear();
+                              Get.snackbar(
+                                'Navigating to Payment Gateway, payment confirmation will be sent via E-mail/SMS in some time. ',
+                                '',
+                                backgroundColor: Colors.white,
+                                colorText: VardhmanColors.green,
+                              );
 
-                              //   Get.back();
-
-                              //   Get.snackbar(
-                              //     'Payment was successful',
-                              //     '',
-                              //     backgroundColor: Colors.white,
-                              //     colorText: VardhmanColors.green,
-                              //   );
-                              // } else if (walletTxnStatus == '106') {
-                              //   Get.snackbar(
-                              //     'Awaiting payment',
-                              //     '',
-                              //     backgroundColor: Colors.white,
-                              //     colorText: VardhmanColors.orange,
-                              //   );
-                              // } else {
-                              //   Get.snackbar(
-                              //     'Payment failed',
-                              //     '',
-                              //     backgroundColor: Colors.white,
-                              //     colorText: VardhmanColors.red,
-                              //   );
-                              // }
+                              return;
                             }
                           }
+
+                          Get.snackbar(
+                            'Some error initiating payment, please try later.',
+                            '',
+                            backgroundColor: Colors.white,
+                            colorText: VardhmanColors.red,
+                          );
                         },
                 ),
               )

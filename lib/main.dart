@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:universal_io/io.dart';
 import 'package:vardhman_b2b/app/app.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/login/login_controller.dart';

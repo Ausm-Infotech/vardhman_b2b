@@ -103,7 +103,7 @@ class InvoiceReviewDialog extends StatelessWidget {
                           );
                         } else {
                           final plainText =
-                              'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount}|txn-for=payment|wallet-payment-mode=2|return-url=http://localhost:8000|cancel-url=http://localhost:8000|';
+                              'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount}|txn-for=payment|wallet-payment-mode=2|return-url=https://arjuntare.github.io/vardhman_b2b/|cancel-url=https://arjuntare.github.io/vardhman_b2b/|';
 
                           final encryptedString =
                               await Api.encryptInputString(plainText);
@@ -157,8 +157,17 @@ class InvoiceReviewDialog extends StatelessWidget {
                           backgroundColor: Colors.white,
                           colorText: VardhmanColors.green,
                         );
+
+                        return;
                       }
                     }
+
+                    Get.snackbar(
+                      'Some error initiating payment, please try later.',
+                      '',
+                      backgroundColor: Colors.white,
+                      colorText: VardhmanColors.red,
+                    );
                   },
                 ),
               ),

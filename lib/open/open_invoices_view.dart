@@ -11,7 +11,6 @@ import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/open/advance_payment_dialog.dart';
-import 'package:vardhman_b2b/open/invoice_review_view.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/open/open_invoices_list.dart';
 
