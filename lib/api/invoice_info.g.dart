@@ -56,4 +56,5 @@ const _$InvoiceStatusEnumMap = {
   InvoiceStatus.notDue: 'notDue',
   InvoiceStatus.discounted: 'discounted',
   InvoiceStatus.processing: 'processing',
+  InvoiceStatus.onHold: 'onHold',
 };

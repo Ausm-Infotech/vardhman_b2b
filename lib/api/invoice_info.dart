@@ -39,11 +39,14 @@ enum InvoiceStatus {
   notDue,
   discounted,
   processing,
+  onHold,
 }
 
 InvoiceInfo getInvoiceInfoWithStatusAndDiscount(InvoiceInfo invoiceInfo) {
   return invoiceInfo.copyWith(
-    status: _getInvoiceStatus(invoiceInfo),
+    status: invoiceInfo.status != InvoiceStatus.onHold
+        ? _getInvoiceStatus(invoiceInfo)
+        : InvoiceStatus.onHold,
     discountAmount: _getDiscountAmount(invoiceInfo),
   );
 }
@@ -84,6 +87,8 @@ String getInvoiceStatusText(InvoiceStatus invoiceStatus) {
       return 'Payment Processing';
     case InvoiceStatus.discounted:
       return 'Discount Applicable';
+    case InvoiceStatus.onHold:
+      return 'On Hold';
   }
 }
 
@@ -98,6 +103,7 @@ Color getInvoiceStatusColor(InvoiceStatus invoiceStatus) {
       return VardhmanColors.red;
     case InvoiceStatus.notDue:
     case InvoiceStatus.processing:
+    case InvoiceStatus.onHold:
       return VardhmanColors.darkGrey;
   }
 }
