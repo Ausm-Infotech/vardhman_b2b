@@ -35,9 +35,13 @@ class InvoiceReviewView extends StatelessWidget {
                         },
                         wait: false,
                       ),
-                title: Text(
-                  '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
-                  textAlign: TextAlign.center,
+                title: RupeeText(
+                  label: 'Total',
+                  amount: invoicesController.selectedTotalAmount,
+                  discountAmount: invoicesController.selectedDiscountedAmount ==
+                          invoicesController.selectedTotalAmount
+                      ? 0
+                      : invoicesController.selectedDiscountedAmount,
                 ),
                 trailing: PrimaryButton(
                   text: 'Pay',
@@ -71,27 +75,6 @@ class InvoiceReviewView extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                width: double.infinity,
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    top: BorderSide(
-                      color: VardhmanColors.dividerGrey,
-                    ),
-                  ),
-                ),
-                child: RupeeText(
-                  label: 'Total',
-                  amount: invoicesController.selectedTotalAmount,
-                  discountAmount: invoicesController.selectedDiscountedAmount ==
-                          invoicesController.selectedTotalAmount
-                      ? 0
-                      : invoicesController.selectedDiscountedAmount,
-                ),
-              )
             ],
           ),
         ),

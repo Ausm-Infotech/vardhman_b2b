@@ -302,8 +302,6 @@ class Api {
         '/orchestrator/ORCH5542001_GetOrderStatus',
         data: {
           "SoldTo": soldToNumber,
-          "FromOrderDate": DateFormat('MM/dd/yyyy').format(fromDate),
-          "ToOrderDate": DateFormat('MM/dd/yyyy').format(toDate),
         },
       );
 

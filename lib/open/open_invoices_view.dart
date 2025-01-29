@@ -12,6 +12,7 @@ import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/open/advance_payment_dialog.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
+import 'package:vardhman_b2b/open/invoice_review_view.dart';
 import 'package:vardhman_b2b/open/open_invoices_list.dart';
 
 class OpenInvoicesView extends StatelessWidget {
@@ -40,16 +41,10 @@ class OpenInvoicesView extends StatelessWidget {
                   label: 'Net Outstanding',
                   amount: invoicesController.totalOpenAmount,
                 ),
-                // trailing: PrimaryButton(
-                //   text: 'Pay',
-                //   onPressed:
-                //       invoicesController.rxSelectedInvoiceInfos.isEmpty ||
-                //               invoicesController.selectedTotalAmount.isNegative
-                //           ? null
-                //           : () async {
-                //               Get.to(() => const InvoiceReviewView());
-                //             },
-                // ),
+                trailing: Text(
+                  '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
+                  textAlign: TextAlign.center,
+                ),
               ),
               Expanded(
                 child: Container(
