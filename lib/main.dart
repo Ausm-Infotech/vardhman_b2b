@@ -15,8 +15,10 @@ Future<void> main() async {
     permanent: true,
   );
 
+  final database = Database();
+
   Get.put(
-    Database(),
+    database,
     permanent: true,
   );
 

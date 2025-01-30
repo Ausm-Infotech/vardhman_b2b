@@ -76,7 +76,7 @@ class App extends StatelessWidget {
           switchTheme: SwitchThemeData(
             thumbColor: WidgetStateProperty.all(VardhmanColors.red),
             trackColor:
-                WidgetStateProperty.all(VardhmanColors.red.withOpacity(0.5)),
+                WidgetStateProperty.all(VardhmanColors.red.withAlpha(127)),
           ),
         ),
         home: Obx(

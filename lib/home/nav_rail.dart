@@ -26,6 +26,9 @@ class NavRail extends StatelessWidget {
             ? homeController.rxNavRailIndex.value - 3
             : null;
 
+        final UserController userController =
+            Get.find<UserController>(tag: 'userController');
+
         return Container(
           color: Colors.white,
           padding: const EdgeInsets.all(16),
@@ -123,12 +126,33 @@ class NavRail extends StatelessWidget {
               const SizedBox(
                 height: 32,
               ),
-              PrimaryButton(
-                iconData: Icons.logout,
-                text: 'Logout',
-                onPressed: () async {
-                  Get.find<UserController>(tag: 'userController').logOut();
-                },
+              SizedBox(
+                height: 170,
+                child: NavRailContainer(
+                  title: 'USER',
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      Text(
+                        userController.rxCustomerDetail.value.name,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      PrimaryButton(
+                        iconData: Icons.logout,
+                        text: 'Logout',
+                        onPressed: () async {
+                          Get.find<UserController>(tag: 'userController')
+                              .logOut();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

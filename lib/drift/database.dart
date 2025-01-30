@@ -28,7 +28,7 @@ class Database extends _$Database {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
-      name: 'vytl',
+      name: 'vytl1',
       web: DriftWebOptions(
         sqlite3Wasm: Uri.parse('sqlite3.wasm'),
         driftWorker: Uri.parse('drift_worker.js'),
