@@ -1,17 +1,16 @@
-import 'dart:developer';
-
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
-import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/login/otp_view.dart';
+import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_entry_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
@@ -67,29 +66,23 @@ class LoginController extends GetxController {
   }
 
   Future<void> validateUser() async {
-    log('validateUser');
-
     _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
 
     if (_userDetailsCompanion != null) {
-      Api.generateAndSendOtp(_userDetailsCompanion!.mobileNumber.value);
-
       otp = '1234';
 
-      Get.snackbar(
-        '',
-        'OTP sent to ${_userDetailsCompanion!.mobileNumber.value}',
-        colorText: VardhmanColors.green,
+      toastification.show(
+        primaryColor: VardhmanColors.green,
+        title: Text('OTP sent to ${_userDetailsCompanion!.mobileNumber.value}'),
       );
 
       Get.to(() => const OtpView());
 
       userIdTextEditingController.clear();
     } else {
-      Get.snackbar(
-        '',
-        'User not found!',
-        colorText: VardhmanColors.red,
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: const Text('User not found!'),
       );
     }
   }
@@ -117,17 +110,19 @@ class LoginController extends GetxController {
 
       otpTextEditingController.clear();
 
-      Get.back();
+      Get.back(
+        canPop: true,
+        closeOverlays: true,
+      );
     } else {
-      Get.snackbar(
-        '',
-        'OTP incorrect!',
-        colorText: VardhmanColors.red,
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: const Text('OTP incorrect!'),
       );
     }
   }
 
-  Future<UserDetail?> getCustomerDetail(UserDetail userDetail) async {
+  Future<UserDetail> getCustomerDetail(UserDetail userDetail) async {
     if (!isCustomer(userDetail)) {
       final relatedCustomersCompanion = await Api.fetchRelatedCustomers(
         userCategory: userDetail.category,
@@ -138,10 +133,11 @@ class LoginController extends GetxController {
         _relatedCustomers = relatedCustomersCompanion
             .map(
               (e) => RelatedCustomer(
-                  id: 0,
-                  managerSoldTo: e.managerSoldTo.value,
-                  customerSoldTo: e.customerSoldTo.value,
-                  customerName: e.customerName.value),
+                id: 0,
+                managerSoldTo: e.managerSoldTo.value,
+                customerSoldTo: e.customerSoldTo.value,
+                customerName: e.customerName.value,
+              ),
             )
             .toList();
 
@@ -190,89 +186,54 @@ class LoginController extends GetxController {
           );
         }
       }
-    } else {
-      return userDetail;
     }
-    return null;
+
+    return userDetail;
   }
 
   Future<void> _logIn(UserDetail userDetail) async {
-    await Get.deleteAll();
-
-    await Get.delete<UserController>(
-      tag: 'userController',
-      force: true,
-    );
-
     final customerDetail = await getCustomerDetail(userDetail);
 
-    if (!Get.isRegistered<OrderEntryController>()) {
-      Get.put(
-        OrderEntryController(),
-        permanent: true,
-      );
-    }
+    await resetController(
+      () => UserController(
+        userDetail: userDetail,
+        customerDetail: customerDetail,
+        relatedCustomers: isCustomer(customerDetail) ? [] : _relatedCustomers,
+      ),
+      tag: 'userController',
+    );
 
-    if (!Get.isRegistered<UserController>(tag: 'userController')) {
-      Get.put(
-        UserController(
-          userDetail: userDetail,
-          customerDetail: customerDetail ?? userDetail,
-          relatedCustomers: _relatedCustomers,
-        ),
-        permanent: true,
-        tag: 'userController',
-      );
-    }
+    await resetController(() => ItemMasterController());
 
-    if (!Get.isRegistered<OrderReviewController>()) {
-      Get.put(
-        OrderReviewController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => OrderEntryController());
 
-    if (!Get.isRegistered<OrdersController>()) {
-      Get.put(
-        OrdersController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => OrderReviewController());
 
-    if (!Get.isRegistered<InvoicesController>()) {
-      Get.put(
-        InvoicesController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => OrdersController());
 
-    if (!Get.isRegistered<CatalogController>()) {
-      Get.put(
-        CatalogController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => InvoicesController());
 
-    if (!Get.isRegistered<HomeController>()) {
-      Get.put(
-        HomeController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => CatalogController());
 
-    if (!Get.isRegistered<LabdipEntryController>()) {
-      Get.put(
-        LabdipEntryController(),
-        permanent: true,
-      );
-    }
+    await resetController(() => HomeController());
 
-    // Get.snackbar(
-    //   '',
-    //   'Logged in as ${userDetail.name}',
-    //   colorText: VardhmanColors.green,
-    // );
+    toastification.show(
+      primaryColor: VardhmanColors.green,
+      title: Text('Logged in as ${userDetail.name}'),
+    );
 
     rxUserDetail.value = userDetail;
+  }
+
+  Future<void> resetController<T extends GetxController>(
+      T Function() controller,
+      {String? tag}) async {
+    await Get.delete<T>(tag: tag, force: true);
+
+    Get.put<T>(
+      controller(),
+      permanent: true,
+      tag: tag,
+    );
   }
 }

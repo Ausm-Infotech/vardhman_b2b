@@ -91,9 +91,11 @@ class InvoicesController extends GetxController
 
       _rxInvoiceInfos.addAll(processedInvoiceInfos);
 
-      rxEarliestInvoiceDate.value = openInvoices.first.date;
+      rxEarliestInvoiceDate.value =
+          openInvoices.isEmpty ? oldestDateTime : openInvoices.first.date;
 
-      rxEarliestReceiptDate.value = paidInvoices.last.receiptDate;
+      rxEarliestReceiptDate.value =
+          paidInvoices.isEmpty ? oldestDateTime : paidInvoices.last.receiptDate;
     } else {
       _rxInvoiceInfos.clear();
 
@@ -130,6 +132,12 @@ class InvoicesController extends GetxController
   List<InvoiceInfo> get processingInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.processing,
+      )
+      .toList();
+
+  List<InvoiceInfo> get heldInvoices => filteredOpenInvoices
+      .where(
+        (invoiceInfo) => invoiceInfo.status == InvoiceStatus.onHold,
       )
       .toList();
 

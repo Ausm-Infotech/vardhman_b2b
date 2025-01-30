@@ -438,6 +438,281 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
   }
 }
 
+class $RelatedCustomersTable extends RelatedCustomers
+    with TableInfo<$RelatedCustomersTable, RelatedCustomer> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RelatedCustomersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _managerSoldToMeta =
+      const VerificationMeta('managerSoldTo');
+  @override
+  late final GeneratedColumn<String> managerSoldTo = GeneratedColumn<String>(
+      'manager_sold_to', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _customerSoldToMeta =
+      const VerificationMeta('customerSoldTo');
+  @override
+  late final GeneratedColumn<String> customerSoldTo = GeneratedColumn<String>(
+      'customer_sold_to', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _customerNameMeta =
+      const VerificationMeta('customerName');
+  @override
+  late final GeneratedColumn<String> customerName = GeneratedColumn<String>(
+      'customer_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, managerSoldTo, customerSoldTo, customerName];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'related_customers';
+  @override
+  VerificationContext validateIntegrity(Insertable<RelatedCustomer> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('manager_sold_to')) {
+      context.handle(
+          _managerSoldToMeta,
+          managerSoldTo.isAcceptableOrUnknown(
+              data['manager_sold_to']!, _managerSoldToMeta));
+    } else if (isInserting) {
+      context.missing(_managerSoldToMeta);
+    }
+    if (data.containsKey('customer_sold_to')) {
+      context.handle(
+          _customerSoldToMeta,
+          customerSoldTo.isAcceptableOrUnknown(
+              data['customer_sold_to']!, _customerSoldToMeta));
+    } else if (isInserting) {
+      context.missing(_customerSoldToMeta);
+    }
+    if (data.containsKey('customer_name')) {
+      context.handle(
+          _customerNameMeta,
+          customerName.isAcceptableOrUnknown(
+              data['customer_name']!, _customerNameMeta));
+    } else if (isInserting) {
+      context.missing(_customerNameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RelatedCustomer map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RelatedCustomer(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      managerSoldTo: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}manager_sold_to'])!,
+      customerSoldTo: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}customer_sold_to'])!,
+      customerName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}customer_name'])!,
+    );
+  }
+
+  @override
+  $RelatedCustomersTable createAlias(String alias) {
+    return $RelatedCustomersTable(attachedDatabase, alias);
+  }
+}
+
+class RelatedCustomer extends DataClass implements Insertable<RelatedCustomer> {
+  final int id;
+  final String managerSoldTo;
+  final String customerSoldTo;
+  final String customerName;
+  const RelatedCustomer(
+      {required this.id,
+      required this.managerSoldTo,
+      required this.customerSoldTo,
+      required this.customerName});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['manager_sold_to'] = Variable<String>(managerSoldTo);
+    map['customer_sold_to'] = Variable<String>(customerSoldTo);
+    map['customer_name'] = Variable<String>(customerName);
+    return map;
+  }
+
+  RelatedCustomersCompanion toCompanion(bool nullToAbsent) {
+    return RelatedCustomersCompanion(
+      id: Value(id),
+      managerSoldTo: Value(managerSoldTo),
+      customerSoldTo: Value(customerSoldTo),
+      customerName: Value(customerName),
+    );
+  }
+
+  factory RelatedCustomer.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RelatedCustomer(
+      id: serializer.fromJson<int>(json['id']),
+      managerSoldTo: serializer.fromJson<String>(json['managerSoldTo']),
+      customerSoldTo: serializer.fromJson<String>(json['customerSoldTo']),
+      customerName: serializer.fromJson<String>(json['customerName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'managerSoldTo': serializer.toJson<String>(managerSoldTo),
+      'customerSoldTo': serializer.toJson<String>(customerSoldTo),
+      'customerName': serializer.toJson<String>(customerName),
+    };
+  }
+
+  RelatedCustomer copyWith(
+          {int? id,
+          String? managerSoldTo,
+          String? customerSoldTo,
+          String? customerName}) =>
+      RelatedCustomer(
+        id: id ?? this.id,
+        managerSoldTo: managerSoldTo ?? this.managerSoldTo,
+        customerSoldTo: customerSoldTo ?? this.customerSoldTo,
+        customerName: customerName ?? this.customerName,
+      );
+  RelatedCustomer copyWithCompanion(RelatedCustomersCompanion data) {
+    return RelatedCustomer(
+      id: data.id.present ? data.id.value : this.id,
+      managerSoldTo: data.managerSoldTo.present
+          ? data.managerSoldTo.value
+          : this.managerSoldTo,
+      customerSoldTo: data.customerSoldTo.present
+          ? data.customerSoldTo.value
+          : this.customerSoldTo,
+      customerName: data.customerName.present
+          ? data.customerName.value
+          : this.customerName,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RelatedCustomer(')
+          ..write('id: $id, ')
+          ..write('managerSoldTo: $managerSoldTo, ')
+          ..write('customerSoldTo: $customerSoldTo, ')
+          ..write('customerName: $customerName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, managerSoldTo, customerSoldTo, customerName);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RelatedCustomer &&
+          other.id == this.id &&
+          other.managerSoldTo == this.managerSoldTo &&
+          other.customerSoldTo == this.customerSoldTo &&
+          other.customerName == this.customerName);
+}
+
+class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
+  final Value<int> id;
+  final Value<String> managerSoldTo;
+  final Value<String> customerSoldTo;
+  final Value<String> customerName;
+  const RelatedCustomersCompanion({
+    this.id = const Value.absent(),
+    this.managerSoldTo = const Value.absent(),
+    this.customerSoldTo = const Value.absent(),
+    this.customerName = const Value.absent(),
+  });
+  RelatedCustomersCompanion.insert({
+    this.id = const Value.absent(),
+    required String managerSoldTo,
+    required String customerSoldTo,
+    required String customerName,
+  })  : managerSoldTo = Value(managerSoldTo),
+        customerSoldTo = Value(customerSoldTo),
+        customerName = Value(customerName);
+  static Insertable<RelatedCustomer> custom({
+    Expression<int>? id,
+    Expression<String>? managerSoldTo,
+    Expression<String>? customerSoldTo,
+    Expression<String>? customerName,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (managerSoldTo != null) 'manager_sold_to': managerSoldTo,
+      if (customerSoldTo != null) 'customer_sold_to': customerSoldTo,
+      if (customerName != null) 'customer_name': customerName,
+    });
+  }
+
+  RelatedCustomersCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? managerSoldTo,
+      Value<String>? customerSoldTo,
+      Value<String>? customerName}) {
+    return RelatedCustomersCompanion(
+      id: id ?? this.id,
+      managerSoldTo: managerSoldTo ?? this.managerSoldTo,
+      customerSoldTo: customerSoldTo ?? this.customerSoldTo,
+      customerName: customerName ?? this.customerName,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (managerSoldTo.present) {
+      map['manager_sold_to'] = Variable<String>(managerSoldTo.value);
+    }
+    if (customerSoldTo.present) {
+      map['customer_sold_to'] = Variable<String>(customerSoldTo.value);
+    }
+    if (customerName.present) {
+      map['customer_name'] = Variable<String>(customerName.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RelatedCustomersCompanion(')
+          ..write('id: $id, ')
+          ..write('managerSoldTo: $managerSoldTo, ')
+          ..write('customerSoldTo: $customerSoldTo, ')
+          ..write('customerName: $customerName')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $BillingDetailsTable extends BillingDetails
     with TableInfo<$BillingDetailsTable, BillingDetail> {
   @override
@@ -1315,970 +1590,764 @@ class DeliveryDetailsCompanion extends UpdateCompanion<DeliveryDetail> {
   }
 }
 
-class $RelatedCustomersTable extends RelatedCustomers
-    with TableInfo<$RelatedCustomersTable, RelatedCustomer> {
+class $ItemMasterTable extends ItemMaster
+    with TableInfo<$ItemMasterTable, ItemMasterData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $RelatedCustomersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  $ItemMasterTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _itemNumberMeta =
+      const VerificationMeta('itemNumber');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _managerSoldToMeta =
-      const VerificationMeta('managerSoldTo');
-  @override
-  late final GeneratedColumn<String> managerSoldTo = GeneratedColumn<String>(
-      'manager_sold_to', aliasedName, false,
+  late final GeneratedColumn<String> itemNumber = GeneratedColumn<String>(
+      'item_number', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerSoldToMeta =
-      const VerificationMeta('customerSoldTo');
+  static const VerificationMeta _articleMeta =
+      const VerificationMeta('article');
   @override
-  late final GeneratedColumn<String> customerSoldTo = GeneratedColumn<String>(
-      'customer_sold_to', aliasedName, false,
+  late final GeneratedColumn<String> article = GeneratedColumn<String>(
+      'article', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerNameMeta =
-      const VerificationMeta('customerName');
+  static const VerificationMeta _articleDescriptionMeta =
+      const VerificationMeta('articleDescription');
   @override
-  late final GeneratedColumn<String> customerName = GeneratedColumn<String>(
-      'customer_name', aliasedName, false,
+  late final GeneratedColumn<String> articleDescription =
+      GeneratedColumn<String>('article_description', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _uomMeta = const VerificationMeta('uom');
+  @override
+  late final GeneratedColumn<String> uom = GeneratedColumn<String>(
+      'uom', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _uomDescriptionMeta =
+      const VerificationMeta('uomDescription');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, managerSoldTo, customerSoldTo, customerName];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'related_customers';
-  @override
-  VerificationContext validateIntegrity(Insertable<RelatedCustomer> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('manager_sold_to')) {
-      context.handle(
-          _managerSoldToMeta,
-          managerSoldTo.isAcceptableOrUnknown(
-              data['manager_sold_to']!, _managerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_managerSoldToMeta);
-    }
-    if (data.containsKey('customer_sold_to')) {
-      context.handle(
-          _customerSoldToMeta,
-          customerSoldTo.isAcceptableOrUnknown(
-              data['customer_sold_to']!, _customerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_customerSoldToMeta);
-    }
-    if (data.containsKey('customer_name')) {
-      context.handle(
-          _customerNameMeta,
-          customerName.isAcceptableOrUnknown(
-              data['customer_name']!, _customerNameMeta));
-    } else if (isInserting) {
-      context.missing(_customerNameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RelatedCustomer map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RelatedCustomer(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      managerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}manager_sold_to'])!,
-      customerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}customer_sold_to'])!,
-      customerName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}customer_name'])!,
-    );
-  }
-
-  @override
-  $RelatedCustomersTable createAlias(String alias) {
-    return $RelatedCustomersTable(attachedDatabase, alias);
-  }
-}
-
-class RelatedCustomer extends DataClass implements Insertable<RelatedCustomer> {
-  final int id;
-  final String managerSoldTo;
-  final String customerSoldTo;
-  final String customerName;
-  const RelatedCustomer(
-      {required this.id,
-      required this.managerSoldTo,
-      required this.customerSoldTo,
-      required this.customerName});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['manager_sold_to'] = Variable<String>(managerSoldTo);
-    map['customer_sold_to'] = Variable<String>(customerSoldTo);
-    map['customer_name'] = Variable<String>(customerName);
-    return map;
-  }
-
-  RelatedCustomersCompanion toCompanion(bool nullToAbsent) {
-    return RelatedCustomersCompanion(
-      id: Value(id),
-      managerSoldTo: Value(managerSoldTo),
-      customerSoldTo: Value(customerSoldTo),
-      customerName: Value(customerName),
-    );
-  }
-
-  factory RelatedCustomer.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RelatedCustomer(
-      id: serializer.fromJson<int>(json['id']),
-      managerSoldTo: serializer.fromJson<String>(json['managerSoldTo']),
-      customerSoldTo: serializer.fromJson<String>(json['customerSoldTo']),
-      customerName: serializer.fromJson<String>(json['customerName']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'managerSoldTo': serializer.toJson<String>(managerSoldTo),
-      'customerSoldTo': serializer.toJson<String>(customerSoldTo),
-      'customerName': serializer.toJson<String>(customerName),
-    };
-  }
-
-  RelatedCustomer copyWith(
-          {int? id,
-          String? managerSoldTo,
-          String? customerSoldTo,
-          String? customerName}) =>
-      RelatedCustomer(
-        id: id ?? this.id,
-        managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-        customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-        customerName: customerName ?? this.customerName,
-      );
-  RelatedCustomer copyWithCompanion(RelatedCustomersCompanion data) {
-    return RelatedCustomer(
-      id: data.id.present ? data.id.value : this.id,
-      managerSoldTo: data.managerSoldTo.present
-          ? data.managerSoldTo.value
-          : this.managerSoldTo,
-      customerSoldTo: data.customerSoldTo.present
-          ? data.customerSoldTo.value
-          : this.customerSoldTo,
-      customerName: data.customerName.present
-          ? data.customerName.value
-          : this.customerName,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomer(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, managerSoldTo, customerSoldTo, customerName);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RelatedCustomer &&
-          other.id == this.id &&
-          other.managerSoldTo == this.managerSoldTo &&
-          other.customerSoldTo == this.customerSoldTo &&
-          other.customerName == this.customerName);
-}
-
-class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
-  final Value<int> id;
-  final Value<String> managerSoldTo;
-  final Value<String> customerSoldTo;
-  final Value<String> customerName;
-  const RelatedCustomersCompanion({
-    this.id = const Value.absent(),
-    this.managerSoldTo = const Value.absent(),
-    this.customerSoldTo = const Value.absent(),
-    this.customerName = const Value.absent(),
-  });
-  RelatedCustomersCompanion.insert({
-    this.id = const Value.absent(),
-    required String managerSoldTo,
-    required String customerSoldTo,
-    required String customerName,
-  })  : managerSoldTo = Value(managerSoldTo),
-        customerSoldTo = Value(customerSoldTo),
-        customerName = Value(customerName);
-  static Insertable<RelatedCustomer> custom({
-    Expression<int>? id,
-    Expression<String>? managerSoldTo,
-    Expression<String>? customerSoldTo,
-    Expression<String>? customerName,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (managerSoldTo != null) 'manager_sold_to': managerSoldTo,
-      if (customerSoldTo != null) 'customer_sold_to': customerSoldTo,
-      if (customerName != null) 'customer_name': customerName,
-    });
-  }
-
-  RelatedCustomersCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? managerSoldTo,
-      Value<String>? customerSoldTo,
-      Value<String>? customerName}) {
-    return RelatedCustomersCompanion(
-      id: id ?? this.id,
-      managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-      customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-      customerName: customerName ?? this.customerName,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (managerSoldTo.present) {
-      map['manager_sold_to'] = Variable<String>(managerSoldTo.value);
-    }
-    if (customerSoldTo.present) {
-      map['customer_sold_to'] = Variable<String>(customerSoldTo.value);
-    }
-    if (customerName.present) {
-      map['customer_name'] = Variable<String>(customerName.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomersCompanion(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $OrderDetailsTable extends OrderDetails
-    with TableInfo<$OrderDetailsTable, OrderDetail> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $OrderDetailsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _soldToNumberMeta =
-      const VerificationMeta('soldToNumber');
-  @override
-  late final GeneratedColumn<String> soldToNumber = GeneratedColumn<String>(
-      'sold_to_number', aliasedName, false,
+  late final GeneratedColumn<String> uomDescription = GeneratedColumn<String>(
+      'uom_description', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _orderNumberMeta =
-      const VerificationMeta('orderNumber');
+  static const VerificationMeta _shadeMeta = const VerificationMeta('shade');
   @override
-  late final GeneratedColumn<int> orderNumber = GeneratedColumn<int>(
-      'order_number', aliasedName, false,
-      type: DriftSqlType.int,
+  late final GeneratedColumn<String> shade = GeneratedColumn<String>(
+      'shade', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isInShadeCardMeta =
+      const VerificationMeta('isInShadeCard');
+  @override
+  late final GeneratedColumn<bool> isInShadeCard = GeneratedColumn<bool>(
+      'is_in_shade_card', aliasedName, false,
+      type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
-  static const VerificationMeta _orderTypeMeta =
-      const VerificationMeta('orderType');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_in_shade_card" IN (0, 1))'));
+  static const VerificationMeta _lastUpdatedDateTimeMeta =
+      const VerificationMeta('lastUpdatedDateTime');
   @override
-  late final GeneratedColumn<String> orderType = GeneratedColumn<String>(
-      'order_type', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _orderCompanyMeta =
-      const VerificationMeta('orderCompany');
-  @override
-  late final GeneratedColumn<String> orderCompany = GeneratedColumn<String>(
-      'order_company', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _orderDateMeta =
-      const VerificationMeta('orderDate');
-  @override
-  late final GeneratedColumn<DateTime> orderDate = GeneratedColumn<DateTime>(
-      'order_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _orderReferenceMeta =
-      const VerificationMeta('orderReference');
-  @override
-  late final GeneratedColumn<String> orderReference = GeneratedColumn<String>(
-      'order_reference', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _holdCodeMeta =
-      const VerificationMeta('holdCode');
-  @override
-  late final GeneratedColumn<String> holdCode = GeneratedColumn<String>(
-      'hold_code', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _shipToMeta = const VerificationMeta('shipTo');
-  @override
-  late final GeneratedColumn<int> shipTo = GeneratedColumn<int>(
-      'ship_to', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _quantityOrderedMeta =
-      const VerificationMeta('quantityOrdered');
-  @override
-  late final GeneratedColumn<int> quantityOrdered = GeneratedColumn<int>(
-      'quantity_ordered', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _quantityShippedMeta =
-      const VerificationMeta('quantityShipped');
-  @override
-  late final GeneratedColumn<int> quantityShipped = GeneratedColumn<int>(
-      'quantity_shipped', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _quantityCancelledMeta =
-      const VerificationMeta('quantityCancelled');
-  @override
-  late final GeneratedColumn<int> quantityCancelled = GeneratedColumn<int>(
-      'quantity_cancelled', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _orderStatusMeta =
-      const VerificationMeta('orderStatus');
-  @override
-  late final GeneratedColumn<String> orderStatus = GeneratedColumn<String>(
-      'order_status', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _orderAmountMeta =
-      const VerificationMeta('orderAmount');
-  @override
-  late final GeneratedColumn<double> orderAmount = GeneratedColumn<double>(
-      'order_amount', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
+  late final GeneratedColumn<DateTime> lastUpdatedDateTime =
+      GeneratedColumn<DateTime>('last_updated_date_time', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        soldToNumber,
-        orderNumber,
-        orderType,
-        orderCompany,
-        orderDate,
-        orderReference,
-        holdCode,
-        shipTo,
-        quantityOrdered,
-        quantityShipped,
-        quantityCancelled,
-        orderStatus,
-        orderAmount
+        itemNumber,
+        article,
+        articleDescription,
+        uom,
+        uomDescription,
+        shade,
+        isInShadeCard,
+        lastUpdatedDateTime
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'order_details';
+  static const String $name = 'item_master';
   @override
-  VerificationContext validateIntegrity(Insertable<OrderDetail> instance,
+  VerificationContext validateIntegrity(Insertable<ItemMasterData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('sold_to_number')) {
+    if (data.containsKey('item_number')) {
       context.handle(
-          _soldToNumberMeta,
-          soldToNumber.isAcceptableOrUnknown(
-              data['sold_to_number']!, _soldToNumberMeta));
+          _itemNumberMeta,
+          itemNumber.isAcceptableOrUnknown(
+              data['item_number']!, _itemNumberMeta));
     } else if (isInserting) {
-      context.missing(_soldToNumberMeta);
+      context.missing(_itemNumberMeta);
     }
-    if (data.containsKey('order_number')) {
+    if (data.containsKey('article')) {
+      context.handle(_articleMeta,
+          article.isAcceptableOrUnknown(data['article']!, _articleMeta));
+    } else if (isInserting) {
+      context.missing(_articleMeta);
+    }
+    if (data.containsKey('article_description')) {
       context.handle(
-          _orderNumberMeta,
-          orderNumber.isAcceptableOrUnknown(
-              data['order_number']!, _orderNumberMeta));
+          _articleDescriptionMeta,
+          articleDescription.isAcceptableOrUnknown(
+              data['article_description']!, _articleDescriptionMeta));
     } else if (isInserting) {
-      context.missing(_orderNumberMeta);
+      context.missing(_articleDescriptionMeta);
     }
-    if (data.containsKey('order_type')) {
-      context.handle(_orderTypeMeta,
-          orderType.isAcceptableOrUnknown(data['order_type']!, _orderTypeMeta));
-    } else if (isInserting) {
-      context.missing(_orderTypeMeta);
-    }
-    if (data.containsKey('order_company')) {
+    if (data.containsKey('uom')) {
       context.handle(
-          _orderCompanyMeta,
-          orderCompany.isAcceptableOrUnknown(
-              data['order_company']!, _orderCompanyMeta));
+          _uomMeta, uom.isAcceptableOrUnknown(data['uom']!, _uomMeta));
     } else if (isInserting) {
-      context.missing(_orderCompanyMeta);
+      context.missing(_uomMeta);
     }
-    if (data.containsKey('order_date')) {
-      context.handle(_orderDateMeta,
-          orderDate.isAcceptableOrUnknown(data['order_date']!, _orderDateMeta));
-    } else if (isInserting) {
-      context.missing(_orderDateMeta);
-    }
-    if (data.containsKey('order_reference')) {
+    if (data.containsKey('uom_description')) {
       context.handle(
-          _orderReferenceMeta,
-          orderReference.isAcceptableOrUnknown(
-              data['order_reference']!, _orderReferenceMeta));
+          _uomDescriptionMeta,
+          uomDescription.isAcceptableOrUnknown(
+              data['uom_description']!, _uomDescriptionMeta));
     } else if (isInserting) {
-      context.missing(_orderReferenceMeta);
+      context.missing(_uomDescriptionMeta);
     }
-    if (data.containsKey('hold_code')) {
-      context.handle(_holdCodeMeta,
-          holdCode.isAcceptableOrUnknown(data['hold_code']!, _holdCodeMeta));
-    } else if (isInserting) {
-      context.missing(_holdCodeMeta);
-    }
-    if (data.containsKey('ship_to')) {
-      context.handle(_shipToMeta,
-          shipTo.isAcceptableOrUnknown(data['ship_to']!, _shipToMeta));
-    } else if (isInserting) {
-      context.missing(_shipToMeta);
-    }
-    if (data.containsKey('quantity_ordered')) {
+    if (data.containsKey('shade')) {
       context.handle(
-          _quantityOrderedMeta,
-          quantityOrdered.isAcceptableOrUnknown(
-              data['quantity_ordered']!, _quantityOrderedMeta));
+          _shadeMeta, shade.isAcceptableOrUnknown(data['shade']!, _shadeMeta));
     } else if (isInserting) {
-      context.missing(_quantityOrderedMeta);
+      context.missing(_shadeMeta);
     }
-    if (data.containsKey('quantity_shipped')) {
+    if (data.containsKey('is_in_shade_card')) {
       context.handle(
-          _quantityShippedMeta,
-          quantityShipped.isAcceptableOrUnknown(
-              data['quantity_shipped']!, _quantityShippedMeta));
+          _isInShadeCardMeta,
+          isInShadeCard.isAcceptableOrUnknown(
+              data['is_in_shade_card']!, _isInShadeCardMeta));
     } else if (isInserting) {
-      context.missing(_quantityShippedMeta);
+      context.missing(_isInShadeCardMeta);
     }
-    if (data.containsKey('quantity_cancelled')) {
+    if (data.containsKey('last_updated_date_time')) {
       context.handle(
-          _quantityCancelledMeta,
-          quantityCancelled.isAcceptableOrUnknown(
-              data['quantity_cancelled']!, _quantityCancelledMeta));
+          _lastUpdatedDateTimeMeta,
+          lastUpdatedDateTime.isAcceptableOrUnknown(
+              data['last_updated_date_time']!, _lastUpdatedDateTimeMeta));
     } else if (isInserting) {
-      context.missing(_quantityCancelledMeta);
-    }
-    if (data.containsKey('order_status')) {
-      context.handle(
-          _orderStatusMeta,
-          orderStatus.isAcceptableOrUnknown(
-              data['order_status']!, _orderStatusMeta));
-    } else if (isInserting) {
-      context.missing(_orderStatusMeta);
-    }
-    if (data.containsKey('order_amount')) {
-      context.handle(
-          _orderAmountMeta,
-          orderAmount.isAcceptableOrUnknown(
-              data['order_amount']!, _orderAmountMeta));
-    } else if (isInserting) {
-      context.missing(_orderAmountMeta);
+      context.missing(_lastUpdatedDateTimeMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {itemNumber};
   @override
-  OrderDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ItemMasterData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return OrderDetail(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      soldToNumber: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}sold_to_number'])!,
-      orderNumber: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}order_number'])!,
-      orderType: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}order_type'])!,
-      orderCompany: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}order_company'])!,
-      orderDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}order_date'])!,
-      orderReference: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}order_reference'])!,
-      holdCode: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}hold_code'])!,
-      shipTo: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}ship_to'])!,
-      quantityOrdered: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}quantity_ordered'])!,
-      quantityShipped: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}quantity_shipped'])!,
-      quantityCancelled: attachedDatabase.typeMapping.read(
-          DriftSqlType.int, data['${effectivePrefix}quantity_cancelled'])!,
-      orderStatus: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}order_status'])!,
-      orderAmount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}order_amount'])!,
+    return ItemMasterData(
+      itemNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_number'])!,
+      article: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}article'])!,
+      articleDescription: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}article_description'])!,
+      uom: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uom'])!,
+      uomDescription: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}uom_description'])!,
+      shade: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}shade'])!,
+      isInShadeCard: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_in_shade_card'])!,
+      lastUpdatedDateTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}last_updated_date_time'])!,
     );
   }
 
   @override
-  $OrderDetailsTable createAlias(String alias) {
-    return $OrderDetailsTable(attachedDatabase, alias);
+  $ItemMasterTable createAlias(String alias) {
+    return $ItemMasterTable(attachedDatabase, alias);
   }
 }
 
-class OrderDetail extends DataClass implements Insertable<OrderDetail> {
-  final int id;
-  final String soldToNumber;
-  final int orderNumber;
-  final String orderType;
-  final String orderCompany;
-  final DateTime orderDate;
-  final String orderReference;
-  final String holdCode;
-  final int shipTo;
-  final int quantityOrdered;
-  final int quantityShipped;
-  final int quantityCancelled;
-  final String orderStatus;
-  final double orderAmount;
-  const OrderDetail(
-      {required this.id,
-      required this.soldToNumber,
-      required this.orderNumber,
-      required this.orderType,
-      required this.orderCompany,
-      required this.orderDate,
-      required this.orderReference,
-      required this.holdCode,
-      required this.shipTo,
-      required this.quantityOrdered,
-      required this.quantityShipped,
-      required this.quantityCancelled,
-      required this.orderStatus,
-      required this.orderAmount});
+class ItemMasterData extends DataClass implements Insertable<ItemMasterData> {
+  final String itemNumber;
+  final String article;
+  final String articleDescription;
+  final String uom;
+  final String uomDescription;
+  final String shade;
+  final bool isInShadeCard;
+  final DateTime lastUpdatedDateTime;
+  const ItemMasterData(
+      {required this.itemNumber,
+      required this.article,
+      required this.articleDescription,
+      required this.uom,
+      required this.uomDescription,
+      required this.shade,
+      required this.isInShadeCard,
+      required this.lastUpdatedDateTime});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['sold_to_number'] = Variable<String>(soldToNumber);
-    map['order_number'] = Variable<int>(orderNumber);
-    map['order_type'] = Variable<String>(orderType);
-    map['order_company'] = Variable<String>(orderCompany);
-    map['order_date'] = Variable<DateTime>(orderDate);
-    map['order_reference'] = Variable<String>(orderReference);
-    map['hold_code'] = Variable<String>(holdCode);
-    map['ship_to'] = Variable<int>(shipTo);
-    map['quantity_ordered'] = Variable<int>(quantityOrdered);
-    map['quantity_shipped'] = Variable<int>(quantityShipped);
-    map['quantity_cancelled'] = Variable<int>(quantityCancelled);
-    map['order_status'] = Variable<String>(orderStatus);
-    map['order_amount'] = Variable<double>(orderAmount);
+    map['item_number'] = Variable<String>(itemNumber);
+    map['article'] = Variable<String>(article);
+    map['article_description'] = Variable<String>(articleDescription);
+    map['uom'] = Variable<String>(uom);
+    map['uom_description'] = Variable<String>(uomDescription);
+    map['shade'] = Variable<String>(shade);
+    map['is_in_shade_card'] = Variable<bool>(isInShadeCard);
+    map['last_updated_date_time'] = Variable<DateTime>(lastUpdatedDateTime);
     return map;
   }
 
-  OrderDetailsCompanion toCompanion(bool nullToAbsent) {
-    return OrderDetailsCompanion(
-      id: Value(id),
-      soldToNumber: Value(soldToNumber),
-      orderNumber: Value(orderNumber),
-      orderType: Value(orderType),
-      orderCompany: Value(orderCompany),
-      orderDate: Value(orderDate),
-      orderReference: Value(orderReference),
-      holdCode: Value(holdCode),
-      shipTo: Value(shipTo),
-      quantityOrdered: Value(quantityOrdered),
-      quantityShipped: Value(quantityShipped),
-      quantityCancelled: Value(quantityCancelled),
-      orderStatus: Value(orderStatus),
-      orderAmount: Value(orderAmount),
+  ItemMasterCompanion toCompanion(bool nullToAbsent) {
+    return ItemMasterCompanion(
+      itemNumber: Value(itemNumber),
+      article: Value(article),
+      articleDescription: Value(articleDescription),
+      uom: Value(uom),
+      uomDescription: Value(uomDescription),
+      shade: Value(shade),
+      isInShadeCard: Value(isInShadeCard),
+      lastUpdatedDateTime: Value(lastUpdatedDateTime),
     );
   }
 
-  factory OrderDetail.fromJson(Map<String, dynamic> json,
+  factory ItemMasterData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return OrderDetail(
-      id: serializer.fromJson<int>(json['id']),
-      soldToNumber: serializer.fromJson<String>(json['soldToNumber']),
-      orderNumber: serializer.fromJson<int>(json['orderNumber']),
-      orderType: serializer.fromJson<String>(json['orderType']),
-      orderCompany: serializer.fromJson<String>(json['orderCompany']),
-      orderDate: serializer.fromJson<DateTime>(json['orderDate']),
-      orderReference: serializer.fromJson<String>(json['orderReference']),
-      holdCode: serializer.fromJson<String>(json['holdCode']),
-      shipTo: serializer.fromJson<int>(json['shipTo']),
-      quantityOrdered: serializer.fromJson<int>(json['quantityOrdered']),
-      quantityShipped: serializer.fromJson<int>(json['quantityShipped']),
-      quantityCancelled: serializer.fromJson<int>(json['quantityCancelled']),
-      orderStatus: serializer.fromJson<String>(json['orderStatus']),
-      orderAmount: serializer.fromJson<double>(json['orderAmount']),
+    return ItemMasterData(
+      itemNumber: serializer.fromJson<String>(json['itemNumber']),
+      article: serializer.fromJson<String>(json['article']),
+      articleDescription:
+          serializer.fromJson<String>(json['articleDescription']),
+      uom: serializer.fromJson<String>(json['uom']),
+      uomDescription: serializer.fromJson<String>(json['uomDescription']),
+      shade: serializer.fromJson<String>(json['shade']),
+      isInShadeCard: serializer.fromJson<bool>(json['isInShadeCard']),
+      lastUpdatedDateTime:
+          serializer.fromJson<DateTime>(json['lastUpdatedDateTime']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'soldToNumber': serializer.toJson<String>(soldToNumber),
-      'orderNumber': serializer.toJson<int>(orderNumber),
-      'orderType': serializer.toJson<String>(orderType),
-      'orderCompany': serializer.toJson<String>(orderCompany),
-      'orderDate': serializer.toJson<DateTime>(orderDate),
-      'orderReference': serializer.toJson<String>(orderReference),
-      'holdCode': serializer.toJson<String>(holdCode),
-      'shipTo': serializer.toJson<int>(shipTo),
-      'quantityOrdered': serializer.toJson<int>(quantityOrdered),
-      'quantityShipped': serializer.toJson<int>(quantityShipped),
-      'quantityCancelled': serializer.toJson<int>(quantityCancelled),
-      'orderStatus': serializer.toJson<String>(orderStatus),
-      'orderAmount': serializer.toJson<double>(orderAmount),
+      'itemNumber': serializer.toJson<String>(itemNumber),
+      'article': serializer.toJson<String>(article),
+      'articleDescription': serializer.toJson<String>(articleDescription),
+      'uom': serializer.toJson<String>(uom),
+      'uomDescription': serializer.toJson<String>(uomDescription),
+      'shade': serializer.toJson<String>(shade),
+      'isInShadeCard': serializer.toJson<bool>(isInShadeCard),
+      'lastUpdatedDateTime': serializer.toJson<DateTime>(lastUpdatedDateTime),
     };
   }
 
-  OrderDetail copyWith(
-          {int? id,
-          String? soldToNumber,
-          int? orderNumber,
-          String? orderType,
-          String? orderCompany,
-          DateTime? orderDate,
-          String? orderReference,
-          String? holdCode,
-          int? shipTo,
-          int? quantityOrdered,
-          int? quantityShipped,
-          int? quantityCancelled,
-          String? orderStatus,
-          double? orderAmount}) =>
-      OrderDetail(
-        id: id ?? this.id,
-        soldToNumber: soldToNumber ?? this.soldToNumber,
-        orderNumber: orderNumber ?? this.orderNumber,
-        orderType: orderType ?? this.orderType,
-        orderCompany: orderCompany ?? this.orderCompany,
-        orderDate: orderDate ?? this.orderDate,
-        orderReference: orderReference ?? this.orderReference,
-        holdCode: holdCode ?? this.holdCode,
-        shipTo: shipTo ?? this.shipTo,
-        quantityOrdered: quantityOrdered ?? this.quantityOrdered,
-        quantityShipped: quantityShipped ?? this.quantityShipped,
-        quantityCancelled: quantityCancelled ?? this.quantityCancelled,
-        orderStatus: orderStatus ?? this.orderStatus,
-        orderAmount: orderAmount ?? this.orderAmount,
+  ItemMasterData copyWith(
+          {String? itemNumber,
+          String? article,
+          String? articleDescription,
+          String? uom,
+          String? uomDescription,
+          String? shade,
+          bool? isInShadeCard,
+          DateTime? lastUpdatedDateTime}) =>
+      ItemMasterData(
+        itemNumber: itemNumber ?? this.itemNumber,
+        article: article ?? this.article,
+        articleDescription: articleDescription ?? this.articleDescription,
+        uom: uom ?? this.uom,
+        uomDescription: uomDescription ?? this.uomDescription,
+        shade: shade ?? this.shade,
+        isInShadeCard: isInShadeCard ?? this.isInShadeCard,
+        lastUpdatedDateTime: lastUpdatedDateTime ?? this.lastUpdatedDateTime,
       );
-  OrderDetail copyWithCompanion(OrderDetailsCompanion data) {
-    return OrderDetail(
-      id: data.id.present ? data.id.value : this.id,
-      soldToNumber: data.soldToNumber.present
-          ? data.soldToNumber.value
-          : this.soldToNumber,
-      orderNumber:
-          data.orderNumber.present ? data.orderNumber.value : this.orderNumber,
-      orderType: data.orderType.present ? data.orderType.value : this.orderType,
-      orderCompany: data.orderCompany.present
-          ? data.orderCompany.value
-          : this.orderCompany,
-      orderDate: data.orderDate.present ? data.orderDate.value : this.orderDate,
-      orderReference: data.orderReference.present
-          ? data.orderReference.value
-          : this.orderReference,
-      holdCode: data.holdCode.present ? data.holdCode.value : this.holdCode,
-      shipTo: data.shipTo.present ? data.shipTo.value : this.shipTo,
-      quantityOrdered: data.quantityOrdered.present
-          ? data.quantityOrdered.value
-          : this.quantityOrdered,
-      quantityShipped: data.quantityShipped.present
-          ? data.quantityShipped.value
-          : this.quantityShipped,
-      quantityCancelled: data.quantityCancelled.present
-          ? data.quantityCancelled.value
-          : this.quantityCancelled,
-      orderStatus:
-          data.orderStatus.present ? data.orderStatus.value : this.orderStatus,
-      orderAmount:
-          data.orderAmount.present ? data.orderAmount.value : this.orderAmount,
+  ItemMasterData copyWithCompanion(ItemMasterCompanion data) {
+    return ItemMasterData(
+      itemNumber:
+          data.itemNumber.present ? data.itemNumber.value : this.itemNumber,
+      article: data.article.present ? data.article.value : this.article,
+      articleDescription: data.articleDescription.present
+          ? data.articleDescription.value
+          : this.articleDescription,
+      uom: data.uom.present ? data.uom.value : this.uom,
+      uomDescription: data.uomDescription.present
+          ? data.uomDescription.value
+          : this.uomDescription,
+      shade: data.shade.present ? data.shade.value : this.shade,
+      isInShadeCard: data.isInShadeCard.present
+          ? data.isInShadeCard.value
+          : this.isInShadeCard,
+      lastUpdatedDateTime: data.lastUpdatedDateTime.present
+          ? data.lastUpdatedDateTime.value
+          : this.lastUpdatedDateTime,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('OrderDetail(')
-          ..write('id: $id, ')
-          ..write('soldToNumber: $soldToNumber, ')
-          ..write('orderNumber: $orderNumber, ')
-          ..write('orderType: $orderType, ')
-          ..write('orderCompany: $orderCompany, ')
-          ..write('orderDate: $orderDate, ')
-          ..write('orderReference: $orderReference, ')
-          ..write('holdCode: $holdCode, ')
-          ..write('shipTo: $shipTo, ')
-          ..write('quantityOrdered: $quantityOrdered, ')
-          ..write('quantityShipped: $quantityShipped, ')
-          ..write('quantityCancelled: $quantityCancelled, ')
-          ..write('orderStatus: $orderStatus, ')
-          ..write('orderAmount: $orderAmount')
+    return (StringBuffer('ItemMasterData(')
+          ..write('itemNumber: $itemNumber, ')
+          ..write('article: $article, ')
+          ..write('articleDescription: $articleDescription, ')
+          ..write('uom: $uom, ')
+          ..write('uomDescription: $uomDescription, ')
+          ..write('shade: $shade, ')
+          ..write('isInShadeCard: $isInShadeCard, ')
+          ..write('lastUpdatedDateTime: $lastUpdatedDateTime')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      soldToNumber,
-      orderNumber,
-      orderType,
-      orderCompany,
-      orderDate,
-      orderReference,
-      holdCode,
-      shipTo,
-      quantityOrdered,
-      quantityShipped,
-      quantityCancelled,
-      orderStatus,
-      orderAmount);
+  int get hashCode => Object.hash(itemNumber, article, articleDescription, uom,
+      uomDescription, shade, isInShadeCard, lastUpdatedDateTime);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is OrderDetail &&
-          other.id == this.id &&
-          other.soldToNumber == this.soldToNumber &&
-          other.orderNumber == this.orderNumber &&
-          other.orderType == this.orderType &&
-          other.orderCompany == this.orderCompany &&
-          other.orderDate == this.orderDate &&
-          other.orderReference == this.orderReference &&
-          other.holdCode == this.holdCode &&
-          other.shipTo == this.shipTo &&
-          other.quantityOrdered == this.quantityOrdered &&
-          other.quantityShipped == this.quantityShipped &&
-          other.quantityCancelled == this.quantityCancelled &&
-          other.orderStatus == this.orderStatus &&
-          other.orderAmount == this.orderAmount);
+      (other is ItemMasterData &&
+          other.itemNumber == this.itemNumber &&
+          other.article == this.article &&
+          other.articleDescription == this.articleDescription &&
+          other.uom == this.uom &&
+          other.uomDescription == this.uomDescription &&
+          other.shade == this.shade &&
+          other.isInShadeCard == this.isInShadeCard &&
+          other.lastUpdatedDateTime == this.lastUpdatedDateTime);
 }
 
-class OrderDetailsCompanion extends UpdateCompanion<OrderDetail> {
-  final Value<int> id;
-  final Value<String> soldToNumber;
-  final Value<int> orderNumber;
-  final Value<String> orderType;
-  final Value<String> orderCompany;
-  final Value<DateTime> orderDate;
-  final Value<String> orderReference;
-  final Value<String> holdCode;
-  final Value<int> shipTo;
-  final Value<int> quantityOrdered;
-  final Value<int> quantityShipped;
-  final Value<int> quantityCancelled;
-  final Value<String> orderStatus;
-  final Value<double> orderAmount;
-  const OrderDetailsCompanion({
-    this.id = const Value.absent(),
-    this.soldToNumber = const Value.absent(),
-    this.orderNumber = const Value.absent(),
-    this.orderType = const Value.absent(),
-    this.orderCompany = const Value.absent(),
-    this.orderDate = const Value.absent(),
-    this.orderReference = const Value.absent(),
-    this.holdCode = const Value.absent(),
-    this.shipTo = const Value.absent(),
-    this.quantityOrdered = const Value.absent(),
-    this.quantityShipped = const Value.absent(),
-    this.quantityCancelled = const Value.absent(),
-    this.orderStatus = const Value.absent(),
-    this.orderAmount = const Value.absent(),
+class ItemMasterCompanion extends UpdateCompanion<ItemMasterData> {
+  final Value<String> itemNumber;
+  final Value<String> article;
+  final Value<String> articleDescription;
+  final Value<String> uom;
+  final Value<String> uomDescription;
+  final Value<String> shade;
+  final Value<bool> isInShadeCard;
+  final Value<DateTime> lastUpdatedDateTime;
+  final Value<int> rowid;
+  const ItemMasterCompanion({
+    this.itemNumber = const Value.absent(),
+    this.article = const Value.absent(),
+    this.articleDescription = const Value.absent(),
+    this.uom = const Value.absent(),
+    this.uomDescription = const Value.absent(),
+    this.shade = const Value.absent(),
+    this.isInShadeCard = const Value.absent(),
+    this.lastUpdatedDateTime = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  OrderDetailsCompanion.insert({
-    this.id = const Value.absent(),
-    required String soldToNumber,
-    required int orderNumber,
-    required String orderType,
-    required String orderCompany,
-    required DateTime orderDate,
-    required String orderReference,
-    required String holdCode,
-    required int shipTo,
-    required int quantityOrdered,
-    required int quantityShipped,
-    required int quantityCancelled,
-    required String orderStatus,
-    required double orderAmount,
-  })  : soldToNumber = Value(soldToNumber),
-        orderNumber = Value(orderNumber),
-        orderType = Value(orderType),
-        orderCompany = Value(orderCompany),
-        orderDate = Value(orderDate),
-        orderReference = Value(orderReference),
-        holdCode = Value(holdCode),
-        shipTo = Value(shipTo),
-        quantityOrdered = Value(quantityOrdered),
-        quantityShipped = Value(quantityShipped),
-        quantityCancelled = Value(quantityCancelled),
-        orderStatus = Value(orderStatus),
-        orderAmount = Value(orderAmount);
-  static Insertable<OrderDetail> custom({
-    Expression<int>? id,
-    Expression<String>? soldToNumber,
-    Expression<int>? orderNumber,
-    Expression<String>? orderType,
-    Expression<String>? orderCompany,
-    Expression<DateTime>? orderDate,
-    Expression<String>? orderReference,
-    Expression<String>? holdCode,
-    Expression<int>? shipTo,
-    Expression<int>? quantityOrdered,
-    Expression<int>? quantityShipped,
-    Expression<int>? quantityCancelled,
-    Expression<String>? orderStatus,
-    Expression<double>? orderAmount,
+  ItemMasterCompanion.insert({
+    required String itemNumber,
+    required String article,
+    required String articleDescription,
+    required String uom,
+    required String uomDescription,
+    required String shade,
+    required bool isInShadeCard,
+    required DateTime lastUpdatedDateTime,
+    this.rowid = const Value.absent(),
+  })  : itemNumber = Value(itemNumber),
+        article = Value(article),
+        articleDescription = Value(articleDescription),
+        uom = Value(uom),
+        uomDescription = Value(uomDescription),
+        shade = Value(shade),
+        isInShadeCard = Value(isInShadeCard),
+        lastUpdatedDateTime = Value(lastUpdatedDateTime);
+  static Insertable<ItemMasterData> custom({
+    Expression<String>? itemNumber,
+    Expression<String>? article,
+    Expression<String>? articleDescription,
+    Expression<String>? uom,
+    Expression<String>? uomDescription,
+    Expression<String>? shade,
+    Expression<bool>? isInShadeCard,
+    Expression<DateTime>? lastUpdatedDateTime,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (soldToNumber != null) 'sold_to_number': soldToNumber,
-      if (orderNumber != null) 'order_number': orderNumber,
-      if (orderType != null) 'order_type': orderType,
-      if (orderCompany != null) 'order_company': orderCompany,
-      if (orderDate != null) 'order_date': orderDate,
-      if (orderReference != null) 'order_reference': orderReference,
-      if (holdCode != null) 'hold_code': holdCode,
-      if (shipTo != null) 'ship_to': shipTo,
-      if (quantityOrdered != null) 'quantity_ordered': quantityOrdered,
-      if (quantityShipped != null) 'quantity_shipped': quantityShipped,
-      if (quantityCancelled != null) 'quantity_cancelled': quantityCancelled,
-      if (orderStatus != null) 'order_status': orderStatus,
-      if (orderAmount != null) 'order_amount': orderAmount,
+      if (itemNumber != null) 'item_number': itemNumber,
+      if (article != null) 'article': article,
+      if (articleDescription != null) 'article_description': articleDescription,
+      if (uom != null) 'uom': uom,
+      if (uomDescription != null) 'uom_description': uomDescription,
+      if (shade != null) 'shade': shade,
+      if (isInShadeCard != null) 'is_in_shade_card': isInShadeCard,
+      if (lastUpdatedDateTime != null)
+        'last_updated_date_time': lastUpdatedDateTime,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  OrderDetailsCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? soldToNumber,
-      Value<int>? orderNumber,
-      Value<String>? orderType,
-      Value<String>? orderCompany,
-      Value<DateTime>? orderDate,
-      Value<String>? orderReference,
-      Value<String>? holdCode,
-      Value<int>? shipTo,
-      Value<int>? quantityOrdered,
-      Value<int>? quantityShipped,
-      Value<int>? quantityCancelled,
-      Value<String>? orderStatus,
-      Value<double>? orderAmount}) {
-    return OrderDetailsCompanion(
-      id: id ?? this.id,
-      soldToNumber: soldToNumber ?? this.soldToNumber,
-      orderNumber: orderNumber ?? this.orderNumber,
-      orderType: orderType ?? this.orderType,
-      orderCompany: orderCompany ?? this.orderCompany,
-      orderDate: orderDate ?? this.orderDate,
-      orderReference: orderReference ?? this.orderReference,
-      holdCode: holdCode ?? this.holdCode,
-      shipTo: shipTo ?? this.shipTo,
-      quantityOrdered: quantityOrdered ?? this.quantityOrdered,
-      quantityShipped: quantityShipped ?? this.quantityShipped,
-      quantityCancelled: quantityCancelled ?? this.quantityCancelled,
-      orderStatus: orderStatus ?? this.orderStatus,
-      orderAmount: orderAmount ?? this.orderAmount,
+  ItemMasterCompanion copyWith(
+      {Value<String>? itemNumber,
+      Value<String>? article,
+      Value<String>? articleDescription,
+      Value<String>? uom,
+      Value<String>? uomDescription,
+      Value<String>? shade,
+      Value<bool>? isInShadeCard,
+      Value<DateTime>? lastUpdatedDateTime,
+      Value<int>? rowid}) {
+    return ItemMasterCompanion(
+      itemNumber: itemNumber ?? this.itemNumber,
+      article: article ?? this.article,
+      articleDescription: articleDescription ?? this.articleDescription,
+      uom: uom ?? this.uom,
+      uomDescription: uomDescription ?? this.uomDescription,
+      shade: shade ?? this.shade,
+      isInShadeCard: isInShadeCard ?? this.isInShadeCard,
+      lastUpdatedDateTime: lastUpdatedDateTime ?? this.lastUpdatedDateTime,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (itemNumber.present) {
+      map['item_number'] = Variable<String>(itemNumber.value);
     }
-    if (soldToNumber.present) {
-      map['sold_to_number'] = Variable<String>(soldToNumber.value);
+    if (article.present) {
+      map['article'] = Variable<String>(article.value);
     }
-    if (orderNumber.present) {
-      map['order_number'] = Variable<int>(orderNumber.value);
+    if (articleDescription.present) {
+      map['article_description'] = Variable<String>(articleDescription.value);
     }
-    if (orderType.present) {
-      map['order_type'] = Variable<String>(orderType.value);
+    if (uom.present) {
+      map['uom'] = Variable<String>(uom.value);
     }
-    if (orderCompany.present) {
-      map['order_company'] = Variable<String>(orderCompany.value);
+    if (uomDescription.present) {
+      map['uom_description'] = Variable<String>(uomDescription.value);
     }
-    if (orderDate.present) {
-      map['order_date'] = Variable<DateTime>(orderDate.value);
+    if (shade.present) {
+      map['shade'] = Variable<String>(shade.value);
     }
-    if (orderReference.present) {
-      map['order_reference'] = Variable<String>(orderReference.value);
+    if (isInShadeCard.present) {
+      map['is_in_shade_card'] = Variable<bool>(isInShadeCard.value);
     }
-    if (holdCode.present) {
-      map['hold_code'] = Variable<String>(holdCode.value);
+    if (lastUpdatedDateTime.present) {
+      map['last_updated_date_time'] =
+          Variable<DateTime>(lastUpdatedDateTime.value);
     }
-    if (shipTo.present) {
-      map['ship_to'] = Variable<int>(shipTo.value);
-    }
-    if (quantityOrdered.present) {
-      map['quantity_ordered'] = Variable<int>(quantityOrdered.value);
-    }
-    if (quantityShipped.present) {
-      map['quantity_shipped'] = Variable<int>(quantityShipped.value);
-    }
-    if (quantityCancelled.present) {
-      map['quantity_cancelled'] = Variable<int>(quantityCancelled.value);
-    }
-    if (orderStatus.present) {
-      map['order_status'] = Variable<String>(orderStatus.value);
-    }
-    if (orderAmount.present) {
-      map['order_amount'] = Variable<double>(orderAmount.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('OrderDetailsCompanion(')
-          ..write('id: $id, ')
-          ..write('soldToNumber: $soldToNumber, ')
-          ..write('orderNumber: $orderNumber, ')
-          ..write('orderType: $orderType, ')
-          ..write('orderCompany: $orderCompany, ')
-          ..write('orderDate: $orderDate, ')
-          ..write('orderReference: $orderReference, ')
-          ..write('holdCode: $holdCode, ')
-          ..write('shipTo: $shipTo, ')
-          ..write('quantityOrdered: $quantityOrdered, ')
-          ..write('quantityShipped: $quantityShipped, ')
-          ..write('quantityCancelled: $quantityCancelled, ')
-          ..write('orderStatus: $orderStatus, ')
-          ..write('orderAmount: $orderAmount')
+    return (StringBuffer('ItemMasterCompanion(')
+          ..write('itemNumber: $itemNumber, ')
+          ..write('article: $article, ')
+          ..write('articleDescription: $articleDescription, ')
+          ..write('uom: $uom, ')
+          ..write('uomDescription: $uomDescription, ')
+          ..write('shade: $shade, ')
+          ..write('isInShadeCard: $isInShadeCard, ')
+          ..write('lastUpdatedDateTime: $lastUpdatedDateTime, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CartTableTable extends CartTable
+    with TableInfo<$CartTableTable, CartTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CartTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _soldToMeta = const VerificationMeta('soldTo');
+  @override
+  late final GeneratedColumn<String> soldTo = GeneratedColumn<String>(
+      'sold_to', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _articleMeta =
+      const VerificationMeta('article');
+  @override
+  late final GeneratedColumn<String> article = GeneratedColumn<String>(
+      'article', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _uomMeta = const VerificationMeta('uom');
+  @override
+  late final GeneratedColumn<String> uom = GeneratedColumn<String>(
+      'uom', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _shadeMeta = const VerificationMeta('shade');
+  @override
+  late final GeneratedColumn<String> shade = GeneratedColumn<String>(
+      'shade', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
+      'quantity', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [soldTo, article, uom, shade, quantity];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cart_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<CartTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('sold_to')) {
+      context.handle(_soldToMeta,
+          soldTo.isAcceptableOrUnknown(data['sold_to']!, _soldToMeta));
+    } else if (isInserting) {
+      context.missing(_soldToMeta);
+    }
+    if (data.containsKey('article')) {
+      context.handle(_articleMeta,
+          article.isAcceptableOrUnknown(data['article']!, _articleMeta));
+    } else if (isInserting) {
+      context.missing(_articleMeta);
+    }
+    if (data.containsKey('uom')) {
+      context.handle(
+          _uomMeta, uom.isAcceptableOrUnknown(data['uom']!, _uomMeta));
+    } else if (isInserting) {
+      context.missing(_uomMeta);
+    }
+    if (data.containsKey('shade')) {
+      context.handle(
+          _shadeMeta, shade.isAcceptableOrUnknown(data['shade']!, _shadeMeta));
+    } else if (isInserting) {
+      context.missing(_shadeMeta);
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    } else if (isInserting) {
+      context.missing(_quantityMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {soldTo, article, uom, shade};
+  @override
+  CartTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CartTableData(
+      soldTo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sold_to'])!,
+      article: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}article'])!,
+      uom: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uom'])!,
+      shade: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}shade'])!,
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity'])!,
+    );
+  }
+
+  @override
+  $CartTableTable createAlias(String alias) {
+    return $CartTableTable(attachedDatabase, alias);
+  }
+}
+
+class CartTableData extends DataClass implements Insertable<CartTableData> {
+  final String soldTo;
+  final String article;
+  final String uom;
+  final String shade;
+  final int quantity;
+  const CartTableData(
+      {required this.soldTo,
+      required this.article,
+      required this.uom,
+      required this.shade,
+      required this.quantity});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['sold_to'] = Variable<String>(soldTo);
+    map['article'] = Variable<String>(article);
+    map['uom'] = Variable<String>(uom);
+    map['shade'] = Variable<String>(shade);
+    map['quantity'] = Variable<int>(quantity);
+    return map;
+  }
+
+  CartTableCompanion toCompanion(bool nullToAbsent) {
+    return CartTableCompanion(
+      soldTo: Value(soldTo),
+      article: Value(article),
+      uom: Value(uom),
+      shade: Value(shade),
+      quantity: Value(quantity),
+    );
+  }
+
+  factory CartTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CartTableData(
+      soldTo: serializer.fromJson<String>(json['soldTo']),
+      article: serializer.fromJson<String>(json['article']),
+      uom: serializer.fromJson<String>(json['uom']),
+      shade: serializer.fromJson<String>(json['shade']),
+      quantity: serializer.fromJson<int>(json['quantity']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'soldTo': serializer.toJson<String>(soldTo),
+      'article': serializer.toJson<String>(article),
+      'uom': serializer.toJson<String>(uom),
+      'shade': serializer.toJson<String>(shade),
+      'quantity': serializer.toJson<int>(quantity),
+    };
+  }
+
+  CartTableData copyWith(
+          {String? soldTo,
+          String? article,
+          String? uom,
+          String? shade,
+          int? quantity}) =>
+      CartTableData(
+        soldTo: soldTo ?? this.soldTo,
+        article: article ?? this.article,
+        uom: uom ?? this.uom,
+        shade: shade ?? this.shade,
+        quantity: quantity ?? this.quantity,
+      );
+  CartTableData copyWithCompanion(CartTableCompanion data) {
+    return CartTableData(
+      soldTo: data.soldTo.present ? data.soldTo.value : this.soldTo,
+      article: data.article.present ? data.article.value : this.article,
+      uom: data.uom.present ? data.uom.value : this.uom,
+      shade: data.shade.present ? data.shade.value : this.shade,
+      quantity: data.quantity.present ? data.quantity.value : this.quantity,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CartTableData(')
+          ..write('soldTo: $soldTo, ')
+          ..write('article: $article, ')
+          ..write('uom: $uom, ')
+          ..write('shade: $shade, ')
+          ..write('quantity: $quantity')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(soldTo, article, uom, shade, quantity);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CartTableData &&
+          other.soldTo == this.soldTo &&
+          other.article == this.article &&
+          other.uom == this.uom &&
+          other.shade == this.shade &&
+          other.quantity == this.quantity);
+}
+
+class CartTableCompanion extends UpdateCompanion<CartTableData> {
+  final Value<String> soldTo;
+  final Value<String> article;
+  final Value<String> uom;
+  final Value<String> shade;
+  final Value<int> quantity;
+  final Value<int> rowid;
+  const CartTableCompanion({
+    this.soldTo = const Value.absent(),
+    this.article = const Value.absent(),
+    this.uom = const Value.absent(),
+    this.shade = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CartTableCompanion.insert({
+    required String soldTo,
+    required String article,
+    required String uom,
+    required String shade,
+    required int quantity,
+    this.rowid = const Value.absent(),
+  })  : soldTo = Value(soldTo),
+        article = Value(article),
+        uom = Value(uom),
+        shade = Value(shade),
+        quantity = Value(quantity);
+  static Insertable<CartTableData> custom({
+    Expression<String>? soldTo,
+    Expression<String>? article,
+    Expression<String>? uom,
+    Expression<String>? shade,
+    Expression<int>? quantity,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (soldTo != null) 'sold_to': soldTo,
+      if (article != null) 'article': article,
+      if (uom != null) 'uom': uom,
+      if (shade != null) 'shade': shade,
+      if (quantity != null) 'quantity': quantity,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CartTableCompanion copyWith(
+      {Value<String>? soldTo,
+      Value<String>? article,
+      Value<String>? uom,
+      Value<String>? shade,
+      Value<int>? quantity,
+      Value<int>? rowid}) {
+    return CartTableCompanion(
+      soldTo: soldTo ?? this.soldTo,
+      article: article ?? this.article,
+      uom: uom ?? this.uom,
+      shade: shade ?? this.shade,
+      quantity: quantity ?? this.quantity,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (soldTo.present) {
+      map['sold_to'] = Variable<String>(soldTo.value);
+    }
+    if (article.present) {
+      map['article'] = Variable<String>(article.value);
+    }
+    if (uom.present) {
+      map['uom'] = Variable<String>(uom.value);
+    }
+    if (shade.present) {
+      map['shade'] = Variable<String>(shade.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CartTableCompanion(')
+          ..write('soldTo: $soldTo, ')
+          ..write('article: $article, ')
+          ..write('uom: $uom, ')
+          ..write('shade: $shade, ')
+          ..write('quantity: $quantity, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2288,22 +2357,24 @@ abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
   late final $UserDetailsTable userDetails = $UserDetailsTable(this);
+  late final $RelatedCustomersTable relatedCustomers =
+      $RelatedCustomersTable(this);
   late final $BillingDetailsTable billingDetails = $BillingDetailsTable(this);
   late final $DeliveryDetailsTable deliveryDetails =
       $DeliveryDetailsTable(this);
-  late final $RelatedCustomersTable relatedCustomers =
-      $RelatedCustomersTable(this);
-  late final $OrderDetailsTable orderDetails = $OrderDetailsTable(this);
+  late final $ItemMasterTable itemMaster = $ItemMasterTable(this);
+  late final $CartTableTable cartTable = $CartTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         userDetails,
+        relatedCustomers,
         billingDetails,
         deliveryDetails,
-        relatedCustomers,
-        orderDetails
+        itemMaster,
+        cartTable
       ];
 }
 
@@ -2514,6 +2585,163 @@ typedef $$UserDetailsTableProcessedTableManager = ProcessedTableManager<
     $$UserDetailsTableUpdateCompanionBuilder,
     (UserDetail, BaseReferences<_$Database, $UserDetailsTable, UserDetail>),
     UserDetail,
+    PrefetchHooks Function()>;
+typedef $$RelatedCustomersTableCreateCompanionBuilder
+    = RelatedCustomersCompanion Function({
+  Value<int> id,
+  required String managerSoldTo,
+  required String customerSoldTo,
+  required String customerName,
+});
+typedef $$RelatedCustomersTableUpdateCompanionBuilder
+    = RelatedCustomersCompanion Function({
+  Value<int> id,
+  Value<String> managerSoldTo,
+  Value<String> customerSoldTo,
+  Value<String> customerName,
+});
+
+class $$RelatedCustomersTableFilterComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get customerName => $composableBuilder(
+      column: $table.customerName, builder: (column) => ColumnFilters(column));
+}
+
+class $$RelatedCustomersTableOrderingComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get customerName => $composableBuilder(
+      column: $table.customerName,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$RelatedCustomersTableAnnotationComposer
+    extends Composer<_$Database, $RelatedCustomersTable> {
+  $$RelatedCustomersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get managerSoldTo => $composableBuilder(
+      column: $table.managerSoldTo, builder: (column) => column);
+
+  GeneratedColumn<String> get customerSoldTo => $composableBuilder(
+      column: $table.customerSoldTo, builder: (column) => column);
+
+  GeneratedColumn<String> get customerName => $composableBuilder(
+      column: $table.customerName, builder: (column) => column);
+}
+
+class $$RelatedCustomersTableTableManager extends RootTableManager<
+    _$Database,
+    $RelatedCustomersTable,
+    RelatedCustomer,
+    $$RelatedCustomersTableFilterComposer,
+    $$RelatedCustomersTableOrderingComposer,
+    $$RelatedCustomersTableAnnotationComposer,
+    $$RelatedCustomersTableCreateCompanionBuilder,
+    $$RelatedCustomersTableUpdateCompanionBuilder,
+    (
+      RelatedCustomer,
+      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+    ),
+    RelatedCustomer,
+    PrefetchHooks Function()> {
+  $$RelatedCustomersTableTableManager(
+      _$Database db, $RelatedCustomersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RelatedCustomersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RelatedCustomersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RelatedCustomersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> managerSoldTo = const Value.absent(),
+            Value<String> customerSoldTo = const Value.absent(),
+            Value<String> customerName = const Value.absent(),
+          }) =>
+              RelatedCustomersCompanion(
+            id: id,
+            managerSoldTo: managerSoldTo,
+            customerSoldTo: customerSoldTo,
+            customerName: customerName,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String managerSoldTo,
+            required String customerSoldTo,
+            required String customerName,
+          }) =>
+              RelatedCustomersCompanion.insert(
+            id: id,
+            managerSoldTo: managerSoldTo,
+            customerSoldTo: customerSoldTo,
+            customerName: customerName,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $RelatedCustomersTable,
+    RelatedCustomer,
+    $$RelatedCustomersTableFilterComposer,
+    $$RelatedCustomersTableOrderingComposer,
+    $$RelatedCustomersTableAnnotationComposer,
+    $$RelatedCustomersTableCreateCompanionBuilder,
+    $$RelatedCustomersTableUpdateCompanionBuilder,
+    (
+      RelatedCustomer,
+      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+    ),
+    RelatedCustomer,
     PrefetchHooks Function()>;
 typedef $$BillingDetailsTableCreateCompanionBuilder = BillingDetailsCompanion
     Function({
@@ -2956,140 +3184,206 @@ typedef $$DeliveryDetailsTableProcessedTableManager = ProcessedTableManager<
     ),
     DeliveryDetail,
     PrefetchHooks Function()>;
-typedef $$RelatedCustomersTableCreateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  required String managerSoldTo,
-  required String customerSoldTo,
-  required String customerName,
+typedef $$ItemMasterTableCreateCompanionBuilder = ItemMasterCompanion Function({
+  required String itemNumber,
+  required String article,
+  required String articleDescription,
+  required String uom,
+  required String uomDescription,
+  required String shade,
+  required bool isInShadeCard,
+  required DateTime lastUpdatedDateTime,
+  Value<int> rowid,
 });
-typedef $$RelatedCustomersTableUpdateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  Value<String> managerSoldTo,
-  Value<String> customerSoldTo,
-  Value<String> customerName,
+typedef $$ItemMasterTableUpdateCompanionBuilder = ItemMasterCompanion Function({
+  Value<String> itemNumber,
+  Value<String> article,
+  Value<String> articleDescription,
+  Value<String> uom,
+  Value<String> uomDescription,
+  Value<String> shade,
+  Value<bool> isInShadeCard,
+  Value<DateTime> lastUpdatedDateTime,
+  Value<int> rowid,
 });
 
-class $$RelatedCustomersTableFilterComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableFilterComposer({
+class $$ItemMasterTableFilterComposer
+    extends Composer<_$Database, $ItemMasterTable> {
+  $$ItemMasterTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get itemNumber => $composableBuilder(
+      column: $table.itemNumber, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get article => $composableBuilder(
+      column: $table.article, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
+  ColumnFilters<String> get articleDescription => $composableBuilder(
+      column: $table.articleDescription,
       builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get uom => $composableBuilder(
+      column: $table.uom, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get uomDescription => $composableBuilder(
+      column: $table.uomDescription,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get shade => $composableBuilder(
+      column: $table.shade, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isInShadeCard => $composableBuilder(
+      column: $table.isInShadeCard, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastUpdatedDateTime => $composableBuilder(
+      column: $table.lastUpdatedDateTime,
+      builder: (column) => ColumnFilters(column));
 }
 
-class $$RelatedCustomersTableOrderingComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableOrderingComposer({
+class $$ItemMasterTableOrderingComposer
+    extends Composer<_$Database, $ItemMasterTable> {
+  $$ItemMasterTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get itemNumber => $composableBuilder(
+      column: $table.itemNumber, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo,
+  ColumnOrderings<String> get article => $composableBuilder(
+      column: $table.article, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get articleDescription => $composableBuilder(
+      column: $table.articleDescription,
       builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
+  ColumnOrderings<String> get uom => $composableBuilder(
+      column: $table.uom, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get uomDescription => $composableBuilder(
+      column: $table.uomDescription,
       builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get customerName => $composableBuilder(
-      column: $table.customerName,
+  ColumnOrderings<String> get shade => $composableBuilder(
+      column: $table.shade, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isInShadeCard => $composableBuilder(
+      column: $table.isInShadeCard,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastUpdatedDateTime => $composableBuilder(
+      column: $table.lastUpdatedDateTime,
       builder: (column) => ColumnOrderings(column));
 }
 
-class $$RelatedCustomersTableAnnotationComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableAnnotationComposer({
+class $$ItemMasterTableAnnotationComposer
+    extends Composer<_$Database, $ItemMasterTable> {
+  $$ItemMasterTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get itemNumber => $composableBuilder(
+      column: $table.itemNumber, builder: (column) => column);
 
-  GeneratedColumn<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => column);
+  GeneratedColumn<String> get article =>
+      $composableBuilder(column: $table.article, builder: (column) => column);
 
-  GeneratedColumn<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo, builder: (column) => column);
+  GeneratedColumn<String> get articleDescription => $composableBuilder(
+      column: $table.articleDescription, builder: (column) => column);
 
-  GeneratedColumn<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => column);
+  GeneratedColumn<String> get uom =>
+      $composableBuilder(column: $table.uom, builder: (column) => column);
+
+  GeneratedColumn<String> get uomDescription => $composableBuilder(
+      column: $table.uomDescription, builder: (column) => column);
+
+  GeneratedColumn<String> get shade =>
+      $composableBuilder(column: $table.shade, builder: (column) => column);
+
+  GeneratedColumn<bool> get isInShadeCard => $composableBuilder(
+      column: $table.isInShadeCard, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedDateTime => $composableBuilder(
+      column: $table.lastUpdatedDateTime, builder: (column) => column);
 }
 
-class $$RelatedCustomersTableTableManager extends RootTableManager<
+class $$ItemMasterTableTableManager extends RootTableManager<
     _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
+    $ItemMasterTable,
+    ItemMasterData,
+    $$ItemMasterTableFilterComposer,
+    $$ItemMasterTableOrderingComposer,
+    $$ItemMasterTableAnnotationComposer,
+    $$ItemMasterTableCreateCompanionBuilder,
+    $$ItemMasterTableUpdateCompanionBuilder,
     (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+      ItemMasterData,
+      BaseReferences<_$Database, $ItemMasterTable, ItemMasterData>
     ),
-    RelatedCustomer,
+    ItemMasterData,
     PrefetchHooks Function()> {
-  $$RelatedCustomersTableTableManager(
-      _$Database db, $RelatedCustomersTable table)
+  $$ItemMasterTableTableManager(_$Database db, $ItemMasterTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$RelatedCustomersTableFilterComposer($db: db, $table: table),
+              $$ItemMasterTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$RelatedCustomersTableOrderingComposer($db: db, $table: table),
+              $$ItemMasterTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$RelatedCustomersTableAnnotationComposer($db: db, $table: table),
+              $$ItemMasterTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> managerSoldTo = const Value.absent(),
-            Value<String> customerSoldTo = const Value.absent(),
-            Value<String> customerName = const Value.absent(),
+            Value<String> itemNumber = const Value.absent(),
+            Value<String> article = const Value.absent(),
+            Value<String> articleDescription = const Value.absent(),
+            Value<String> uom = const Value.absent(),
+            Value<String> uomDescription = const Value.absent(),
+            Value<String> shade = const Value.absent(),
+            Value<bool> isInShadeCard = const Value.absent(),
+            Value<DateTime> lastUpdatedDateTime = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              RelatedCustomersCompanion(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
+              ItemMasterCompanion(
+            itemNumber: itemNumber,
+            article: article,
+            articleDescription: articleDescription,
+            uom: uom,
+            uomDescription: uomDescription,
+            shade: shade,
+            isInShadeCard: isInShadeCard,
+            lastUpdatedDateTime: lastUpdatedDateTime,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String managerSoldTo,
-            required String customerSoldTo,
-            required String customerName,
+            required String itemNumber,
+            required String article,
+            required String articleDescription,
+            required String uom,
+            required String uomDescription,
+            required String shade,
+            required bool isInShadeCard,
+            required DateTime lastUpdatedDateTime,
+            Value<int> rowid = const Value.absent(),
           }) =>
-              RelatedCustomersCompanion.insert(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
+              ItemMasterCompanion.insert(
+            itemNumber: itemNumber,
+            article: article,
+            articleDescription: articleDescription,
+            uom: uom,
+            uomDescription: uomDescription,
+            shade: shade,
+            isInShadeCard: isInShadeCard,
+            lastUpdatedDateTime: lastUpdatedDateTime,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -3098,307 +3392,166 @@ class $$RelatedCustomersTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
+typedef $$ItemMasterTableProcessedTableManager = ProcessedTableManager<
     _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
+    $ItemMasterTable,
+    ItemMasterData,
+    $$ItemMasterTableFilterComposer,
+    $$ItemMasterTableOrderingComposer,
+    $$ItemMasterTableAnnotationComposer,
+    $$ItemMasterTableCreateCompanionBuilder,
+    $$ItemMasterTableUpdateCompanionBuilder,
     (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
+      ItemMasterData,
+      BaseReferences<_$Database, $ItemMasterTable, ItemMasterData>
     ),
-    RelatedCustomer,
+    ItemMasterData,
     PrefetchHooks Function()>;
-typedef $$OrderDetailsTableCreateCompanionBuilder = OrderDetailsCompanion
-    Function({
-  Value<int> id,
-  required String soldToNumber,
-  required int orderNumber,
-  required String orderType,
-  required String orderCompany,
-  required DateTime orderDate,
-  required String orderReference,
-  required String holdCode,
-  required int shipTo,
-  required int quantityOrdered,
-  required int quantityShipped,
-  required int quantityCancelled,
-  required String orderStatus,
-  required double orderAmount,
+typedef $$CartTableTableCreateCompanionBuilder = CartTableCompanion Function({
+  required String soldTo,
+  required String article,
+  required String uom,
+  required String shade,
+  required int quantity,
+  Value<int> rowid,
 });
-typedef $$OrderDetailsTableUpdateCompanionBuilder = OrderDetailsCompanion
-    Function({
-  Value<int> id,
-  Value<String> soldToNumber,
-  Value<int> orderNumber,
-  Value<String> orderType,
-  Value<String> orderCompany,
-  Value<DateTime> orderDate,
-  Value<String> orderReference,
-  Value<String> holdCode,
-  Value<int> shipTo,
-  Value<int> quantityOrdered,
-  Value<int> quantityShipped,
-  Value<int> quantityCancelled,
-  Value<String> orderStatus,
-  Value<double> orderAmount,
+typedef $$CartTableTableUpdateCompanionBuilder = CartTableCompanion Function({
+  Value<String> soldTo,
+  Value<String> article,
+  Value<String> uom,
+  Value<String> shade,
+  Value<int> quantity,
+  Value<int> rowid,
 });
 
-class $$OrderDetailsTableFilterComposer
-    extends Composer<_$Database, $OrderDetailsTable> {
-  $$OrderDetailsTableFilterComposer({
+class $$CartTableTableFilterComposer
+    extends Composer<_$Database, $CartTableTable> {
+  $$CartTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get soldTo => $composableBuilder(
+      column: $table.soldTo, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get article => $composableBuilder(
+      column: $table.article, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get orderNumber => $composableBuilder(
-      column: $table.orderNumber, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get uom => $composableBuilder(
+      column: $table.uom, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get orderType => $composableBuilder(
-      column: $table.orderType, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get shade => $composableBuilder(
+      column: $table.shade, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get orderCompany => $composableBuilder(
-      column: $table.orderCompany, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<DateTime> get orderDate => $composableBuilder(
-      column: $table.orderDate, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get orderReference => $composableBuilder(
-      column: $table.orderReference,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get holdCode => $composableBuilder(
-      column: $table.holdCode, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get shipTo => $composableBuilder(
-      column: $table.shipTo, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get quantityOrdered => $composableBuilder(
-      column: $table.quantityOrdered,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get quantityShipped => $composableBuilder(
-      column: $table.quantityShipped,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get quantityCancelled => $composableBuilder(
-      column: $table.quantityCancelled,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get orderStatus => $composableBuilder(
-      column: $table.orderStatus, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<double> get orderAmount => $composableBuilder(
-      column: $table.orderAmount, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get quantity => $composableBuilder(
+      column: $table.quantity, builder: (column) => ColumnFilters(column));
 }
 
-class $$OrderDetailsTableOrderingComposer
-    extends Composer<_$Database, $OrderDetailsTable> {
-  $$OrderDetailsTableOrderingComposer({
+class $$CartTableTableOrderingComposer
+    extends Composer<_$Database, $CartTableTable> {
+  $$CartTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get soldTo => $composableBuilder(
+      column: $table.soldTo, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get article => $composableBuilder(
+      column: $table.article, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get orderNumber => $composableBuilder(
-      column: $table.orderNumber, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get uom => $composableBuilder(
+      column: $table.uom, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get orderType => $composableBuilder(
-      column: $table.orderType, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get shade => $composableBuilder(
+      column: $table.shade, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get orderCompany => $composableBuilder(
-      column: $table.orderCompany,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<DateTime> get orderDate => $composableBuilder(
-      column: $table.orderDate, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get orderReference => $composableBuilder(
-      column: $table.orderReference,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get holdCode => $composableBuilder(
-      column: $table.holdCode, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get shipTo => $composableBuilder(
-      column: $table.shipTo, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get quantityOrdered => $composableBuilder(
-      column: $table.quantityOrdered,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get quantityShipped => $composableBuilder(
-      column: $table.quantityShipped,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get quantityCancelled => $composableBuilder(
-      column: $table.quantityCancelled,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get orderStatus => $composableBuilder(
-      column: $table.orderStatus, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<double> get orderAmount => $composableBuilder(
-      column: $table.orderAmount, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get quantity => $composableBuilder(
+      column: $table.quantity, builder: (column) => ColumnOrderings(column));
 }
 
-class $$OrderDetailsTableAnnotationComposer
-    extends Composer<_$Database, $OrderDetailsTable> {
-  $$OrderDetailsTableAnnotationComposer({
+class $$CartTableTableAnnotationComposer
+    extends Composer<_$Database, $CartTableTable> {
+  $$CartTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get soldTo =>
+      $composableBuilder(column: $table.soldTo, builder: (column) => column);
 
-  GeneratedColumn<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber, builder: (column) => column);
+  GeneratedColumn<String> get article =>
+      $composableBuilder(column: $table.article, builder: (column) => column);
 
-  GeneratedColumn<int> get orderNumber => $composableBuilder(
-      column: $table.orderNumber, builder: (column) => column);
+  GeneratedColumn<String> get uom =>
+      $composableBuilder(column: $table.uom, builder: (column) => column);
 
-  GeneratedColumn<String> get orderType =>
-      $composableBuilder(column: $table.orderType, builder: (column) => column);
+  GeneratedColumn<String> get shade =>
+      $composableBuilder(column: $table.shade, builder: (column) => column);
 
-  GeneratedColumn<String> get orderCompany => $composableBuilder(
-      column: $table.orderCompany, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get orderDate =>
-      $composableBuilder(column: $table.orderDate, builder: (column) => column);
-
-  GeneratedColumn<String> get orderReference => $composableBuilder(
-      column: $table.orderReference, builder: (column) => column);
-
-  GeneratedColumn<String> get holdCode =>
-      $composableBuilder(column: $table.holdCode, builder: (column) => column);
-
-  GeneratedColumn<int> get shipTo =>
-      $composableBuilder(column: $table.shipTo, builder: (column) => column);
-
-  GeneratedColumn<int> get quantityOrdered => $composableBuilder(
-      column: $table.quantityOrdered, builder: (column) => column);
-
-  GeneratedColumn<int> get quantityShipped => $composableBuilder(
-      column: $table.quantityShipped, builder: (column) => column);
-
-  GeneratedColumn<int> get quantityCancelled => $composableBuilder(
-      column: $table.quantityCancelled, builder: (column) => column);
-
-  GeneratedColumn<String> get orderStatus => $composableBuilder(
-      column: $table.orderStatus, builder: (column) => column);
-
-  GeneratedColumn<double> get orderAmount => $composableBuilder(
-      column: $table.orderAmount, builder: (column) => column);
+  GeneratedColumn<int> get quantity =>
+      $composableBuilder(column: $table.quantity, builder: (column) => column);
 }
 
-class $$OrderDetailsTableTableManager extends RootTableManager<
+class $$CartTableTableTableManager extends RootTableManager<
     _$Database,
-    $OrderDetailsTable,
-    OrderDetail,
-    $$OrderDetailsTableFilterComposer,
-    $$OrderDetailsTableOrderingComposer,
-    $$OrderDetailsTableAnnotationComposer,
-    $$OrderDetailsTableCreateCompanionBuilder,
-    $$OrderDetailsTableUpdateCompanionBuilder,
-    (OrderDetail, BaseReferences<_$Database, $OrderDetailsTable, OrderDetail>),
-    OrderDetail,
+    $CartTableTable,
+    CartTableData,
+    $$CartTableTableFilterComposer,
+    $$CartTableTableOrderingComposer,
+    $$CartTableTableAnnotationComposer,
+    $$CartTableTableCreateCompanionBuilder,
+    $$CartTableTableUpdateCompanionBuilder,
+    (CartTableData, BaseReferences<_$Database, $CartTableTable, CartTableData>),
+    CartTableData,
     PrefetchHooks Function()> {
-  $$OrderDetailsTableTableManager(_$Database db, $OrderDetailsTable table)
+  $$CartTableTableTableManager(_$Database db, $CartTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$OrderDetailsTableFilterComposer($db: db, $table: table),
+              $$CartTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$OrderDetailsTableOrderingComposer($db: db, $table: table),
+              $$CartTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$OrderDetailsTableAnnotationComposer($db: db, $table: table),
+              $$CartTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> soldToNumber = const Value.absent(),
-            Value<int> orderNumber = const Value.absent(),
-            Value<String> orderType = const Value.absent(),
-            Value<String> orderCompany = const Value.absent(),
-            Value<DateTime> orderDate = const Value.absent(),
-            Value<String> orderReference = const Value.absent(),
-            Value<String> holdCode = const Value.absent(),
-            Value<int> shipTo = const Value.absent(),
-            Value<int> quantityOrdered = const Value.absent(),
-            Value<int> quantityShipped = const Value.absent(),
-            Value<int> quantityCancelled = const Value.absent(),
-            Value<String> orderStatus = const Value.absent(),
-            Value<double> orderAmount = const Value.absent(),
+            Value<String> soldTo = const Value.absent(),
+            Value<String> article = const Value.absent(),
+            Value<String> uom = const Value.absent(),
+            Value<String> shade = const Value.absent(),
+            Value<int> quantity = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              OrderDetailsCompanion(
-            id: id,
-            soldToNumber: soldToNumber,
-            orderNumber: orderNumber,
-            orderType: orderType,
-            orderCompany: orderCompany,
-            orderDate: orderDate,
-            orderReference: orderReference,
-            holdCode: holdCode,
-            shipTo: shipTo,
-            quantityOrdered: quantityOrdered,
-            quantityShipped: quantityShipped,
-            quantityCancelled: quantityCancelled,
-            orderStatus: orderStatus,
-            orderAmount: orderAmount,
+              CartTableCompanion(
+            soldTo: soldTo,
+            article: article,
+            uom: uom,
+            shade: shade,
+            quantity: quantity,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String soldToNumber,
-            required int orderNumber,
-            required String orderType,
-            required String orderCompany,
-            required DateTime orderDate,
-            required String orderReference,
-            required String holdCode,
-            required int shipTo,
-            required int quantityOrdered,
-            required int quantityShipped,
-            required int quantityCancelled,
-            required String orderStatus,
-            required double orderAmount,
+            required String soldTo,
+            required String article,
+            required String uom,
+            required String shade,
+            required int quantity,
+            Value<int> rowid = const Value.absent(),
           }) =>
-              OrderDetailsCompanion.insert(
-            id: id,
-            soldToNumber: soldToNumber,
-            orderNumber: orderNumber,
-            orderType: orderType,
-            orderCompany: orderCompany,
-            orderDate: orderDate,
-            orderReference: orderReference,
-            holdCode: holdCode,
-            shipTo: shipTo,
-            quantityOrdered: quantityOrdered,
-            quantityShipped: quantityShipped,
-            quantityCancelled: quantityCancelled,
-            orderStatus: orderStatus,
-            orderAmount: orderAmount,
+              CartTableCompanion.insert(
+            soldTo: soldTo,
+            article: article,
+            uom: uom,
+            shade: shade,
+            quantity: quantity,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -3407,17 +3560,17 @@ class $$OrderDetailsTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$OrderDetailsTableProcessedTableManager = ProcessedTableManager<
+typedef $$CartTableTableProcessedTableManager = ProcessedTableManager<
     _$Database,
-    $OrderDetailsTable,
-    OrderDetail,
-    $$OrderDetailsTableFilterComposer,
-    $$OrderDetailsTableOrderingComposer,
-    $$OrderDetailsTableAnnotationComposer,
-    $$OrderDetailsTableCreateCompanionBuilder,
-    $$OrderDetailsTableUpdateCompanionBuilder,
-    (OrderDetail, BaseReferences<_$Database, $OrderDetailsTable, OrderDetail>),
-    OrderDetail,
+    $CartTableTable,
+    CartTableData,
+    $$CartTableTableFilterComposer,
+    $$CartTableTableOrderingComposer,
+    $$CartTableTableAnnotationComposer,
+    $$CartTableTableCreateCompanionBuilder,
+    $$CartTableTableUpdateCompanionBuilder,
+    (CartTableData, BaseReferences<_$Database, $CartTableTable, CartTableData>),
+    CartTableData,
     PrefetchHooks Function()>;
 
 class $DatabaseManager {
@@ -3425,12 +3578,14 @@ class $DatabaseManager {
   $DatabaseManager(this._db);
   $$UserDetailsTableTableManager get userDetails =>
       $$UserDetailsTableTableManager(_db, _db.userDetails);
+  $$RelatedCustomersTableTableManager get relatedCustomers =>
+      $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
   $$BillingDetailsTableTableManager get billingDetails =>
       $$BillingDetailsTableTableManager(_db, _db.billingDetails);
   $$DeliveryDetailsTableTableManager get deliveryDetails =>
       $$DeliveryDetailsTableTableManager(_db, _db.deliveryDetails);
-  $$RelatedCustomersTableTableManager get relatedCustomers =>
-      $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
-  $$OrderDetailsTableTableManager get orderDetails =>
-      $$OrderDetailsTableTableManager(_db, _db.orderDetails);
+  $$ItemMasterTableTableManager get itemMaster =>
+      $$ItemMasterTableTableManager(_db, _db.itemMaster);
+  $$CartTableTableTableManager get cartTable =>
+      $$CartTableTableTableManager(_db, _db.cartTable);
 }

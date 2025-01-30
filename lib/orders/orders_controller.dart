@@ -4,35 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
+import 'package:vardhman_b2b/api/order_info.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/drift/database.dart';
+import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_entry_controller.dart';
-import 'package:vardhman_b2b/sample_data.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class OrdersController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final _userController = Get.find<UserController>(tag: 'userController');
 
-  final _rxFilteredOrderStatuses = RxList<OrderDetail>();
+  final _rxOrderInfos = <OrderInfo>[];
 
-  final _orderStatuses = <OrderDetail>[];
+  final rxEarliestOrderDate = oldestDateTime.obs;
 
-  final isRefreshing = false.obs;
+  final rxOrderFromDate = oldestDateTime.obs;
 
-  final rxFirstDate = oldestDateTime.obs;
-
-  final rxFromDate = oldestDateTime.obs;
-
-  final rxToDate = DateTime.now().obs;
+  final rxOrderToDate = DateTime.now().obs;
 
   final rxOrderNumberInput = ''.obs;
 
-  final orderNumberTextEditingController = TextEditingController();
+  final rxSelectedOrder = Rxn<OrderInfo>();
 
-  final rxSelectedLabdipOrder = Rxn<OrderDetail>();
-
-  final rxSelectedLabdipOrderDetails = <OrderDetailLine>[].obs;
+  final rxSelectedOrderDetails = <OrderDetailLine>[].obs;
 
   late final tabController = TabController(length: 4, vsync: this);
 
@@ -42,151 +36,118 @@ class OrdersController extends GetxController
 
   Future<void> init() async {
     _userController.rxCustomerDetail.listenAndPump(
-      (_) async {
-        await refreshOrders();
-
-        final earliestOrderDate = _orderStatuses.isNotEmpty
-            ? _orderStatuses.first.orderDate
-            : oldestDateTime;
-
-        rxFirstDate.value = earliestOrderDate;
-
-        rxFromDate.value = earliestOrderDate;
-      },
-    );
-
-    rxOrderNumberInput.listenAndPump(
       (_) {
-        filterOrders();
+        refreshOrders();
       },
     );
-  }
-
-  void filterOrders() {
-    final filteredOrders = _orderStatuses.where(
-      (OrderDetail) => OrderDetail.orderReference.trim().isNotEmpty
-          ? OrderDetail.orderReference.contains(rxOrderNumberInput.value)
-          : OrderDetail.orderNumber.toString().contains(
-                rxOrderNumberInput.value,
-              ),
-    );
-
-    _rxFilteredOrderStatuses.clear();
-
-    _rxFilteredOrderStatuses.addAll(filteredOrders);
   }
 
   Future<void> refreshOrders() async {
-    isRefreshing.value = true;
-
     final customerSoldToNumber =
         _userController.rxCustomerDetail.value.soldToNumber;
 
-    Api.fetchOrders(
+    final orderInfos = await Api.fetchOrders(
       soldToNumber: customerSoldToNumber,
-      fromDate: rxFirstDate.value,
-      toDate: DateTime.now(),
-    ).then((orderStatusCompanions) {
-      if (orderStatusCompanions.isNotEmpty) {
-        _orderStatuses.clear();
-
-        _orderStatuses.addAll(
-          orderStatusCompanions.map(
-            (e) => OrderDetail(
-              holdCode: e.holdCode.value,
-              id: 0,
-              orderAmount: e.orderAmount.value,
-              orderCompany: e.orderCompany.value,
-              orderDate: e.orderDate.value,
-              orderNumber: e.orderNumber.value,
-              orderReference: e.orderReference.value,
-              orderStatus: e.orderStatus.value,
-              orderType: e.orderType.value,
-              quantityCancelled: e.quantityCancelled.value,
-              quantityOrdered: e.quantityOrdered.value,
-              quantityShipped: e.quantityShipped.value,
-              shipTo: e.shipTo.value,
-              soldToNumber: e.soldToNumber.value,
-            ),
-          ),
-        );
-
-        _orderStatuses.sort(
-          (a, b) => a.orderDate.compareTo(b.orderDate),
-        );
-
-        filterOrders();
-
-        if (labdipOrders.isNotEmpty) {
-          if (rxSelectedLabdipOrder.value == null ||
-              !labdipOrders.contains(rxSelectedLabdipOrder.value)) {
-            selectLabdipOrder(labdipOrders.first);
-          }
-        } else {
-          rxSelectedLabdipOrder.value = null;
-
-          rxSelectedLabdipOrderDetails.clear();
-        }
-      }
-    });
-
-    filterOrders();
-
-    isRefreshing.value = false;
-  }
-
-  Future<void> selectLabdipOrder(OrderDetail OrderDetail) async {
-    rxSelectedLabdipOrder.value = OrderDetail;
-
-    rxSelectedLabdipOrderDetails.clear();
-
-    final orderDetailLines = await Api.fetchOrderDetails(
-      orderNumber: OrderDetail.orderNumber,
-      orderType: OrderDetail.orderType,
-      orderCompany: OrderDetail.orderCompany,
     );
 
-    rxSelectedLabdipOrderDetails.addAll(orderDetailLines);
+    _rxOrderInfos.clear();
+
+    if (orderInfos.isNotEmpty) {
+      _rxOrderInfos.addAll(orderInfos);
+
+      _rxOrderInfos.sort(
+        (a, b) => a.orderDate.compareTo(b.orderDate),
+      );
+
+      rxEarliestOrderDate.value = _rxOrderInfos.first.orderDate;
+
+      rxOrderFromDate.value = _rxOrderInfos.first.orderDate;
+    } else {
+      rxEarliestOrderDate.value = oldestDateTime;
+
+      rxOrderFromDate.value = oldestDateTime;
+    }
   }
 
-  List<OrderDetail> get inProgressOrders => _rxFilteredOrderStatuses
+  Future<void> selectOrder(OrderInfo orderStatusData) async {
+    rxSelectedOrder.value = orderStatusData;
+
+    final orderDetailLines = await Api.fetchOrderDetails(
+      orderNumber: orderStatusData.orderNumber,
+      orderType: orderStatusData.orderType,
+      orderCompany: orderStatusData.orderCompany,
+    );
+
+    if (orderDetailLines.isNotEmpty) {
+      rxSelectedOrder.value = orderStatusData;
+
+      rxSelectedOrderDetails.clear();
+
+      rxSelectedOrderDetails.addAll(orderDetailLines);
+    }
+
+    // Get.to(() => OrderDetailsView());
+  }
+
+  List<OrderInfo> get _filteredOrderInfos => _rxOrderInfos
       .where(
-        (OrderDetail) =>
-            OrderDetail.orderStatus == 'In Progress' ||
-            OrderDetail.orderStatus == 'Partially Dispatched',
+        (orderInfo) =>
+            (orderInfo.orderReference.trim().isNotEmpty
+                ? orderInfo.orderReference.contains(rxOrderNumberInput.value)
+                : orderInfo.orderNumber
+                    .toString()
+                    .contains(rxOrderNumberInput.value)) &&
+            orderInfo.orderDate.isAfter(
+              rxOrderFromDate.value.subtract(
+                Duration(days: 1),
+              ),
+            ) &&
+            orderInfo.orderDate.isBefore(
+              rxOrderToDate.value.add(
+                Duration(days: 1),
+              ),
+            ),
       )
       .toList();
 
-  List<OrderDetail> get holdOrders => _rxFilteredOrderStatuses
+  List<OrderInfo> get labdipOrders => _filteredOrderInfos
       .where(
-        (OrderDetail) => OrderDetail.orderStatus == 'Hold',
+        (orderStatusData) => orderStatusData.orderType == 'LD',
       )
       .toList();
 
-  List<OrderDetail> get cancelledOrders => _rxFilteredOrderStatuses
+  List<OrderInfo> get inProgressOrders => _filteredOrderInfos
       .where(
-        (OrderDetail) => OrderDetail.orderStatus == 'Cancelled',
+        (orderStatusData) =>
+            orderStatusData.orderStatus == 'In Progress' ||
+            orderStatusData.orderStatus == 'Partially Dispatched',
       )
       .toList();
 
-  List<OrderDetail> get dispatchedOrders => _rxFilteredOrderStatuses
+  List<OrderInfo> get holdOrders => _filteredOrderInfos
       .where(
-        (OrderDetail) =>
-            OrderDetail.orderStatus == 'Dispatched' ||
-            OrderDetail.orderStatus == 'Partially Dispatched',
+        (orderStatusData) => orderStatusData.orderStatus == 'Hold',
       )
       .toList();
 
-  List<OrderDetail> get labdipOrders => _rxFilteredOrderStatuses
+  List<OrderInfo> get cancelledOrders => _filteredOrderInfos
       .where(
-        (OrderDetail) => OrderDetail.orderType == 'LD',
+        (orderStatusData) => orderStatusData.orderStatus == 'Cancelled',
       )
       .toList();
 
-  Map<String, Article> get selectedOrderArticlesMap {
+  List<OrderInfo> get dispatchedOrders => _filteredOrderInfos
+      .where(
+        (orderStatusData) =>
+            orderStatusData.orderStatus == 'Dispatched' ||
+            orderStatusData.orderStatus == 'Partially Dispatched',
+      )
+      .toList();
+
+  Map<String, Article> getArticleMapFromOrderLines(
+      List<OrderDetailLine> orderDetailLines) {
     final articleMap = <String, Article>{};
-
-    for (var orderDetailLine in rxSelectedLabdipOrderDetails) {
+    for (var orderDetailLine in orderDetailLines) {
       final item = orderDetailLine.item;
 
       List<String> itemParts = item.split(RegExp('\\s+'));
@@ -201,6 +162,8 @@ class OrdersController extends GetxController
         String shade = itemParts[2].trim();
 
         int quantity = orderDetailLine.quantityOrdered;
+
+        final itemMasterController = Get.find<ItemMasterController>();
 
         if (article.isNotEmpty && uom.isNotEmpty && shade.isNotEmpty) {
           final articleObject = articleMap[article];
@@ -217,7 +180,7 @@ class OrdersController extends GetxController
             } else {
               articleObject.uomMap[uom] = Uom(
                 name: uom,
-                description: uomDescriptions[uom] ?? '',
+                description: itemMasterController.getUomDescription(uom),
                 shadeQuantitiesMap: {shade: quantity}.obs,
               );
             }
@@ -228,7 +191,7 @@ class OrdersController extends GetxController
               uomMap: {
                 uom: Uom(
                   name: uom,
-                  description: uomDescriptions[uom] ?? '',
+                  description: itemMasterController.getUomDescription(uom),
                   shadeQuantitiesMap: {shade: quantity}.obs,
                 )
               }.obs,
@@ -241,23 +204,22 @@ class OrdersController extends GetxController
     return articleMap;
   }
 
+  Map<String, Article> get selectedOrderArticlesMap =>
+      getArticleMapFromOrderLines(rxSelectedOrderDetails);
+
   bool get hasDefaultValues =>
       areDatesEqual(
-        rxFromDate.value,
-        rxFirstDate.value,
+        rxOrderFromDate.value,
+        rxEarliestOrderDate.value,
       ) &&
-      areDatesEqual(rxToDate.value, DateTime.now()) &&
+      areDatesEqual(rxOrderToDate.value, DateTime.now()) &&
       rxOrderNumberInput.value.isEmpty;
 
   Future<void> setDefaultValues() async {
-    rxFromDate.value = rxFirstDate.value;
+    rxOrderFromDate.value = rxEarliestOrderDate.value;
 
-    rxToDate.value = DateTime.now();
+    rxOrderToDate.value = DateTime.now();
 
     rxOrderNumberInput.value = '';
-
-    orderNumberTextEditingController.clear();
-
-    await refreshOrders();
   }
 }

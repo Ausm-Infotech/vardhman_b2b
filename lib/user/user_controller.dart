@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:drift/drift.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vardhman_b2b/api/api.dart';
@@ -7,14 +9,11 @@ import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/login/login_controller.dart';
-import 'package:vardhman_b2b/orders/order_entry_controller.dart';
 
 class UserController extends GetxController {
   final _sharedPrefs = Get.find<SharedPreferences>();
 
   final loginController = Get.find<LoginController>();
-
-  final orderEntryController = Get.find<OrderEntryController>();
 
   final Rx<UserDetail> rxCustomerDetail, rxUserDetail;
 
@@ -43,10 +42,6 @@ class UserController extends GetxController {
 
     _listenRxCustomerDetail();
   }
-
-  String get shipTo => rxDeliveryAddress.value?.deliveryAddressNumber == 0
-      ? rxCustomerDetail.value.soldToNumber
-      : rxDeliveryAddress.value?.deliveryAddressNumber.toString() ?? '';
 
   void _listenRxCustomerDetail() {
     _rxCustomerDetailSubscription = rxCustomerDetail.listenAndPump(
@@ -152,16 +147,43 @@ class UserController extends GetxController {
         );
   }
 
-  Future<void> refreshQuantity() async {
-    final itemNumber = getItemNumber(
-      article: orderEntryController.articleTextEditingController.text,
-      uom: orderEntryController.uomTextEditingController.text,
-      shade: orderEntryController.shadeTextEditingController.text,
+  Future<void> selectCustomer(String customerSoldToNumber) async {
+    final customerDetailComp = await Api.fetchUserData(customerSoldToNumber);
+
+    if (customerDetailComp != null) {
+      rxCustomerDetail.value = UserDetail(
+        id: 0,
+        mobileNumber: customerDetailComp.mobileNumber.value,
+        name: customerDetailComp.name.value,
+        soldToNumber: customerDetailComp.soldToNumber.value,
+        companyCode: customerDetailComp.companyCode.value,
+        companyName: customerDetailComp.companyName.value,
+        role: customerDetailComp.role.value,
+        category: customerDetailComp.category.value,
+      );
+
+      await _sharedPrefs.setString(
+        sharedPrefsSelectedCustomerKey(rxUserDetail.value),
+        customerSoldToNumber,
+      );
+    }
+  }
+
+  Future<void> refreshRelatedCustomers() async {
+    final relatedCustomers = await Api.fetchRelatedCustomers(
+      userCategory: rxUserDetail.value.category,
+      userAddressNumber: rxUserDetail.value.soldToNumber,
     );
 
-    availableQuantity.value = await Api.fetchItemQuantity(
-      branchPlant: rxDeliveryAddress.value?.branchPlant ?? '',
-      itemNumber: itemNumber,
+    await _database.managers.relatedCustomers
+        .filter(
+          (f) => f.managerSoldTo.equals(rxUserDetail.value.soldToNumber),
+        )
+        .delete();
+
+    _database.managers.relatedCustomers.bulkCreate(
+      (o) => relatedCustomers,
+      mode: InsertMode.insertOrReplace,
     );
   }
 

@@ -84,12 +84,12 @@ class LabdipOrdersView extends StatelessWidget {
                     .map(
                       (labdipOrder) => DataRow(
                         selected: labdipOrder ==
-                            ordersController.rxSelectedLabdipOrder.value,
+                            ordersController.rxSelectedOrder.value,
                         onSelectChanged: (value) {
                           if (value == true &&
-                              ordersController.rxSelectedLabdipOrder.value !=
+                              ordersController.rxSelectedOrder.value !=
                                   labdipOrder) {
-                            ordersController.selectLabdipOrder(labdipOrder);
+                            ordersController.selectOrder(labdipOrder);
                           }
                         },
                         cells: [

@@ -11,9 +11,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
 import 'package:universal_io/io.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
-import 'package:vardhman_b2b/api/invoice_info.dart' as api;
+import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
+import 'package:vardhman_b2b/api/order_info.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -21,6 +22,7 @@ import 'dart:developer';
 import 'package:dio/io.dart';
 
 import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
+import 'package:vardhman_b2b/sample_data.dart';
 
 class Api {
   static final _fileDownloadDio = Dio(
@@ -290,12 +292,10 @@ class Api {
     return relatedCustomerCompanions;
   }
 
-  static Future<List<OrderDetailsCompanion>> fetchOrders({
+  static Future<List<OrderInfo>> fetchOrders({
     required String soldToNumber,
-    required DateTime fromDate,
-    required DateTime toDate,
   }) async {
-    final orderDetailsCompanions = <OrderDetailsCompanion>[];
+    final orderInfos = <OrderInfo>[];
 
     try {
       final response = await _dio.post(
@@ -306,38 +306,36 @@ class Api {
       );
 
       if (response.statusCode == 200) {
-        for (var orderInfo in response.data["GetOrderStatus"]) {
-          final OrderDetailsCompanion orderDetailsCompanion =
-              OrderDetailsCompanion(
-            soldToNumber: Value(soldToNumber),
-            orderNumber: Value(orderInfo['OrderNumber']),
-            orderType: Value(orderInfo['OrType']),
-            orderCompany: Value(orderInfo['OrderCo']),
-            orderDate: Value(
-              DateFormat('MM/dd/yyyy').parse(
-                orderInfo['OrderDate'],
-              ),
+        for (var orderStatus in response.data["GetOrderStatus"]) {
+          final OrderInfo orderInfo = OrderInfo(
+            orderNumber: orderStatus['OrderNumber'],
+            orderType: orderStatus['OrType'],
+            orderCompany: orderStatus['OrderCo'],
+            orderDate: DateFormat('MM/dd/yyyy').parse(
+              orderStatus['OrderDate'],
             ),
-            orderReference: Value(orderInfo['OrderReference']),
-            holdCode: Value(orderInfo['HoldCode']),
-            shipTo: Value(orderInfo['ShipTo']),
-            quantityOrdered: Value(orderInfo['QuantityOrdered']),
-            quantityShipped: Value(orderInfo['QuantityShipped']),
-            quantityCancelled: Value(orderInfo['QuantityCanceled']),
-            orderStatus: Value(orderInfo['OrderStatus']),
-            orderAmount: Value(
-              double.tryParse(orderInfo['OrderAmount'].toString()) ?? 0.0,
-            ),
+            orderReference: orderStatus['OrderReference'],
+            holdCode: orderStatus['HoldCode'],
+            shipTo: orderStatus['ShipTo'],
+            quantityOrdered: orderStatus['QuantityOrdered'],
+            quantityShipped: orderStatus['QuantityShipped'],
+            quantityCancelled: orderStatus['QuantityCanceled'],
+            orderStatus: orderStatus['OrderStatus'],
+            orderAmount:
+                double.tryParse(orderStatus['OrderAmount'].toString()) ?? 0.0,
+            isDTM: orderStatus['DTMOrderYN'].toString().trim() == 'Y',
+            canIndent: orderStatus['InderntOrderYN'].toString().trim() == 'Y',
+            quantityBackOrdered: orderStatus['QuantityBackOrder'],
           );
 
-          orderDetailsCompanions.add(orderDetailsCompanion);
+          orderInfos.add(orderInfo);
         }
       }
     } catch (e) {
       log('fetchOrders error - $e');
     }
 
-    return orderDetailsCompanions;
+    return orderInfos;
   }
 
   static Future<List<OrderDetailLine>> fetchOrderDetails({
@@ -673,11 +671,11 @@ class Api {
     return invoiceReceiptDetailsMap;
   }
 
-  static Future<List<api.InvoiceInfo>> fetchInvoices({
+  static Future<List<InvoiceInfo>> fetchInvoices({
     required String customerNumber,
     required String company,
   }) async {
-    final invoiceDetailsCompanions = <api.InvoiceInfo>[];
+    final invoiceDetailsCompanions = <InvoiceInfo>[];
 
     try {
       final response = await _dio.post(
@@ -695,7 +693,7 @@ class Api {
         final openInvoicesData = response.data['OpenInvoices'] as List;
 
         for (final openInvoiceData in openInvoicesData) {
-          final openInvoiceInfo = api.InvoiceInfo(
+          final openInvoiceInfo = InvoiceInfo(
             openAmount: openInvoiceData['InvoiceOpenAmount'] + .0,
             grossAmount: openInvoiceData['InvoiceGrossAmount'] + .0,
             discountAmount: openInvoiceData['InvoiceDiscountAvailable'] + .0,
@@ -714,7 +712,7 @@ class Api {
               openInvoiceData['DiscountDueDate'],
             ),
             isOpen: true,
-            status: api.InvoiceStatus.processing,
+            status: InvoiceStatus.processing,
             receiptNumber:
                 invoiceReceiptNumbersMap[openInvoiceData['InvoiceNumber']]
                         ?['receiptNumber'] ??
@@ -731,7 +729,7 @@ class Api {
         final paidInvoicesData = response.data['PaidInvoice'] as List;
 
         for (final paidInvoiceData in paidInvoicesData) {
-          final paidInvoiceInfo = api.InvoiceInfo(
+          final paidInvoiceInfo = InvoiceInfo(
             openAmount: paidInvoiceData['InvoiceOpenAmount'] + .0,
             grossAmount: paidInvoiceData['InvoiceGrossAmount'] + .0,
             discountAmount: paidInvoiceData['InvoiceDiscountAmount'] + .0,
@@ -750,7 +748,7 @@ class Api {
               paidInvoiceData['DiscountDueDate'],
             ),
             isOpen: false,
-            status: api.InvoiceStatus.processing,
+            status: InvoiceStatus.processing,
             receiptNumber:
                 invoiceReceiptNumbersMap[paidInvoiceData['InvoiceNumber']]
                         ?['receiptNumber'] ??
@@ -1074,5 +1072,174 @@ class Api {
     }
 
     return null;
+  }
+
+  static Future<Map<String, String>> fetchUoMDescriptions() async {
+    final uomDescriptions = <String, String>{};
+
+    dynamic responseData;
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F0005",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F0005.KY|F0005.DL01",
+          "maxPageSize": "No Max",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F0005.SY",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "55"}
+                ]
+              },
+              {
+                "controlId": "F0005.RT",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "K2"}
+                ]
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        responseData = response.data;
+      }
+    } catch (e) {
+      log('fetchUoMDescriptions error - $e');
+
+      responseData = uomDescriptionsResponseData;
+    }
+
+    final rowset = responseData['fs_DATABROWSE_F0005']['data']['gridData']
+        ['rowset'] as List;
+    for (var row in rowset) {
+      uomDescriptions[row['F0005_KY'].trim()] = row['F0005_DL01'];
+    }
+
+    return uomDescriptions;
+  }
+
+  static Future<List<ItemMasterCompanion>> fetchItemMaster(
+      {required DateTime fromDate}) async {
+    final itemMasterCompanions = <ItemMasterCompanion>[];
+
+    dynamic responseData;
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F4101",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F4101.LITM|F4101.URCD|F4101.DSC1|F4101.UPMJ",
+          "maxPageSize": "No Max",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F4101.SRP1",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "DOM"}
+                ]
+              },
+              {
+                "controlId": "F4101.PRP1",
+                "operator": "LIST",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "Z"},
+                  {"specialValueId": "LITERAL", "content": "M"}
+                ]
+              },
+              {
+                "controlId": "F4101.STKT",
+                "operator": "NOT_EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "O"}
+                ]
+              },
+              {"controlId": "F4101.SEG1", "operator": "STR_NOT_BLANK"},
+              {"controlId": "F4101.SEG2", "operator": "STR_NOT_BLANK"},
+              {"controlId": "F4101.SEG3", "operator": "STR_NOT_BLANK"},
+              {
+                "controlId": "F4101.UPMJ",
+                "operator": "GREATER_EQUAL",
+                "value": [
+                  {
+                    "specialValueId": "LITERAL",
+                    "content": DateFormat('MM/dd/yyyy').format(fromDate)
+                  }
+                ]
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        responseData = response.data;
+      }
+    } catch (e) {
+      log('fetchItemMaster error - $e');
+
+      if (fromDate.isAtSameMomentAs(oldestDateTime)) {
+        responseData = itemMasterResponseData;
+      }
+    }
+
+    if (responseData != null) {
+      final uomDescriptions = await fetchUoMDescriptions();
+
+      final rowset = responseData['fs_DATABROWSE_F4101']['data']['gridData']
+          ['rowset'] as List;
+      for (var row in rowset) {
+        String itemNumber = row['F4101_LITM'];
+
+        List<String> itemParts = itemNumber.split(RegExp('\\s+'));
+
+        if (itemParts.length == 3) {
+          String article = itemParts[0].trim();
+
+          String uom = itemParts[1].trim();
+
+          String shade = itemParts[2].trim();
+
+          String upmj = row['F4101_UPMJ'];
+
+          itemMasterCompanions.add(
+            ItemMasterCompanion(
+              itemNumber: Value(row['F4101_LITM']),
+              article: Value(article),
+              articleDescription: Value(row['F4101_DSC1']),
+              uom: Value(uom),
+              uomDescription: Value(uomDescriptions[uom] ?? ''),
+              shade: Value(shade),
+              isInShadeCard: Value(row['F4101_URCD'] == 'Y'),
+              lastUpdatedDateTime: Value(
+                DateTime(
+                  int.parse(upmj.substring(0, 4)),
+                  int.parse(upmj.substring(4, 6)),
+                  int.parse(upmj.substring(6, 8)),
+                ),
+              ),
+            ),
+          );
+        } else {
+          log('incorrect item - $itemNumber');
+        }
+      }
+    }
+
+    return itemMasterCompanions;
   }
 }

@@ -26,7 +26,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              '${ordersController.rxSelectedLabdipOrder.value?.orderNumber} ${ordersController.rxSelectedLabdipOrder.value?.orderType}',
+              '${ordersController.rxSelectedOrder.value?.orderNumber} ${ordersController.rxSelectedOrder.value?.orderType}',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -37,7 +37,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
               height: 16,
             ),
             Flexible(
-              child: ordersController.rxSelectedLabdipOrderDetails.isEmpty
+              child: ordersController.rxSelectedOrderDetails.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
@@ -55,7 +55,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         // DataColumn2(
                         //     label: Text('Cancelled'), size: ColumnSize.S),
                       ],
-                      rows: ordersController.rxSelectedLabdipOrderDetails.map(
+                      rows: ordersController.rxSelectedOrderDetails.map(
                         (orderDetail) {
                           final itemParts =
                               orderDetail.item.split(RegExp('\\s+'));

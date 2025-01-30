@@ -1,13 +1,18 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drift/drift.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+// import 'package:speech_to_text/speech_recognition_result.dart';
+// import 'package:speech_to_text/speech_to_text.dart';
 import 'package:vardhman_b2b/common/excel_dialog.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/sample_data.dart';
+import 'package:vardhman_b2b/drift/database.dart';
+import 'package:vardhman_b2b/orders/item_master_controller.dart';
+import 'package:vardhman_b2b/user/user_controller.dart';
 
 class Article {
   final String name, description;
@@ -38,12 +43,18 @@ const shadeCardIdentifier = 'SHADE-CARD';
 const errorText = 'NOT FOUND!';
 
 class OrderEntryController extends GetxController {
+  final Database _database = Get.find<Database>();
+
+  final UserController _userController = Get.find(tag: 'userController');
+
+  final ItemMasterController itemMasterController = Get.find();
+
   final TextEditingController articleTextEditingController =
           TextEditingController(),
       uomTextEditingController = TextEditingController(),
       shadeTextEditingController = TextEditingController(),
       quantityTextEditingController = TextEditingController.fromValue(
-        const TextEditingValue(text: '1'),
+        TextEditingValue(text: '1'),
       );
 
   final FocusNode articleFocusNode = FocusNode(),
@@ -72,10 +83,27 @@ class OrderEntryController extends GetxController {
 
   final scrollController = ScrollController();
 
+  // final speechToText = SpeechToText();
+
   final speechToTextStatus = 'done'.obs;
 
   OrderEntryController() {
-    loadItemData();
+    // speechToText.initialize(
+    //   onError: (errorNotification) {
+    //     log('Speech error - $errorNotification');
+    //   },
+    //   onStatus: (status) {
+    //     log('Speech status - $status');
+
+    //     speechToTextStatus.value = status;
+    //   },
+    // );
+
+    itemMasterController.rxItems.listen(
+      (items) {
+        loadItemData(items);
+      },
+    );
 
     articleTextEditingController.addListener(articleEditListener);
     uomTextEditingController.addListener(uomEditListener);
@@ -85,60 +113,172 @@ class OrderEntryController extends GetxController {
     uomFocusNode.addListener(uomFocusListener);
     shadeFocusNode.addListener(shadeFocusListener);
     quantityFocusNode.addListener(quantityFocusListener);
+
+    _userController.rxCustomerDetail.listenAndPump(
+      (customerDetail) async {
+        carticleMap.clear();
+
+        final cartItems = await _database.managers.cartTable
+            .filter(
+              (f) => f.soldTo.equals(
+                customerDetail.soldToNumber,
+              ),
+            )
+            .get();
+
+        for (final cartItem in cartItems) {
+          addExcelItemToCart(
+            article: cartItem.article,
+            uom: cartItem.uom,
+            shade: cartItem.shade,
+            quantity: cartItem.quantity,
+            replace: false,
+          );
+        }
+      },
+    );
   }
 
-  Future<void> listen() async {}
+  // Future<void> listen() async {
+  //   if (canListen()) {
+  //     if (speechToTextStatus.value == 'listening') {
+  //       return;
+  //     } else if (speechToTextStatus.value == 'notListening') {
+  //       await speechToText.stop();
+  //     } else if (speechToTextStatus.value == 'done') {
+  //       final regExp = quantityFocusNode.hasFocus
+  //           ? RegExp(r'[^0-9]')
+  //           : RegExp(r'[^a-zA-Z0-9]');
 
-  void loadItemData() {
+  //       speechToText.listen(
+  //         listenOptions: SpeechListenOptions(
+  //           cancelOnError: true,
+  //           listenMode: ListenMode.dictation,
+  //           partialResults: false,
+  //         ),
+  //         listenFor: Duration(seconds: 20),
+  //         pauseFor: Duration(seconds: 20),
+  //         onResult: (result) {
+  //           final foundAlternates = <String>[];
+
+  //           for (SpeechRecognitionWords alternate in result.alternates) {
+  //             log(alternate.recognizedWords);
+
+  //             final recognizedWords = alternate.recognizedWords
+  //                 .replaceAll(regExp, '')
+  //                 .toUpperCase();
+
+  //             if (suggestions.any(
+  //               (suggestion) =>
+  //                   suggestion.toUpperCase().contains(recognizedWords),
+  //             )) {
+  //               foundAlternates.add(recognizedWords);
+  //             }
+  //           }
+
+  //           log('Found alternates - ${foundAlternates.toString()}');
+
+  //           final bestFoundAlternate = foundAlternates.fold(
+  //             '',
+  //             (value, element) {
+  //               return value.length > element.length ? value : element;
+  //             },
+  //           );
+
+  //           final finalResult = bestFoundAlternate.isNotEmpty
+  //               ? bestFoundAlternate
+  //               : result.recognizedWords.replaceAll(regExp, '').toUpperCase();
+
+  //           final shouldFocusNextField = suggestions
+  //                   .where(
+  //                     (suggestion) => suggestion.contains(finalResult),
+  //                   )
+  //                   .length ==
+  //               1;
+
+  //           if (articleFocusNode.hasFocus) {
+  //             articleTextEditingController.value = TextEditingValue(
+  //               text: finalResult,
+  //             );
+
+  //             if (shouldFocusNextField) {
+  //               uomFocusNode.requestFocus();
+  //             }
+  //           } else if (uomFocusNode.hasFocus) {
+  //             uomTextEditingController.value = TextEditingValue(
+  //               text: finalResult,
+  //             );
+
+  //             if (shouldFocusNextField) {
+  //               shadeFocusNode.requestFocus();
+  //             }
+  //           } else if (shadeFocusNode.hasFocus) {
+  //             shadeTextEditingController.value = TextEditingValue(
+  //               text: finalResult,
+  //             );
+
+  //             if (shouldFocusNextField) {
+  //               quantityFocusNode.requestFocus();
+  //             }
+  //           } else if (quantityFocusNode.hasFocus) {
+  //             quantityTextEditingController.value = TextEditingValue(
+  //               text: finalResult,
+  //             );
+  //           }
+  //         },
+  //       );
+  //     }
+  //   } else if (speechToTextStatus.value != 'done') {
+  //     await speechToText.stop();
+  //   }
+  // }
+
+  void loadItemData(List<ItemMasterData> items) {
+    shadeCardMap.clear();
+
+    articleMap.clear();
+
     DateTime startTime = DateTime.now();
 
-    for (String item in items) {
-      List<String> itemParts = item.split(RegExp('\\s+'));
+    for (ItemMasterData item in items) {
+      String article = item.article;
 
-      log(itemParts.toString());
+      String uom = item.uom;
 
-      if (itemParts.length == 4) {
-        String article = itemParts[0].trim();
+      String shade = item.shade;
 
-        String uom = itemParts[1].trim();
+      shadeCardMap[getItemNumber(article: article, uom: uom, shade: shade)] =
+          item.isInShadeCard;
 
-        String shade = itemParts[2].trim();
+      if (article.isNotEmpty && uom.isNotEmpty && shade.isNotEmpty) {
+        final articleObject = articleMap[article];
 
-        String shadeCardFlag = itemParts[3].trim();
+        if (articleObject != null) {
+          final uomObject = articleObject.uomMap[uom];
 
-        shadeCardMap[getItemNumber(article: article, uom: uom, shade: shade)] =
-            shadeCardFlag == 'Y';
-
-        if (article.isNotEmpty && uom.isNotEmpty && shade.isNotEmpty) {
-          final articleObject = articleMap[article];
-
-          if (articleObject != null) {
-            final uomObject = articleObject.uomMap[uom];
-
-            if (uomObject != null) {
-              if (!uomObject.shadeQuantitiesMap.containsKey(shade)) {
-                uomObject.shadeQuantitiesMap[shade] = 1;
-              }
-            } else {
-              articleObject.uomMap[uom] = Uom(
-                name: uom,
-                description: uomDescriptions[uom] ?? '',
-                shadeQuantitiesMap: {shade: 1}.obs,
-              );
+          if (uomObject != null) {
+            if (!uomObject.shadeQuantitiesMap.containsKey(shade)) {
+              uomObject.shadeQuantitiesMap[shade] = 1;
             }
           } else {
-            articleMap[article] = Article(
-              name: article,
-              description: articleDescriptions[article] ?? '',
-              uomMap: {
-                uom: Uom(
-                  name: uom,
-                  description: uomDescriptions[uom] ?? '',
-                  shadeQuantitiesMap: {shade: 1}.obs,
-                )
-              }.obs,
+            articleObject.uomMap[uom] = Uom(
+              name: uom,
+              description: item.uomDescription,
+              shadeQuantitiesMap: {shade: 1}.obs,
             );
           }
+        } else {
+          articleMap[article] = Article(
+            name: article,
+            description: item.articleDescription,
+            uomMap: {
+              uom: Uom(
+                name: uom,
+                description: item.uomDescription,
+                shadeQuantitiesMap: {shade: 1}.obs,
+              )
+            }.obs,
+          );
         }
       }
     }
@@ -166,7 +306,7 @@ class OrderEntryController extends GetxController {
 
       if (articleObject != null) {
         final uomsWithDescriptions = articleObject.uomMap.keys.map(
-          (e) => '$e - ${uomDescriptions[e] ?? ''}',
+          (uom) => '$uom - ${itemMasterController.getUomDescription(uom)}',
         );
 
         final filteredUoms = uomsWithDescriptions.where(
@@ -258,7 +398,8 @@ class OrderEntryController extends GetxController {
 
       shadeTextEditingController.clear();
     } else if (articleMap.containsKey(articleInput.value)) {
-      articleDescription.value = articleDescriptions[articleInput.value] ?? '';
+      articleDescription.value =
+          itemMasterController.getArticleDescription(articleInput.value);
     } else {
       articleError.value = errorText;
     }
@@ -283,7 +424,8 @@ class OrderEntryController extends GetxController {
       shadeTextEditingController.clear();
     } else if ((articleObject != null &&
         articleObject.uomMap.containsKey(uomInput.value))) {
-      uomDescription.value = uomDescriptions[uomInput.value] ?? '';
+      uomDescription.value =
+          itemMasterController.getUomDescription(uomInput.value);
     } else {
       uomError.value = errorText;
     }
@@ -316,7 +458,7 @@ class OrderEntryController extends GetxController {
 
         shouldUpdate.value = true;
       } else {
-        quantityTextEditingController.value = const TextEditingValue(
+        quantityTextEditingController.value = TextEditingValue(
           text: '1',
         );
 
@@ -337,7 +479,7 @@ class OrderEntryController extends GetxController {
   }
 
   void articleFocusListener() {
-    listen();
+    // listen();
 
     if (articleFocusNode.hasFocus) {
       articleTextEditingController.selection = TextSelection(
@@ -352,7 +494,7 @@ class OrderEntryController extends GetxController {
   }
 
   void uomFocusListener() {
-    listen();
+    // listen();
 
     if (uomFocusNode.hasFocus) {
       uomTextEditingController.selection = TextSelection(
@@ -367,7 +509,7 @@ class OrderEntryController extends GetxController {
   }
 
   void shadeFocusListener() {
-    listen();
+    // listen();
 
     if (shadeFocusNode.hasFocus) {
       shadeTextEditingController.selection = TextSelection(
@@ -382,7 +524,7 @@ class OrderEntryController extends GetxController {
   }
 
   void quantityFocusListener() {
-    listen();
+    // listen();
 
     if (quantityFocusNode.hasFocus) {
       quantityTextEditingController.selection = TextSelection(
@@ -435,7 +577,7 @@ class OrderEntryController extends GetxController {
     shadeFocusNode.requestFocus();
   }
 
-  void addItemToCart() {
+  Future<void> addItemToCart() async {
     String article = articleInput.value,
         uom = uomInput.value,
         shade = shadeInput.value;
@@ -464,7 +606,7 @@ class OrderEntryController extends GetxController {
           {
             uom: Uom(
               name: uom,
-              description: uomDescriptions[uom] ?? '',
+              description: itemMasterController.getUomDescription(uom),
               shadeQuantitiesMap: {shade: quantity}.obs,
             ),
           },
@@ -473,16 +615,26 @@ class OrderEntryController extends GetxController {
     } else {
       carticleMap[article] = Article(
         name: article,
-        description: articleDescriptions[article] ?? '',
+        description: itemMasterController.getArticleDescription(article),
         uomMap: {
           uom: Uom(
             name: uom,
-            description: uomDescriptions[uom] ?? '',
+            description: itemMasterController.getUomDescription(uom),
             shadeQuantitiesMap: {shade: quantity}.obs,
           ),
         }.obs,
       );
     }
+
+    await _database.managers.cartTable.create(
+      (o) => o(
+        soldTo: _userController.rxCustomerDetail.value.soldToNumber,
+        article: article,
+        uom: uom,
+        shade: shade,
+        quantity: quantity,
+      ),
+    );
 
     shadeTextEditingController.clear();
 
@@ -514,7 +666,7 @@ class OrderEntryController extends GetxController {
           {
             uom: Uom(
               name: uom,
-              description: uomDescriptions[uom] ?? '',
+              description: itemMasterController.getUomDescription(uom),
               shadeQuantitiesMap: {shade: quantity}.obs,
             ),
           },
@@ -523,16 +675,27 @@ class OrderEntryController extends GetxController {
     } else {
       carticleMap[article] = Article(
         name: article,
-        description: articleDescriptions[article] ?? '',
+        description: itemMasterController.getArticleDescription(article),
         uomMap: {
           uom: Uom(
             name: uom,
-            description: uomDescriptions[uom] ?? '',
+            description: itemMasterController.getUomDescription(uom),
             shadeQuantitiesMap: {shade: quantity}.obs,
           ),
         }.obs,
       );
     }
+
+    _database.managers.cartTable.create(
+      (o) => o(
+        soldTo: _userController.rxCustomerDetail.value.soldToNumber,
+        article: article,
+        uom: uom,
+        shade: shade,
+        quantity: quantity,
+      ),
+      mode: InsertMode.insertOrReplace,
+    );
   }
 
   bool canAddItemToCart() {
@@ -631,10 +794,21 @@ class OrderEntryController extends GetxController {
     suggestions.clear();
   }
 
-  void updateCart() {
-    carticleMap[articleInput.value]
-        ?.uomMap[uomInput.value]
-        ?.shadeQuantitiesMap[shadeInput.value] = parseQuantity();
+  void updateCart({
+    String? article,
+    String? uom,
+    String? shade,
+    int? quantity,
+  }) {
+    final _article = article ?? articleInput.value;
+
+    final _uom = uom ?? uomInput.value;
+
+    final _shade = shade ?? shadeInput.value;
+
+    final _quantity = quantity ?? parseQuantity();
+
+    carticleMap[_article]?.uomMap[_uom]?.shadeQuantitiesMap[_shade] = _quantity;
 
     shadeTextEditingController.clear();
 
@@ -643,14 +817,24 @@ class OrderEntryController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  void deleteShade() {
-    final articleObject = carticleMap[articleInput.value];
+  Future<void> deleteShade({
+    String? article,
+    String? uom,
+    String? shade,
+  }) async {
+    final _article = article ?? articleInput.value;
+
+    final _uom = uom ?? uomInput.value;
+
+    final _shade = shade ?? shadeInput.value;
+
+    final articleObject = carticleMap[_article];
 
     if (articleObject != null) {
-      final uomObject = articleObject.uomMap[uomInput.value];
+      final uomObject = articleObject.uomMap[_uom];
 
       if (uomObject != null) {
-        uomObject.shadeQuantitiesMap.remove(shadeInput.value);
+        uomObject.shadeQuantitiesMap.remove(_shade);
 
         shadeTextEditingController.clear();
 
@@ -668,9 +852,31 @@ class OrderEntryController extends GetxController {
       }
     }
 
+    final deletedRowsCount = await _database.managers.cartTable
+        .filter((f) => f.soldTo
+            .equals(_userController.rxCustomerDetail.value.soldToNumber))
+        .filter((f) => f.article.equals(_article))
+        .filter((f) => f.uom.equals(_uom))
+        .filter((f) => f.shade.equals(_shade))
+        .delete();
+
+    log('$deletedRowsCount rows deleted');
+
     suggestions.clear();
 
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  Future<void> deleteArticle(String article) async {
+    carticleMap.remove(article);
+
+    final deletedRowsCount = await _database.managers.cartTable
+        .filter((f) => f.soldTo
+            .equals(_userController.rxCustomerDetail.value.soldToNumber))
+        .filter((f) => f.article.equals(article))
+        .delete();
+
+    log('$deletedRowsCount rows deleted');
   }
 
   List<Article> getSortedArticles() {
@@ -715,7 +921,7 @@ class OrderEntryController extends GetxController {
   }
 
   void clearInputs() {
-    quantityTextEditingController.value = const TextEditingValue(text: '1');
+    quantityTextEditingController.value = TextEditingValue(text: '1');
 
     shadeTextEditingController.clear();
 
@@ -731,7 +937,7 @@ class OrderEntryController extends GetxController {
   void scrollToTop() {
     scrollController.animateTo(
       0,
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       curve: Curves.linear,
     );
   }
@@ -800,4 +1006,13 @@ class OrderEntryController extends GetxController {
   Future<void> showExcelDialog() async {
     Get.dialog(ExcelDialog());
   }
+
+  List<String> get articles => articleMap.keys.toList();
+
+  List<String> getUomsForArticle(String article) =>
+      articleMap[article]?.uomMap.keys.toList() ?? [];
+
+  List<String> getShadesForArticleAndUom(
+          {required String article, required String uom}) =>
+      articleMap[article]?.uomMap[uom]?.shadeQuantitiesMap.keys.toList() ?? [];
 }

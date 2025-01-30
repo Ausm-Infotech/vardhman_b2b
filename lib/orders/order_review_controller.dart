@@ -42,7 +42,11 @@ class OrderReviewController extends GetxController {
               .branchPlant ??
           '',
       soldTo: _userController.rxCustomerDetail.value.soldToNumber,
-      shipTo: _userController.shipTo,
+      shipTo: (_userController.rxDeliveryAddress.value?.deliveryAddressNumber ==
+                  0
+              ? _userController.rxCustomerDetail.value.soldToNumber
+              : _userController.rxDeliveryAddress.value?.deliveryAddressNumber)
+          .toString(),
       company: _userController.rxCustomerDetail.value.companyCode,
       orderTakenBy: _userController.rxUserDetail.value.role,
       labdipOrderLines: labdipOrderLines,
