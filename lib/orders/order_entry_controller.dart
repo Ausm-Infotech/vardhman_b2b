@@ -54,7 +54,7 @@ class OrderEntryController extends GetxController {
       uomTextEditingController = TextEditingController(),
       shadeTextEditingController = TextEditingController(),
       quantityTextEditingController = TextEditingController.fromValue(
-        TextEditingValue(text: '1'),
+        const TextEditingValue(text: '1'),
       );
 
   final FocusNode articleFocusNode = FocusNode(),
@@ -458,7 +458,7 @@ class OrderEntryController extends GetxController {
 
         shouldUpdate.value = true;
       } else {
-        quantityTextEditingController.value = TextEditingValue(
+        quantityTextEditingController.value = const TextEditingValue(
           text: '1',
         );
 
@@ -800,15 +800,17 @@ class OrderEntryController extends GetxController {
     String? shade,
     int? quantity,
   }) {
-    final _article = article ?? articleInput.value;
+    final currentArticle = article ?? articleInput.value;
 
-    final _uom = uom ?? uomInput.value;
+    final currentUom = uom ?? uomInput.value;
 
-    final _shade = shade ?? shadeInput.value;
+    final currentShade = shade ?? shadeInput.value;
 
-    final _quantity = quantity ?? parseQuantity();
+    final currentQuantity = quantity ?? parseQuantity();
 
-    carticleMap[_article]?.uomMap[_uom]?.shadeQuantitiesMap[_shade] = _quantity;
+    carticleMap[currentArticle]
+        ?.uomMap[currentUom]
+        ?.shadeQuantitiesMap[currentShade] = currentQuantity;
 
     shadeTextEditingController.clear();
 
@@ -822,19 +824,19 @@ class OrderEntryController extends GetxController {
     String? uom,
     String? shade,
   }) async {
-    final _article = article ?? articleInput.value;
+    final currentArticle = article ?? articleInput.value;
 
-    final _uom = uom ?? uomInput.value;
+    final currentUom = uom ?? uomInput.value;
 
-    final _shade = shade ?? shadeInput.value;
+    final currentShade = shade ?? shadeInput.value;
 
-    final articleObject = carticleMap[_article];
+    final articleObject = carticleMap[currentArticle];
 
     if (articleObject != null) {
-      final uomObject = articleObject.uomMap[_uom];
+      final uomObject = articleObject.uomMap[currentUom];
 
       if (uomObject != null) {
-        uomObject.shadeQuantitiesMap.remove(_shade);
+        uomObject.shadeQuantitiesMap.remove(currentShade);
 
         shadeTextEditingController.clear();
 
@@ -855,9 +857,9 @@ class OrderEntryController extends GetxController {
     final deletedRowsCount = await _database.managers.cartTable
         .filter((f) => f.soldTo
             .equals(_userController.rxCustomerDetail.value.soldToNumber))
-        .filter((f) => f.article.equals(_article))
-        .filter((f) => f.uom.equals(_uom))
-        .filter((f) => f.shade.equals(_shade))
+        .filter((f) => f.article.equals(currentArticle))
+        .filter((f) => f.uom.equals(currentUom))
+        .filter((f) => f.shade.equals(currentShade))
         .delete();
 
     log('$deletedRowsCount rows deleted');
@@ -921,7 +923,7 @@ class OrderEntryController extends GetxController {
   }
 
   void clearInputs() {
-    quantityTextEditingController.value = TextEditingValue(text: '1');
+    quantityTextEditingController.value = const TextEditingValue(text: '1');
 
     shadeTextEditingController.clear();
 
@@ -937,7 +939,7 @@ class OrderEntryController extends GetxController {
   void scrollToTop() {
     scrollController.animateTo(
       0,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.linear,
     );
   }

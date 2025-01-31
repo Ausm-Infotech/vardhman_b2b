@@ -58,7 +58,7 @@ class InvoiceReviewDialog extends StatelessWidget {
                     final batchNumber = await Api.fetchPaymentBatchNumber();
 
                     if (batchNumber != null) {
-                      final receiptNumber = 'M$batchNumber';
+                      final receiptNumber = 'P$batchNumber';
 
                       final paymentEntryCreated =
                           await Api.createInvoicePaymentEntry(

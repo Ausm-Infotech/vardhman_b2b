@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
-import 'package:vardhman_b2b/common/label_row.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
-import 'package:vardhman_b2b/open/open_invoices_list.dart';
 import 'package:vardhman_b2b/paid/paid_invoices_list.dart';
 
 class PaidInvoicesView extends StatelessWidget {

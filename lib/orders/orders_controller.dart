@@ -99,12 +99,12 @@ class OrdersController extends GetxController
                     .contains(rxOrderNumberInput.value)) &&
             orderInfo.orderDate.isAfter(
               rxOrderFromDate.value.subtract(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ) &&
             orderInfo.orderDate.isBefore(
               rxOrderToDate.value.add(
-                Duration(days: 1),
+                const Duration(days: 1),
               ),
             ),
       )
