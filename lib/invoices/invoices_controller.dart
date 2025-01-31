@@ -155,16 +155,30 @@ class InvoicesController extends GetxController
     rxSelectedInvoiceInfos.remove(invoiceInfo);
   }
 
-  double get totalOverdueAmount => _rxInvoiceInfos
-      .fold(
-        0.0,
-        (previousValue, invoiceInfo) =>
-            previousValue +
-            (invoiceInfo.status == InvoiceStatus.overdue
-                ? invoiceInfo.openAmount
-                : 0),
-      )
-      .toPrecision(2);
+  double getTotalAmount(InvoiceStatus invoiceStatus) {
+    return _rxInvoiceInfos
+        .fold(
+          0.0,
+          (previousValue, invoiceInfo) =>
+              previousValue +
+              (invoiceInfo.status == invoiceStatus
+                  ? invoiceInfo.openAmount
+                  : 0),
+        )
+        .toPrecision(2);
+  }
+
+  double get totalOverdueAmount => getTotalAmount(InvoiceStatus.overdue);
+
+  double get totalNotDueAmount => getTotalAmount(InvoiceStatus.notDue);
+
+  double get totalCreditNoteAmount => getTotalAmount(InvoiceStatus.creditNote);
+
+  double get totalDiscountedAmount => getTotalAmount(InvoiceStatus.discounted);
+
+  double get totalProcessingAmount => getTotalAmount(InvoiceStatus.processing);
+
+  double get totalHeldAmount => getTotalAmount(InvoiceStatus.onHold);
 
   List<InvoiceInfo> get openInvoices => _rxInvoiceInfos
       .where((invoiceInfo) => invoiceInfo.status != InvoiceStatus.paid)

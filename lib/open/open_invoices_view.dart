@@ -88,7 +88,7 @@ class OpenInvoicesView extends StatelessWidget {
                                     if (invoicesController
                                         .processingInvoices.isNotEmpty) ...[
                                       LabelRow(
-                                        text: 'Processing Payment',
+                                        title: 'Processing Payment',
                                         color: getInvoiceStatusColor(
                                           InvoiceStatus.processing,
                                         ),
@@ -102,7 +102,9 @@ class OpenInvoicesView extends StatelessWidget {
                                     if (invoicesController
                                         .creditNotes.isNotEmpty) ...[
                                       LabelRow(
-                                        text: 'Credit Notes',
+                                        title: 'Credit Notes',
+                                        trailing:
+                                            '₹${invoicesController.totalCreditNoteAmount.toStringAsFixed(2)}',
                                         color: getInvoiceStatusColor(
                                           InvoiceStatus.creditNote,
                                         ),
@@ -116,7 +118,9 @@ class OpenInvoicesView extends StatelessWidget {
                                     if (invoicesController
                                         .overdueInvoices.isNotEmpty) ...[
                                       LabelRow(
-                                        text: 'Overdue Invoices',
+                                        title: 'Overdue Invoices',
+                                        trailing:
+                                            '₹${invoicesController.totalOverdueAmount.toStringAsFixed(2)}',
                                         color: getInvoiceStatusColor(
                                           InvoiceStatus.overdue,
                                         ),
@@ -130,9 +134,12 @@ class OpenInvoicesView extends StatelessWidget {
                                     if (invoicesController
                                         .notDueInvoices.isNotEmpty) ...[
                                       LabelRow(
-                                        text: 'Not Due Invoices',
+                                        title: 'Not Due Invoices',
+                                        trailing:
+                                            '₹${invoicesController.totalNotDueAmount.toStringAsFixed(2)}',
                                         color: getInvoiceStatusColor(
-                                            InvoiceStatus.notDue),
+                                          InvoiceStatus.notDue,
+                                        ),
                                       ),
                                       OpenInvoicesList(
                                         showHeader: false,
@@ -143,16 +150,35 @@ class OpenInvoicesView extends StatelessWidget {
                                     if (invoicesController
                                         .discountedInvoices.isNotEmpty) ...[
                                       LabelRow(
-                                        text: 'Discounted Invoices',
+                                        title: 'Discounted Invoices',
+                                        trailing:
+                                            '₹${invoicesController.totalDiscountedAmount.toStringAsFixed(2)}',
                                         color: getInvoiceStatusColor(
-                                            InvoiceStatus.discounted),
+                                          InvoiceStatus.discounted,
+                                        ),
                                       ),
                                       OpenInvoicesList(
                                         showHeader: false,
                                         invoicesDetails: invoicesController
                                             .discountedInvoices,
                                       ),
-                                    ]
+                                    ],
+                                    if (invoicesController
+                                        .heldInvoices.isNotEmpty) ...[
+                                      LabelRow(
+                                        title: 'Other Invoices',
+                                        trailing:
+                                            '₹${invoicesController.totalHeldAmount.toStringAsFixed(2)}',
+                                        color: getInvoiceStatusColor(
+                                          InvoiceStatus.onHold,
+                                        ),
+                                      ),
+                                      OpenInvoicesList(
+                                        showHeader: false,
+                                        invoicesDetails:
+                                            invoicesController.heldInvoices,
+                                      ),
+                                    ],
                                   ],
                                 ),
                               ),

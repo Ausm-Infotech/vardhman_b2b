@@ -761,6 +761,42 @@ class Api {
 
           invoiceDetailsCompanions.add(paidInvoiceInfo);
         }
+
+        final holdInvoicesData = response.data['HoldInvoice'] as List;
+
+        for (final holdInvoiceData in holdInvoicesData) {
+          final holdInvoiceInfo = InvoiceInfo(
+            openAmount: holdInvoiceData['InvoiceOpenAmount'] + .0,
+            grossAmount: holdInvoiceData['InvoiceGrossAmount'] + .0,
+            discountAmount: holdInvoiceData['InvoiceDiscountAvailable'] + .0,
+            taxableAmount: holdInvoiceData['InvoiceTaxableAmount'] + .0,
+            tax: holdInvoiceData['InvoiceTax'] + .0,
+            customerNumber: holdInvoiceData['Customer'].toString(),
+            company: holdInvoiceData['InvoiceCompany'],
+            docType: holdInvoiceData['InvoiceDocType'],
+            invoiceNumber: holdInvoiceData['InvoiceNumber'],
+            salesOrderNumber: holdInvoiceData['SalesOrderNumber'],
+            salesOrderType: holdInvoiceData['SalesOrderType'],
+            date: DateFormat('MM/dd/yyyy').parse(
+              holdInvoiceData['InvoiceDate'],
+            ),
+            discountDueDate: DateFormat('MM/dd/yyyy').parse(
+              holdInvoiceData['DiscountDueDate'],
+            ),
+            isOpen: true,
+            status: InvoiceStatus.onHold,
+            receiptNumber:
+                invoiceReceiptNumbersMap[holdInvoiceData['InvoiceNumber']]
+                        ?['receiptNumber'] ??
+                    '',
+            receiptDate:
+                invoiceReceiptNumbersMap[holdInvoiceData['InvoiceNumber']]
+                        ?['receiptDate'] ??
+                    DateTime.now(),
+          );
+
+          invoiceDetailsCompanions.add(holdInvoiceInfo);
+        }
       }
     } catch (e) {
       log(

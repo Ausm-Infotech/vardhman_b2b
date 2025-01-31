@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
 
 class LabelRow extends StatelessWidget {
-  final String text;
+  final String leading;
+  final String title;
+  final String trailing;
   final Color color;
   final Color textColor;
 
   const LabelRow({
     super.key,
-    required this.text,
+    this.leading = '',
+    required this.title,
+    this.trailing = '',
     required this.color,
     this.textColor = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: color,
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
+    return DefaultTextStyle(
+      style: TextStyle(
+        color: textColor,
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+      ),
+      child: Container(
+        color: color,
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 4,
         ),
-        textAlign: TextAlign.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              leading,
+            ),
+            Text(
+              title,
+            ),
+            Text(
+              trailing,
+            ),
+          ],
+        ),
       ),
     );
   }

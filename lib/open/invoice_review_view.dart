@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/open/invoice_review_dialog.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
+import 'package:vardhman_b2b/open/invoice_review_dialog.dart';
 import 'package:vardhman_b2b/open/open_invoices_list.dart';
 
 class InvoiceReviewView extends StatelessWidget {
@@ -45,15 +46,60 @@ class InvoiceReviewView extends StatelessWidget {
                 ),
                 trailing: PrimaryButton(
                   text: 'Pay',
-                  onPressed:
-                      invoicesController.rxSelectedInvoiceInfos.isEmpty ||
-                              invoicesController.selectedDiscountedAmount < 0
-                          ? null
-                          : () async {
-                              Get.dialog(
-                                const InvoiceReviewDialog(),
-                              );
-                            },
+                  onPressed: invoicesController
+                              .rxSelectedInvoiceInfos.isEmpty ||
+                          invoicesController.selectedDiscountedAmount.isNegative
+                      ? null
+                      : () async {
+                          final hasSelectedAllNotDue =
+                              invoicesController.notDueInvoices.every(
+                            (invoiceInfo) => invoicesController
+                                .rxSelectedInvoiceInfos
+                                .contains(invoiceInfo),
+                          );
+
+                          final hasSelectedAllOverdue =
+                              invoicesController.overdueInvoices.every(
+                            (invoiceInfo) => invoicesController
+                                .rxSelectedInvoiceInfos
+                                .contains(invoiceInfo),
+                          );
+
+                          if (!hasSelectedAllOverdue &&
+                              invoicesController.rxSelectedInvoiceInfos.any(
+                                  (invoiceInfo) =>
+                                      invoiceInfo.status ==
+                                          InvoiceStatus.notDue ||
+                                      invoiceInfo.status ==
+                                          InvoiceStatus.discounted)) {
+                            Get.snackbar(
+                              'Please select all overdue invoices to proceed.',
+                              '',
+                              backgroundColor: Colors.white,
+                              colorText: VardhmanColors.red,
+                            );
+
+                            return;
+                          } else if (!hasSelectedAllNotDue &&
+                              invoicesController.rxSelectedInvoiceInfos.any(
+                                (invoiceInfo) =>
+                                    invoiceInfo.status ==
+                                    InvoiceStatus.discounted,
+                              )) {
+                            Get.snackbar(
+                              'Please select all not due invoices to proceed.',
+                              '',
+                              backgroundColor: Colors.white,
+                              colorText: VardhmanColors.red,
+                            );
+
+                            return;
+                          }
+
+                          Get.dialog(
+                            const InvoiceReviewDialog(),
+                          );
+                        },
                 ),
               ),
               Expanded(
