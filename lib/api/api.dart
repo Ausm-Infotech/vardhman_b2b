@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' as Get;
+import 'package:get/get.dart' as getx;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
@@ -61,9 +61,9 @@ class Api {
           if (response.statusCode == 444) {
             log('Token expired');
 
-            if (Get.Get.isRegistered<UserController>(tag: 'userController')) {
+            if (getx.Get.isRegistered<UserController>(tag: 'userController')) {
               final UserController userController =
-                  Get.Get.find<UserController>(tag: 'userController');
+                  getx.Get.find<UserController>(tag: 'userController');
 
               userController.logOut();
 
