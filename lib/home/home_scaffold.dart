@@ -28,6 +28,7 @@ class HomeScaffold extends StatelessWidget {
         body: Obx(
           () => Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const NavRail(),
               const VerticalDivider(

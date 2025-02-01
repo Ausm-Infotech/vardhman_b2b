@@ -28,6 +28,7 @@ mixin _$OrderDetailLine {
   DateTime? get dateInvoiced => throw _privateConstructorUsedError;
   String get item => throw _privateConstructorUsedError;
   String get itemDescription => throw _privateConstructorUsedError;
+  String get userComment => throw _privateConstructorUsedError;
   String get nextStatus => throw _privateConstructorUsedError;
   String get nextStatusDescription => throw _privateConstructorUsedError;
   String get lastStatus => throw _privateConstructorUsedError;
@@ -64,6 +65,7 @@ abstract class $OrderDetailLineCopyWith<$Res> {
       DateTime? dateInvoiced,
       String item,
       String itemDescription,
+      String userComment,
       String nextStatus,
       String nextStatusDescription,
       String lastStatus,
@@ -99,6 +101,7 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
     Object? dateInvoiced = freezed,
     Object? item = null,
     Object? itemDescription = null,
+    Object? userComment = null,
     Object? nextStatus = null,
     Object? nextStatusDescription = null,
     Object? lastStatus = null,
@@ -142,6 +145,10 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
       itemDescription: null == itemDescription
           ? _value.itemDescription
           : itemDescription // ignore: cast_nullable_to_non_nullable
+              as String,
+      userComment: null == userComment
+          ? _value.userComment
+          : userComment // ignore: cast_nullable_to_non_nullable
               as String,
       nextStatus: null == nextStatus
           ? _value.nextStatus
@@ -204,6 +211,7 @@ abstract class _$$OrderDetailLineImplCopyWith<$Res>
       DateTime? dateInvoiced,
       String item,
       String itemDescription,
+      String userComment,
       String nextStatus,
       String nextStatusDescription,
       String lastStatus,
@@ -237,6 +245,7 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
     Object? dateInvoiced = freezed,
     Object? item = null,
     Object? itemDescription = null,
+    Object? userComment = null,
     Object? nextStatus = null,
     Object? nextStatusDescription = null,
     Object? lastStatus = null,
@@ -280,6 +289,10 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
       itemDescription: null == itemDescription
           ? _value.itemDescription
           : itemDescription // ignore: cast_nullable_to_non_nullable
+              as String,
+      userComment: null == userComment
+          ? _value.userComment
+          : userComment // ignore: cast_nullable_to_non_nullable
               as String,
       nextStatus: null == nextStatus
           ? _value.nextStatus
@@ -337,6 +350,7 @@ class _$OrderDetailLineImpl implements _OrderDetailLine {
       required this.dateInvoiced,
       required this.item,
       required this.itemDescription,
+      required this.userComment,
       required this.nextStatus,
       required this.nextStatusDescription,
       required this.lastStatus,
@@ -368,6 +382,8 @@ class _$OrderDetailLineImpl implements _OrderDetailLine {
   @override
   final String itemDescription;
   @override
+  final String userComment;
+  @override
   final String nextStatus;
   @override
   final String nextStatusDescription;
@@ -390,7 +406,7 @@ class _$OrderDetailLineImpl implements _OrderDetailLine {
 
   @override
   String toString() {
-    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany)';
+    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany)';
   }
 
   @override
@@ -412,6 +428,8 @@ class _$OrderDetailLineImpl implements _OrderDetailLine {
             (identical(other.item, item) || other.item == item) &&
             (identical(other.itemDescription, itemDescription) ||
                 other.itemDescription == itemDescription) &&
+            (identical(other.userComment, userComment) ||
+                other.userComment == userComment) &&
             (identical(other.nextStatus, nextStatus) ||
                 other.nextStatus == nextStatus) &&
             (identical(other.nextStatusDescription, nextStatusDescription) ||
@@ -436,26 +454,28 @@ class _$OrderDetailLineImpl implements _OrderDetailLine {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      company,
-      orderNumber,
-      orderType,
-      lineNumber,
-      dateShipped,
-      dateInvoiced,
-      item,
-      itemDescription,
-      nextStatus,
-      nextStatusDescription,
-      lastStatus,
-      lastStatusDescription,
-      quantityOrdered,
-      quantityCancelled,
-      quantityBackordered,
-      invoiceNumber,
-      invoiceType,
-      invoiceCompany);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        company,
+        orderNumber,
+        orderType,
+        lineNumber,
+        dateShipped,
+        dateInvoiced,
+        item,
+        itemDescription,
+        userComment,
+        nextStatus,
+        nextStatusDescription,
+        lastStatus,
+        lastStatusDescription,
+        quantityOrdered,
+        quantityCancelled,
+        quantityBackordered,
+        invoiceNumber,
+        invoiceType,
+        invoiceCompany
+      ]);
 
   /// Create a copy of OrderDetailLine
   /// with the given fields replaced by the non-null parameter values.
@@ -484,6 +504,7 @@ abstract class _OrderDetailLine implements OrderDetailLine {
       required final DateTime? dateInvoiced,
       required final String item,
       required final String itemDescription,
+      required final String userComment,
       required final String nextStatus,
       required final String nextStatusDescription,
       required final String lastStatus,
@@ -514,6 +535,8 @@ abstract class _OrderDetailLine implements OrderDetailLine {
   String get item;
   @override
   String get itemDescription;
+  @override
+  String get userComment;
   @override
   String get nextStatus;
   @override

@@ -26,6 +26,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             HeaderView(
               trailing: SecondaryButton(
@@ -36,7 +37,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
               title: Text(
                 ordersController.rxSelectedOrder.value == null
                     ? 'Order Details'
-                    : '${ordersController.rxSelectedOrder.value?.orderNumber} ${ordersController.rxSelectedOrder.value?.orderType}',
+                    : 'Order Details for ${ordersController.rxSelectedOrder.value?.orderReference} (JDE order no. ${ordersController.rxSelectedOrder.value?.orderNumber})',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -50,7 +51,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                   ? const Center(
                       child: Text('No Order Selected'),
                     )
-                  : DataTable2(
+                  : DataTable(
                       columns: const [
                         DataColumn2(label: Text('Line'), size: ColumnSize.S),
                         DataColumn2(label: Text('Article'), size: ColumnSize.M),
@@ -58,6 +59,11 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
                         DataColumn2(label: Text('Tex'), size: ColumnSize.S),
                         DataColumn2(label: Text('Shade'), size: ColumnSize.M),
+                        // DataColumn2(
+                        //     label: Text('Permanent Shade'), size: ColumnSize.M),
+                        // DataColumn2(
+                        //     label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Comment'), size: ColumnSize.M),
                       ],
                       rows: ordersController.rxSelectedOrderDetails.map(
                         (orderDetail) {
@@ -94,6 +100,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               ),
                               DataCell(
                                 Text(shade),
+                              ),
+                              DataCell(
+                                Text(orderDetail.userComment),
                               ),
                             ],
                           );

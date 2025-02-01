@@ -153,18 +153,27 @@ class LabdipEntryController extends GetxController {
   }
 
   String get uom {
-    String uom = 'AC';
+    String? uom;
+
+    final sameArticleIndustryItems = catalogController.industryItems
+        .where(
+          (itemCatalogInfo) => itemCatalogInfo.article == rxArticle.value,
+        )
+        .toList();
 
     try {
-      uom = catalogController.industryItems
-          .firstWhere((element) =>
-              element.article == rxArticle.value && element.uom != 'AC')
-          .uom;
+      if (sameArticleIndustryItems.any(
+        (itemCatalogInfo) => itemCatalogInfo.uom == 'AC',
+      )) {
+        uom = 'AC';
+      } else {
+        uom = sameArticleIndustryItems.firstOrNull?.uom;
+      }
     } catch (error) {
       log(error.toString());
     }
 
-    return uom;
+    return uom ?? '';
   }
 
   void _clearInputs() {

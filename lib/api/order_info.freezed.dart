@@ -287,7 +287,7 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$OrderInfoImpl implements _OrderInfo {
+class _$OrderInfoImpl extends _OrderInfo {
   const _$OrderInfoImpl(
       {required this.orderNumber,
       required this.orderType,
@@ -303,7 +303,8 @@ class _$OrderInfoImpl implements _OrderInfo {
       required this.orderAmount,
       required this.quantityBackOrdered,
       required this.canIndent,
-      required this.isDTM});
+      required this.isDTM})
+      : super._();
 
   factory _$OrderInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderInfoImplFromJson(json);
@@ -415,7 +416,7 @@ class _$OrderInfoImpl implements _OrderInfo {
   }
 }
 
-abstract class _OrderInfo implements OrderInfo {
+abstract class _OrderInfo extends OrderInfo {
   const factory _OrderInfo(
       {required final int orderNumber,
       required final String orderType,
@@ -432,6 +433,7 @@ abstract class _OrderInfo implements OrderInfo {
       required final int quantityBackOrdered,
       required final bool canIndent,
       required final bool isDTM}) = _$OrderInfoImpl;
+  const _OrderInfo._() : super._();
 
   factory _OrderInfo.fromJson(Map<String, dynamic> json) =
       _$OrderInfoImpl.fromJson;

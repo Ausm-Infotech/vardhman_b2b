@@ -23,6 +23,12 @@ class OrderInfo with _$OrderInfo {
     required bool isDTM,
   }) = _OrderInfo;
 
+  const OrderInfo._();
+
+  String get orderNumberString => orderReference.trim().isNotEmpty
+      ? orderReference
+      : orderNumber.toString();
+
   factory OrderInfo.fromJson(Map<String, dynamic> json) =>
       _$OrderInfoFromJson(json);
 }

@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-
-import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' as Get;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
+import 'package:toastification/toastification.dart';
 import 'package:universal_io/io.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
@@ -20,10 +20,9 @@ import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
-import 'package:dio/io.dart';
-
 import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/sample_data.dart';
+import 'package:vardhman_b2b/user/user_controller.dart';
 
 class Api {
   static final _fileDownloadDio = Dio(
@@ -33,9 +32,9 @@ class Api {
         'Authorization': 'Basic YXJqdW46YXJqdW4=',
         'Accept': 'application/pdf',
       },
-      sendTimeout: const Duration(seconds: 60),
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(minutes: 5),
+      sendTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
@@ -56,32 +55,41 @@ class Api {
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
-  )
-    ..interceptors.add(
+  )..interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
           if (response.statusCode == 444) {
             log('Token expired');
+
+            if (Get.Get.isRegistered<UserController>(tag: 'userController')) {
+              final UserController userController =
+                  Get.Get.find<UserController>(tag: 'userController');
+
+              userController.logOut();
+
+              toastification.show(
+                primaryColor: VardhmanColors.red,
+                title: Text('Session Expired'),
+              );
+            }
           }
 
           handler.next(response);
         },
       ),
-    )
-    ..httpClientAdapter = kIsWeb
-        ? BrowserHttpClientAdapter()
-        : IOHttpClientAdapter(
-            createHttpClient: () {
-              final httpClient = HttpClient();
+    );
+  // ..httpClientAdapter = IOHttpClientAdapter(
+  //   createHttpClient: () {
+  //     final httpClient = HttpClient();
 
-              httpClient.badCertificateCallback =
-                  (X509Certificate cert, String host, int port) {
-                return true;
-              };
+  //     httpClient.badCertificateCallback =
+  //         (X509Certificate cert, String host, int port) {
+  //       return true;
+  //     };
 
-              return httpClient;
-            },
-          );
+  //     return httpClient;
+  //   },
+  // );
 
   static Future<bool> fetchToken(String deviceName) async {
     try {
@@ -431,6 +439,7 @@ class Api {
                   : null,
               item: orderDetailData['Item'],
               itemDescription: orderDetailData['Item Description'],
+              userComment: orderDetailData['Description2'],
               nextStatus: orderDetailData['Next Status'],
               nextStatusDescription: orderDetailData['Next Status Desc'],
               lastStatus: orderDetailData['Last Status'],

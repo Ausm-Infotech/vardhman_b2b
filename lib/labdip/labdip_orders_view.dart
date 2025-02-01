@@ -80,7 +80,7 @@ class LabdipOrdersView extends StatelessWidget {
                               },
                               cells: [
                                 DataCell(
-                                  Text('${labdipOrder.orderNumber}'),
+                                  Text(labdipOrder.orderNumberString),
                                 ),
                                 DataCell(
                                   Text(DateFormat('dd/MM/yyyy')

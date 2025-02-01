@@ -18,6 +18,7 @@ class OrderDetailLine with _$OrderDetailLine {
     required DateTime? dateInvoiced,
     required String item,
     required String itemDescription,
+    required String userComment,
     required String nextStatus,
     required String nextStatusDescription,
     required String lastStatus,
