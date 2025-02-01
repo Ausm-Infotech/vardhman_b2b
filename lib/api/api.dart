@@ -270,6 +270,11 @@ class Api {
       );
 
       if (response.statusCode == 200) {
+        final ac01 = response.data['ORCH550005_GetUDC_Repeating'][0]
+            ['ORCH550005_GetUDC']['AC01'];
+
+        final branchUserDetailsCompanion = await fetchUserData(ac01);
+
         final soldToData = response.data['Get_SoldTo_Address '][0];
 
         return UserAddress(
@@ -287,6 +292,9 @@ class Api {
           deliveryAddressNumber: 0,
           branchPlant: response.data['ORCH550005_GetUDC_Repeating'][0]
               ['ORCH550005_GetUDC']['Branch Plant'],
+          branchPlantEmail: branchUserDetailsCompanion?.email.value,
+          branchPlantPhone: branchUserDetailsCompanion?.mobileNumber.value,
+          branchPlantWhatsApp: branchUserDetailsCompanion?.whatsAppNumber.value,
         );
       }
     } catch (e) {

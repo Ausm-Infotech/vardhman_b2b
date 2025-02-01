@@ -111,4 +111,16 @@ class UserController extends GetxController {
 
     loginController.rxUserDetail.value = null;
   }
+
+  UserAddress? get _billingAddress => rxDeliveryAddresses.firstWhereOrNull(
+        (userAddress) => userAddress.deliveryAddressNumber == 0,
+      );
+
+  String get branchPlant => _billingAddress?.branchPlant ?? '';
+
+  String get branchPlantEmail => _billingAddress?.branchPlantEmail ?? '';
+
+  String get branchPlantPhone => _billingAddress?.branchPlantPhone ?? '';
+
+  String get branchPlantWhatsApp => _billingAddress?.branchPlantWhatsApp ?? '';
 }

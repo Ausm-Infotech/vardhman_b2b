@@ -21,6 +21,9 @@ _$UserAddressImpl _$$UserAddressImplFromJson(Map<String, dynamic> json) =>
       countryCode: json['countryCode'] as String,
       deliveryAddressNumber: (json['deliveryAddressNumber'] as num).toInt(),
       branchPlant: json['branchPlant'] as String?,
+      branchPlantEmail: json['branchPlantEmail'] as String?,
+      branchPlantPhone: json['branchPlantPhone'] as String?,
+      branchPlantWhatsApp: json['branchPlantWhatsApp'] as String?,
     );
 
 Map<String, dynamic> _$$UserAddressImplToJson(_$UserAddressImpl instance) =>
@@ -38,4 +41,7 @@ Map<String, dynamic> _$$UserAddressImplToJson(_$UserAddressImpl instance) =>
       'countryCode': instance.countryCode,
       'deliveryAddressNumber': instance.deliveryAddressNumber,
       'branchPlant': instance.branchPlant,
+      'branchPlantEmail': instance.branchPlantEmail,
+      'branchPlantPhone': instance.branchPlantPhone,
+      'branchPlantWhatsApp': instance.branchPlantWhatsApp,
     };

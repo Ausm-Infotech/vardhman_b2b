@@ -35,12 +35,7 @@ class OrderReviewController extends GetxController {
     isSubmitted = await Api.submitLabdipOrder(
       b2bOrderNumber: b2bOrderNumber,
       merchandiserName: merchandiserName,
-      branchPlant: _userController.rxDeliveryAddresses
-              .firstWhere(
-                (userAddress) => userAddress.deliveryAddressNumber == 0,
-              )
-              .branchPlant ??
-          '',
+      branchPlant: _userController.branchPlant,
       soldTo: _userController.rxCustomerDetail.value.soldToNumber,
       shipTo: (_userController.rxDeliveryAddress.value?.deliveryAddressNumber ==
                   0

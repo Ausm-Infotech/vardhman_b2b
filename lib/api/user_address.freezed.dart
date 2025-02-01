@@ -33,6 +33,9 @@ mixin _$UserAddress {
   String get countryCode => throw _privateConstructorUsedError;
   int get deliveryAddressNumber => throw _privateConstructorUsedError;
   String? get branchPlant => throw _privateConstructorUsedError;
+  String? get branchPlantEmail => throw _privateConstructorUsedError;
+  String? get branchPlantPhone => throw _privateConstructorUsedError;
+  String? get branchPlantWhatsApp => throw _privateConstructorUsedError;
 
   /// Serializes this UserAddress to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,7 +66,10 @@ abstract class $UserAddressCopyWith<$Res> {
       String country,
       String countryCode,
       int deliveryAddressNumber,
-      String? branchPlant});
+      String? branchPlant,
+      String? branchPlantEmail,
+      String? branchPlantPhone,
+      String? branchPlantWhatsApp});
 }
 
 /// @nodoc
@@ -94,6 +100,9 @@ class _$UserAddressCopyWithImpl<$Res, $Val extends UserAddress>
     Object? countryCode = null,
     Object? deliveryAddressNumber = null,
     Object? branchPlant = freezed,
+    Object? branchPlantEmail = freezed,
+    Object? branchPlantPhone = freezed,
+    Object? branchPlantWhatsApp = freezed,
   }) {
     return _then(_value.copyWith(
       alphaName: null == alphaName
@@ -148,6 +157,18 @@ class _$UserAddressCopyWithImpl<$Res, $Val extends UserAddress>
           ? _value.branchPlant
           : branchPlant // ignore: cast_nullable_to_non_nullable
               as String?,
+      branchPlantEmail: freezed == branchPlantEmail
+          ? _value.branchPlantEmail
+          : branchPlantEmail // ignore: cast_nullable_to_non_nullable
+              as String?,
+      branchPlantPhone: freezed == branchPlantPhone
+          ? _value.branchPlantPhone
+          : branchPlantPhone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      branchPlantWhatsApp: freezed == branchPlantWhatsApp
+          ? _value.branchPlantWhatsApp
+          : branchPlantWhatsApp // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -173,7 +194,10 @@ abstract class _$$UserAddressImplCopyWith<$Res>
       String country,
       String countryCode,
       int deliveryAddressNumber,
-      String? branchPlant});
+      String? branchPlant,
+      String? branchPlantEmail,
+      String? branchPlantPhone,
+      String? branchPlantWhatsApp});
 }
 
 /// @nodoc
@@ -202,6 +226,9 @@ class __$$UserAddressImplCopyWithImpl<$Res>
     Object? countryCode = null,
     Object? deliveryAddressNumber = null,
     Object? branchPlant = freezed,
+    Object? branchPlantEmail = freezed,
+    Object? branchPlantPhone = freezed,
+    Object? branchPlantWhatsApp = freezed,
   }) {
     return _then(_$UserAddressImpl(
       alphaName: null == alphaName
@@ -256,6 +283,18 @@ class __$$UserAddressImplCopyWithImpl<$Res>
           ? _value.branchPlant
           : branchPlant // ignore: cast_nullable_to_non_nullable
               as String?,
+      branchPlantEmail: freezed == branchPlantEmail
+          ? _value.branchPlantEmail
+          : branchPlantEmail // ignore: cast_nullable_to_non_nullable
+              as String?,
+      branchPlantPhone: freezed == branchPlantPhone
+          ? _value.branchPlantPhone
+          : branchPlantPhone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      branchPlantWhatsApp: freezed == branchPlantWhatsApp
+          ? _value.branchPlantWhatsApp
+          : branchPlantWhatsApp // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -276,7 +315,10 @@ class _$UserAddressImpl implements _UserAddress {
       required this.country,
       required this.countryCode,
       required this.deliveryAddressNumber,
-      this.branchPlant});
+      this.branchPlant,
+      this.branchPlantEmail,
+      this.branchPlantPhone,
+      this.branchPlantWhatsApp});
 
   factory _$UserAddressImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserAddressImplFromJson(json);
@@ -307,10 +349,16 @@ class _$UserAddressImpl implements _UserAddress {
   final int deliveryAddressNumber;
   @override
   final String? branchPlant;
+  @override
+  final String? branchPlantEmail;
+  @override
+  final String? branchPlantPhone;
+  @override
+  final String? branchPlantWhatsApp;
 
   @override
   String toString() {
-    return 'UserAddress(alphaName: $alphaName, addressLine1: $addressLine1, addressLine2: $addressLine2, addressLine3: $addressLine3, addressLine4: $addressLine4, city: $city, postalCode: $postalCode, state: $state, stateCode: $stateCode, country: $country, countryCode: $countryCode, deliveryAddressNumber: $deliveryAddressNumber, branchPlant: $branchPlant)';
+    return 'UserAddress(alphaName: $alphaName, addressLine1: $addressLine1, addressLine2: $addressLine2, addressLine3: $addressLine3, addressLine4: $addressLine4, city: $city, postalCode: $postalCode, state: $state, stateCode: $stateCode, country: $country, countryCode: $countryCode, deliveryAddressNumber: $deliveryAddressNumber, branchPlant: $branchPlant, branchPlantEmail: $branchPlantEmail, branchPlantPhone: $branchPlantPhone, branchPlantWhatsApp: $branchPlantWhatsApp)';
   }
 
   @override
@@ -340,7 +388,13 @@ class _$UserAddressImpl implements _UserAddress {
             (identical(other.deliveryAddressNumber, deliveryAddressNumber) ||
                 other.deliveryAddressNumber == deliveryAddressNumber) &&
             (identical(other.branchPlant, branchPlant) ||
-                other.branchPlant == branchPlant));
+                other.branchPlant == branchPlant) &&
+            (identical(other.branchPlantEmail, branchPlantEmail) ||
+                other.branchPlantEmail == branchPlantEmail) &&
+            (identical(other.branchPlantPhone, branchPlantPhone) ||
+                other.branchPlantPhone == branchPlantPhone) &&
+            (identical(other.branchPlantWhatsApp, branchPlantWhatsApp) ||
+                other.branchPlantWhatsApp == branchPlantWhatsApp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -359,7 +413,10 @@ class _$UserAddressImpl implements _UserAddress {
       country,
       countryCode,
       deliveryAddressNumber,
-      branchPlant);
+      branchPlant,
+      branchPlantEmail,
+      branchPlantPhone,
+      branchPlantWhatsApp);
 
   /// Create a copy of UserAddress
   /// with the given fields replaced by the non-null parameter values.
@@ -391,7 +448,10 @@ abstract class _UserAddress implements UserAddress {
       required final String country,
       required final String countryCode,
       required final int deliveryAddressNumber,
-      final String? branchPlant}) = _$UserAddressImpl;
+      final String? branchPlant,
+      final String? branchPlantEmail,
+      final String? branchPlantPhone,
+      final String? branchPlantWhatsApp}) = _$UserAddressImpl;
 
   factory _UserAddress.fromJson(Map<String, dynamic> json) =
       _$UserAddressImpl.fromJson;
@@ -422,6 +482,12 @@ abstract class _UserAddress implements UserAddress {
   int get deliveryAddressNumber;
   @override
   String? get branchPlant;
+  @override
+  String? get branchPlantEmail;
+  @override
+  String? get branchPlantPhone;
+  @override
+  String? get branchPlantWhatsApp;
 
   /// Create a copy of UserAddress
   /// with the given fields replaced by the non-null parameter values.

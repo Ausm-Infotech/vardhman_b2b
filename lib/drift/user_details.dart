@@ -4,7 +4,7 @@ class UserDetails extends Table {
   @override
   Set<Column> get primaryKey => {soldToNumber};
 
-  TextColumn get soldToNumber => text().unique()();
+  TextColumn get soldToNumber => text()();
   BoolColumn get isMobileUser => boolean()();
   TextColumn get mobileNumber => text()();
   BoolColumn get canSendSMS => boolean()();

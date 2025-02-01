@@ -23,6 +23,9 @@ class UserAddress with _$UserAddress {
     required String countryCode,
     required int deliveryAddressNumber,
     String? branchPlant,
+    String? branchPlantEmail,
+    String? branchPlantPhone,
+    String? branchPlantWhatsApp,
   }) = _UserAddress;
 
   factory UserAddress.fromJson(Map<String, Object?> json) =>

@@ -14,9 +14,7 @@ class $UserDetailsTable extends UserDetails
   @override
   late final GeneratedColumn<String> soldToNumber = GeneratedColumn<String>(
       'sold_to_number', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _isMobileUserMeta =
       const VerificationMeta('isMobileUser');
   @override
