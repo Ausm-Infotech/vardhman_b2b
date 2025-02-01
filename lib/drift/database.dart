@@ -4,7 +4,6 @@ import 'package:vardhman_b2b/drift/billing_details.dart';
 import 'package:vardhman_b2b/drift/cart_table.dart';
 import 'package:vardhman_b2b/drift/delivery_details.dart';
 import 'package:vardhman_b2b/drift/item_master.dart';
-import 'package:vardhman_b2b/drift/related_customers.dart';
 
 import 'user_details.dart';
 
@@ -13,7 +12,6 @@ part 'database.g.dart';
 @DriftDatabase(
   tables: [
     UserDetails,
-    RelatedCustomers,
     BillingDetails,
     DeliveryDetails,
     ItemMaster,

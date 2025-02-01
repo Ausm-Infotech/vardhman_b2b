@@ -15,7 +15,6 @@ class LabdipView extends StatelessWidget {
     return const Row(
       children: <Widget>[
         Expanded(
-          flex: 1,
           child: LabdipOrdersView(),
         ),
         VerticalDivider(
@@ -24,7 +23,7 @@ class LabdipView extends StatelessWidget {
           color: VardhmanColors.dividerGrey,
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: LabdipOrderDetailsView(),
         ),
       ],

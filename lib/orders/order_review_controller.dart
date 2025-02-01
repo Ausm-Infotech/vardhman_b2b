@@ -65,10 +65,19 @@ class OrderReviewController extends GetxController {
         colorText: Colors.white,
       );
 
-      Api.sendOrderEntrySMS(
-        b2bOrderNumber,
-        _userController.rxCustomerDetail.value.mobileNumber,
-      );
+      if (_userController.rxCustomerDetail.value.canSendSMS) {
+        Api.sendOrderEntrySMS(
+          orderNumber: b2bOrderNumber,
+          mobileNumber: _userController.rxCustomerDetail.value.mobileNumber,
+        );
+      }
+
+      if (_userController.rxCustomerDetail.value.canSendWhatsApp) {
+        Api.sendOrderEntryWhatsApp(
+          orderNumber: b2bOrderNumber,
+          mobileNumber: _userController.rxCustomerDetail.value.mobileNumber,
+        );
+      }
 
       fetchOrderNumber();
     } else {

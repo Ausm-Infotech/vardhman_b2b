@@ -9,6 +9,7 @@ environment:
 dependencies:
   data_table_2: ^2.5.18
   date_field: ^6.0.0
+  device_info_plus: ^11.2.2
   dio: ^5.7.0
   drift: ^2.23.1
   drift_db_viewer: ^2.1.0
@@ -23,6 +24,7 @@ dependencies:
   get: ^4.6.6
   http: ^1.2.2
   intl: ^0.20.1
+  json_annotation: ^4.9.0
   # js: ^0.7.1
   path_provider: ^2.1.5
   pdfrx: ^1.0.101

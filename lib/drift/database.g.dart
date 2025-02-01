@@ -9,28 +9,6 @@ class $UserDetailsTable extends UserDetails
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $UserDetailsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _mobileNumberMeta =
-      const VerificationMeta('mobileNumber');
-  @override
-  late final GeneratedColumn<String> mobileNumber = GeneratedColumn<String>(
-      'mobile_number', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _soldToNumberMeta =
       const VerificationMeta('soldToNumber');
   @override
@@ -39,6 +17,55 @@ class $UserDetailsTable extends UserDetails
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  static const VerificationMeta _isMobileUserMeta =
+      const VerificationMeta('isMobileUser');
+  @override
+  late final GeneratedColumn<bool> isMobileUser = GeneratedColumn<bool>(
+      'is_mobile_user', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_mobile_user" IN (0, 1))'));
+  static const VerificationMeta _mobileNumberMeta =
+      const VerificationMeta('mobileNumber');
+  @override
+  late final GeneratedColumn<String> mobileNumber = GeneratedColumn<String>(
+      'mobile_number', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _canSendSMSMeta =
+      const VerificationMeta('canSendSMS');
+  @override
+  late final GeneratedColumn<bool> canSendSMS = GeneratedColumn<bool>(
+      'can_send_s_m_s', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("can_send_s_m_s" IN (0, 1))'));
+  static const VerificationMeta _whatsAppNumberMeta =
+      const VerificationMeta('whatsAppNumber');
+  @override
+  late final GeneratedColumn<String> whatsAppNumber = GeneratedColumn<String>(
+      'whats_app_number', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _canSendWhatsAppMeta =
+      const VerificationMeta('canSendWhatsApp');
+  @override
+  late final GeneratedColumn<bool> canSendWhatsApp = GeneratedColumn<bool>(
+      'can_send_whats_app', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("can_send_whats_app" IN (0, 1))'));
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+      'email', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _companyCodeMeta =
       const VerificationMeta('companyCode');
   @override
@@ -64,10 +91,14 @@ class $UserDetailsTable extends UserDetails
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        mobileNumber,
-        name,
         soldToNumber,
+        isMobileUser,
+        mobileNumber,
+        canSendSMS,
+        whatsAppNumber,
+        canSendWhatsApp,
+        email,
+        name,
         companyCode,
         companyName,
         role,
@@ -83,8 +114,21 @@ class $UserDetailsTable extends UserDetails
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('sold_to_number')) {
+      context.handle(
+          _soldToNumberMeta,
+          soldToNumber.isAcceptableOrUnknown(
+              data['sold_to_number']!, _soldToNumberMeta));
+    } else if (isInserting) {
+      context.missing(_soldToNumberMeta);
+    }
+    if (data.containsKey('is_mobile_user')) {
+      context.handle(
+          _isMobileUserMeta,
+          isMobileUser.isAcceptableOrUnknown(
+              data['is_mobile_user']!, _isMobileUserMeta));
+    } else if (isInserting) {
+      context.missing(_isMobileUserMeta);
     }
     if (data.containsKey('mobile_number')) {
       context.handle(
@@ -94,19 +138,41 @@ class $UserDetailsTable extends UserDetails
     } else if (isInserting) {
       context.missing(_mobileNumberMeta);
     }
+    if (data.containsKey('can_send_s_m_s')) {
+      context.handle(
+          _canSendSMSMeta,
+          canSendSMS.isAcceptableOrUnknown(
+              data['can_send_s_m_s']!, _canSendSMSMeta));
+    } else if (isInserting) {
+      context.missing(_canSendSMSMeta);
+    }
+    if (data.containsKey('whats_app_number')) {
+      context.handle(
+          _whatsAppNumberMeta,
+          whatsAppNumber.isAcceptableOrUnknown(
+              data['whats_app_number']!, _whatsAppNumberMeta));
+    } else if (isInserting) {
+      context.missing(_whatsAppNumberMeta);
+    }
+    if (data.containsKey('can_send_whats_app')) {
+      context.handle(
+          _canSendWhatsAppMeta,
+          canSendWhatsApp.isAcceptableOrUnknown(
+              data['can_send_whats_app']!, _canSendWhatsAppMeta));
+    } else if (isInserting) {
+      context.missing(_canSendWhatsAppMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
     if (data.containsKey('name')) {
       context.handle(
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
-    }
-    if (data.containsKey('sold_to_number')) {
-      context.handle(
-          _soldToNumberMeta,
-          soldToNumber.isAcceptableOrUnknown(
-              data['sold_to_number']!, _soldToNumberMeta));
-    } else if (isInserting) {
-      context.missing(_soldToNumberMeta);
     }
     if (data.containsKey('company_code')) {
       context.handle(
@@ -140,19 +206,27 @@ class $UserDetailsTable extends UserDetails
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {soldToNumber};
   @override
   UserDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UserDetail(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      mobileNumber: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}mobile_number'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       soldToNumber: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sold_to_number'])!,
+      isMobileUser: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_mobile_user'])!,
+      mobileNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}mobile_number'])!,
+      canSendSMS: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}can_send_s_m_s'])!,
+      whatsAppNumber: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}whats_app_number'])!,
+      canSendWhatsApp: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}can_send_whats_app'])!,
+      email: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}email'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       companyCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}company_code'])!,
       companyName: attachedDatabase.typeMapping
@@ -171,19 +245,27 @@ class $UserDetailsTable extends UserDetails
 }
 
 class UserDetail extends DataClass implements Insertable<UserDetail> {
-  final int id;
-  final String mobileNumber;
-  final String name;
   final String soldToNumber;
+  final bool isMobileUser;
+  final String mobileNumber;
+  final bool canSendSMS;
+  final String whatsAppNumber;
+  final bool canSendWhatsApp;
+  final String email;
+  final String name;
   final String companyCode;
   final String companyName;
   final String role;
   final String category;
   const UserDetail(
-      {required this.id,
+      {required this.soldToNumber,
+      required this.isMobileUser,
       required this.mobileNumber,
+      required this.canSendSMS,
+      required this.whatsAppNumber,
+      required this.canSendWhatsApp,
+      required this.email,
       required this.name,
-      required this.soldToNumber,
       required this.companyCode,
       required this.companyName,
       required this.role,
@@ -191,10 +273,14 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['mobile_number'] = Variable<String>(mobileNumber);
-    map['name'] = Variable<String>(name);
     map['sold_to_number'] = Variable<String>(soldToNumber);
+    map['is_mobile_user'] = Variable<bool>(isMobileUser);
+    map['mobile_number'] = Variable<String>(mobileNumber);
+    map['can_send_s_m_s'] = Variable<bool>(canSendSMS);
+    map['whats_app_number'] = Variable<String>(whatsAppNumber);
+    map['can_send_whats_app'] = Variable<bool>(canSendWhatsApp);
+    map['email'] = Variable<String>(email);
+    map['name'] = Variable<String>(name);
     map['company_code'] = Variable<String>(companyCode);
     map['company_name'] = Variable<String>(companyName);
     map['role'] = Variable<String>(role);
@@ -204,10 +290,14 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
 
   UserDetailsCompanion toCompanion(bool nullToAbsent) {
     return UserDetailsCompanion(
-      id: Value(id),
-      mobileNumber: Value(mobileNumber),
-      name: Value(name),
       soldToNumber: Value(soldToNumber),
+      isMobileUser: Value(isMobileUser),
+      mobileNumber: Value(mobileNumber),
+      canSendSMS: Value(canSendSMS),
+      whatsAppNumber: Value(whatsAppNumber),
+      canSendWhatsApp: Value(canSendWhatsApp),
+      email: Value(email),
+      name: Value(name),
       companyCode: Value(companyCode),
       companyName: Value(companyName),
       role: Value(role),
@@ -219,10 +309,14 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserDetail(
-      id: serializer.fromJson<int>(json['id']),
-      mobileNumber: serializer.fromJson<String>(json['mobileNumber']),
-      name: serializer.fromJson<String>(json['name']),
       soldToNumber: serializer.fromJson<String>(json['soldToNumber']),
+      isMobileUser: serializer.fromJson<bool>(json['isMobileUser']),
+      mobileNumber: serializer.fromJson<String>(json['mobileNumber']),
+      canSendSMS: serializer.fromJson<bool>(json['canSendSMS']),
+      whatsAppNumber: serializer.fromJson<String>(json['whatsAppNumber']),
+      canSendWhatsApp: serializer.fromJson<bool>(json['canSendWhatsApp']),
+      email: serializer.fromJson<String>(json['email']),
+      name: serializer.fromJson<String>(json['name']),
       companyCode: serializer.fromJson<String>(json['companyCode']),
       companyName: serializer.fromJson<String>(json['companyName']),
       role: serializer.fromJson<String>(json['role']),
@@ -233,10 +327,14 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'mobileNumber': serializer.toJson<String>(mobileNumber),
-      'name': serializer.toJson<String>(name),
       'soldToNumber': serializer.toJson<String>(soldToNumber),
+      'isMobileUser': serializer.toJson<bool>(isMobileUser),
+      'mobileNumber': serializer.toJson<String>(mobileNumber),
+      'canSendSMS': serializer.toJson<bool>(canSendSMS),
+      'whatsAppNumber': serializer.toJson<String>(whatsAppNumber),
+      'canSendWhatsApp': serializer.toJson<bool>(canSendWhatsApp),
+      'email': serializer.toJson<String>(email),
+      'name': serializer.toJson<String>(name),
       'companyCode': serializer.toJson<String>(companyCode),
       'companyName': serializer.toJson<String>(companyName),
       'role': serializer.toJson<String>(role),
@@ -245,19 +343,27 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   }
 
   UserDetail copyWith(
-          {int? id,
+          {String? soldToNumber,
+          bool? isMobileUser,
           String? mobileNumber,
+          bool? canSendSMS,
+          String? whatsAppNumber,
+          bool? canSendWhatsApp,
+          String? email,
           String? name,
-          String? soldToNumber,
           String? companyCode,
           String? companyName,
           String? role,
           String? category}) =>
       UserDetail(
-        id: id ?? this.id,
-        mobileNumber: mobileNumber ?? this.mobileNumber,
-        name: name ?? this.name,
         soldToNumber: soldToNumber ?? this.soldToNumber,
+        isMobileUser: isMobileUser ?? this.isMobileUser,
+        mobileNumber: mobileNumber ?? this.mobileNumber,
+        canSendSMS: canSendSMS ?? this.canSendSMS,
+        whatsAppNumber: whatsAppNumber ?? this.whatsAppNumber,
+        canSendWhatsApp: canSendWhatsApp ?? this.canSendWhatsApp,
+        email: email ?? this.email,
+        name: name ?? this.name,
         companyCode: companyCode ?? this.companyCode,
         companyName: companyName ?? this.companyName,
         role: role ?? this.role,
@@ -265,14 +371,25 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       );
   UserDetail copyWithCompanion(UserDetailsCompanion data) {
     return UserDetail(
-      id: data.id.present ? data.id.value : this.id,
-      mobileNumber: data.mobileNumber.present
-          ? data.mobileNumber.value
-          : this.mobileNumber,
-      name: data.name.present ? data.name.value : this.name,
       soldToNumber: data.soldToNumber.present
           ? data.soldToNumber.value
           : this.soldToNumber,
+      isMobileUser: data.isMobileUser.present
+          ? data.isMobileUser.value
+          : this.isMobileUser,
+      mobileNumber: data.mobileNumber.present
+          ? data.mobileNumber.value
+          : this.mobileNumber,
+      canSendSMS:
+          data.canSendSMS.present ? data.canSendSMS.value : this.canSendSMS,
+      whatsAppNumber: data.whatsAppNumber.present
+          ? data.whatsAppNumber.value
+          : this.whatsAppNumber,
+      canSendWhatsApp: data.canSendWhatsApp.present
+          ? data.canSendWhatsApp.value
+          : this.canSendWhatsApp,
+      email: data.email.present ? data.email.value : this.email,
+      name: data.name.present ? data.name.value : this.name,
       companyCode:
           data.companyCode.present ? data.companyCode.value : this.companyCode,
       companyName:
@@ -285,10 +402,14 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   @override
   String toString() {
     return (StringBuffer('UserDetail(')
-          ..write('id: $id, ')
-          ..write('mobileNumber: $mobileNumber, ')
-          ..write('name: $name, ')
           ..write('soldToNumber: $soldToNumber, ')
+          ..write('isMobileUser: $isMobileUser, ')
+          ..write('mobileNumber: $mobileNumber, ')
+          ..write('canSendSMS: $canSendSMS, ')
+          ..write('whatsAppNumber: $whatsAppNumber, ')
+          ..write('canSendWhatsApp: $canSendWhatsApp, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
           ..write('companyCode: $companyCode, ')
           ..write('companyName: $companyName, ')
           ..write('role: $role, ')
@@ -298,16 +419,31 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   }
 
   @override
-  int get hashCode => Object.hash(id, mobileNumber, name, soldToNumber,
-      companyCode, companyName, role, category);
+  int get hashCode => Object.hash(
+      soldToNumber,
+      isMobileUser,
+      mobileNumber,
+      canSendSMS,
+      whatsAppNumber,
+      canSendWhatsApp,
+      email,
+      name,
+      companyCode,
+      companyName,
+      role,
+      category);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UserDetail &&
-          other.id == this.id &&
-          other.mobileNumber == this.mobileNumber &&
-          other.name == this.name &&
           other.soldToNumber == this.soldToNumber &&
+          other.isMobileUser == this.isMobileUser &&
+          other.mobileNumber == this.mobileNumber &&
+          other.canSendSMS == this.canSendSMS &&
+          other.whatsAppNumber == this.whatsAppNumber &&
+          other.canSendWhatsApp == this.canSendWhatsApp &&
+          other.email == this.email &&
+          other.name == this.name &&
           other.companyCode == this.companyCode &&
           other.companyName == this.companyName &&
           other.role == this.role &&
@@ -315,97 +451,149 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
 }
 
 class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
-  final Value<int> id;
-  final Value<String> mobileNumber;
-  final Value<String> name;
   final Value<String> soldToNumber;
+  final Value<bool> isMobileUser;
+  final Value<String> mobileNumber;
+  final Value<bool> canSendSMS;
+  final Value<String> whatsAppNumber;
+  final Value<bool> canSendWhatsApp;
+  final Value<String> email;
+  final Value<String> name;
   final Value<String> companyCode;
   final Value<String> companyName;
   final Value<String> role;
   final Value<String> category;
+  final Value<int> rowid;
   const UserDetailsCompanion({
-    this.id = const Value.absent(),
-    this.mobileNumber = const Value.absent(),
-    this.name = const Value.absent(),
     this.soldToNumber = const Value.absent(),
+    this.isMobileUser = const Value.absent(),
+    this.mobileNumber = const Value.absent(),
+    this.canSendSMS = const Value.absent(),
+    this.whatsAppNumber = const Value.absent(),
+    this.canSendWhatsApp = const Value.absent(),
+    this.email = const Value.absent(),
+    this.name = const Value.absent(),
     this.companyCode = const Value.absent(),
     this.companyName = const Value.absent(),
     this.role = const Value.absent(),
     this.category = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   UserDetailsCompanion.insert({
-    this.id = const Value.absent(),
-    required String mobileNumber,
-    required String name,
     required String soldToNumber,
+    required bool isMobileUser,
+    required String mobileNumber,
+    required bool canSendSMS,
+    required String whatsAppNumber,
+    required bool canSendWhatsApp,
+    required String email,
+    required String name,
     required String companyCode,
     required String companyName,
     required String role,
     required String category,
-  })  : mobileNumber = Value(mobileNumber),
+    this.rowid = const Value.absent(),
+  })  : soldToNumber = Value(soldToNumber),
+        isMobileUser = Value(isMobileUser),
+        mobileNumber = Value(mobileNumber),
+        canSendSMS = Value(canSendSMS),
+        whatsAppNumber = Value(whatsAppNumber),
+        canSendWhatsApp = Value(canSendWhatsApp),
+        email = Value(email),
         name = Value(name),
-        soldToNumber = Value(soldToNumber),
         companyCode = Value(companyCode),
         companyName = Value(companyName),
         role = Value(role),
         category = Value(category);
   static Insertable<UserDetail> custom({
-    Expression<int>? id,
-    Expression<String>? mobileNumber,
-    Expression<String>? name,
     Expression<String>? soldToNumber,
+    Expression<bool>? isMobileUser,
+    Expression<String>? mobileNumber,
+    Expression<bool>? canSendSMS,
+    Expression<String>? whatsAppNumber,
+    Expression<bool>? canSendWhatsApp,
+    Expression<String>? email,
+    Expression<String>? name,
     Expression<String>? companyCode,
     Expression<String>? companyName,
     Expression<String>? role,
     Expression<String>? category,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (mobileNumber != null) 'mobile_number': mobileNumber,
-      if (name != null) 'name': name,
       if (soldToNumber != null) 'sold_to_number': soldToNumber,
+      if (isMobileUser != null) 'is_mobile_user': isMobileUser,
+      if (mobileNumber != null) 'mobile_number': mobileNumber,
+      if (canSendSMS != null) 'can_send_s_m_s': canSendSMS,
+      if (whatsAppNumber != null) 'whats_app_number': whatsAppNumber,
+      if (canSendWhatsApp != null) 'can_send_whats_app': canSendWhatsApp,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
       if (companyCode != null) 'company_code': companyCode,
       if (companyName != null) 'company_name': companyName,
       if (role != null) 'role': role,
       if (category != null) 'category': category,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   UserDetailsCompanion copyWith(
-      {Value<int>? id,
+      {Value<String>? soldToNumber,
+      Value<bool>? isMobileUser,
       Value<String>? mobileNumber,
+      Value<bool>? canSendSMS,
+      Value<String>? whatsAppNumber,
+      Value<bool>? canSendWhatsApp,
+      Value<String>? email,
       Value<String>? name,
-      Value<String>? soldToNumber,
       Value<String>? companyCode,
       Value<String>? companyName,
       Value<String>? role,
-      Value<String>? category}) {
+      Value<String>? category,
+      Value<int>? rowid}) {
     return UserDetailsCompanion(
-      id: id ?? this.id,
-      mobileNumber: mobileNumber ?? this.mobileNumber,
-      name: name ?? this.name,
       soldToNumber: soldToNumber ?? this.soldToNumber,
+      isMobileUser: isMobileUser ?? this.isMobileUser,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+      canSendSMS: canSendSMS ?? this.canSendSMS,
+      whatsAppNumber: whatsAppNumber ?? this.whatsAppNumber,
+      canSendWhatsApp: canSendWhatsApp ?? this.canSendWhatsApp,
+      email: email ?? this.email,
+      name: name ?? this.name,
       companyCode: companyCode ?? this.companyCode,
       companyName: companyName ?? this.companyName,
       role: role ?? this.role,
       category: category ?? this.category,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (soldToNumber.present) {
+      map['sold_to_number'] = Variable<String>(soldToNumber.value);
+    }
+    if (isMobileUser.present) {
+      map['is_mobile_user'] = Variable<bool>(isMobileUser.value);
     }
     if (mobileNumber.present) {
       map['mobile_number'] = Variable<String>(mobileNumber.value);
     }
+    if (canSendSMS.present) {
+      map['can_send_s_m_s'] = Variable<bool>(canSendSMS.value);
+    }
+    if (whatsAppNumber.present) {
+      map['whats_app_number'] = Variable<String>(whatsAppNumber.value);
+    }
+    if (canSendWhatsApp.present) {
+      map['can_send_whats_app'] = Variable<bool>(canSendWhatsApp.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
-    }
-    if (soldToNumber.present) {
-      map['sold_to_number'] = Variable<String>(soldToNumber.value);
     }
     if (companyCode.present) {
       map['company_code'] = Variable<String>(companyCode.value);
@@ -419,295 +607,28 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
     if (category.present) {
       map['category'] = Variable<String>(category.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('UserDetailsCompanion(')
-          ..write('id: $id, ')
-          ..write('mobileNumber: $mobileNumber, ')
-          ..write('name: $name, ')
           ..write('soldToNumber: $soldToNumber, ')
+          ..write('isMobileUser: $isMobileUser, ')
+          ..write('mobileNumber: $mobileNumber, ')
+          ..write('canSendSMS: $canSendSMS, ')
+          ..write('whatsAppNumber: $whatsAppNumber, ')
+          ..write('canSendWhatsApp: $canSendWhatsApp, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
           ..write('companyCode: $companyCode, ')
           ..write('companyName: $companyName, ')
           ..write('role: $role, ')
-          ..write('category: $category')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RelatedCustomersTable extends RelatedCustomers
-    with TableInfo<$RelatedCustomersTable, RelatedCustomer> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RelatedCustomersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _managerSoldToMeta =
-      const VerificationMeta('managerSoldTo');
-  @override
-  late final GeneratedColumn<String> managerSoldTo = GeneratedColumn<String>(
-      'manager_sold_to', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerSoldToMeta =
-      const VerificationMeta('customerSoldTo');
-  @override
-  late final GeneratedColumn<String> customerSoldTo = GeneratedColumn<String>(
-      'customer_sold_to', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _customerNameMeta =
-      const VerificationMeta('customerName');
-  @override
-  late final GeneratedColumn<String> customerName = GeneratedColumn<String>(
-      'customer_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, managerSoldTo, customerSoldTo, customerName];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'related_customers';
-  @override
-  VerificationContext validateIntegrity(Insertable<RelatedCustomer> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('manager_sold_to')) {
-      context.handle(
-          _managerSoldToMeta,
-          managerSoldTo.isAcceptableOrUnknown(
-              data['manager_sold_to']!, _managerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_managerSoldToMeta);
-    }
-    if (data.containsKey('customer_sold_to')) {
-      context.handle(
-          _customerSoldToMeta,
-          customerSoldTo.isAcceptableOrUnknown(
-              data['customer_sold_to']!, _customerSoldToMeta));
-    } else if (isInserting) {
-      context.missing(_customerSoldToMeta);
-    }
-    if (data.containsKey('customer_name')) {
-      context.handle(
-          _customerNameMeta,
-          customerName.isAcceptableOrUnknown(
-              data['customer_name']!, _customerNameMeta));
-    } else if (isInserting) {
-      context.missing(_customerNameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RelatedCustomer map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RelatedCustomer(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      managerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}manager_sold_to'])!,
-      customerSoldTo: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}customer_sold_to'])!,
-      customerName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}customer_name'])!,
-    );
-  }
-
-  @override
-  $RelatedCustomersTable createAlias(String alias) {
-    return $RelatedCustomersTable(attachedDatabase, alias);
-  }
-}
-
-class RelatedCustomer extends DataClass implements Insertable<RelatedCustomer> {
-  final int id;
-  final String managerSoldTo;
-  final String customerSoldTo;
-  final String customerName;
-  const RelatedCustomer(
-      {required this.id,
-      required this.managerSoldTo,
-      required this.customerSoldTo,
-      required this.customerName});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['manager_sold_to'] = Variable<String>(managerSoldTo);
-    map['customer_sold_to'] = Variable<String>(customerSoldTo);
-    map['customer_name'] = Variable<String>(customerName);
-    return map;
-  }
-
-  RelatedCustomersCompanion toCompanion(bool nullToAbsent) {
-    return RelatedCustomersCompanion(
-      id: Value(id),
-      managerSoldTo: Value(managerSoldTo),
-      customerSoldTo: Value(customerSoldTo),
-      customerName: Value(customerName),
-    );
-  }
-
-  factory RelatedCustomer.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RelatedCustomer(
-      id: serializer.fromJson<int>(json['id']),
-      managerSoldTo: serializer.fromJson<String>(json['managerSoldTo']),
-      customerSoldTo: serializer.fromJson<String>(json['customerSoldTo']),
-      customerName: serializer.fromJson<String>(json['customerName']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'managerSoldTo': serializer.toJson<String>(managerSoldTo),
-      'customerSoldTo': serializer.toJson<String>(customerSoldTo),
-      'customerName': serializer.toJson<String>(customerName),
-    };
-  }
-
-  RelatedCustomer copyWith(
-          {int? id,
-          String? managerSoldTo,
-          String? customerSoldTo,
-          String? customerName}) =>
-      RelatedCustomer(
-        id: id ?? this.id,
-        managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-        customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-        customerName: customerName ?? this.customerName,
-      );
-  RelatedCustomer copyWithCompanion(RelatedCustomersCompanion data) {
-    return RelatedCustomer(
-      id: data.id.present ? data.id.value : this.id,
-      managerSoldTo: data.managerSoldTo.present
-          ? data.managerSoldTo.value
-          : this.managerSoldTo,
-      customerSoldTo: data.customerSoldTo.present
-          ? data.customerSoldTo.value
-          : this.customerSoldTo,
-      customerName: data.customerName.present
-          ? data.customerName.value
-          : this.customerName,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomer(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, managerSoldTo, customerSoldTo, customerName);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RelatedCustomer &&
-          other.id == this.id &&
-          other.managerSoldTo == this.managerSoldTo &&
-          other.customerSoldTo == this.customerSoldTo &&
-          other.customerName == this.customerName);
-}
-
-class RelatedCustomersCompanion extends UpdateCompanion<RelatedCustomer> {
-  final Value<int> id;
-  final Value<String> managerSoldTo;
-  final Value<String> customerSoldTo;
-  final Value<String> customerName;
-  const RelatedCustomersCompanion({
-    this.id = const Value.absent(),
-    this.managerSoldTo = const Value.absent(),
-    this.customerSoldTo = const Value.absent(),
-    this.customerName = const Value.absent(),
-  });
-  RelatedCustomersCompanion.insert({
-    this.id = const Value.absent(),
-    required String managerSoldTo,
-    required String customerSoldTo,
-    required String customerName,
-  })  : managerSoldTo = Value(managerSoldTo),
-        customerSoldTo = Value(customerSoldTo),
-        customerName = Value(customerName);
-  static Insertable<RelatedCustomer> custom({
-    Expression<int>? id,
-    Expression<String>? managerSoldTo,
-    Expression<String>? customerSoldTo,
-    Expression<String>? customerName,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (managerSoldTo != null) 'manager_sold_to': managerSoldTo,
-      if (customerSoldTo != null) 'customer_sold_to': customerSoldTo,
-      if (customerName != null) 'customer_name': customerName,
-    });
-  }
-
-  RelatedCustomersCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? managerSoldTo,
-      Value<String>? customerSoldTo,
-      Value<String>? customerName}) {
-    return RelatedCustomersCompanion(
-      id: id ?? this.id,
-      managerSoldTo: managerSoldTo ?? this.managerSoldTo,
-      customerSoldTo: customerSoldTo ?? this.customerSoldTo,
-      customerName: customerName ?? this.customerName,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (managerSoldTo.present) {
-      map['manager_sold_to'] = Variable<String>(managerSoldTo.value);
-    }
-    if (customerSoldTo.present) {
-      map['customer_sold_to'] = Variable<String>(customerSoldTo.value);
-    }
-    if (customerName.present) {
-      map['customer_name'] = Variable<String>(customerName.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RelatedCustomersCompanion(')
-          ..write('id: $id, ')
-          ..write('managerSoldTo: $managerSoldTo, ')
-          ..write('customerSoldTo: $customerSoldTo, ')
-          ..write('customerName: $customerName')
+          ..write('category: $category, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2357,8 +2278,6 @@ abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
   late final $UserDetailsTable userDetails = $UserDetailsTable(this);
-  late final $RelatedCustomersTable relatedCustomers =
-      $RelatedCustomersTable(this);
   late final $BillingDetailsTable billingDetails = $BillingDetailsTable(this);
   late final $DeliveryDetailsTable deliveryDetails =
       $DeliveryDetailsTable(this);
@@ -2368,37 +2287,41 @@ abstract class _$Database extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [
-        userDetails,
-        relatedCustomers,
-        billingDetails,
-        deliveryDetails,
-        itemMaster,
-        cartTable
-      ];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [userDetails, billingDetails, deliveryDetails, itemMaster, cartTable];
 }
 
 typedef $$UserDetailsTableCreateCompanionBuilder = UserDetailsCompanion
     Function({
-  Value<int> id,
-  required String mobileNumber,
-  required String name,
   required String soldToNumber,
+  required bool isMobileUser,
+  required String mobileNumber,
+  required bool canSendSMS,
+  required String whatsAppNumber,
+  required bool canSendWhatsApp,
+  required String email,
+  required String name,
   required String companyCode,
   required String companyName,
   required String role,
   required String category,
+  Value<int> rowid,
 });
 typedef $$UserDetailsTableUpdateCompanionBuilder = UserDetailsCompanion
     Function({
-  Value<int> id,
-  Value<String> mobileNumber,
-  Value<String> name,
   Value<String> soldToNumber,
+  Value<bool> isMobileUser,
+  Value<String> mobileNumber,
+  Value<bool> canSendSMS,
+  Value<String> whatsAppNumber,
+  Value<bool> canSendWhatsApp,
+  Value<String> email,
+  Value<String> name,
   Value<String> companyCode,
   Value<String> companyName,
   Value<String> role,
   Value<String> category,
+  Value<int> rowid,
 });
 
 class $$UserDetailsTableFilterComposer
@@ -2410,17 +2333,31 @@ class $$UserDetailsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get soldToNumber => $composableBuilder(
+      column: $table.soldToNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isMobileUser => $composableBuilder(
+      column: $table.isMobileUser, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get mobileNumber => $composableBuilder(
       column: $table.mobileNumber, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<bool> get canSendSMS => $composableBuilder(
+      column: $table.canSendSMS, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get whatsAppNumber => $composableBuilder(
+      column: $table.whatsAppNumber,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get canSendWhatsApp => $composableBuilder(
+      column: $table.canSendWhatsApp,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get companyCode => $composableBuilder(
       column: $table.companyCode, builder: (column) => ColumnFilters(column));
@@ -2444,19 +2381,34 @@ class $$UserDetailsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get soldToNumber => $composableBuilder(
+      column: $table.soldToNumber,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isMobileUser => $composableBuilder(
+      column: $table.isMobileUser,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get mobileNumber => $composableBuilder(
       column: $table.mobileNumber,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get canSendSMS => $composableBuilder(
+      column: $table.canSendSMS, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get whatsAppNumber => $composableBuilder(
+      column: $table.whatsAppNumber,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get canSendWhatsApp => $composableBuilder(
+      column: $table.canSendWhatsApp,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber,
-      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get companyCode => $composableBuilder(
       column: $table.companyCode, builder: (column) => ColumnOrderings(column));
@@ -2480,17 +2432,29 @@ class $$UserDetailsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get soldToNumber => $composableBuilder(
+      column: $table.soldToNumber, builder: (column) => column);
+
+  GeneratedColumn<bool> get isMobileUser => $composableBuilder(
+      column: $table.isMobileUser, builder: (column) => column);
 
   GeneratedColumn<String> get mobileNumber => $composableBuilder(
       column: $table.mobileNumber, builder: (column) => column);
 
+  GeneratedColumn<bool> get canSendSMS => $composableBuilder(
+      column: $table.canSendSMS, builder: (column) => column);
+
+  GeneratedColumn<String> get whatsAppNumber => $composableBuilder(
+      column: $table.whatsAppNumber, builder: (column) => column);
+
+  GeneratedColumn<bool> get canSendWhatsApp => $composableBuilder(
+      column: $table.canSendWhatsApp, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get soldToNumber => $composableBuilder(
-      column: $table.soldToNumber, builder: (column) => column);
 
   GeneratedColumn<String> get companyCode => $composableBuilder(
       column: $table.companyCode, builder: (column) => column);
@@ -2528,44 +2492,64 @@ class $$UserDetailsTableTableManager extends RootTableManager<
           createComputedFieldComposer: () =>
               $$UserDetailsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> mobileNumber = const Value.absent(),
-            Value<String> name = const Value.absent(),
             Value<String> soldToNumber = const Value.absent(),
+            Value<bool> isMobileUser = const Value.absent(),
+            Value<String> mobileNumber = const Value.absent(),
+            Value<bool> canSendSMS = const Value.absent(),
+            Value<String> whatsAppNumber = const Value.absent(),
+            Value<bool> canSendWhatsApp = const Value.absent(),
+            Value<String> email = const Value.absent(),
+            Value<String> name = const Value.absent(),
             Value<String> companyCode = const Value.absent(),
             Value<String> companyName = const Value.absent(),
             Value<String> role = const Value.absent(),
             Value<String> category = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
               UserDetailsCompanion(
-            id: id,
-            mobileNumber: mobileNumber,
-            name: name,
             soldToNumber: soldToNumber,
+            isMobileUser: isMobileUser,
+            mobileNumber: mobileNumber,
+            canSendSMS: canSendSMS,
+            whatsAppNumber: whatsAppNumber,
+            canSendWhatsApp: canSendWhatsApp,
+            email: email,
+            name: name,
             companyCode: companyCode,
             companyName: companyName,
             role: role,
             category: category,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String mobileNumber,
-            required String name,
             required String soldToNumber,
+            required bool isMobileUser,
+            required String mobileNumber,
+            required bool canSendSMS,
+            required String whatsAppNumber,
+            required bool canSendWhatsApp,
+            required String email,
+            required String name,
             required String companyCode,
             required String companyName,
             required String role,
             required String category,
+            Value<int> rowid = const Value.absent(),
           }) =>
               UserDetailsCompanion.insert(
-            id: id,
-            mobileNumber: mobileNumber,
-            name: name,
             soldToNumber: soldToNumber,
+            isMobileUser: isMobileUser,
+            mobileNumber: mobileNumber,
+            canSendSMS: canSendSMS,
+            whatsAppNumber: whatsAppNumber,
+            canSendWhatsApp: canSendWhatsApp,
+            email: email,
+            name: name,
             companyCode: companyCode,
             companyName: companyName,
             role: role,
             category: category,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -2585,163 +2569,6 @@ typedef $$UserDetailsTableProcessedTableManager = ProcessedTableManager<
     $$UserDetailsTableUpdateCompanionBuilder,
     (UserDetail, BaseReferences<_$Database, $UserDetailsTable, UserDetail>),
     UserDetail,
-    PrefetchHooks Function()>;
-typedef $$RelatedCustomersTableCreateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  required String managerSoldTo,
-  required String customerSoldTo,
-  required String customerName,
-});
-typedef $$RelatedCustomersTableUpdateCompanionBuilder
-    = RelatedCustomersCompanion Function({
-  Value<int> id,
-  Value<String> managerSoldTo,
-  Value<String> customerSoldTo,
-  Value<String> customerName,
-});
-
-class $$RelatedCustomersTableFilterComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => ColumnFilters(column));
-}
-
-class $$RelatedCustomersTableOrderingComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get customerName => $composableBuilder(
-      column: $table.customerName,
-      builder: (column) => ColumnOrderings(column));
-}
-
-class $$RelatedCustomersTableAnnotationComposer
-    extends Composer<_$Database, $RelatedCustomersTable> {
-  $$RelatedCustomersTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get managerSoldTo => $composableBuilder(
-      column: $table.managerSoldTo, builder: (column) => column);
-
-  GeneratedColumn<String> get customerSoldTo => $composableBuilder(
-      column: $table.customerSoldTo, builder: (column) => column);
-
-  GeneratedColumn<String> get customerName => $composableBuilder(
-      column: $table.customerName, builder: (column) => column);
-}
-
-class $$RelatedCustomersTableTableManager extends RootTableManager<
-    _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
-    (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
-    ),
-    RelatedCustomer,
-    PrefetchHooks Function()> {
-  $$RelatedCustomersTableTableManager(
-      _$Database db, $RelatedCustomersTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$RelatedCustomersTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$RelatedCustomersTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$RelatedCustomersTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> managerSoldTo = const Value.absent(),
-            Value<String> customerSoldTo = const Value.absent(),
-            Value<String> customerName = const Value.absent(),
-          }) =>
-              RelatedCustomersCompanion(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String managerSoldTo,
-            required String customerSoldTo,
-            required String customerName,
-          }) =>
-              RelatedCustomersCompanion.insert(
-            id: id,
-            managerSoldTo: managerSoldTo,
-            customerSoldTo: customerSoldTo,
-            customerName: customerName,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$RelatedCustomersTableProcessedTableManager = ProcessedTableManager<
-    _$Database,
-    $RelatedCustomersTable,
-    RelatedCustomer,
-    $$RelatedCustomersTableFilterComposer,
-    $$RelatedCustomersTableOrderingComposer,
-    $$RelatedCustomersTableAnnotationComposer,
-    $$RelatedCustomersTableCreateCompanionBuilder,
-    $$RelatedCustomersTableUpdateCompanionBuilder,
-    (
-      RelatedCustomer,
-      BaseReferences<_$Database, $RelatedCustomersTable, RelatedCustomer>
-    ),
-    RelatedCustomer,
     PrefetchHooks Function()>;
 typedef $$BillingDetailsTableCreateCompanionBuilder = BillingDetailsCompanion
     Function({
@@ -3578,8 +3405,6 @@ class $DatabaseManager {
   $DatabaseManager(this._db);
   $$UserDetailsTableTableManager get userDetails =>
       $$UserDetailsTableTableManager(_db, _db.userDetails);
-  $$RelatedCustomersTableTableManager get relatedCustomers =>
-      $$RelatedCustomersTableTableManager(_db, _db.relatedCustomers);
   $$BillingDetailsTableTableManager get billingDetails =>
       $$BillingDetailsTableTableManager(_db, _db.billingDetails);
   $$DeliveryDetailsTableTableManager get deliveryDetails =>

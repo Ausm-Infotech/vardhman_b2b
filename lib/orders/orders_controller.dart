@@ -69,24 +69,24 @@ class OrdersController extends GetxController
     }
   }
 
-  Future<void> selectOrder(OrderInfo orderStatusData) async {
-    rxSelectedOrder.value = orderStatusData;
+  Future<void> selectOrder(OrderInfo orderInfo) async {
+    rxSelectedOrder.value = orderInfo;
 
-    final orderDetailLines = await Api.fetchOrderDetails(
-      orderNumber: orderStatusData.orderNumber,
-      orderType: orderStatusData.orderType,
-      orderCompany: orderStatusData.orderCompany,
-    );
+    refreshSelectedOrderDetails();
+  }
 
-    if (orderDetailLines.isNotEmpty) {
-      rxSelectedOrder.value = orderStatusData;
+  Future<void> refreshSelectedOrderDetails() async {
+    rxSelectedOrderDetails.clear();
 
-      rxSelectedOrderDetails.clear();
+    if (rxSelectedOrder.value != null) {
+      final orderDetailLines = await Api.fetchOrderDetails(
+        orderNumber: rxSelectedOrder.value!.orderNumber,
+        orderType: rxSelectedOrder.value!.orderType,
+        orderCompany: rxSelectedOrder.value!.orderCompany,
+      );
 
       rxSelectedOrderDetails.addAll(orderDetailLines);
     }
-
-    // Get.to(() => OrderDetailsView());
   }
 
   List<OrderInfo> get _filteredOrderInfos => _rxOrderInfos

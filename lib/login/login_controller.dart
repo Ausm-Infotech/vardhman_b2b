@@ -1,7 +1,9 @@
+import 'dart:developer';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
@@ -35,9 +37,9 @@ class LoginController extends GetxController {
 
   final rxIsProcessing = true.obs;
 
-  List<RelatedCustomer> _relatedCustomers = [];
-
   String otp = '';
+
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   LoginController() {
     userIdTextEditingController.addListener(
@@ -59,31 +61,89 @@ class LoginController extends GetxController {
     final userDetail = await _database.managers.userDetails.getSingleOrNull();
 
     if (userDetail != null) {
-      await _logIn(userDetail);
+      final isTokenRefreshed = await refreshToken(userDetail.soldToNumber);
+
+      if (isTokenRefreshed) {
+        await _logIn(userDetail);
+      }
     }
 
     rxIsProcessing.value = false;
   }
 
-  Future<void> validateUser() async {
-    _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
+  Future<String> getDeviceInfoString() async {
+    String deviceInfoString = 'Unknown Device';
 
-    if (_userDetailsCompanion != null) {
-      otp = '1234';
+    try {
+      if (GetPlatform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceInfoString = '${androidInfo.brand} ${androidInfo.model}';
+      } else if (GetPlatform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceInfoString = '${iosInfo.name} ${iosInfo.model}';
+      } else if (GetPlatform.isWeb) {
+        final webInfo = await deviceInfo.webBrowserInfo;
+        deviceInfoString = '${webInfo.browserName} ${webInfo.userAgent}';
+      }
+    } catch (e) {
+      log('Failed to get device name: $e');
+    }
 
-      toastification.show(
-        primaryColor: VardhmanColors.green,
-        title: Text('OTP sent to ${_userDetailsCompanion!.mobileNumber.value}'),
-      );
+    return deviceInfoString;
+  }
 
-      Get.to(() => const OtpView());
+  Future<bool> refreshToken(String userId) async {
+    await Api.logout();
 
-      userIdTextEditingController.clear();
+    final deviceInfoString = await getDeviceInfoString();
+
+    final deviceName = '${deviceInfoString}_$userId';
+
+    final isTokenSuccess = await Api.fetchToken(deviceName);
+
+    if (isTokenSuccess) {
+      return true;
     } else {
       toastification.show(
         primaryColor: VardhmanColors.red,
-        title: const Text('User not found!'),
+        title: const Text('Connection error!'),
       );
+
+      return false;
+    }
+  }
+
+  Future<void> validateUser() async {
+    final isTokenRefreshed = await refreshToken(rxUserId.value);
+
+    if (isTokenRefreshed) {
+      _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
+
+      if (_userDetailsCompanion != null) {
+        if (!_userDetailsCompanion!.isMobileUser.value) {
+          otp = '1234';
+
+          toastification.show(
+            primaryColor: VardhmanColors.green,
+            title: Text(
+                'OTP sent to ${_userDetailsCompanion!.mobileNumber.value}'),
+          );
+
+          Get.to(() => const OtpView());
+
+          userIdTextEditingController.clear();
+        } else {
+          toastification.show(
+            primaryColor: VardhmanColors.red,
+            title: const Text('User is not a B2B Portal user!'),
+          );
+        }
+      } else {
+        toastification.show(
+          primaryColor: VardhmanColors.red,
+          title: const Text('User not found!'),
+        );
+      }
     }
   }
 
@@ -92,10 +152,14 @@ class LoginController extends GetxController {
         otpTextEditingController.value.text == otp) {
       await _logIn(
         UserDetail(
-          id: 0,
-          mobileNumber: _userDetailsCompanion!.mobileNumber.value,
-          name: _userDetailsCompanion!.name.value,
           soldToNumber: _userDetailsCompanion!.soldToNumber.value,
+          isMobileUser: _userDetailsCompanion!.isMobileUser.value,
+          mobileNumber: _userDetailsCompanion!.mobileNumber.value,
+          canSendSMS: _userDetailsCompanion!.canSendSMS.value,
+          email: _userDetailsCompanion!.email.value,
+          whatsAppNumber: _userDetailsCompanion!.whatsAppNumber.value,
+          canSendWhatsApp: _userDetailsCompanion!.canSendWhatsApp.value,
+          name: _userDetailsCompanion!.name.value,
           companyCode: _userDetailsCompanion!.companyCode.value,
           companyName: _userDetailsCompanion!.companyName.value,
           role: _userDetailsCompanion!.role.value,
@@ -122,83 +186,13 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<UserDetail> getCustomerDetail(UserDetail userDetail) async {
-    if (!isCustomer(userDetail)) {
-      final relatedCustomersCompanion = await Api.fetchRelatedCustomers(
-        userCategory: userDetail.category,
-        userAddressNumber: userDetail.soldToNumber,
-      );
-
-      if (relatedCustomersCompanion.isNotEmpty) {
-        _relatedCustomers = relatedCustomersCompanion
-            .map(
-              (e) => RelatedCustomer(
-                id: 0,
-                managerSoldTo: e.managerSoldTo.value,
-                customerSoldTo: e.customerSoldTo.value,
-                customerName: e.customerName.value,
-              ),
-            )
-            .toList();
-
-        await _database.managers.relatedCustomers
-            .filter(
-              (f) => f.managerSoldTo.equals(userDetail.soldToNumber),
-            )
-            .delete();
-
-        _database.managers.relatedCustomers.bulkCreate(
-          (o) => relatedCustomersCompanion,
-          mode: InsertMode.insertOrReplace,
-        );
-
-        final sharedPrefs = await SharedPreferences.getInstance();
-
-        final sharedPrefsKey = sharedPrefsSelectedCustomerKey(userDetail);
-
-        var selectedCustomerSoldTo =
-            sharedPrefs.getString(sharedPrefsKey) ?? '';
-
-        if (selectedCustomerSoldTo.isEmpty ||
-            !relatedCustomersCompanion.any(
-              (element) =>
-                  element.customerSoldTo.value == selectedCustomerSoldTo,
-            )) {
-          selectedCustomerSoldTo =
-              relatedCustomersCompanion.first.customerSoldTo.value;
-        }
-
-        final customerDetailComp =
-            await Api.fetchUserData(selectedCustomerSoldTo);
-
-        if (customerDetailComp != null) {
-          sharedPrefs.setString(sharedPrefsKey, selectedCustomerSoldTo);
-
-          return UserDetail(
-            id: 0,
-            mobileNumber: customerDetailComp.mobileNumber.value,
-            name: customerDetailComp.name.value,
-            soldToNumber: customerDetailComp.soldToNumber.value,
-            companyCode: customerDetailComp.companyCode.value,
-            companyName: customerDetailComp.companyName.value,
-            role: customerDetailComp.role.value,
-            category: customerDetailComp.category.value,
-          );
-        }
-      }
-    }
-
-    return userDetail;
-  }
+  //
 
   Future<void> _logIn(UserDetail userDetail) async {
-    final customerDetail = await getCustomerDetail(userDetail);
-
     await resetController(
       () => UserController(
         userDetail: userDetail,
-        customerDetail: customerDetail,
-        relatedCustomers: isCustomer(customerDetail) ? [] : _relatedCustomers,
+        customerDetail: userDetail,
       ),
       tag: 'userController',
     );

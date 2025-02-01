@@ -47,83 +47,51 @@ class LabdipOrdersView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: DataTable2(
-                showCheckboxColumn: false,
-                columns: const [
-                  DataColumn(
-                    label: Text('Order Number'),
+            child: ordersController.labdipOrders.isEmpty
+                ? const Center(
+                    child: Text('No Labdip Orders'),
+                  )
+                : Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: DataTable2(
+                      showCheckboxColumn: false,
+                      columns: const [
+                        DataColumn(
+                          label: Text('Order Number'),
+                        ),
+                        DataColumn(
+                          label: Text('Date'),
+                        ),
+                      ],
+                      rows: ordersController.labdipOrders
+                          .map(
+                            (labdipOrder) => DataRow(
+                              selected: labdipOrder ==
+                                  ordersController.rxSelectedOrder.value,
+                              onSelectChanged: (value) {
+                                if (value == true &&
+                                    ordersController.rxSelectedOrder.value !=
+                                        labdipOrder) {
+                                  ordersController.selectOrder(labdipOrder);
+                                }
+                              },
+                              cells: [
+                                DataCell(
+                                  Text('${labdipOrder.orderNumber}'),
+                                ),
+                                DataCell(
+                                  Text(DateFormat('dd/MM/yyyy')
+                                      .format(labdipOrder.orderDate)),
+                                ),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                  // DataColumn(
-                  //   label: Text('Type'),
-                  // ),
-                  DataColumn(
-                    label: Text('Date'),
-                  ),
-                  // DataColumn(
-                  //   label: Text('Quantity'),
-                  // ),
-                  // DataColumn(
-                  //   label: Text('Shipped'),
-                  // ),
-                  // DataColumn(
-                  //   label: Text('Cancelled'),
-                  // ),
-                  // DataColumn(
-                  //   label: Text('Amount'),
-                  // ),
-                  DataColumn(
-                    label: Text('Status'),
-                  ),
-                ],
-                rows: ordersController.labdipOrders
-                    .map(
-                      (labdipOrder) => DataRow(
-                        selected: labdipOrder ==
-                            ordersController.rxSelectedOrder.value,
-                        onSelectChanged: (value) {
-                          if (value == true &&
-                              ordersController.rxSelectedOrder.value !=
-                                  labdipOrder) {
-                            ordersController.selectOrder(labdipOrder);
-                          }
-                        },
-                        cells: [
-                          DataCell(
-                            Text(labdipOrder.orderNumber.toString()),
-                          ),
-                          // DataCell(
-                          //   Text(labdipOrder.orderType),
-                          // ),
-                          DataCell(
-                            Text(DateFormat('dd/MM/yyyy')
-                                .format(labdipOrder.orderDate)),
-                          ),
-                          // DataCell(
-                          //   Text(labdipOrder.quantityOrdered.toString()),
-                          // ),
-                          // DataCell(
-                          //   Text(labdipOrder.quantityShipped.toString()),
-                          // ),
-                          // DataCell(
-                          //   Text(labdipOrder.quantityCancelled.toString()),
-                          // ),
-                          // DataCell(
-                          //   Text(labdipOrder.orderAmount.toStringAsFixed(2)),
-                          // ),
-                          DataCell(
-                            Text(labdipOrder.orderStatus),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
           ),
         ],
       ),

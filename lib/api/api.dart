@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:file_saver/file_saver.dart';
@@ -40,39 +41,92 @@ class Api {
     ),
   );
 
-  static get _dio {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: 'https://172.22.250.11:7081/jderest',
-        headers: {
-          'Authorization': 'Basic REVWMTQ6U2VjdXJlQDI=',
-          'Content-Type': 'application/json',
-          'Connection': 'keep-alive',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Accept': '*/*',
+  static final _dio = Dio(
+    BaseOptions(
+      baseUrl: 'https://172.22.250.11:7081/jderest',
+      headers: {
+        'Content-Type': 'application/json',
+        'Connection': 'keep-alive',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept': '*/*',
+      },
+      sendTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      validateStatus: (status) => true,
+      receiveDataWhenStatusError: true,
+    ),
+  )
+    ..interceptors.add(
+      InterceptorsWrapper(
+        onResponse: (response, handler) {
+          if (response.statusCode == 444) {
+            log('Token expired');
+          }
+
+          handler.next(response);
         },
-        sendTimeout: const Duration(seconds: 30),
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(minutes: 30),
-        validateStatus: (status) => true,
-        receiveDataWhenStatusError: true,
       ),
-    );
+    )
+    ..httpClientAdapter = kIsWeb
+        ? BrowserHttpClientAdapter()
+        : IOHttpClientAdapter(
+            createHttpClient: () {
+              final httpClient = HttpClient();
 
-    if (!kIsWeb) {
-      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-        final httpClient = HttpClient();
+              httpClient.badCertificateCallback =
+                  (X509Certificate cert, String host, int port) {
+                return true;
+              };
 
-        httpClient.badCertificateCallback =
-            (X509Certificate cert, String host, int port) {
-          return true;
-        };
+              return httpClient;
+            },
+          );
 
-        return httpClient;
-      };
+  static Future<bool> fetchToken(String deviceName) async {
+    try {
+      final response = await _dio.post(
+        '/v2/tokenrequest',
+        data: {
+          "username": "JDEMAPPNP",
+          "password": "AppSecure#1",
+          "deviceName": deviceName,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final token = response.data['userInfo']['token'];
+
+        _dio.options.headers['JDE-AIS-Auth'] = token;
+        _dio.options.headers['JDE-AIS-Auth-Device'] = deviceName;
+
+        return true;
+      }
+    } catch (e) {
+      log('fetchToken error - $e');
     }
 
-    return dio;
+    return false;
+  }
+
+  static Future<bool> logout() async {
+    try {
+      final response = await _dio.post(
+        '/v2/tokenrequest/logout',
+        data: {},
+      );
+
+      if (response.statusCode == 200) {
+        _dio.options.headers.remove('JDE-AIS-Auth');
+        _dio.options.headers.remove('JDE-AIS-Auth-Device');
+
+        return true;
+      }
+    } catch (e) {
+      log('logout error - $e');
+    }
+
+    return false;
   }
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
@@ -110,7 +164,7 @@ class Api {
   }
 
   static Future<void> sendOrderEntrySMS(
-      String orderNumber, String mobileNumber) async {
+      {required String orderNumber, required String mobileNumber}) async {
     try {
       await Dio().post(
         'https://digimate.airtel.in:15443/BULK_API/InstantJsonPushV2',
@@ -140,6 +194,34 @@ class Api {
     }
   }
 
+  static Future<void> sendOrderEntryWhatsApp({
+    required String orderNumber,
+    required String mobileNumber,
+  }) async {
+    try {
+      final response = await Dio(
+        BaseOptions(
+          headers: {'Authorization': 'Basic TVNfVkFSREhNOlZhcmRobUAyMCMj'},
+        ),
+      ).post(
+        'https://iqwhatsapp.airtel.in/gateway/airtel-xchange/basic/whatsapp-manager/v1/template/send',
+        data: {
+          "templateId": "01jj1c8ddqvjdd5v9hp63d850p",
+          "to": mobileNumber,
+          "from": "9313503051",
+          "message": {
+            "headerVars": [orderNumber],
+            "variables": [orderNumber]
+          }
+        },
+      );
+
+      log(response.data.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   static Future<UserDetailsCompanion?> fetchUserData(
     String userId,
   ) async {
@@ -155,9 +237,14 @@ class Api {
         final userData = response.data['Get_User_Data'][0];
 
         return UserDetailsCompanion(
-          mobileNumber: Value(userData['MobileNumber']),
-          name: Value(userData['UserName']),
           soldToNumber: Value(userData['User']),
+          isMobileUser: Value(userData['MobileOrPortalFlag'] == 'M'),
+          mobileNumber: Value(userData['MobileNumber']),
+          canSendSMS: Value(userData['SendSMSYN'] == 'Y'),
+          whatsAppNumber: Value(userData['WhatAppNumber']),
+          canSendWhatsApp: Value(userData['SendWAPYN'] == 'Y'),
+          email: Value(userData['EmailAddresses']),
+          name: Value(userData['UserName']),
           companyCode: Value(userData['Company Code']),
           companyName: Value(userData['Company']),
           role: Value(userData['UserRole']),
@@ -252,44 +339,6 @@ class Api {
     }
 
     return deliveryAddresses;
-  }
-
-  static Future<List<RelatedCustomersCompanion>> fetchRelatedCustomers({
-    required String userCategory,
-    required String userAddressNumber,
-  }) async {
-    final relatedCustomerCompanions = <RelatedCustomersCompanion>[];
-
-    try {
-      final response = await _dio.post(
-        '/orchestrator/ORCH5503012_Get_Related_Customers ',
-        data: {
-          'UserCodeInput': userCategory,
-          'UserId': userAddressNumber,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final relatedCustomers = response.data['Related_Customers'] ??
-            response.data["Related_Customers "] ??
-            [];
-
-        for (var relatedCustomer in relatedCustomers) {
-          relatedCustomerCompanions.add(
-            RelatedCustomersCompanion(
-              managerSoldTo: Value(userAddressNumber),
-              customerSoldTo:
-                  Value(relatedCustomer['Customer Number'].toString()),
-              customerName: Value(relatedCustomer['Customer Name']),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      log('fetchRelatedCustomers error - $e');
-    }
-
-    return relatedCustomerCompanions;
   }
 
   static Future<List<OrderInfo>> fetchOrders({
