@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
 import 'package:toastification/toastification.dart';
-import 'package:dio/io.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
@@ -57,11 +56,11 @@ class Api {
       receiveDataWhenStatusError: true,
     ),
   )
-    ..httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () => HttpClient()
-        ..badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true,
-    )
+    // ..httpClientAdapter = IOHttpClientAdapter(
+    //   createHttpClient: () => HttpClient()
+    //     ..badCertificateCallback =
+    //         (X509Certificate cert, String host, int port) => true,
+    // )
     ..interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
@@ -85,18 +84,6 @@ class Api {
         },
       ),
     );
-  // ..httpClientAdapter = IOHttpClientAdapter(
-  //   createHttpClient: () {
-  //     final httpClient = HttpClient();
-
-  //     httpClient.badCertificateCallback =
-  //         (X509Certificate cert, String host, int port) {
-  //       return true;
-  //     };
-
-  //     return httpClient;
-  //   },
-  // );
 
   static Future<bool> fetchToken(String deviceName) async {
     try {
