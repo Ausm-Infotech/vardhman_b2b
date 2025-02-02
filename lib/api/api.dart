@@ -85,18 +85,6 @@ class Api {
         },
       ),
     );
-  // ..httpClientAdapter = IOHttpClientAdapter(
-  //   createHttpClient: () {
-  //     final httpClient = HttpClient();
-
-  //     httpClient.badCertificateCallback =
-  //         (X509Certificate cert, String host, int port) {
-  //       return true;
-  //     };
-
-  //     return httpClient;
-  //   },
-  // );
 
   static Future<bool> fetchToken(String deviceName) async {
     try {
