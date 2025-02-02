@@ -1,10 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
-import 'package:vardhman_b2b/api/order_info.dart';
+import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_entry_controller.dart';
@@ -14,7 +13,7 @@ class OrdersController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final _userController = Get.find<UserController>(tag: 'userController');
 
-  final _rxOrderInfos = <OrderInfo>[];
+  final _rxOrderHeaderLines = <OrderHeaderLine>[];
 
   final rxEarliestOrderDate = oldestDateTime.obs;
 
@@ -24,7 +23,7 @@ class OrdersController extends GetxController
 
   final rxOrderNumberInput = ''.obs;
 
-  final rxSelectedOrder = Rxn<OrderInfo>();
+  final rxSelectedOrder = Rxn<OrderHeaderLine>();
 
   final rxSelectedOrderDetails = <OrderDetailLine>[].obs;
 
@@ -46,22 +45,21 @@ class OrdersController extends GetxController
     final customerSoldToNumber =
         _userController.rxCustomerDetail.value.soldToNumber;
 
-    final orderInfos = await Api.fetchOrders(
-      soldToNumber: customerSoldToNumber,
-    );
+    final orderInfos =
+        await Api.fetchOrders(soldToNumber: customerSoldToNumber);
 
-    _rxOrderInfos.clear();
+    _rxOrderHeaderLines.clear();
 
     if (orderInfos.isNotEmpty) {
-      _rxOrderInfos.addAll(orderInfos);
+      _rxOrderHeaderLines.addAll(orderInfos);
 
-      _rxOrderInfos.sort(
-        (a, b) => a.orderDate.compareTo(b.orderDate),
-      );
+      _rxOrderHeaderLines.sort((a, b) => b.orderDate.compareTo(a.orderDate));
 
-      rxEarliestOrderDate.value = _rxOrderInfos.first.orderDate;
+      rxEarliestOrderDate.value =
+          _rxOrderHeaderLines.lastOrNull?.orderDate ?? oldestDateTime;
 
-      rxOrderFromDate.value = _rxOrderInfos.first.orderDate;
+      rxOrderFromDate.value =
+          _rxOrderHeaderLines.lastOrNull?.orderDate ?? oldestDateTime;
     } else {
       rxEarliestOrderDate.value = oldestDateTime;
 
@@ -69,7 +67,7 @@ class OrdersController extends GetxController
     }
   }
 
-  Future<void> selectOrder(OrderInfo orderInfo) async {
+  Future<void> selectOrder(OrderHeaderLine orderInfo) async {
     rxSelectedOrder.value = orderInfo;
 
     refreshSelectedOrderDetails();
@@ -89,20 +87,21 @@ class OrdersController extends GetxController
     }
   }
 
-  List<OrderInfo> get _filteredOrderInfos => _rxOrderInfos
+  List<OrderHeaderLine> get _filteredOrderInfos => _rxOrderHeaderLines
       .where(
-        (orderInfo) =>
-            (orderInfo.orderReference.trim().isNotEmpty
-                ? orderInfo.orderReference.contains(rxOrderNumberInput.value)
-                : orderInfo.orderNumber
+        (orderHeaderLine) =>
+            (orderHeaderLine.orderReference.trim().isNotEmpty
+                ? orderHeaderLine.orderReference
+                    .contains(rxOrderNumberInput.value)
+                : orderHeaderLine.orderNumber
                     .toString()
                     .contains(rxOrderNumberInput.value)) &&
-            orderInfo.orderDate.isAfter(
+            orderHeaderLine.orderDate.isAfter(
               rxOrderFromDate.value.subtract(
                 const Duration(days: 1),
               ),
             ) &&
-            orderInfo.orderDate.isBefore(
+            orderHeaderLine.orderDate.isBefore(
               rxOrderToDate.value.add(
                 const Duration(days: 1),
               ),
@@ -110,13 +109,13 @@ class OrdersController extends GetxController
       )
       .toList();
 
-  List<OrderInfo> get labdipOrders => _filteredOrderInfos
+  List<OrderHeaderLine> get labdipOrders => _filteredOrderInfos
       .where(
         (orderStatusData) => orderStatusData.orderType == 'LD',
       )
       .toList();
 
-  List<OrderInfo> get inProgressOrders => _filteredOrderInfos
+  List<OrderHeaderLine> get inProgressOrders => _filteredOrderInfos
       .where(
         (orderStatusData) =>
             orderStatusData.orderStatus == 'In Progress' ||
@@ -124,19 +123,19 @@ class OrdersController extends GetxController
       )
       .toList();
 
-  List<OrderInfo> get holdOrders => _filteredOrderInfos
+  List<OrderHeaderLine> get holdOrders => _filteredOrderInfos
       .where(
         (orderStatusData) => orderStatusData.orderStatus == 'Hold',
       )
       .toList();
 
-  List<OrderInfo> get cancelledOrders => _filteredOrderInfos
+  List<OrderHeaderLine> get cancelledOrders => _filteredOrderInfos
       .where(
         (orderStatusData) => orderStatusData.orderStatus == 'Cancelled',
       )
       .toList();
 
-  List<OrderInfo> get dispatchedOrders => _filteredOrderInfos
+  List<OrderHeaderLine> get dispatchedOrders => _filteredOrderInfos
       .where(
         (orderStatusData) =>
             orderStatusData.orderStatus == 'Dispatched' ||

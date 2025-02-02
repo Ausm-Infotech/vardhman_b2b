@@ -5,6 +5,7 @@ import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrderDetailsView extends StatelessWidget {
@@ -15,6 +16,8 @@ class LabdipOrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrdersController ordersController = Get.find<OrdersController>();
+
+    final LabdipController labdipController = Get.find<LabdipController>();
 
     final CatalogController catalogController = Get.find<CatalogController>();
 
@@ -59,11 +62,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
                         DataColumn2(label: Text('Tex'), size: ColumnSize.S),
                         DataColumn2(label: Text('Shade'), size: ColumnSize.M),
-                        // DataColumn2(
-                        //     label: Text('Permanent Shade'), size: ColumnSize.M),
-                        // DataColumn2(
-                        //     label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(
+                          label: Text('Permanent\nShade'),
+                          size: ColumnSize.M,
+                        ),
+                        DataColumn2(
+                            label: Text('Reference'), size: ColumnSize.M),
                         DataColumn2(label: Text('Comment'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Status'), size: ColumnSize.M),
                       ],
                       rows: ordersController.rxSelectedOrderDetails.map(
                         (orderDetail) {
@@ -80,6 +86,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 itemCatalogInfo.article == article &&
                                 itemCatalogInfo.uom == uom,
                           );
+
+                          final labdipTableRow = labdipController
+                              .getLabdipTableRow(orderDetail.workOrderNumber);
 
                           return DataRow(
                             cells: [
@@ -102,7 +111,16 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 Text(shade),
                               ),
                               DataCell(
+                                Text(labdipTableRow?.permanentShade ?? ''),
+                              ),
+                              DataCell(
+                                Text(labdipTableRow?.reference ?? ''),
+                              ),
+                              DataCell(
                                 Text(orderDetail.userComment),
+                              ),
+                              DataCell(
+                                Text(orderDetail.status),
                               ),
                             ],
                           );

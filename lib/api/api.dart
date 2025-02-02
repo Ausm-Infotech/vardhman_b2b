@@ -10,12 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pure_ftp/pure_ftp.dart';
 import 'package:toastification/toastification.dart';
-import 'package:universal_io/io.dart';
+import 'package:dio/io.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
+import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
-import 'package:vardhman_b2b/api/order_info.dart';
+import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -55,7 +56,13 @@ class Api {
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
-  )..interceptors.add(
+  )
+    ..httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () => HttpClient()
+        ..badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true,
+    )
+    ..interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
           if (response.statusCode == 444) {
@@ -357,10 +364,10 @@ class Api {
     return deliveryAddresses;
   }
 
-  static Future<List<OrderInfo>> fetchOrders({
+  static Future<List<OrderHeaderLine>> fetchOrders({
     required String soldToNumber,
   }) async {
-    final orderInfos = <OrderInfo>[];
+    final orderHeaderLines = <OrderHeaderLine>[];
 
     try {
       final response = await _dio.post(
@@ -372,7 +379,7 @@ class Api {
 
       if (response.statusCode == 200) {
         for (var orderStatus in response.data["GetOrderStatus"]) {
-          final OrderInfo orderInfo = OrderInfo(
+          final OrderHeaderLine orderHeaderLine = OrderHeaderLine(
             orderNumber: orderStatus['OrderNumber'],
             orderType: orderStatus['OrType'],
             orderCompany: orderStatus['OrderCo'],
@@ -393,14 +400,14 @@ class Api {
             quantityBackOrdered: orderStatus['QuantityBackOrder'],
           );
 
-          orderInfos.add(orderInfo);
+          orderHeaderLines.add(orderHeaderLine);
         }
       }
     } catch (e) {
       log('fetchOrders error - $e');
     }
 
-    return orderInfos;
+    return orderHeaderLines;
   }
 
   static Future<List<OrderDetailLine>> fetchOrderDetails({
@@ -450,6 +457,10 @@ class Api {
               invoiceNumber: orderDetailData['Invoice'],
               invoiceType: orderDetailData['Invoice Type'],
               invoiceCompany: orderDetailData['Invoice Company'],
+              workOrderNumber: int.tryParse(orderDetailData['WorkOrder']) ?? 0,
+              catalogName: orderDetailData['Catalog Name'],
+              woStatus: orderDetailData['WOStatus'],
+              workOrderType: orderDetailData['WorkOrderType'],
             ),
           );
         }
@@ -459,6 +470,55 @@ class Api {
     }
 
     return orderDetailLines;
+  }
+
+  static Future<List<LabdipTableRow>> fetchLabdipTableRows(
+      int orderNumber) async {
+    final labdipTableRows = <LabdipTableRow>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F5630111",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F5630111.WCP3|F5630111.REFERENC|F5630111.DOCO",
+          "maxPageSize": "No Max",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F5630111.QSMP",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": orderNumber}
+                ]
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F5630111']['data']
+            ['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          labdipTableRows.add(
+            LabdipTableRow(
+              reference: row['F5630111_REFERENC'],
+              workOrderNumber: row['F5630111_DOCO'],
+              permanentShade: row['F5630111_WCP3'],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchLabdipTableRows error - $e');
+    }
+
+    return labdipTableRows;
   }
 
   static Future<List<ItemCatalogInfo>> fetchItemCatalogInfo() async {

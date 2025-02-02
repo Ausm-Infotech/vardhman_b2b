@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_info.dart';
+part of 'order_header_line.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OrderInfoImpl _$$OrderInfoImplFromJson(Map<String, dynamic> json) =>
-    _$OrderInfoImpl(
+_$OrderHeaderLineImpl _$$OrderHeaderLineImplFromJson(
+        Map<String, dynamic> json) =>
+    _$OrderHeaderLineImpl(
       orderNumber: (json['orderNumber'] as num).toInt(),
       orderType: json['orderType'] as String,
       orderCompany: json['orderCompany'] as String,
@@ -25,7 +26,8 @@ _$OrderInfoImpl _$$OrderInfoImplFromJson(Map<String, dynamic> json) =>
       isDTM: json['isDTM'] as bool,
     );
 
-Map<String, dynamic> _$$OrderInfoImplToJson(_$OrderInfoImpl instance) =>
+Map<String, dynamic> _$$OrderHeaderLineImplToJson(
+        _$OrderHeaderLineImpl instance) =>
     <String, dynamic>{
       'orderNumber': instance.orderNumber,
       'orderType': instance.orderType,

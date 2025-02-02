@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'order_info.freezed.dart';
-part 'order_info.g.dart';
+part 'order_header_line.freezed.dart';
+part 'order_header_line.g.dart';
 
 @freezed
-class OrderInfo with _$OrderInfo {
-  const factory OrderInfo({
+class OrderHeaderLine with _$OrderHeaderLine {
+  const factory OrderHeaderLine({
     required int orderNumber,
     required String orderType,
     required String orderCompany,
@@ -21,14 +21,16 @@ class OrderInfo with _$OrderInfo {
     required int quantityBackOrdered,
     required bool canIndent,
     required bool isDTM,
-  }) = _OrderInfo;
+  }) = _OrderHeaderLine;
 
-  const OrderInfo._();
+  const OrderHeaderLine._();
 
   String get orderNumberString => orderReference.trim().isNotEmpty
       ? orderReference
       : orderNumber.toString();
 
-  factory OrderInfo.fromJson(Map<String, dynamic> json) =>
-      _$OrderInfoFromJson(json);
+  bool get isLabdip => orderType == 'LD';
+
+  factory OrderHeaderLine.fromJson(Map<String, dynamic> json) =>
+      _$OrderHeaderLineFromJson(json);
 }

@@ -9,7 +9,7 @@ part 'order_detail_line.g.dart';
 
 @freezed
 class OrderDetailLine with _$OrderDetailLine {
-  const factory OrderDetailLine({
+  factory OrderDetailLine({
     required String company,
     required int orderNumber,
     required String orderType,
@@ -29,7 +29,31 @@ class OrderDetailLine with _$OrderDetailLine {
     required int invoiceNumber,
     required String invoiceType,
     required String invoiceCompany,
+    required int workOrderNumber,
+    required String workOrderType,
+    required String woStatus,
+    required String catalogName,
   }) = _OrderDetailLine;
+
+  OrderDetailLine._();
+
+  String get status {
+    // Labdip
+    if (orderType == 'LD' && workOrderType == 'W6') {
+      switch (woStatus) {
+        case '10':
+        case '15':
+          return 'Order Received By Branch';
+        case '20':
+          return 'Order Received By Plant';
+        case '41':
+          return 'Dispatched';
+        default:
+          return 'In Progress';
+      }
+    }
+    return 'Unknown';
+  }
 
   factory OrderDetailLine.fromJson(Map<String, Object?> json) =>
       _$OrderDetailLineFromJson(json);

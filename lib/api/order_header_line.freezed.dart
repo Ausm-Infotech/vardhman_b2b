@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'order_info.dart';
+part of 'order_header_line.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-OrderInfo _$OrderInfoFromJson(Map<String, dynamic> json) {
-  return _OrderInfo.fromJson(json);
+OrderHeaderLine _$OrderHeaderLineFromJson(Map<String, dynamic> json) {
+  return _OrderHeaderLine.fromJson(json);
 }
 
 /// @nodoc
-mixin _$OrderInfo {
+mixin _$OrderHeaderLine {
   int get orderNumber => throw _privateConstructorUsedError;
   String get orderType => throw _privateConstructorUsedError;
   String get orderCompany => throw _privateConstructorUsedError;
@@ -36,20 +36,21 @@ mixin _$OrderInfo {
   bool get canIndent => throw _privateConstructorUsedError;
   bool get isDTM => throw _privateConstructorUsedError;
 
-  /// Serializes this OrderInfo to a JSON map.
+  /// Serializes this OrderHeaderLine to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of OrderInfo
+  /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $OrderInfoCopyWith<OrderInfo> get copyWith =>
+  $OrderHeaderLineCopyWith<OrderHeaderLine> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $OrderInfoCopyWith<$Res> {
-  factory $OrderInfoCopyWith(OrderInfo value, $Res Function(OrderInfo) then) =
-      _$OrderInfoCopyWithImpl<$Res, OrderInfo>;
+abstract class $OrderHeaderLineCopyWith<$Res> {
+  factory $OrderHeaderLineCopyWith(
+          OrderHeaderLine value, $Res Function(OrderHeaderLine) then) =
+      _$OrderHeaderLineCopyWithImpl<$Res, OrderHeaderLine>;
   @useResult
   $Res call(
       {int orderNumber,
@@ -70,16 +71,16 @@ abstract class $OrderInfoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
-    implements $OrderInfoCopyWith<$Res> {
-  _$OrderInfoCopyWithImpl(this._value, this._then);
+class _$OrderHeaderLineCopyWithImpl<$Res, $Val extends OrderHeaderLine>
+    implements $OrderHeaderLineCopyWith<$Res> {
+  _$OrderHeaderLineCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of OrderInfo
+  /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -166,11 +167,11 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
 }
 
 /// @nodoc
-abstract class _$$OrderInfoImplCopyWith<$Res>
-    implements $OrderInfoCopyWith<$Res> {
-  factory _$$OrderInfoImplCopyWith(
-          _$OrderInfoImpl value, $Res Function(_$OrderInfoImpl) then) =
-      __$$OrderInfoImplCopyWithImpl<$Res>;
+abstract class _$$OrderHeaderLineImplCopyWith<$Res>
+    implements $OrderHeaderLineCopyWith<$Res> {
+  factory _$$OrderHeaderLineImplCopyWith(_$OrderHeaderLineImpl value,
+          $Res Function(_$OrderHeaderLineImpl) then) =
+      __$$OrderHeaderLineImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -192,14 +193,14 @@ abstract class _$$OrderInfoImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$OrderInfoImplCopyWithImpl<$Res>
-    extends _$OrderInfoCopyWithImpl<$Res, _$OrderInfoImpl>
-    implements _$$OrderInfoImplCopyWith<$Res> {
-  __$$OrderInfoImplCopyWithImpl(
-      _$OrderInfoImpl _value, $Res Function(_$OrderInfoImpl) _then)
+class __$$OrderHeaderLineImplCopyWithImpl<$Res>
+    extends _$OrderHeaderLineCopyWithImpl<$Res, _$OrderHeaderLineImpl>
+    implements _$$OrderHeaderLineImplCopyWith<$Res> {
+  __$$OrderHeaderLineImplCopyWithImpl(
+      _$OrderHeaderLineImpl _value, $Res Function(_$OrderHeaderLineImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of OrderInfo
+  /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -220,7 +221,7 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
     Object? canIndent = null,
     Object? isDTM = null,
   }) {
-    return _then(_$OrderInfoImpl(
+    return _then(_$OrderHeaderLineImpl(
       orderNumber: null == orderNumber
           ? _value.orderNumber
           : orderNumber // ignore: cast_nullable_to_non_nullable
@@ -287,8 +288,8 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$OrderInfoImpl extends _OrderInfo {
-  const _$OrderInfoImpl(
+class _$OrderHeaderLineImpl extends _OrderHeaderLine {
+  const _$OrderHeaderLineImpl(
       {required this.orderNumber,
       required this.orderType,
       required this.orderCompany,
@@ -306,8 +307,8 @@ class _$OrderInfoImpl extends _OrderInfo {
       required this.isDTM})
       : super._();
 
-  factory _$OrderInfoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OrderInfoImplFromJson(json);
+  factory _$OrderHeaderLineImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OrderHeaderLineImplFromJson(json);
 
   @override
   final int orderNumber;
@@ -342,14 +343,14 @@ class _$OrderInfoImpl extends _OrderInfo {
 
   @override
   String toString() {
-    return 'OrderInfo(orderNumber: $orderNumber, orderType: $orderType, orderCompany: $orderCompany, orderDate: $orderDate, orderReference: $orderReference, holdCode: $holdCode, shipTo: $shipTo, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, orderStatus: $orderStatus, orderAmount: $orderAmount, quantityBackOrdered: $quantityBackOrdered, canIndent: $canIndent, isDTM: $isDTM)';
+    return 'OrderHeaderLine(orderNumber: $orderNumber, orderType: $orderType, orderCompany: $orderCompany, orderDate: $orderDate, orderReference: $orderReference, holdCode: $holdCode, shipTo: $shipTo, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, orderStatus: $orderStatus, orderAmount: $orderAmount, quantityBackOrdered: $quantityBackOrdered, canIndent: $canIndent, isDTM: $isDTM)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$OrderInfoImpl &&
+            other is _$OrderHeaderLineImpl &&
             (identical(other.orderNumber, orderNumber) ||
                 other.orderNumber == orderNumber) &&
             (identical(other.orderType, orderType) ||
@@ -400,24 +401,25 @@ class _$OrderInfoImpl extends _OrderInfo {
       canIndent,
       isDTM);
 
-  /// Create a copy of OrderInfo
+  /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$OrderInfoImplCopyWith<_$OrderInfoImpl> get copyWith =>
-      __$$OrderInfoImplCopyWithImpl<_$OrderInfoImpl>(this, _$identity);
+  _$$OrderHeaderLineImplCopyWith<_$OrderHeaderLineImpl> get copyWith =>
+      __$$OrderHeaderLineImplCopyWithImpl<_$OrderHeaderLineImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OrderInfoImplToJson(
+    return _$$OrderHeaderLineImplToJson(
       this,
     );
   }
 }
 
-abstract class _OrderInfo extends OrderInfo {
-  const factory _OrderInfo(
+abstract class _OrderHeaderLine extends OrderHeaderLine {
+  const factory _OrderHeaderLine(
       {required final int orderNumber,
       required final String orderType,
       required final String orderCompany,
@@ -432,11 +434,11 @@ abstract class _OrderInfo extends OrderInfo {
       required final double orderAmount,
       required final int quantityBackOrdered,
       required final bool canIndent,
-      required final bool isDTM}) = _$OrderInfoImpl;
-  const _OrderInfo._() : super._();
+      required final bool isDTM}) = _$OrderHeaderLineImpl;
+  const _OrderHeaderLine._() : super._();
 
-  factory _OrderInfo.fromJson(Map<String, dynamic> json) =
-      _$OrderInfoImpl.fromJson;
+  factory _OrderHeaderLine.fromJson(Map<String, dynamic> json) =
+      _$OrderHeaderLineImpl.fromJson;
 
   @override
   int get orderNumber;
@@ -469,10 +471,10 @@ abstract class _OrderInfo extends OrderInfo {
   @override
   bool get isDTM;
 
-  /// Create a copy of OrderInfo
+  /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$OrderInfoImplCopyWith<_$OrderInfoImpl> get copyWith =>
+  _$$OrderHeaderLineImplCopyWith<_$OrderHeaderLineImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

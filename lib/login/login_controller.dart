@@ -11,6 +11,7 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/login/otp_view.dart';
 import 'package:vardhman_b2b/orders/item_master_controller.dart';
@@ -206,6 +207,8 @@ class LoginController extends GetxController {
     await resetController(() => OrderReviewController());
 
     await resetController(() => OrdersController());
+
+    await resetController(() => LabdipController());
 
     await resetController(() => InvoicesController());
 

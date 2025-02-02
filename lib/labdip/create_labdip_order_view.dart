@@ -11,8 +11,8 @@ import 'package:vardhman_b2b/labdip/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
-class NewLabdipOrderView extends StatelessWidget {
-  const NewLabdipOrderView({super.key});
+class CreateLabdipOrderView extends StatelessWidget {
+  const CreateLabdipOrderView({super.key});
 
   @override
   Widget build(BuildContext context) {

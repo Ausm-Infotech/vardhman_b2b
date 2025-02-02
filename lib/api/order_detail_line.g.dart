@@ -32,6 +32,10 @@ _$OrderDetailLineImpl _$$OrderDetailLineImplFromJson(
       invoiceNumber: (json['invoiceNumber'] as num).toInt(),
       invoiceType: json['invoiceType'] as String,
       invoiceCompany: json['invoiceCompany'] as String,
+      workOrderNumber: (json['workOrderNumber'] as num).toInt(),
+      workOrderType: json['workOrderType'] as String,
+      woStatus: json['woStatus'] as String,
+      catalogName: json['catalogName'] as String,
     );
 
 Map<String, dynamic> _$$OrderDetailLineImplToJson(
@@ -56,4 +60,8 @@ Map<String, dynamic> _$$OrderDetailLineImplToJson(
       'invoiceNumber': instance.invoiceNumber,
       'invoiceType': instance.invoiceType,
       'invoiceCompany': instance.invoiceCompany,
+      'workOrderNumber': instance.workOrderNumber,
+      'workOrderType': instance.workOrderType,
+      'woStatus': instance.woStatus,
+      'catalogName': instance.catalogName,
     };
