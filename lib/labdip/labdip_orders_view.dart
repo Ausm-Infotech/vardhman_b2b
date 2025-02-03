@@ -9,6 +9,7 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/create_labdip_order_view.dart';
+import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrdersView extends StatelessWidget {
@@ -19,6 +20,8 @@ class LabdipOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrdersController ordersController = Get.find<OrdersController>();
+
+    final LabdipController labdipController = Get.find<LabdipController>();
 
     return Obx(
       () => Column(
@@ -50,7 +53,7 @@ class LabdipOrdersView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ordersController.labdipOrders.isEmpty
+            child: labdipController.filteredLabdipOrders.isEmpty
                 ? const Center(
                     child: Text('No Labdip Orders'),
                   )
@@ -66,28 +69,39 @@ class LabdipOrdersView extends StatelessWidget {
                           label: Text('Order Number'),
                         ),
                         DataColumn(
+                          label: Text('Reference'),
+                        ),
+                        DataColumn(
                           label: Text('Date'),
                         ),
                       ],
-                      rows: ordersController.labdipOrders
+                      rows: labdipController.filteredLabdipOrders
                           .map(
                             (labdipOrder) => DataRow(
                               selected: labdipOrder ==
-                                  ordersController.rxSelectedOrder.value,
+                                  labdipController
+                                      .rxSelectedOrderHeaderLine.value,
                               onSelectChanged: (value) {
                                 if (value == true &&
-                                    ordersController.rxSelectedOrder.value !=
+                                    labdipController
+                                            .rxSelectedOrderHeaderLine.value !=
                                         labdipOrder) {
-                                  ordersController.selectOrder(labdipOrder);
+                                  labdipController.selectOrder(labdipOrder);
                                 }
                               },
                               cells: [
                                 DataCell(
-                                  Text(labdipOrder.orderNumberString),
+                                  Text(labdipOrder.orderNumber.toString()),
                                 ),
                                 DataCell(
-                                  Text(DateFormat('dd/MM/yyyy')
-                                      .format(labdipOrder.orderDate)),
+                                  Text(labdipOrder.orderReference),
+                                ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('dd/MM/yyyy').format(
+                                      labdipOrder.orderDate,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

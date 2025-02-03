@@ -440,6 +440,7 @@ class Api {
               lastStatus: orderDetailData['Last Status'],
               lastStatusDescription: orderDetailData['Last Status Desc'],
               quantityOrdered: orderDetailData['Quantity Ordered'],
+              quantityShipped: orderDetailData['Quantity Shipped'],
               quantityCancelled: orderDetailData['Quantity Canceled'],
               quantityBackordered: orderDetailData['Quantity Backordered'],
               invoiceNumber: orderDetailData['Invoice'],

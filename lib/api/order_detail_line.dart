@@ -24,6 +24,7 @@ class OrderDetailLine with _$OrderDetailLine {
     required String lastStatus,
     required String lastStatusDescription,
     required int quantityOrdered,
+    required int quantityShipped,
     required int quantityCancelled,
     required int quantityBackordered,
     required int invoiceNumber,

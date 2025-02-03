@@ -6,16 +6,16 @@ import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/dtm/dtm_controller.dart';
 
-class LabdipOrderDetailsView extends StatelessWidget {
-  const LabdipOrderDetailsView({
+class DtmOrderDetailsView extends StatelessWidget {
+  const DtmOrderDetailsView({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final LabdipController labdipController = Get.find<LabdipController>();
+    final DtmController dtmController = Get.find<DtmController>();
 
     final CatalogController catalogController = Get.find<CatalogController>();
 
@@ -34,7 +34,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
               trailing: SecondaryButton(
                 iconData: Icons.refresh,
                 text: 'Refresh',
-                onPressed: labdipController.refreshSelectedOrderDetails,
+                onPressed: dtmController.refreshSelectedOrderDetails,
               ),
               title: DefaultTextStyle(
                 style: const TextStyle(
@@ -47,18 +47,18 @@ class LabdipOrderDetailsView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (labdipController.rxSelectedOrderHeaderLine.value !=
+                      if (dtmController.rxSelectedOrderHeaderLine.value !=
                           null) ...[
                         Text(
-                          'Order Details for ${labdipController.rxSelectedOrderHeaderLine.value!.orderReference}',
+                          'Order Details for ${dtmController.rxSelectedOrderHeaderLine.value!.orderReference}',
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'JDE order no. ${labdipController.rxSelectedOrderHeaderLine.value!.orderNumber}',
+                          'JDE order no. ${dtmController.rxSelectedOrderHeaderLine.value!.orderNumber}',
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Dated ${DateFormat('dd/MM/yyyy').format(labdipController.rxSelectedOrderHeaderLine.value!.orderDate)}',
+                          'Dated ${DateFormat('dd/MM/yyyy').format(dtmController.rxSelectedOrderHeaderLine.value!.orderDate)}',
                         ),
                       ],
                     ],
@@ -67,7 +67,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: labdipController.rxSelectedOrderHeaderLine.value == null
+              child: dtmController.rxSelectedOrderHeaderLine.value == null
                   ? const Center(
                       child: Text('No Order Selected'),
                     )
@@ -81,26 +81,26 @@ class LabdipOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                               label: Text('Ticket'), size: ColumnSize.S),
                           DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                          DataColumn2(label: Text('Shade'), size: ColumnSize.M),
                           DataColumn2(
-                            label: Text('Permanent\nShade'),
+                            label: Text('Shade'),
                             size: ColumnSize.M,
                           ),
                           DataColumn2(
-                              label: Text('Reference'), size: ColumnSize.M),
+                              label: Text('Quantity'), size: ColumnSize.M),
+                          DataColumn2(
+                              label: Text('Shipped'), size: ColumnSize.M),
                           DataColumn2(
                               label: Text('Comment'), size: ColumnSize.M),
                           DataColumn2(
                               label: Text('Status'), size: ColumnSize.M),
                         ],
-                        rows: labdipController.rxSelectedOrderDetailLines.map(
+                        rows: dtmController.primaryOrderDetailLines.map(
                           (orderDetail) {
                             final itemParts =
                                 orderDetail.item.split(RegExp('\\s+'));
 
                             final String article = itemParts[0];
                             final String uom = itemParts[1];
-                            final String shade = itemParts[2];
 
                             final catalogItem =
                                 catalogController.rxFilteredItems.firstWhere(
@@ -109,8 +109,23 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   itemCatalogInfo.uom == uom,
                             );
 
-                            final labdipTableRow = labdipController
-                                .getLabdipTableRow(orderDetail.workOrderNumber);
+                            final permanentShadeLine =
+                                dtmController.getPermanentShadeLine(
+                              orderDetail.workOrderNumber,
+                            );
+
+                            var permanentShade = 'SWT';
+
+                            final quantityShipped = 0;
+
+                            if (permanentShadeLine != null) {
+                              final permanentShadeParts =
+                                  permanentShadeLine.item.split(RegExp('\\s+'));
+
+                              if (permanentShadeParts.length == 3) {
+                                permanentShade = permanentShadeParts[2];
+                              }
+                            }
 
                             return DataRow(
                               cells: [
@@ -131,13 +146,19 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   Text(catalogItem.tex),
                                 ),
                                 DataCell(
-                                  Text(shade),
+                                  Text(permanentShade),
                                 ),
                                 DataCell(
-                                  Text(labdipTableRow?.permanentShade ?? ''),
+                                  Text(
+                                    orderDetail.quantityOrdered.toString(),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(labdipTableRow?.reference ?? ''),
+                                  Text(
+                                    permanentShadeLine?.quantityShipped
+                                            .toString() ??
+                                        '',
+                                  ),
                                 ),
                                 DataCell(
                                   Text(orderDetail.userComment),

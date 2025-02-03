@@ -29,8 +29,6 @@ class OrderHeaderLine with _$OrderHeaderLine {
       ? orderReference
       : orderNumber.toString();
 
-  bool get isLabdip => orderType == 'LD';
-
   factory OrderHeaderLine.fromJson(Map<String, dynamic> json) =>
       _$OrderHeaderLineFromJson(json);
 }
