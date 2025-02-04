@@ -118,6 +118,8 @@ class DtmOrderDetailsView extends StatelessWidget {
 
                             var quantityShipped = 0;
 
+                            var status = orderDetail.status;
+
                             if (permanentShadeLine != null) {
                               final permanentShadeParts =
                                   permanentShadeLine.item.split(RegExp('\\s+'));
@@ -135,6 +137,12 @@ class DtmOrderDetailsView extends StatelessWidget {
                                     previousValue +
                                     orderDetailLine.quantityShipped,
                               );
+
+                              if (invoicedLines.isNotEmpty) {
+                                status = 'Dispatched';
+                              } else {
+                                status = permanentShadeLine.status;
+                              }
                             }
 
                             return DataRow(
@@ -168,7 +176,7 @@ class DtmOrderDetailsView extends StatelessWidget {
                                   Text(orderDetail.userComment),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.status),
+                                  Text(status),
                                 ),
                               ],
                             );

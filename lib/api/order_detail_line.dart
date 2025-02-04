@@ -53,6 +53,20 @@ class OrderDetailLine with _$OrderDetailLine {
           return 'In Progress';
       }
     }
+
+    // DTM
+    if (orderType == 'SW' && workOrderType == 'W4') {
+      switch (woStatus) {
+        case '10':
+        case '15':
+          return 'Order Received By Branch';
+        case '20':
+          return 'Order Received By Plant';
+        default:
+          return 'In Progress';
+      }
+    }
+
     return 'Unknown';
   }
 
