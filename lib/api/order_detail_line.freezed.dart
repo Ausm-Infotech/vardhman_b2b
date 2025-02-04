@@ -34,6 +34,7 @@ mixin _$OrderDetailLine {
   String get lastStatus => throw _privateConstructorUsedError;
   String get lastStatusDescription => throw _privateConstructorUsedError;
   int get quantityOrdered => throw _privateConstructorUsedError;
+  int get quantityShipped => throw _privateConstructorUsedError;
   int get quantityCancelled => throw _privateConstructorUsedError;
   int get quantityBackordered => throw _privateConstructorUsedError;
   int get invoiceNumber => throw _privateConstructorUsedError;
@@ -75,6 +76,7 @@ abstract class $OrderDetailLineCopyWith<$Res> {
       String lastStatus,
       String lastStatusDescription,
       int quantityOrdered,
+      int quantityShipped,
       int quantityCancelled,
       int quantityBackordered,
       int invoiceNumber,
@@ -115,6 +117,7 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
     Object? lastStatus = null,
     Object? lastStatusDescription = null,
     Object? quantityOrdered = null,
+    Object? quantityShipped = null,
     Object? quantityCancelled = null,
     Object? quantityBackordered = null,
     Object? invoiceNumber = null,
@@ -182,6 +185,10 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
           ? _value.quantityOrdered
           : quantityOrdered // ignore: cast_nullable_to_non_nullable
               as int,
+      quantityShipped: null == quantityShipped
+          ? _value.quantityShipped
+          : quantityShipped // ignore: cast_nullable_to_non_nullable
+              as int,
       quantityCancelled: null == quantityCancelled
           ? _value.quantityCancelled
           : quantityCancelled // ignore: cast_nullable_to_non_nullable
@@ -245,6 +252,7 @@ abstract class _$$OrderDetailLineImplCopyWith<$Res>
       String lastStatus,
       String lastStatusDescription,
       int quantityOrdered,
+      int quantityShipped,
       int quantityCancelled,
       int quantityBackordered,
       int invoiceNumber,
@@ -283,6 +291,7 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
     Object? lastStatus = null,
     Object? lastStatusDescription = null,
     Object? quantityOrdered = null,
+    Object? quantityShipped = null,
     Object? quantityCancelled = null,
     Object? quantityBackordered = null,
     Object? invoiceNumber = null,
@@ -350,6 +359,10 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
           ? _value.quantityOrdered
           : quantityOrdered // ignore: cast_nullable_to_non_nullable
               as int,
+      quantityShipped: null == quantityShipped
+          ? _value.quantityShipped
+          : quantityShipped // ignore: cast_nullable_to_non_nullable
+              as int,
       quantityCancelled: null == quantityCancelled
           ? _value.quantityCancelled
           : quantityCancelled // ignore: cast_nullable_to_non_nullable
@@ -408,6 +421,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
       required this.lastStatus,
       required this.lastStatusDescription,
       required this.quantityOrdered,
+      required this.quantityShipped,
       required this.quantityCancelled,
       required this.quantityBackordered,
       required this.invoiceNumber,
@@ -451,6 +465,8 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
   @override
   final int quantityOrdered;
   @override
+  final int quantityShipped;
+  @override
   final int quantityCancelled;
   @override
   final int quantityBackordered;
@@ -471,7 +487,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
 
   @override
   String toString() {
-    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, catalogName: $catalogName)';
+    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, catalogName: $catalogName)';
   }
 
   @override
@@ -505,6 +521,8 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
                 other.lastStatusDescription == lastStatusDescription) &&
             (identical(other.quantityOrdered, quantityOrdered) ||
                 other.quantityOrdered == quantityOrdered) &&
+            (identical(other.quantityShipped, quantityShipped) ||
+                other.quantityShipped == quantityShipped) &&
             (identical(other.quantityCancelled, quantityCancelled) ||
                 other.quantityCancelled == quantityCancelled) &&
             (identical(other.quantityBackordered, quantityBackordered) ||
@@ -543,6 +561,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
         lastStatus,
         lastStatusDescription,
         quantityOrdered,
+        quantityShipped,
         quantityCancelled,
         quantityBackordered,
         invoiceNumber,
@@ -587,6 +606,7 @@ abstract class _OrderDetailLine extends OrderDetailLine {
       required final String lastStatus,
       required final String lastStatusDescription,
       required final int quantityOrdered,
+      required final int quantityShipped,
       required final int quantityCancelled,
       required final int quantityBackordered,
       required final int invoiceNumber,
@@ -629,6 +649,8 @@ abstract class _OrderDetailLine extends OrderDetailLine {
   String get lastStatusDescription;
   @override
   int get quantityOrdered;
+  @override
+  int get quantityShipped;
   @override
   int get quantityCancelled;
   @override
