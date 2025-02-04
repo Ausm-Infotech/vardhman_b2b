@@ -8,8 +8,8 @@ import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/dtm/create_dtm_order_view.dart';
 import 'package:vardhman_b2b/dtm/dtm_controller.dart';
-import 'package:vardhman_b2b/labdip/create_labdip_order_view.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class DtmOrdersView extends StatelessWidget {
@@ -46,7 +46,7 @@ class DtmOrdersView extends StatelessWidget {
                       vertical: 48,
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child: CreateLabdipOrderView(),
+                    child: CreateDtmOrderView(),
                   ),
                 );
               },

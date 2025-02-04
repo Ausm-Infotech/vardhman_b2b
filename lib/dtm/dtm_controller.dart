@@ -54,4 +54,13 @@ class DtmController extends GetxController {
           detailLine.catalogName.endsWith(workOrderNumber.toString()),
     );
   }
+
+  List<OrderDetailLine> getInvoicedLines(String itemNumber) {
+    return _rxOrderDetailLines
+        .where(
+          (detailLine) =>
+              detailLine.item == itemNumber && detailLine.invoiceNumber > 0,
+        )
+        .toList();
+  }
 }

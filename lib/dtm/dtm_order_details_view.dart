@@ -116,7 +116,7 @@ class DtmOrderDetailsView extends StatelessWidget {
 
                             var permanentShade = 'SWT';
 
-                            final quantityShipped = 0;
+                            var quantityShipped = 0;
 
                             if (permanentShadeLine != null) {
                               final permanentShadeParts =
@@ -125,6 +125,16 @@ class DtmOrderDetailsView extends StatelessWidget {
                               if (permanentShadeParts.length == 3) {
                                 permanentShade = permanentShadeParts[2];
                               }
+
+                              final invoicedLines = dtmController
+                                  .getInvoicedLines(permanentShadeLine.item);
+
+                              quantityShipped = invoicedLines.fold(
+                                0,
+                                (previousValue, orderDetailLine) =>
+                                    previousValue +
+                                    orderDetailLine.quantityShipped,
+                              );
                             }
 
                             return DataRow(
@@ -149,16 +159,10 @@ class DtmOrderDetailsView extends StatelessWidget {
                                   Text(permanentShade),
                                 ),
                                 DataCell(
-                                  Text(
-                                    orderDetail.quantityOrdered.toString(),
-                                  ),
+                                  Text(orderDetail.quantityOrdered.toString()),
                                 ),
                                 DataCell(
-                                  Text(
-                                    permanentShadeLine?.quantityShipped
-                                            .toString() ??
-                                        '',
-                                  ),
+                                  Text(quantityShipped.toString()),
                                 ),
                                 DataCell(
                                   Text(orderDetail.userComment),

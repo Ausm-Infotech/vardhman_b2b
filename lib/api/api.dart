@@ -20,6 +20,7 @@ import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
+import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
 import 'dart:developer';
 import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/sample_data.dart';
@@ -994,6 +995,67 @@ class Api {
               "EndUse": labdipOrderLine.buyerCode,
               "BillingType":
                   labdipOrderLine.billingType == "Branch" ? "B" : "D",
+            },
+          )
+          .toList(),
+    };
+
+    log(jsonEncode(payload));
+
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55CreateStagingData',
+        data: payload,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log(
+        'Submit order error',
+        error: e,
+      );
+    }
+
+    return false;
+  }
+
+  static Future<bool> submitDtmOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required String soldTo,
+    required String shipTo,
+    required String branchPlant,
+    required String company,
+    required String orderTakenBy,
+    required List<DtmEntryLine> dtmEntryLines,
+  }) async {
+    final payload = {
+      "Detail": dtmEntryLines
+          .map(
+            (dtmEntryLine) => {
+              "BatchNumber": b2bOrderNumber,
+              "Company": company,
+              "SoldTo": soldTo,
+              "ShipTo": shipTo,
+              "BranchPlant": branchPlant,
+              "ItemNumber": getItemNumber(
+                article: dtmEntryLine.article,
+                uom: dtmEntryLine.uom,
+                shade: dtmEntryLine.shade,
+              ),
+              "Quantity": 1,
+              "OrderTakenBy": orderTakenBy,
+              "LineNumber": (dtmEntryLines.indexOf(dtmEntryLine) + 1) + 1000,
+              "DocumentType": "DT",
+              "SourceFlag": "B",
+              "MerchandiserName": merchandiserName,
+              "LightSourceRemark":
+                  "${dtmEntryLine.firstLightSource} ${dtmEntryLine.secondLightSource}",
+              "ColorRemark": dtmEntryLine.colorRemark,
+              "EndUse": dtmEntryLine.buyerCode,
+              "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
             },
           )
           .toList(),
