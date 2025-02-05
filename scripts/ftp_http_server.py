@@ -3,6 +3,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from ftplib import FTP
 import json
 import base64
+import ssl  # Import the ssl module
 
 # Configuration
 FTP_HOST = '172.33.3.45'
@@ -12,6 +13,8 @@ FTP_DIRECTORY = ''
 HTTP_PORT = 8080
 USERNAME = 'arjun'
 PASSWORD = 'arjun'
+CERT_FILE = 'scripts\cert.pem'  # Path to your certificate file
+KEY_FILE = 'scripts\key.pem'  # Path to your key file
 
 def get_ftp_files(directory):
     """Fetches the list of files and directories from the FTP server."""
@@ -41,18 +44,18 @@ class BasicAuthHandler(BaseHTTPRequestHandler):
 
     def authenticate(self):
         auth_header = self.headers.get('Authorization')
-        if auth_header is None:
+        if (auth_header is None):
             self.do_AUTHHEAD()
             return False
 
         auth_type, auth_data = auth_header.split(' ', 1)
-        if auth_type.lower() != 'basic':
+        if (auth_type.lower() != 'basic'):
             self.do_AUTHHEAD()
             return False
 
         decoded = base64.b64decode(auth_data).decode('utf-8')
         username, password = decoded.split(':', 1)
-        if username == USERNAME and password == PASSWORD:
+        if (username == USERNAME and password == PASSWORD):
             return True
 
         self.do_AUTHHEAD()
@@ -103,5 +106,10 @@ class BasicAuthHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
     httpd = HTTPServer(('0.0.0.0', HTTP_PORT), BasicAuthHandler)
-    print(f"Starting server on port {HTTP_PORT}...")
+    # Create an SSL context
+    ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    ssl_context.load_cert_chain(certfile=CERT_FILE, keyfile=KEY_FILE)
+    # Wrap the server socket with SSL
+    httpd.socket = ssl_context.wrap_socket(httpd.socket, server_side=True)
+    print(f"Starting server on port {HTTP_PORT} with SSL...")
     httpd.serve_forever()
