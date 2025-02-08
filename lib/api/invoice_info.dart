@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get/get.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/user/user_controller.dart';
 
 part 'invoice_info.freezed.dart';
 part 'invoice_info.g.dart';
@@ -47,7 +49,7 @@ InvoiceInfo getInvoiceInfoWithStatusAndDiscount(InvoiceInfo invoiceInfo) {
     status: invoiceInfo.status != InvoiceStatus.onHold
         ? _getInvoiceStatus(invoiceInfo)
         : InvoiceStatus.onHold,
-    discountAmount: _getDiscountAmount(invoiceInfo),
+    discountAmount: _getDiscountedAmount(invoiceInfo),
   );
 }
 
@@ -61,7 +63,7 @@ InvoiceStatus _getInvoiceStatus(InvoiceInfo invoiceInfo) {
       return InvoiceStatus.overdue;
     } else if (invoiceInfo.openAmount != invoiceInfo.grossAmount) {
       return InvoiceStatus.partiallyPaid;
-    } else if (_getDiscountAmount(invoiceInfo) > 0) {
+    } else if (_getDiscountedAmount(invoiceInfo) > 0) {
       return InvoiceStatus.discounted;
     } else {
       return InvoiceStatus.notDue;
@@ -108,16 +110,26 @@ Color getInvoiceStatusColor(InvoiceStatus invoiceStatus) {
   }
 }
 
-double _getDiscountAmount(InvoiceInfo invoiceInfo) {
-  double discountAmount = 0;
+double _getDiscountedAmount(InvoiceInfo invoiceInfo) {
+  double discountedAmount = 0;
+
+  double discountPercent = 3;
+
+  if (Get.isRegistered<UserController>(tag: 'userController')) {
+    final UserController userController =
+        Get.find<UserController>(tag: 'userController');
+
+    discountPercent = userController.rxCustomerDetail.value.discountPercent;
+  }
 
   DateTime discountExpiryDate = invoiceInfo.date.add(
-    const Duration(days: 7),
+    Duration(days: 7),
   );
 
   if (DateTime.now().isBefore(discountExpiryDate)) {
-    discountAmount = invoiceInfo.openAmount * 0.97;
+    discountedAmount =
+        invoiceInfo.openAmount - invoiceInfo.openAmount * discountPercent / 100;
   }
 
-  return discountAmount;
+  return discountedAmount;
 }

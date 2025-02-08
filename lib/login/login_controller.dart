@@ -167,6 +167,7 @@ class LoginController extends GetxController {
           companyName: _userDetailsCompanion!.companyName.value,
           role: _userDetailsCompanion!.role.value,
           category: _userDetailsCompanion!.category.value,
+          discountPercent: _userDetailsCompanion!.discountPercent.value,
         ),
       );
 

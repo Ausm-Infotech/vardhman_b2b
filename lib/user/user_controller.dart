@@ -97,6 +97,7 @@ class UserController extends GetxController {
         companyName: customerDetailComp.companyName.value,
         role: customerDetailComp.role.value,
         category: customerDetailComp.category.value,
+        discountPercent: customerDetailComp.discountPercent.value,
       );
 
       await _sharedPrefs.setString(

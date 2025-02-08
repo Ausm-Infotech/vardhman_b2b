@@ -16,4 +16,5 @@ class UserDetails extends Table {
   TextColumn get companyName => text()();
   TextColumn get role => text()();
   TextColumn get category => text()();
+  RealColumn get discountPercent => real()();
 }

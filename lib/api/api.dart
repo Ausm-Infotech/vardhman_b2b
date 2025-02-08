@@ -2,13 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pure_ftp/pure_ftp.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
@@ -26,24 +25,19 @@ import 'package:vardhman_b2b/sample_data.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class Api {
-  static final _fileDownloadDio = Dio(
+  static final _fileDio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:8080',
-      headers: {
-        'Authorization': 'Basic YXJqdW46YXJqdW4=',
-        'Accept': 'application/pdf',
-      },
-      sendTimeout: const Duration(seconds: 30),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      validateStatus: (status) => true,
-      receiveDataWhenStatusError: true,
+      baseUrl: 'https://b2b.amefird.in:8081',
+      headers: {'Authorization': 'Basic dnl0bDpPQUlJSkRvaWpmQCM='},
     ),
-  );
+  )..httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () =>
+          HttpClient()..badCertificateCallback = (_, __, ___) => true,
+    );
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://172.22.250.11:7081/jderest',
+      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -252,6 +246,8 @@ class Api {
           companyName: Value(userData['Company']),
           role: Value(userData['UserRole']),
           category: Value(userData['UserCategory']),
+          discountPercent: Value(
+              double.tryParse(userData['DiscountPercent'].toString()) ?? 0),
         );
       }
     } catch (e) {
@@ -1132,120 +1128,71 @@ class Api {
     return false;
   }
 
-  static Future<Uint8List?> downloadCatalog({
-    required String articleName,
-    Function(int, int, double)? onReceiveProgress,
+  static Future<List<String>> listFiles(String directoryName) async {
+    final fileNames = <String>[];
+
+    try {
+      final response = await _fileDio.get('/list/$directoryName');
+
+      if (response.statusCode == 200) {
+        final files = response.data['files'] as List;
+        for (var file in files) {
+          fileNames.add(file);
+        }
+      }
+    } catch (e) {
+      log('listFiles error - $e');
+    }
+
+    return fileNames;
+  }
+
+  static Future<File?> _downloadFile({
+    required String folderName,
+    required String fileName,
   }) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final localPath = '${directory.path}/$articleName-CAT.pdf';
-      final localFile = File(localPath);
+      final localFolder = Directory('${directory.path}/$folderName');
 
-      if (await localFile.exists()) {
-        return await localFile.readAsBytes();
+      if (!localFolder.existsSync()) {
+        localFolder.createSync(recursive: true);
       }
 
-      final ftpClient = FtpClient(
-        socketInitOptions: ftpSocketInitOptions,
-        authOptions: ftpAuthOptions,
-        logCallback: print,
+      final localFile = File('${localFolder.path}/$fileName');
+
+      if (localFile.existsSync()) {
+        return localFile;
+      }
+
+      final response = await _fileDio.get(
+        '/download/MobileApp/$folderName/$fileName',
+        options: Options(responseType: ResponseType.bytes),
       );
 
-      await ftpClient.connect();
+      if (response.statusCode == 200) {
+        await localFile.writeAsBytes(
+          response.data,
+          flush: true,
+        );
 
-      final file =
-          ftpClient.getFile('/MobileApp/Catalogs/$articleName-CAT.pdf');
-
-      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
-        file,
-        onReceiveProgress: onReceiveProgress,
-      );
-
-      await ftpClient.disconnect();
-
-      await localFile.writeAsBytes(fileData);
-
-      return Uint8List.fromList(fileData);
+        return localFile;
+      }
     } catch (e) {
-      log('downloadCatalogPdf error - $e');
+      log('_downloadFile error - $e');
     }
 
     return null;
   }
 
-  static Future<Uint8List?> downloadShadeCard({
-    required String articleName,
-    Function(int, int, double)? onReceiveProgress,
-  }) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final localPath = '${directory.path}/$articleName-SHADE.pdf';
-      final localFile = File(localPath);
-
-      if (await localFile.exists()) {
-        return await localFile.readAsBytes();
-      }
-
-      final ftpClient = FtpClient(
-        socketInitOptions: ftpSocketInitOptions,
-        authOptions: ftpAuthOptions,
-        logCallback: print,
-      );
-
-      await ftpClient.connect();
-
-      final file =
-          ftpClient.getFile('/MobileApp/ShadeCards/$articleName-SHADE.pdf');
-
-      final fileData = await FtpFileSystem(client: ftpClient).downloadFile(
-        file,
-        onReceiveProgress: onReceiveProgress,
-      );
-
-      await ftpClient.disconnect();
-
-      await localFile.writeAsBytes(fileData);
-
-      return Uint8List.fromList(fileData);
-    } catch (e) {
-      log('downloadShadeCard error - $e');
-    }
-
-    return null;
-  }
-
-  static Future<Uint8List?> downloadInvoice({
+  static Future<File?> downloadInvoice({
     required int invoiceNumber,
     required String invoiceType,
-    Function(int, int, double)? onReceiveProgress,
   }) async {
-    try {
-      final fileName = '${invoiceNumber}_$invoiceType.pdf';
-
-      // final response = await _fileDownloadDio.get(
-      //   '/CAMSInvoicing/$fileName',
-      //   options: Options(responseType: ResponseType.bytes),
-      // );
-
-      await FileSaver.instance.saveFile(
-        name: fileName,
-        link: LinkDetails(
-          // headers: {"Authorization": 'Basic YXJqdW46YXJqdW4='},
-          link: '/download/CAMSInvoicing/$fileName',
-        ),
-        dioClient: _fileDownloadDio,
-      );
-
-      // final fileData = response.data;
-
-      // await localFile.writeAsBytes(fileData);
-
-      // return Uint8List.fromList(fileData);
-    } catch (e) {
-      log('downloadInvoice error - $e');
-    }
-
-    return null;
+    return await _downloadFile(
+      folderName: 'Invoices',
+      fileName: '${invoiceNumber}_$invoiceType.pdf',
+    );
   }
 
   static Future<String?> encryptInputString(String plainText) async {

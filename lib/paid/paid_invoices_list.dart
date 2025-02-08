@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
-import 'package:vardhman_b2b/common/pdf_dialog.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -121,17 +122,13 @@ class PaidInvoicesList extends StatelessWidget {
                         text: '',
                         iconData: FontAwesomeIcons.filePdf,
                         onPressed: () async {
-                          final bytes = await Api.downloadInvoice(
+                          final file = await Api.downloadInvoice(
                             invoiceNumber: invoiceInfo.invoiceNumber,
                             invoiceType: invoiceInfo.docType,
                           );
 
-                          if (bytes != null) {
-                            Get.dialog(
-                              PdfDialog.data(
-                                bytes: bytes,
-                              ),
-                            );
+                          if (file != null) {
+                            log('File downloaded!');
                           } else {
                             Get.snackbar(
                               'Invoice not found',

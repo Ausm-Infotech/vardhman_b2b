@@ -87,6 +87,12 @@ class $UserDetailsTable extends UserDetails
   late final GeneratedColumn<String> category = GeneratedColumn<String>(
       'category', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _discountPercentMeta =
+      const VerificationMeta('discountPercent');
+  @override
+  late final GeneratedColumn<double> discountPercent = GeneratedColumn<double>(
+      'discount_percent', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         soldToNumber,
@@ -100,7 +106,8 @@ class $UserDetailsTable extends UserDetails
         companyCode,
         companyName,
         role,
-        category
+        category,
+        discountPercent
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -200,6 +207,14 @@ class $UserDetailsTable extends UserDetails
     } else if (isInserting) {
       context.missing(_categoryMeta);
     }
+    if (data.containsKey('discount_percent')) {
+      context.handle(
+          _discountPercentMeta,
+          discountPercent.isAcceptableOrUnknown(
+              data['discount_percent']!, _discountPercentMeta));
+    } else if (isInserting) {
+      context.missing(_discountPercentMeta);
+    }
     return context;
   }
 
@@ -233,6 +248,8 @@ class $UserDetailsTable extends UserDetails
           .read(DriftSqlType.string, data['${effectivePrefix}role'])!,
       category: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
+      discountPercent: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}discount_percent'])!,
     );
   }
 
@@ -255,6 +272,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
   final String companyName;
   final String role;
   final String category;
+  final double discountPercent;
   const UserDetail(
       {required this.soldToNumber,
       required this.isMobileUser,
@@ -267,7 +285,8 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       required this.companyCode,
       required this.companyName,
       required this.role,
-      required this.category});
+      required this.category,
+      required this.discountPercent});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -283,6 +302,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
     map['company_name'] = Variable<String>(companyName);
     map['role'] = Variable<String>(role);
     map['category'] = Variable<String>(category);
+    map['discount_percent'] = Variable<double>(discountPercent);
     return map;
   }
 
@@ -300,6 +320,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       companyName: Value(companyName),
       role: Value(role),
       category: Value(category),
+      discountPercent: Value(discountPercent),
     );
   }
 
@@ -319,6 +340,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       companyName: serializer.fromJson<String>(json['companyName']),
       role: serializer.fromJson<String>(json['role']),
       category: serializer.fromJson<String>(json['category']),
+      discountPercent: serializer.fromJson<double>(json['discountPercent']),
     );
   }
   @override
@@ -337,6 +359,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       'companyName': serializer.toJson<String>(companyName),
       'role': serializer.toJson<String>(role),
       'category': serializer.toJson<String>(category),
+      'discountPercent': serializer.toJson<double>(discountPercent),
     };
   }
 
@@ -352,7 +375,8 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
           String? companyCode,
           String? companyName,
           String? role,
-          String? category}) =>
+          String? category,
+          double? discountPercent}) =>
       UserDetail(
         soldToNumber: soldToNumber ?? this.soldToNumber,
         isMobileUser: isMobileUser ?? this.isMobileUser,
@@ -366,6 +390,7 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
         companyName: companyName ?? this.companyName,
         role: role ?? this.role,
         category: category ?? this.category,
+        discountPercent: discountPercent ?? this.discountPercent,
       );
   UserDetail copyWithCompanion(UserDetailsCompanion data) {
     return UserDetail(
@@ -394,6 +419,9 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
           data.companyName.present ? data.companyName.value : this.companyName,
       role: data.role.present ? data.role.value : this.role,
       category: data.category.present ? data.category.value : this.category,
+      discountPercent: data.discountPercent.present
+          ? data.discountPercent.value
+          : this.discountPercent,
     );
   }
 
@@ -411,7 +439,8 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
           ..write('companyCode: $companyCode, ')
           ..write('companyName: $companyName, ')
           ..write('role: $role, ')
-          ..write('category: $category')
+          ..write('category: $category, ')
+          ..write('discountPercent: $discountPercent')
           ..write(')'))
         .toString();
   }
@@ -429,7 +458,8 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
       companyCode,
       companyName,
       role,
-      category);
+      category,
+      discountPercent);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -445,7 +475,8 @@ class UserDetail extends DataClass implements Insertable<UserDetail> {
           other.companyCode == this.companyCode &&
           other.companyName == this.companyName &&
           other.role == this.role &&
-          other.category == this.category);
+          other.category == this.category &&
+          other.discountPercent == this.discountPercent);
 }
 
 class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
@@ -461,6 +492,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
   final Value<String> companyName;
   final Value<String> role;
   final Value<String> category;
+  final Value<double> discountPercent;
   final Value<int> rowid;
   const UserDetailsCompanion({
     this.soldToNumber = const Value.absent(),
@@ -475,6 +507,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
     this.companyName = const Value.absent(),
     this.role = const Value.absent(),
     this.category = const Value.absent(),
+    this.discountPercent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserDetailsCompanion.insert({
@@ -490,6 +523,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
     required String companyName,
     required String role,
     required String category,
+    required double discountPercent,
     this.rowid = const Value.absent(),
   })  : soldToNumber = Value(soldToNumber),
         isMobileUser = Value(isMobileUser),
@@ -502,7 +536,8 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
         companyCode = Value(companyCode),
         companyName = Value(companyName),
         role = Value(role),
-        category = Value(category);
+        category = Value(category),
+        discountPercent = Value(discountPercent);
   static Insertable<UserDetail> custom({
     Expression<String>? soldToNumber,
     Expression<bool>? isMobileUser,
@@ -516,6 +551,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
     Expression<String>? companyName,
     Expression<String>? role,
     Expression<String>? category,
+    Expression<double>? discountPercent,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -531,6 +567,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
       if (companyName != null) 'company_name': companyName,
       if (role != null) 'role': role,
       if (category != null) 'category': category,
+      if (discountPercent != null) 'discount_percent': discountPercent,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -548,6 +585,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
       Value<String>? companyName,
       Value<String>? role,
       Value<String>? category,
+      Value<double>? discountPercent,
       Value<int>? rowid}) {
     return UserDetailsCompanion(
       soldToNumber: soldToNumber ?? this.soldToNumber,
@@ -562,6 +600,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
       companyName: companyName ?? this.companyName,
       role: role ?? this.role,
       category: category ?? this.category,
+      discountPercent: discountPercent ?? this.discountPercent,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -605,6 +644,9 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
     if (category.present) {
       map['category'] = Variable<String>(category.value);
     }
+    if (discountPercent.present) {
+      map['discount_percent'] = Variable<double>(discountPercent.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -626,6 +668,7 @@ class UserDetailsCompanion extends UpdateCompanion<UserDetail> {
           ..write('companyName: $companyName, ')
           ..write('role: $role, ')
           ..write('category: $category, ')
+          ..write('discountPercent: $discountPercent, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2303,6 +2346,7 @@ typedef $$UserDetailsTableCreateCompanionBuilder = UserDetailsCompanion
   required String companyName,
   required String role,
   required String category,
+  required double discountPercent,
   Value<int> rowid,
 });
 typedef $$UserDetailsTableUpdateCompanionBuilder = UserDetailsCompanion
@@ -2319,6 +2363,7 @@ typedef $$UserDetailsTableUpdateCompanionBuilder = UserDetailsCompanion
   Value<String> companyName,
   Value<String> role,
   Value<String> category,
+  Value<double> discountPercent,
   Value<int> rowid,
 });
 
@@ -2368,6 +2413,10 @@ class $$UserDetailsTableFilterComposer
 
   ColumnFilters<String> get category => $composableBuilder(
       column: $table.category, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get discountPercent => $composableBuilder(
+      column: $table.discountPercent,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$UserDetailsTableOrderingComposer
@@ -2419,6 +2468,10 @@ class $$UserDetailsTableOrderingComposer
 
   ColumnOrderings<String> get category => $composableBuilder(
       column: $table.category, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get discountPercent => $composableBuilder(
+      column: $table.discountPercent,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$UserDetailsTableAnnotationComposer
@@ -2465,6 +2518,9 @@ class $$UserDetailsTableAnnotationComposer
 
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<double> get discountPercent => $composableBuilder(
+      column: $table.discountPercent, builder: (column) => column);
 }
 
 class $$UserDetailsTableTableManager extends RootTableManager<
@@ -2502,6 +2558,7 @@ class $$UserDetailsTableTableManager extends RootTableManager<
             Value<String> companyName = const Value.absent(),
             Value<String> role = const Value.absent(),
             Value<String> category = const Value.absent(),
+            Value<double> discountPercent = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UserDetailsCompanion(
@@ -2517,6 +2574,7 @@ class $$UserDetailsTableTableManager extends RootTableManager<
             companyName: companyName,
             role: role,
             category: category,
+            discountPercent: discountPercent,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -2532,6 +2590,7 @@ class $$UserDetailsTableTableManager extends RootTableManager<
             required String companyName,
             required String role,
             required String category,
+            required double discountPercent,
             Value<int> rowid = const Value.absent(),
           }) =>
               UserDetailsCompanion.insert(
@@ -2547,6 +2606,7 @@ class $$UserDetailsTableTableManager extends RootTableManager<
             companyName: companyName,
             role: role,
             category: category,
+            discountPercent: discountPercent,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
