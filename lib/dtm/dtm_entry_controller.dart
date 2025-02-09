@@ -50,6 +50,8 @@ class DtmEntryController extends GetxController {
 
   final rxEndUse = ''.obs;
 
+  final rxQuantity = ''.obs;
+
   final endUseOptions = [
     "Active/sportswear",
     "Apparel",
@@ -118,15 +120,19 @@ class DtmEntryController extends GetxController {
     );
   }
 
-  bool get canAddOrderLine =>
-      rxMerchandiser.value.isNotEmpty &&
-      rxShade.value.isNotEmpty &&
-      rxBuyerInfo.value != null &&
-      rxSubstrate.value.isNotEmpty &&
-      rxTicket.value.isNotEmpty &&
-      rxTex.value.isNotEmpty &&
-      rxArticle.value.isNotEmpty &&
-      rxBrand.value.isNotEmpty;
+  bool get canAddOrderLine {
+    final quantity = int.tryParse(rxQuantity.value) ?? 0;
+
+    return rxMerchandiser.value.isNotEmpty &&
+        rxShade.value.isNotEmpty &&
+        rxBuyerInfo.value != null &&
+        rxSubstrate.value.isNotEmpty &&
+        rxTicket.value.isNotEmpty &&
+        rxTex.value.isNotEmpty &&
+        rxArticle.value.isNotEmpty &&
+        rxBrand.value.isNotEmpty &&
+        quantity > 0;
+  }
 
   void addDtmOrderLine() {
     rxDtmEntryLines.add(currentDtmOrderLine);
@@ -311,6 +317,7 @@ class DtmEntryController extends GetxController {
         shade: rxShade.value,
         uom: uom,
         endUse: rxEndUse.value,
+        quantity: int.tryParse(rxQuantity.value) ?? 0,
       );
 
   Future<void> submitOrder() async {

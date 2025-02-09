@@ -1040,7 +1040,7 @@ class Api {
                 uom: dtmEntryLine.uom,
                 shade: dtmEntryLine.shade,
               ),
-              "Quantity": 1,
+              "Quantity": dtmEntryLine.quantity,
               "OrderTakenBy": orderTakenBy,
               "LineNumber": (dtmEntryLines.indexOf(dtmEntryLine) + 1) + 1000,
               "DocumentType": "DT",

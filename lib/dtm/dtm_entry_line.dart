@@ -15,6 +15,7 @@ class DtmEntryLine {
   final String billingType;
   final String uom;
   final String endUse;
+  final int quantity;
 
   DtmEntryLine({
     required this.endUse,
@@ -33,6 +34,7 @@ class DtmEntryLine {
     required this.article,
     required this.ticket,
     required this.comment,
+    required this.quantity,
   });
 
   String get colorRemark => [

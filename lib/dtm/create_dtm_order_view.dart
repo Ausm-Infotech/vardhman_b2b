@@ -5,9 +5,9 @@ import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_controller.dart';
-import 'package:vardhman_b2b/labdip/catalog_search_field.dart';
-import 'package:vardhman_b2b/labdip/new_order_text_box.dart';
-import 'package:vardhman_b2b/labdip/new_order_text_field.dart';
+import 'package:vardhman_b2b/common/catalog_search_field.dart';
+import 'package:vardhman_b2b/common/new_order_text_box.dart';
+import 'package:vardhman_b2b/common/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
@@ -156,6 +156,12 @@ class CreateDtmOrderView extends StatelessWidget {
                                   dtmEntryController.uniqueFilteredArticles,
                             ),
                           ),
+                          Expanded(
+                            child: NewOrderTextField(
+                              labelText: 'Quantity',
+                              rxString: dtmEntryController.rxQuantity,
+                            ),
+                          ),
                         ],
                       ),
                       Padding(
@@ -197,7 +203,7 @@ class CreateDtmOrderView extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
