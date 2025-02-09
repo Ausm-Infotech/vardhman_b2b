@@ -20,6 +20,7 @@ class CatalogSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
+        key: GlobalKey(debugLabel: labelText),
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
