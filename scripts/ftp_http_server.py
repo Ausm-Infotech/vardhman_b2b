@@ -5,16 +5,19 @@ import json
 import base64
 import ssl  # Import the ssl module
 
+
+#38.137.12.84
+
 # Configuration
 FTP_HOST = '172.33.3.45'
 FTP_USER = 'vytl'
 FTP_PASS = 'Nov#2021'
-FTP_DIRECTORY = ''
-HTTP_PORT = 8080
-USERNAME = 'arjun'
-PASSWORD = 'arjun'
-CERT_FILE = 'scripts\cert.pem'  # Path to your certificate file
-KEY_FILE = 'scripts\key.pem'  # Path to your key file
+FTP_DIRECTORY = 'MobileApp'
+HTTP_PORT = 8081
+USERNAME = 'vytl'
+PASSWORD = 'OAIIJDoijf@#'
+CERT_FILE = 'cert.pem'  # Path to your certificate file
+KEY_FILE = 'key.pem'  # Path to your key file
 
 def get_ftp_files(directory):
     """Fetches the list of files and directories from the FTP server."""
@@ -66,7 +69,7 @@ class BasicAuthHandler(BaseHTTPRequestHandler):
             return
 
         if self.path.startswith('/list'):  # List files and directories
-            directory = self.path[len('/list'):].strip('/') or FTP_DIRECTORY
+            directory = FTP_DIRECTORY + '/' + self.path[len('/list'):].strip('/').replace('..', '')
             try:
                 files = get_ftp_files(directory)
                 self.send_response(200)
@@ -81,7 +84,7 @@ class BasicAuthHandler(BaseHTTPRequestHandler):
 
         elif self.path.startswith('/download'):  # Download a specific file
             parts = self.path[len('/download'):].strip('/').split('/')
-            directory = '/'.join(parts[:-1]) or FTP_DIRECTORY
+            directory = '/'.join(parts[:-1])
             filename = parts[-1]
 
             try:

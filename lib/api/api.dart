@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
@@ -27,13 +26,15 @@ import 'package:vardhman_b2b/user/user_controller.dart';
 class Api {
   static final _fileDio = Dio(
     BaseOptions(
+      // baseUrl: 'https://localhost:8081',
       baseUrl: 'https://b2b.amefird.in:8081',
       headers: {'Authorization': 'Basic dnl0bDpPQUlJSkRvaWpmQCM='},
     ),
-  )..httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () =>
-          HttpClient()..badCertificateCallback = (_, __, ___) => true,
-    );
+  );
+  // ..httpClientAdapter = IOHttpClientAdapter(
+  //     createHttpClient: () =>
+  //         HttpClient()..badCertificateCallback = (_, __, ___) => true,
+  //   );
 
   static final _dio = Dio(
     BaseOptions(
@@ -1183,6 +1184,36 @@ class Api {
     }
 
     return null;
+  }
+
+  static Future<Uint8List?> _downloadFileWeb({
+    required String folderName,
+    required String fileName,
+  }) async {
+    try {
+      final response = await _fileDio.get(
+        '/download/MobileApp/$folderName/$fileName',
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+    } catch (e) {
+      log('_downloadFile error - $e');
+    }
+
+    return null;
+  }
+
+  static Future<Uint8List?> downloadInvoiceWeb({
+    required int invoiceNumber,
+    required String invoiceType,
+  }) async {
+    return await _downloadFileWeb(
+      folderName: 'Invoices',
+      fileName: '${invoiceNumber}_$invoiceType.pdf',
+    );
   }
 
   static Future<File?> downloadInvoice({

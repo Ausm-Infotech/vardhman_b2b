@@ -6,7 +6,6 @@ Description=Run Python Script on Boot for FTP-HTTPS proxy
 ExecStart=/usr/bin/python3 /home/vytl/ausm/scripts/ftp_http_server.py
 WorkingDirectory=/home/vytl/ausm/scripts
 Restart=on-failure
-User=vytl  # Replace with your username
 
 [Install]
 WantedBy=multi-user.target

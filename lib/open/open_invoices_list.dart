@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -123,19 +125,40 @@ class OpenInvoicesList extends StatelessWidget {
                         text: '',
                         iconData: FontAwesomeIcons.filePdf,
                         onPressed: () async {
-                          final file = await Api.downloadInvoice(
-                            invoiceNumber: invoiceInfo.invoiceNumber,
-                            invoiceType: invoiceInfo.docType,
-                          );
-
-                          if (file != null) {
-                            log('Invoice downloaded: $file');
-                          } else {
-                            Get.snackbar(
-                              'Invoice not found',
-                              '',
-                              colorText: VardhmanColors.red,
+                          if (kIsWeb) {
+                            final fileBytes = await Api.downloadInvoiceWeb(
+                              invoiceNumber: invoiceInfo.invoiceNumber,
+                              invoiceType: invoiceInfo.docType,
                             );
+
+                            if (fileBytes != null) {
+                              FileSaver.instance.saveFile(
+                                name:
+                                    '${invoiceInfo.invoiceNumber}_${invoiceInfo.docType}.pdf',
+                                bytes: Uint8List.fromList(fileBytes),
+                              );
+                            } else {
+                              Get.snackbar(
+                                'Invoice not found',
+                                '',
+                                colorText: VardhmanColors.red,
+                              );
+                            }
+                          } else {
+                            final file = await Api.downloadInvoice(
+                              invoiceNumber: invoiceInfo.invoiceNumber,
+                              invoiceType: invoiceInfo.docType,
+                            );
+
+                            if (file != null) {
+                              log('Invoice downloaded: $file');
+                            } else {
+                              Get.snackbar(
+                                'Invoice not found',
+                                '',
+                                colorText: VardhmanColors.red,
+                              );
+                            }
                           }
                         },
                       ),

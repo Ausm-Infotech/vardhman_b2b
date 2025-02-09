@@ -124,8 +124,10 @@ class LoginController extends GetxController {
 
       if (_userDetailsCompanion != null) {
         if (!_userDetailsCompanion!.isMobileUser.value) {
-          otp = await Api.generateAndSendOtp(
-              _userDetailsCompanion!.mobileNumber.value);
+          // otp = await Api.generateAndSendOtp(
+          //     _userDetailsCompanion!.mobileNumber.value);
+
+          otp = "1234";
 
           toastification.show(
             primaryColor: VardhmanColors.green,
