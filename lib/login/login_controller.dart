@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
+import 'package:vardhman_b2b/bulk/bulk_controller.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -219,6 +220,8 @@ class LoginController extends GetxController {
     await resetController(() => LabdipController());
 
     await resetController(() => DtmController());
+
+    await resetController(() => BulkController());
 
     await resetController(() => InvoicesController());
 

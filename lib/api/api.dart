@@ -15,6 +15,7 @@ import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
+import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
@@ -1052,6 +1053,67 @@ class Api {
               "ColorRemark": dtmEntryLine.colorRemark,
               "EndUse": dtmEntryLine.buyerCode,
               "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
+            },
+          )
+          .toList(),
+    };
+
+    log(jsonEncode(payload));
+
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55CreateStagingData',
+        data: payload,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log(
+        'Submit order error',
+        error: e,
+      );
+    }
+
+    return false;
+  }
+
+  static Future<bool> submitBulkOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required String soldTo,
+    required String shipTo,
+    required String branchPlant,
+    required String company,
+    required String orderTakenBy,
+    required List<BulkEntryLine> bulkEntryLines,
+  }) async {
+    final payload = {
+      "Detail": bulkEntryLines
+          .map(
+            (bulkEntryLine) => {
+              "BatchNumber": b2bOrderNumber,
+              "Company": company,
+              "SoldTo": soldTo,
+              "ShipTo": shipTo,
+              "BranchPlant": branchPlant,
+              "ItemNumber": getItemNumber(
+                article: bulkEntryLine.article,
+                uom: bulkEntryLine.uom,
+                shade: bulkEntryLine.shade,
+              ),
+              "Quantity": bulkEntryLine.quantity,
+              "OrderTakenBy": orderTakenBy,
+              "LineNumber": (bulkEntryLines.indexOf(bulkEntryLine) + 1) + 1000,
+              "DocumentType": "BK",
+              "SourceFlag": "B",
+              "MerchandiserName": merchandiserName,
+              "LightSourceRemark":
+                  "${bulkEntryLine.firstLightSource} ${bulkEntryLine.secondLightSource}",
+              "ColorRemark": bulkEntryLine.colorRemark,
+              "EndUse": bulkEntryLine.buyerCode,
+              "BillingType": bulkEntryLine.billingType == "Branch" ? "B" : "D",
             },
           )
           .toList(),
