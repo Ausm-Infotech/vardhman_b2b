@@ -102,8 +102,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                             final String uom = itemParts[1];
                             final String shade = itemParts[2];
 
-                            final catalogItem =
-                                catalogController.rxFilteredItems.firstWhere(
+                            final catalogItem = catalogController
+                                .rxFilteredItems
+                                .firstWhereOrNull(
                               (itemCatalogInfo) =>
                                   itemCatalogInfo.article == article &&
                                   itemCatalogInfo.uom == uom,
@@ -122,13 +123,13 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   Text(article),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.brandDesc),
+                                  Text(catalogItem?.brandDesc ?? ''),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.ticket),
+                                  Text(catalogItem?.ticket ?? ''),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.tex),
+                                  Text(catalogItem?.tex ?? ''),
                                 ),
                                 DataCell(
                                   Text(shade),
