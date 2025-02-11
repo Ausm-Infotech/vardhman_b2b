@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
-import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class OrderReviewController extends GetxController {
@@ -30,7 +30,7 @@ class OrderReviewController extends GetxController {
 
   Future<bool> submitLabdipOrder({
     required String merchandiserName,
-    required List<LabdipEntryLine> labdipOrderLines,
+    required List<DraftTableData> labdipOrderLines,
   }) async {
     bool isSubmitted = false;
 

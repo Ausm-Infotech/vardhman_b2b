@@ -6,20 +6,15 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/common/catalog_search_field.dart';
 import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
-import 'package:vardhman_b2b/common/new_order_text_box.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
-import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class CreateLabdipOrderView extends StatelessWidget {
   const CreateLabdipOrderView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final labdipController = Get.find<LabdipEntryController>();
-
-    final OrderReviewController orderReviewController =
-        Get.find<OrderReviewController>();
+    final labdipEntryController = Get.find<LabdipEntryController>();
 
     return Obx(
       () => Container(
@@ -37,7 +32,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                 },
               ),
               title: Text(
-                'New Labdip Order : ${orderReviewController.b2bOrderNumber}',
+                'New Labdip Order : ${labdipEntryController.orderNumber}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),
@@ -45,7 +40,7 @@ class CreateLabdipOrderView extends StatelessWidget {
               ),
               trailing: PrimaryButton(
                 text: 'Submit',
-                onPressed: labdipController.submitOrder,
+                onPressed: labdipEntryController.submitOrder,
               ),
             ),
             Row(
@@ -61,21 +56,21 @@ class CreateLabdipOrderView extends StatelessWidget {
                             flex: 2,
                             child: NewOrderTextField(
                               labelText: 'Merchandiser',
-                              rxString: labdipController.rxMerchandiser,
+                              rxString: labdipEntryController.rxMerchandiser,
                             ),
                           ),
-                          Expanded(
-                            child: CatalogSearchField(
-                              labelText: 'Billing Type',
-                              rxString: labdipController.rxBillingType,
-                              searchList: labdipController.billingTypes,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: CatalogSearchField(
+                          //     labelText: 'Billing Type',
+                          //     rxString: labdipEntryController.rxBillingType,
+                          //     searchList: labdipEntryController.billingTypes,
+                          //   ),
+                          // ),
                           Expanded(
                             child: CatalogSearchField(
                               labelText: 'Shade',
-                              rxString: labdipController.rxShade,
-                              searchList: labdipController.shades,
+                              rxString: labdipEntryController.rxShade,
+                              searchList: labdipEntryController.shades,
                             ),
                           ),
                         ],
@@ -86,26 +81,35 @@ class CreateLabdipOrderView extends StatelessWidget {
                             flex: 2,
                             child: CatalogSearchField(
                               labelText: 'Buyer',
-                              rxString: labdipController.rxBuyer,
-                              searchList: labdipController.rxBuyerInfos
-                                  .map((buyerInfo) => buyerInfo.name)
-                                  .toList(),
+                              rxString: labdipEntryController.rxBuyerName,
+                              searchList: labdipEntryController.buyerNames,
+                            ),
+                          ),
+                          if (labdipEntryController.isOtherBuyer)
+                            Expanded(
+                              child: NewOrderTextField(
+                                labelText: 'Name',
+                                rxString: labdipEntryController.rxOtherBuyer,
+                              ),
+                            ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              isEnabled: labdipEntryController.isOtherBuyer,
+                              labelText: 'Light Source 1',
+                              rxString:
+                                  labdipEntryController.rxFirstLightSource,
+                              searchList:
+                                  labdipEntryController.firstLightSources,
                             ),
                           ),
                           Expanded(
-                            child: NewOrderTextBox(
-                              label: 'Light Source 1',
-                              text: labdipController
-                                      .rxBuyerInfo.value?.firstLightSource ??
-                                  '',
-                            ),
-                          ),
-                          Expanded(
-                            child: NewOrderTextBox(
-                              label: 'Light Source 2',
-                              text: labdipController
-                                      .rxBuyerInfo.value?.secondLightSource ??
-                                  '',
+                            child: CatalogSearchField(
+                              isEnabled: labdipEntryController.isOtherBuyer,
+                              labelText: 'Light Source 2',
+                              rxString:
+                                  labdipEntryController.rxSecondLightSource,
+                              searchList:
+                                  labdipEntryController.secondLightSources,
                             ),
                           ),
                         ],
@@ -116,24 +120,26 @@ class CreateLabdipOrderView extends StatelessWidget {
                             flex: 2,
                             child: CatalogSearchField(
                               labelText: 'Substrate',
-                              rxString: labdipController.rxSubstrate,
-                              searchList:
-                                  labdipController.uniqueFilteredSubstrates,
+                              rxString: labdipEntryController.rxSubstrate,
+                              searchList: labdipEntryController
+                                  .uniqueFilteredSubstrates,
                             ),
                           ),
                           Expanded(
                             child: CatalogSearchField(
+                              isEnabled: false,
                               labelText: 'Ticket',
-                              rxString: labdipController.rxTicket,
+                              rxString: labdipEntryController.rxTicket,
                               searchList:
-                                  labdipController.uniqueFilteredTickets,
+                                  labdipEntryController.uniqueFilteredTickets,
                             ),
                           ),
                           Expanded(
                             child: CatalogSearchField(
                               labelText: 'Tex',
-                              rxString: labdipController.rxTex,
-                              searchList: labdipController.uniqueFilteredTexs,
+                              rxString: labdipEntryController.rxTex,
+                              searchList:
+                                  labdipEntryController.uniqueFilteredTexs,
                             ),
                           ),
                         ],
@@ -143,16 +149,17 @@ class CreateLabdipOrderView extends StatelessWidget {
                           Expanded(
                             child: CatalogSearchField(
                               labelText: 'Brand',
-                              rxString: labdipController.rxBrand,
-                              searchList: labdipController.uniqueFilteredBrands,
+                              rxString: labdipEntryController.rxBrand,
+                              searchList:
+                                  labdipEntryController.uniqueFilteredBrands,
                             ),
                           ),
                           Expanded(
                             child: CatalogSearchField(
                               labelText: 'Article',
-                              rxString: labdipController.rxArticle,
+                              rxString: labdipEntryController.rxArticle,
                               searchList:
-                                  labdipController.uniqueFilteredArticles,
+                                  labdipEntryController.uniqueFilteredArticles,
                             ),
                           ),
                         ],
@@ -162,35 +169,38 @@ class CreateLabdipOrderView extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            labdipController.rxSelectedLabdipOrderLines.isEmpty
+                            labdipEntryController
+                                    .rxSelectedLabdipOrderLines.isEmpty
                                 ? PrimaryButton(
                                     text: 'Add Line',
-                                    onPressed: !labdipController.canAddOrderLine
-                                        ? null
-                                        : () async {
-                                            labdipController
-                                                .addLapdipOrderLine();
-                                          },
+                                    onPressed:
+                                        !labdipEntryController.canAddOrderLine
+                                            ? null
+                                            : () async {
+                                                labdipEntryController
+                                                    .addLapdipOrderLine();
+                                              },
                                   )
                                 : SecondaryButton(
                                     text: 'Update',
-                                    onPressed: labdipController
+                                    onPressed: labdipEntryController
                                                 .rxSelectedLabdipOrderLines
                                                 .length ==
                                             1
                                         ? () async {
-                                            labdipController
+                                            labdipEntryController
                                                 .updateLapdipOrderLine();
                                           }
                                         : null,
                                   ),
                             PrimaryButton(
                               text: 'Delete',
-                              onPressed: labdipController
+                              onPressed: labdipEntryController
                                       .rxSelectedLabdipOrderLines.isEmpty
                                   ? null
                                   : () async {
-                                      labdipController.deleteSelectedLines();
+                                      labdipEntryController
+                                          .deleteSelectedLines();
                                     },
                             ),
                           ],
@@ -207,25 +217,25 @@ class CreateLabdipOrderView extends StatelessWidget {
                       children: <Widget>[
                         NewOrderTextField(
                           labelText: 'Color Name',
-                          rxString: labdipController.rxColor,
+                          rxString: labdipEntryController.rxColor,
                         ),
                         CatalogSearchField(
                           labelText: 'End Use',
-                          rxString: labdipController.rxEndUse,
-                          searchList: labdipController.endUseOptions,
+                          rxString: labdipEntryController.rxEndUse,
+                          searchList: labdipEntryController.endUseOptions,
                         ),
                         CatalogSearchField(
                           labelText: 'Request Type',
-                          rxString: labdipController.rxRequestType,
-                          searchList: labdipController.requestTypes,
+                          rxString: labdipEntryController.rxRequestType,
+                          searchList: labdipEntryController.requestTypes,
                         ),
                         NewOrderTextField(
                           labelText: 'L A B',
-                          rxString: labdipController.rxLAB,
+                          rxString: labdipEntryController.rxLAB,
                         ),
                         NewOrderTextField(
                           labelText: 'Comment',
-                          rxString: labdipController.rxComment,
+                          rxString: labdipEntryController.rxComment,
                         ),
                       ],
                     ),
@@ -245,17 +255,18 @@ class CreateLabdipOrderView extends StatelessWidget {
                   DataColumn2(label: Text('Article'), size: ColumnSize.S),
                   DataColumn2(label: Text('Comment'), size: ColumnSize.L),
                 ],
-                rows: labdipController.rxLabdipOrderLines
+                rows: labdipEntryController.rxLabdipOrderLines
                     .map(
                       (labdipOrderLine) => DataRow(
-                        selected: labdipController.rxSelectedLabdipOrderLines
+                        selected: labdipEntryController
+                            .rxSelectedLabdipOrderLines
                             .contains(labdipOrderLine),
                         onSelectChanged: (isSelected) {
                           if (isSelected == true) {
-                            labdipController.rxSelectedLabdipOrderLines
+                            labdipEntryController.rxSelectedLabdipOrderLines
                                 .add(labdipOrderLine);
                           } else {
-                            labdipController.rxSelectedLabdipOrderLines
+                            labdipEntryController.rxSelectedLabdipOrderLines
                                 .remove(labdipOrderLine);
                           }
                         },

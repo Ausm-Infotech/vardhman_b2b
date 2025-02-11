@@ -20,7 +20,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
 import 'dart:developer';
-import 'package:vardhman_b2b/labdip/labdip_entry_line.dart';
 import 'package:vardhman_b2b/sample_data.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
@@ -963,7 +962,7 @@ class Api {
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<LabdipEntryLine> labdipOrderLines,
+    required List<DraftTableData> labdipOrderLines,
   }) async {
     final payload = {
       "Detail": labdipOrderLines

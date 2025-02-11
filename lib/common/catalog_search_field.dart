@@ -10,11 +10,13 @@ class CatalogSearchField extends StatelessWidget {
     required this.labelText,
     required this.rxString,
     required this.searchList,
+    this.isEnabled = true,
   });
 
   final String labelText;
   final RxString rxString;
   final List<String> searchList;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class CatalogSearchField extends StatelessWidget {
               child: SearchField(
                 key: GlobalKey(debugLabel: labelText),
                 searchInputDecoration: SearchInputDecoration(
+                  // isDense: true,
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 0.5,
@@ -43,7 +46,7 @@ class CatalogSearchField extends StatelessWidget {
                   ),
                   label: Text(labelText),
                 ),
-                enabled: searchList.isNotEmpty,
+                enabled: isEnabled && searchList.isNotEmpty,
                 suggestions: searchList
                     .map(
                       (e) => SearchFieldListItem(e),
@@ -58,17 +61,19 @@ class CatalogSearchField extends StatelessWidget {
                         : SearchFieldListItem(rxString.value),
               ),
             ),
-            const SizedBox(width: 8),
-            SecondaryButton(
-              wait: false,
-              iconData: Icons.clear,
-              text: '',
-              onPressed: rxString.value.isEmpty
-                  ? null
-                  : () async {
-                      rxString.value = '';
-                    },
-            ),
+            if (isEnabled) ...[
+              const SizedBox(width: 8),
+              SecondaryButton(
+                wait: false,
+                iconData: Icons.clear,
+                text: '',
+                onPressed: rxString.value.isEmpty
+                    ? null
+                    : () async {
+                        rxString.value = '';
+                      },
+              ),
+            ],
           ],
         ),
       ),

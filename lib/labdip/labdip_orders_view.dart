@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/create_labdip_order_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrdersView extends StatelessWidget {
@@ -39,16 +42,35 @@ class LabdipOrdersView extends StatelessWidget {
             trailing: PrimaryButton(
               text: 'New Order',
               onPressed: () async {
-                Get.dialog(
-                  const Dialog(
-                    insetPadding: EdgeInsets.symmetric(
-                      horizontal: 80,
-                      vertical: 48,
+                final newOrderNumber = await Api.fetchOrderNumber();
+
+                if (newOrderNumber != null) {
+                  if (Get.isRegistered<LabdipEntryController>()) {
+                    Get.delete<LabdipEntryController>();
+                  }
+
+                  Get.put(
+                    LabdipEntryController(
+                      orderNumber: newOrderNumber,
                     ),
-                    clipBehavior: Clip.hardEdge,
-                    child: CreateLabdipOrderView(),
-                  ),
-                );
+                  );
+
+                  Get.dialog(
+                    const Dialog(
+                      insetPadding: EdgeInsets.symmetric(
+                        horizontal: 80,
+                        vertical: 48,
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: CreateLabdipOrderView(),
+                    ),
+                  );
+                } else {
+                  toastification.show(
+                    primaryColor: VardhmanColors.red,
+                    title: Text('Failed to fetch new order number!'),
+                  );
+                }
               },
             ),
           ),
@@ -58,55 +80,92 @@ class LabdipOrdersView extends StatelessWidget {
                     child: Text('No Labdip Orders'),
                   )
                 : Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(8),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     child: DataTable2(
                       showCheckboxColumn: false,
                       columns: const [
-                        DataColumn(
-                          label: Text('Order Number'),
-                        ),
-                        DataColumn(
-                          label: Text('Reference'),
-                        ),
-                        DataColumn(
-                          label: Text('Date'),
-                        ),
+                        DataColumn2(
+                            label: Text('Order No.'), size: ColumnSize.S),
+                        DataColumn2(
+                            label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Date'), size: ColumnSize.S),
                       ],
-                      rows: labdipController.filteredLabdipOrders
-                          .map(
-                            (labdipOrder) => DataRow(
-                              selected: labdipOrder ==
-                                  labdipController
-                                      .rxSelectedOrderHeaderLine.value,
-                              onSelectChanged: (value) {
-                                if (value == true &&
-                                    labdipController
-                                            .rxSelectedOrderHeaderLine.value !=
-                                        labdipOrder) {
-                                  labdipController.selectOrder(labdipOrder);
-                                }
-                              },
-                              cells: [
-                                DataCell(
-                                  Text(labdipOrder.orderNumber.toString()),
+                      rows: [
+                        ...labdipController.rxDraftOrders.map(
+                          (draftTableData) => DataRow(
+                            onSelectChanged: (value) {
+                              if (Get.isRegistered<LabdipEntryController>()) {
+                                Get.delete<LabdipEntryController>();
+                              }
+
+                              Get.put(
+                                LabdipEntryController(
+                                  orderNumber: draftTableData.orderNumber,
                                 ),
-                                DataCell(
-                                  Text(labdipOrder.orderReference),
+                              );
+
+                              Get.dialog(
+                                const Dialog(
+                                  insetPadding: EdgeInsets.symmetric(
+                                    horizontal: 80,
+                                    vertical: 48,
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: CreateLabdipOrderView(),
                                 ),
-                                DataCell(
-                                  Text(
-                                    DateFormat('dd/MM/yyyy').format(
-                                      labdipOrder.orderDate,
-                                    ),
+                              );
+                            },
+                            cells: [
+                              DataCell(
+                                Text('Draft'),
+                              ),
+                              DataCell(
+                                Text(draftTableData.orderNumber.toString()),
+                              ),
+                              DataCell(
+                                Text(
+                                  DateFormat('dd/MM/yyyy').format(
+                                    draftTableData.lastUpdated,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                          .toList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ...labdipController.filteredLabdipOrders.map(
+                          (labdipOrder) => DataRow(
+                            selected: labdipOrder ==
+                                labdipController
+                                    .rxSelectedOrderHeaderLine.value,
+                            onSelectChanged: (value) {
+                              if (value == true &&
+                                  labdipController
+                                          .rxSelectedOrderHeaderLine.value !=
+                                      labdipOrder) {
+                                labdipController.selectOrder(labdipOrder);
+                              }
+                            },
+                            cells: [
+                              DataCell(
+                                Text(labdipOrder.orderNumber.toString()),
+                              ),
+                              DataCell(
+                                Text(labdipOrder.orderReference),
+                              ),
+                              DataCell(
+                                Text(
+                                  DateFormat('dd/MM/yyyy').format(
+                                    labdipOrder.orderDate,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
           ),
@@ -141,9 +200,7 @@ class LabdipOrdersView extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -173,9 +230,7 @@ class LabdipOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -202,9 +257,7 @@ class LabdipOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 SecondaryButton(
                   wait: false,
                   iconData: FontAwesomeIcons.arrowRotateLeft,
