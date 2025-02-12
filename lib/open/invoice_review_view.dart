@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
@@ -72,11 +73,11 @@ class InvoiceReviewView extends StatelessWidget {
                                           InvoiceStatus.notDue ||
                                       invoiceInfo.status ==
                                           InvoiceStatus.discounted)) {
-                            Get.snackbar(
-                              'Please select all overdue invoices to proceed.',
-                              '',
-                              backgroundColor: Colors.white,
-                              colorText: VardhmanColors.red,
+                            toastification.show(
+                              primaryColor: VardhmanColors.red,
+                              title: Text(
+                                'Please select all overdue invoices to proceed.',
+                              ),
                             );
 
                             return;
@@ -86,11 +87,11 @@ class InvoiceReviewView extends StatelessWidget {
                                     invoiceInfo.status ==
                                     InvoiceStatus.discounted,
                               )) {
-                            Get.snackbar(
-                              'Please select all not due invoices to proceed.',
-                              '',
-                              backgroundColor: Colors.white,
-                              colorText: VardhmanColors.red,
+                            toastification.show(
+                              primaryColor: VardhmanColors.red,
+                              title: Text(
+                                'Please select all not due invoices to proceed.',
+                              ),
                             );
 
                             return;

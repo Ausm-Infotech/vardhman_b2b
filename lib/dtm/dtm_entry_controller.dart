@@ -326,6 +326,7 @@ class DtmEntryController extends GetxController {
 
     final isSubmitted = await orderReviewController.submitDtmOrder(
       merchandiserName: rxMerchandiser.value,
+      b2bOrderNumber: '', // TODO - b2bOrderNumber B2BD-xxxx
       dtmEntryLines: rxDtmEntryLines,
     );
 

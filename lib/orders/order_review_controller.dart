@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -30,6 +31,7 @@ class OrderReviewController extends GetxController {
 
   Future<bool> submitLabdipOrder({
     required String merchandiserName,
+    required String b2bOrderNumber,
     required List<DraftTableData> labdipOrderLines,
   }) async {
     bool isSubmitted = false;
@@ -52,14 +54,11 @@ class OrderReviewController extends GetxController {
     rxIsProcessing.value = false;
 
     if (isSubmitted) {
-      Get.back();
-
-      Get.snackbar(
-        '',
-        'Order $b2bOrderNumber placed successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.green,
-        colorText: Colors.white,
+      toastification.show(
+        primaryColor: VardhmanColors.green,
+        title: Text(
+          'Order $b2bOrderNumber placed successfully!',
+        ),
       );
 
       if (_userController.rxCustomerDetail.value.canSendSMS) {
@@ -78,12 +77,11 @@ class OrderReviewController extends GetxController {
 
       fetchOrderNumber();
     } else {
-      Get.snackbar(
-        '',
-        'Some error placing the order!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.red,
-        colorText: Colors.white,
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: Text(
+          'Some error placing the order!',
+        ),
       );
     }
 
@@ -92,6 +90,7 @@ class OrderReviewController extends GetxController {
 
   Future<bool> submitDtmOrder({
     required String merchandiserName,
+    required String b2bOrderNumber,
     required List<DtmEntryLine> dtmEntryLines,
   }) async {
     bool isSubmitted = false;
@@ -114,15 +113,9 @@ class OrderReviewController extends GetxController {
     rxIsProcessing.value = false;
 
     if (isSubmitted) {
-      Get.back();
-
-      Get.snackbar(
-        '',
-        'Order $b2bOrderNumber placed successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.green,
-        colorText: Colors.white,
-      );
+      toastification.show(
+          primaryColor: VardhmanColors.green,
+          title: Text('Order $b2bOrderNumber placed successfully!'));
 
       if (_userController.rxCustomerDetail.value.canSendSMS) {
         Api.sendOrderEntrySMS(
@@ -140,12 +133,9 @@ class OrderReviewController extends GetxController {
 
       fetchOrderNumber();
     } else {
-      Get.snackbar(
-        '',
-        'Some error placing the order!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.red,
-        colorText: Colors.white,
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: Text('Some error placing the order!'),
       );
     }
 
@@ -154,6 +144,7 @@ class OrderReviewController extends GetxController {
 
   Future<bool> submitBulkOrder({
     required String merchandiserName,
+    required String b2bOrderNumber,
     required List<BulkEntryLine> bulkEntryLines,
   }) async {
     bool isSubmitted = false;
@@ -176,14 +167,9 @@ class OrderReviewController extends GetxController {
     rxIsProcessing.value = false;
 
     if (isSubmitted) {
-      Get.back();
-
-      Get.snackbar(
-        '',
-        'Order $b2bOrderNumber placed successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.green,
-        colorText: Colors.white,
+      toastification.show(
+        primaryColor: VardhmanColors.green,
+        title: Text('Order $b2bOrderNumber placed successfully!'),
       );
 
       if (_userController.rxCustomerDetail.value.canSendSMS) {
@@ -202,12 +188,9 @@ class OrderReviewController extends GetxController {
 
       fetchOrderNumber();
     } else {
-      Get.snackbar(
-        '',
-        'Some error placing the order!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: VardhmanColors.red,
-        colorText: Colors.white,
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: Text('Some error placing the order!'),
       );
     }
 
@@ -217,6 +200,4 @@ class OrderReviewController extends GetxController {
   bool get canSubmit =>
       _userController.rxDeliveryAddress.value != null &&
       rxOrderNumber.value != null;
-
-  String get b2bOrderNumber => 'B2B-${rxOrderNumber.value}';
 }

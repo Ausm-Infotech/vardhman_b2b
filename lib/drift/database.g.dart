@@ -2431,11 +2431,10 @@ class $DraftTableTable extends DraftTable
   late final GeneratedColumn<String> lab = GeneratedColumn<String>(
       'lab', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _commentMeta =
-      const VerificationMeta('comment');
+  static const VerificationMeta _remarkMeta = const VerificationMeta('remark');
   @override
-  late final GeneratedColumn<String> comment = GeneratedColumn<String>(
-      'comment', aliasedName, false,
+  late final GeneratedColumn<String> remark = GeneratedColumn<String>(
+      'remark', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _billingTypeMeta =
       const VerificationMeta('billingType');
@@ -2492,7 +2491,7 @@ class $DraftTableTable extends DraftTable
         requestType,
         colorName,
         lab,
-        comment,
+        remark,
         billingType,
         uom,
         endUse,
@@ -2633,11 +2632,11 @@ class $DraftTableTable extends DraftTable
     } else if (isInserting) {
       context.missing(_labMeta);
     }
-    if (data.containsKey('comment')) {
-      context.handle(_commentMeta,
-          comment.isAcceptableOrUnknown(data['comment']!, _commentMeta));
+    if (data.containsKey('remark')) {
+      context.handle(_remarkMeta,
+          remark.isAcceptableOrUnknown(data['remark']!, _remarkMeta));
     } else if (isInserting) {
-      context.missing(_commentMeta);
+      context.missing(_remarkMeta);
     }
     if (data.containsKey('billing_type')) {
       context.handle(
@@ -2728,8 +2727,8 @@ class $DraftTableTable extends DraftTable
           .read(DriftSqlType.string, data['${effectivePrefix}color_name'])!,
       lab: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}lab'])!,
-      comment: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}comment'])!,
+      remark: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remark'])!,
       billingType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}billing_type'])!,
       uom: attachedDatabase.typeMapping
@@ -2771,7 +2770,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
   final String requestType;
   final String colorName;
   final String lab;
-  final String comment;
+  final String remark;
   final String billingType;
   final String uom;
   final String endUse;
@@ -2798,7 +2797,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       required this.requestType,
       required this.colorName,
       required this.lab,
-      required this.comment,
+      required this.remark,
       required this.billingType,
       required this.uom,
       required this.endUse,
@@ -2827,7 +2826,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
     map['request_type'] = Variable<String>(requestType);
     map['color_name'] = Variable<String>(colorName);
     map['lab'] = Variable<String>(lab);
-    map['comment'] = Variable<String>(comment);
+    map['remark'] = Variable<String>(remark);
     map['billing_type'] = Variable<String>(billingType);
     map['uom'] = Variable<String>(uom);
     map['end_use'] = Variable<String>(endUse);
@@ -2858,7 +2857,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       requestType: Value(requestType),
       colorName: Value(colorName),
       lab: Value(lab),
-      comment: Value(comment),
+      remark: Value(remark),
       billingType: Value(billingType),
       uom: Value(uom),
       endUse: Value(endUse),
@@ -2891,7 +2890,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       requestType: serializer.fromJson<String>(json['requestType']),
       colorName: serializer.fromJson<String>(json['colorName']),
       lab: serializer.fromJson<String>(json['lab']),
-      comment: serializer.fromJson<String>(json['comment']),
+      remark: serializer.fromJson<String>(json['remark']),
       billingType: serializer.fromJson<String>(json['billingType']),
       uom: serializer.fromJson<String>(json['uom']),
       endUse: serializer.fromJson<String>(json['endUse']),
@@ -2923,7 +2922,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       'requestType': serializer.toJson<String>(requestType),
       'colorName': serializer.toJson<String>(colorName),
       'lab': serializer.toJson<String>(lab),
-      'comment': serializer.toJson<String>(comment),
+      'remark': serializer.toJson<String>(remark),
       'billingType': serializer.toJson<String>(billingType),
       'uom': serializer.toJson<String>(uom),
       'endUse': serializer.toJson<String>(endUse),
@@ -2953,7 +2952,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           String? requestType,
           String? colorName,
           String? lab,
-          String? comment,
+          String? remark,
           String? billingType,
           String? uom,
           String? endUse,
@@ -2980,7 +2979,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         requestType: requestType ?? this.requestType,
         colorName: colorName ?? this.colorName,
         lab: lab ?? this.lab,
-        comment: comment ?? this.comment,
+        remark: remark ?? this.remark,
         billingType: billingType ?? this.billingType,
         uom: uom ?? this.uom,
         endUse: endUse ?? this.endUse,
@@ -3018,7 +3017,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           data.requestType.present ? data.requestType.value : this.requestType,
       colorName: data.colorName.present ? data.colorName.value : this.colorName,
       lab: data.lab.present ? data.lab.value : this.lab,
-      comment: data.comment.present ? data.comment.value : this.comment,
+      remark: data.remark.present ? data.remark.value : this.remark,
       billingType:
           data.billingType.present ? data.billingType.value : this.billingType,
       uom: data.uom.present ? data.uom.value : this.uom,
@@ -3053,7 +3052,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           ..write('requestType: $requestType, ')
           ..write('colorName: $colorName, ')
           ..write('lab: $lab, ')
-          ..write('comment: $comment, ')
+          ..write('remark: $remark, ')
           ..write('billingType: $billingType, ')
           ..write('uom: $uom, ')
           ..write('endUse: $endUse, ')
@@ -3085,7 +3084,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         requestType,
         colorName,
         lab,
-        comment,
+        remark,
         billingType,
         uom,
         endUse,
@@ -3116,7 +3115,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           other.requestType == this.requestType &&
           other.colorName == this.colorName &&
           other.lab == this.lab &&
-          other.comment == this.comment &&
+          other.remark == this.remark &&
           other.billingType == this.billingType &&
           other.uom == this.uom &&
           other.endUse == this.endUse &&
@@ -3145,7 +3144,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   final Value<String> requestType;
   final Value<String> colorName;
   final Value<String> lab;
-  final Value<String> comment;
+  final Value<String> remark;
   final Value<String> billingType;
   final Value<String> uom;
   final Value<String> endUse;
@@ -3172,7 +3171,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.requestType = const Value.absent(),
     this.colorName = const Value.absent(),
     this.lab = const Value.absent(),
-    this.comment = const Value.absent(),
+    this.remark = const Value.absent(),
     this.billingType = const Value.absent(),
     this.uom = const Value.absent(),
     this.endUse = const Value.absent(),
@@ -3200,7 +3199,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     required String requestType,
     required String colorName,
     required String lab,
-    required String comment,
+    required String remark,
     required String billingType,
     required String uom,
     required String endUse,
@@ -3225,7 +3224,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
         requestType = Value(requestType),
         colorName = Value(colorName),
         lab = Value(lab),
-        comment = Value(comment),
+        remark = Value(remark),
         billingType = Value(billingType),
         uom = Value(uom),
         endUse = Value(endUse),
@@ -3252,7 +3251,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     Expression<String>? requestType,
     Expression<String>? colorName,
     Expression<String>? lab,
-    Expression<String>? comment,
+    Expression<String>? remark,
     Expression<String>? billingType,
     Expression<String>? uom,
     Expression<String>? endUse,
@@ -3280,7 +3279,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       if (requestType != null) 'request_type': requestType,
       if (colorName != null) 'color_name': colorName,
       if (lab != null) 'lab': lab,
-      if (comment != null) 'comment': comment,
+      if (remark != null) 'remark': remark,
       if (billingType != null) 'billing_type': billingType,
       if (uom != null) 'uom': uom,
       if (endUse != null) 'end_use': endUse,
@@ -3310,7 +3309,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       Value<String>? requestType,
       Value<String>? colorName,
       Value<String>? lab,
-      Value<String>? comment,
+      Value<String>? remark,
       Value<String>? billingType,
       Value<String>? uom,
       Value<String>? endUse,
@@ -3337,7 +3336,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       requestType: requestType ?? this.requestType,
       colorName: colorName ?? this.colorName,
       lab: lab ?? this.lab,
-      comment: comment ?? this.comment,
+      remark: remark ?? this.remark,
       billingType: billingType ?? this.billingType,
       uom: uom ?? this.uom,
       endUse: endUse ?? this.endUse,
@@ -3407,8 +3406,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     if (lab.present) {
       map['lab'] = Variable<String>(lab.value);
     }
-    if (comment.present) {
-      map['comment'] = Variable<String>(comment.value);
+    if (remark.present) {
+      map['remark'] = Variable<String>(remark.value);
     }
     if (billingType.present) {
       map['billing_type'] = Variable<String>(billingType.value);
@@ -3453,7 +3452,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
           ..write('requestType: $requestType, ')
           ..write('colorName: $colorName, ')
           ..write('lab: $lab, ')
-          ..write('comment: $comment, ')
+          ..write('remark: $remark, ')
           ..write('billingType: $billingType, ')
           ..write('uom: $uom, ')
           ..write('endUse: $endUse, ')
@@ -4634,7 +4633,7 @@ typedef $$DraftTableTableCreateCompanionBuilder = DraftTableCompanion Function({
   required String requestType,
   required String colorName,
   required String lab,
-  required String comment,
+  required String remark,
   required String billingType,
   required String uom,
   required String endUse,
@@ -4662,7 +4661,7 @@ typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<String> requestType,
   Value<String> colorName,
   Value<String> lab,
-  Value<String> comment,
+  Value<String> remark,
   Value<String> billingType,
   Value<String> uom,
   Value<String> endUse,
@@ -4739,8 +4738,8 @@ class $$DraftTableTableFilterComposer
   ColumnFilters<String> get lab => $composableBuilder(
       column: $table.lab, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get comment => $composableBuilder(
-      column: $table.comment, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get remark => $composableBuilder(
+      column: $table.remark, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get billingType => $composableBuilder(
       column: $table.billingType, builder: (column) => ColumnFilters(column));
@@ -4830,8 +4829,8 @@ class $$DraftTableTableOrderingComposer
   ColumnOrderings<String> get lab => $composableBuilder(
       column: $table.lab, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get comment => $composableBuilder(
-      column: $table.comment, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get remark => $composableBuilder(
+      column: $table.remark, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get billingType => $composableBuilder(
       column: $table.billingType, builder: (column) => ColumnOrderings(column));
@@ -4918,8 +4917,8 @@ class $$DraftTableTableAnnotationComposer
   GeneratedColumn<String> get lab =>
       $composableBuilder(column: $table.lab, builder: (column) => column);
 
-  GeneratedColumn<String> get comment =>
-      $composableBuilder(column: $table.comment, builder: (column) => column);
+  GeneratedColumn<String> get remark =>
+      $composableBuilder(column: $table.remark, builder: (column) => column);
 
   GeneratedColumn<String> get billingType => $composableBuilder(
       column: $table.billingType, builder: (column) => column);
@@ -4985,7 +4984,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<String> requestType = const Value.absent(),
             Value<String> colorName = const Value.absent(),
             Value<String> lab = const Value.absent(),
-            Value<String> comment = const Value.absent(),
+            Value<String> remark = const Value.absent(),
             Value<String> billingType = const Value.absent(),
             Value<String> uom = const Value.absent(),
             Value<String> endUse = const Value.absent(),
@@ -5013,7 +5012,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             requestType: requestType,
             colorName: colorName,
             lab: lab,
-            comment: comment,
+            remark: remark,
             billingType: billingType,
             uom: uom,
             endUse: endUse,
@@ -5041,7 +5040,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             required String requestType,
             required String colorName,
             required String lab,
-            required String comment,
+            required String remark,
             required String billingType,
             required String uom,
             required String endUse,
@@ -5069,7 +5068,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             requestType: requestType,
             colorName: colorName,
             lab: lab,
-            comment: comment,
+            remark: remark,
             billingType: billingType,
             uom: uom,
             endUse: endUse,

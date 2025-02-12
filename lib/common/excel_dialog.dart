@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -76,10 +77,9 @@ class ExcelDialog extends StatelessWidget {
                 final File file = File(destinationPath);
                 await file.writeAsBytes(data.buffer.asUint8List());
 
-                Get.snackbar(
-                  '',
-                  'Sample.xlsx saved in Downloads',
-                  colorText: VardhmanColors.green,
+                toastification.show(
+                  primaryColor: VardhmanColors.green,
+                  title: Text('Sample.xlsx saved in Downloads'),
                 );
 
                 Get.back();

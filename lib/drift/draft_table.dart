@@ -20,7 +20,7 @@ class DraftTable extends Table {
   TextColumn get requestType => text()();
   TextColumn get colorName => text()();
   TextColumn get lab => text()();
-  TextColumn get comment => text()();
+  TextColumn get remark => text()();
   TextColumn get billingType => text()();
   TextColumn get uom => text()();
   TextColumn get endUse => text()();

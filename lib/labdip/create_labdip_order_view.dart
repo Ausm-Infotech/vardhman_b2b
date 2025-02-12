@@ -246,6 +246,18 @@ class CreateLabdipOrderView extends StatelessWidget {
                         SizedBox(
                           width: 200,
                         ),
+                        SecondaryButton(
+                          wait: false,
+                          text: 'Clear Inputs',
+                          onPressed: !labdipEntryController.canClearInputs
+                              ? null
+                              : () async {
+                                  labdipEntryController.clearInputs();
+                                },
+                        ),
+                        SizedBox(
+                          width: 150,
+                        ),
                         PrimaryButton(
                           text: 'Add Line',
                           onPressed: !labdipEntryController.canAddOrderLine ||
@@ -339,7 +351,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                     ),
                     NewOrderTextField(
                       labelText: 'Remark',
-                      rxString: labdipEntryController.rxComment,
+                      rxString: labdipEntryController.rxRemark,
                     ),
                   ],
                 ),
@@ -357,14 +369,16 @@ class CreateLabdipOrderView extends StatelessWidget {
                   outside: BorderSide(color: VardhmanColors.darkGrey),
                   borderRadius: BorderRadius.circular(8)),
               columns: const [
-                DataColumn2(label: Text('Color'), size: ColumnSize.S),
                 DataColumn2(label: Text('Buyer'), size: ColumnSize.S),
-                DataColumn2(label: Text('Substrate'), size: ColumnSize.S),
-                DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
-                DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                DataColumn2(label: Text('Brand'), size: ColumnSize.S),
                 DataColumn2(label: Text('Article'), size: ColumnSize.S),
-                DataColumn2(label: Text('Comment'), size: ColumnSize.L),
+                DataColumn2(label: Text('Shade'), size: ColumnSize.S),
+                DataColumn2(label: Text('Brand'), size: ColumnSize.S),
+                DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
+                DataColumn2(label: Text('Substrate'), size: ColumnSize.S),
+                DataColumn2(label: Text('Tex'), size: ColumnSize.S),
+                DataColumn2(label: Text('Color'), size: ColumnSize.S),
+                DataColumn2(label: Text('LAB'), size: ColumnSize.S),
+                DataColumn2(label: Text('Remark'), size: ColumnSize.M),
               ],
               empty: Center(child: const Text('No Order Lines')),
               rows: labdipEntryController.rxLabdipOrderLines
@@ -377,14 +391,16 @@ class CreateLabdipOrderView extends StatelessWidget {
                             .selectLabdipOrderLine(labdipOrderLine);
                       },
                       cells: [
-                        DataCell(Text(labdipOrderLine.colorName)),
                         DataCell(Text(labdipOrderLine.buyer)),
-                        DataCell(Text(labdipOrderLine.substrate)),
-                        DataCell(Text(labdipOrderLine.ticket)),
-                        DataCell(Text(labdipOrderLine.tex)),
-                        DataCell(Text(labdipOrderLine.brand)),
                         DataCell(Text(labdipOrderLine.article)),
-                        DataCell(Text(labdipOrderLine.comment)),
+                        DataCell(Text(labdipOrderLine.shade)),
+                        DataCell(Text(labdipOrderLine.brand)),
+                        DataCell(Text(labdipOrderLine.ticket)),
+                        DataCell(Text(labdipOrderLine.substrate)),
+                        DataCell(Text(labdipOrderLine.tex)),
+                        DataCell(Text(labdipOrderLine.colorName)),
+                        DataCell(Text(labdipOrderLine.lab)),
+                        DataCell(Text(labdipOrderLine.remark)),
                       ],
                     ),
                   )

@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
@@ -130,10 +130,9 @@ class PaidInvoicesList extends StatelessWidget {
                           if (file != null) {
                             log('File downloaded!');
                           } else {
-                            Get.snackbar(
-                              'Invoice not found',
-                              '',
-                              colorText: VardhmanColors.red,
+                            toastification.show(
+                              primaryColor: VardhmanColors.red,
+                              title: Text('Invoice not found'),
                             );
                           }
                         },

@@ -326,6 +326,7 @@ class BulkEntryController extends GetxController {
 
     final isSubmitted = await orderReviewController.submitBulkOrder(
       merchandiserName: rxMerchandiser.value,
+      b2bOrderNumber: '', // TODO - B2BB-xxxx
       bulkEntryLines: rxBulkEntryLines,
     );
 

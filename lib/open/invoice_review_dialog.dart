@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
@@ -151,22 +152,22 @@ class InvoiceReviewDialog extends StatelessWidget {
 
                         Get.back();
 
-                        Get.snackbar(
-                          'Navigating to Payment Gateway, payment confirmation will be sent via E-mail/SMS in some time. ',
-                          '',
-                          backgroundColor: Colors.white,
-                          colorText: VardhmanColors.green,
+                        toastification.show(
+                          primaryColor: VardhmanColors.green,
+                          title: Text(
+                            'Navigating to Payment Gateway, payment confirmation will be sent via E-mail/SMS in some time. ',
+                          ),
                         );
 
                         return;
                       }
                     }
 
-                    Get.snackbar(
-                      'Some error initiating payment, please try later.',
-                      '',
-                      backgroundColor: Colors.white,
-                      colorText: VardhmanColors.red,
+                    toastification.show(
+                      primaryColor: VardhmanColors.red,
+                      title: Text(
+                        'Some error initiating payment, please try later.',
+                      ),
                     );
                   },
                 ),

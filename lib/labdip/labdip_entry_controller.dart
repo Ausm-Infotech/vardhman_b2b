@@ -1,10 +1,13 @@
 import 'dart:developer';
 
 import 'package:drift/drift.dart' as drift;
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
+import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -42,15 +45,13 @@ class LabdipEntryController extends GetxController {
 
   final rxBrand = ''.obs;
 
-  final rxRemark = ''.obs;
-
   final rxL = ''.obs;
 
   final rxA = ''.obs;
 
   final rxB = ''.obs;
 
-  final rxComment = ''.obs;
+  final rxRemark = ''.obs;
 
   final rxLabdipOrderLines = <DraftTableData>[].obs;
 
@@ -144,6 +145,10 @@ class LabdipEntryController extends GetxController {
         rxLabdipOrderLines.clear();
 
         rxLabdipOrderLines.addAll(draftTableRows);
+
+        clearInputs();
+
+        _populateInputs(labdipOrderLine: draftTableRows.last);
       },
     );
 
@@ -246,7 +251,7 @@ class LabdipEntryController extends GetxController {
 
   String get _colorRemark => [
         if (rxColor.value.trim().isNotEmpty) rxColor.value,
-        if (rxComment.value.trim().isNotEmpty) rxComment.value,
+        if (rxRemark.value.trim().isNotEmpty) rxRemark.value,
         if (rxL.value.trim().isNotEmpty) rxL.value,
         if (rxRequestType.value.isNotEmpty) rxRequestType.value,
         if (rxEndUse.value.isNotEmpty) rxEndUse.value,
@@ -260,7 +265,10 @@ class LabdipEntryController extends GetxController {
           labdipOrderLine.article == rxArticle.value &&
           labdipOrderLine.shade == rxShade.value,
     )) {
-      Get.snackbar('Error', 'Article and Shade combination already exists');
+      toastification.show(
+        primaryColor: VardhmanColors.red,
+        title: Text('Duplicate Article and Shade combination'),
+      );
     } else {
       _database.managers.draftTable.create(
         (o) => o(
@@ -270,7 +278,7 @@ class LabdipEntryController extends GetxController {
           buyer: _buyerName,
           buyerCode: _rxBuyerCode.value,
           colorName: rxColor.value,
-          comment: rxComment.value,
+          remark: rxRemark.value,
           endUse: rxEndUse.value,
           firstLightSource: rxFirstLightSource.value,
           lab: '${rxL.value},${rxA.value},${rxB.value}',
@@ -295,7 +303,7 @@ class LabdipEntryController extends GetxController {
         mode: drift.InsertMode.insertOrReplace,
       );
 
-      _clearInputs();
+      clearInputs();
     }
   }
 
@@ -321,7 +329,7 @@ class LabdipEntryController extends GetxController {
               buyer: drift.Value(_buyerName),
               buyerCode: drift.Value(_rxBuyerCode.value),
               colorName: drift.Value(rxColor.value),
-              comment: drift.Value(rxComment.value),
+              remark: drift.Value(rxRemark.value),
               endUse: drift.Value(rxEndUse.value),
               firstLightSource: drift.Value(rxFirstLightSource.value),
               lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
@@ -351,7 +359,7 @@ class LabdipEntryController extends GetxController {
 
     rxSelectedLabdipOrderLines.clear();
 
-    _clearInputs();
+    clearInputs();
   }
 
   void deleteSelectedLines() {
@@ -389,17 +397,49 @@ class LabdipEntryController extends GetxController {
     return uom ?? '';
   }
 
-  void _clearInputs() {
+  bool get canClearInputs =>
+      rxColor.value != '' ||
+      rxEndUse.value != '' ||
+      rxRequestType.value != '' ||
+      rxL.value != '' ||
+      rxA.value != '' ||
+      rxB.value != '' ||
+      rxRemark.value != '' ||
+      rxSubstrate.value != '' ||
+      rxTicket.value != '' ||
+      rxTex.value != '' ||
+      rxBrand.value != '' ||
+      rxArticle.value != '' ||
+      rxShade.value != 'SWT' ||
+      rxMerchandiser.value != '' ||
+      rxOtherMerchandiser.value != '' ||
+      rxBuyerName.value != '' ||
+      rxOtherBuyer.value != '' ||
+      _rxBuyerCode.value != '' ||
+      rxFirstLightSource.value != '' ||
+      rxSecondLightSource.value != '';
+
+  void clearInputs() {
     rxColor.value = '';
     rxEndUse.value = '';
     rxRequestType.value = '';
     rxL.value = '';
-    rxComment.value = '';
+    rxA.value = '';
+    rxB.value = '';
+    rxRemark.value = '';
     rxSubstrate.value = '';
     rxTicket.value = '';
     rxTex.value = '';
     rxBrand.value = '';
     rxArticle.value = '';
+    rxShade.value = 'SWT';
+    rxMerchandiser.value = '';
+    rxOtherMerchandiser.value = '';
+    rxBuyerName.value = '';
+    rxOtherBuyer.value = '';
+    _rxBuyerCode.value = '';
+    rxFirstLightSource.value = '';
+    rxSecondLightSource.value = '';
   }
 
   List<String> get uniqueFilteredArticles => catalogController.industryItems
@@ -500,14 +540,17 @@ class LabdipEntryController extends GetxController {
         Get.find<OrderReviewController>();
 
     final isSubmitted = await orderReviewController.submitLabdipOrder(
+      b2bOrderNumber: b2bOrderNumber,
       merchandiserName: rxMerchandiser.value,
       labdipOrderLines: rxLabdipOrderLines,
     );
 
     if (isSubmitted) {
-      rxLabdipOrderLines.clear();
-      rxSelectedLabdipOrderLines.clear();
-      _clearInputs();
+      _database.managers.draftTable
+          .filter((f) => f.orderNumber.equals(orderNumber))
+          .delete();
+
+      Get.back();
     }
   }
 
@@ -522,39 +565,42 @@ class LabdipEntryController extends GetxController {
     }
 
     if (rxSelectedLabdipOrderLines.length == 1) {
-      final selectedLabdipOrderLine = rxSelectedLabdipOrderLines.first;
+      clearInputs();
 
-      final labParts = selectedLabdipOrderLine.lab.split(',');
-
-      final isOtherBuyer = !buyerNames.contains(selectedLabdipOrderLine.buyer);
-
-      final isOtherMerchandiser =
-          !merchandiserNames.contains(selectedLabdipOrderLine.merchandiser);
-
-      rxMerchandiser.value =
-          isOtherMerchandiser ? 'OTHER' : selectedLabdipOrderLine.merchandiser;
-
-      rxOtherMerchandiser.value =
-          isOtherMerchandiser ? selectedLabdipOrderLine.merchandiser : '';
-      rxColor.value = selectedLabdipOrderLine.colorName;
-      rxShade.value = selectedLabdipOrderLine.shade;
-      rxBuyerName.value =
-          isOtherBuyer ? 'OTHER' : selectedLabdipOrderLine.buyer;
-      rxOtherBuyer.value = isOtherBuyer ? selectedLabdipOrderLine.buyer : '';
-      _rxBuyerCode.value = selectedLabdipOrderLine.buyerCode;
-      rxFirstLightSource.value = selectedLabdipOrderLine.firstLightSource;
-      rxSecondLightSource.value = selectedLabdipOrderLine.secondLightSource;
-      rxSubstrate.value = selectedLabdipOrderLine.substrate;
-      rxTicket.value = selectedLabdipOrderLine.ticket;
-      rxTex.value = selectedLabdipOrderLine.tex;
-      rxArticle.value = selectedLabdipOrderLine.article;
-      rxBrand.value = selectedLabdipOrderLine.brand;
-      rxL.value = labParts[0];
-      rxA.value = labParts[1];
-      rxB.value = labParts[2];
-      rxComment.value = selectedLabdipOrderLine.comment;
-      rxRequestType.value = selectedLabdipOrderLine.requestType;
-      rxEndUse.value = selectedLabdipOrderLine.endUse;
+      _populateInputs(labdipOrderLine: rxSelectedLabdipOrderLines.first);
     }
+  }
+
+  void _populateInputs({required DraftTableData labdipOrderLine}) {
+    final labParts = labdipOrderLine.lab.split(',');
+
+    final isOtherBuyer = !buyerNames.contains(labdipOrderLine.buyer);
+
+    final isOtherMerchandiser =
+        !merchandiserNames.contains(labdipOrderLine.merchandiser);
+
+    rxMerchandiser.value =
+        isOtherMerchandiser ? 'OTHER' : labdipOrderLine.merchandiser;
+
+    rxOtherMerchandiser.value =
+        isOtherMerchandiser ? labdipOrderLine.merchandiser : '';
+    rxColor.value = labdipOrderLine.colorName;
+    rxShade.value = labdipOrderLine.shade;
+    rxBuyerName.value = isOtherBuyer ? 'OTHER' : labdipOrderLine.buyer;
+    rxOtherBuyer.value = isOtherBuyer ? labdipOrderLine.buyer : '';
+    _rxBuyerCode.value = labdipOrderLine.buyerCode;
+    rxFirstLightSource.value = labdipOrderLine.firstLightSource;
+    rxSecondLightSource.value = labdipOrderLine.secondLightSource;
+    rxSubstrate.value = labdipOrderLine.substrate;
+    rxTicket.value = labdipOrderLine.ticket;
+    rxTex.value = labdipOrderLine.tex;
+    rxArticle.value = labdipOrderLine.article;
+    rxBrand.value = labdipOrderLine.brand;
+    rxL.value = labParts[0];
+    rxA.value = labParts[1];
+    rxB.value = labParts[2];
+    rxRemark.value = labdipOrderLine.remark;
+    rxRequestType.value = labdipOrderLine.requestType;
+    rxEndUse.value = labdipOrderLine.endUse;
   }
 }

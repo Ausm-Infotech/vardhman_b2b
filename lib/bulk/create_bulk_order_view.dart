@@ -9,7 +9,6 @@ import 'package:vardhman_b2b/common/catalog_search_field.dart';
 import 'package:vardhman_b2b/common/new_order_text_box.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
-import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class CreateBulkOrderView extends StatelessWidget {
   const CreateBulkOrderView({super.key});
@@ -17,9 +16,6 @@ class CreateBulkOrderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bulkEntryController = Get.find<BulkEntryController>();
-
-    final OrderReviewController orderReviewController =
-        Get.find<OrderReviewController>();
 
     return Obx(
       () => Container(
@@ -37,7 +33,7 @@ class CreateBulkOrderView extends StatelessWidget {
                 },
               ),
               title: Text(
-                'New Bulk Order : ${orderReviewController.b2bOrderNumber}',
+                'New Bulk Order : ', // TODO - B2BB-xxxx
                 style: const TextStyle(
                   fontSize: 16,
                 ),

@@ -9,7 +9,6 @@ import 'package:vardhman_b2b/common/catalog_search_field.dart';
 import 'package:vardhman_b2b/common/new_order_text_box.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
 import 'package:vardhman_b2b/nav_rail_container.dart';
-import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class CreateDtmOrderView extends StatelessWidget {
   const CreateDtmOrderView({super.key});
@@ -17,9 +16,6 @@ class CreateDtmOrderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dtmEntryController = Get.find<DtmEntryController>();
-
-    final OrderReviewController orderReviewController =
-        Get.find<OrderReviewController>();
 
     return Obx(
       () => Container(
@@ -37,7 +33,7 @@ class CreateDtmOrderView extends StatelessWidget {
                 },
               ),
               title: Text(
-                'New DTM Order : ${orderReviewController.b2bOrderNumber}',
+                'New DTM Order : ', //TODO - B2BD-xxxx
                 style: const TextStyle(
                   fontSize: 16,
                 ),
