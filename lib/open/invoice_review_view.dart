@@ -103,23 +103,27 @@ class InvoiceReviewView extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Column(
-                  children: [
-                    const OpenInvoicesList(
-                      invoicesDetails: [],
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: OpenInvoicesList(
-                          showHeader: false,
-                          canSelect: false,
-                          invoicesDetails:
-                              invoicesController.rxSelectedInvoiceInfos,
-                        ),
+                child: invoicesController.rxSelectedInvoiceInfos.isEmpty
+                    ? Center(
+                        child: Text('No Invoices Selected'),
+                      )
+                    : Column(
+                        children: [
+                          const OpenInvoicesList(
+                            invoicesDetails: [],
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: OpenInvoicesList(
+                                showHeader: false,
+                                canSelect: false,
+                                invoicesDetails:
+                                    invoicesController.rxSelectedInvoiceInfos,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),

@@ -2347,6 +2347,12 @@ class $DraftTableTable extends DraftTable
   late final GeneratedColumn<int> orderNumber = GeneratedColumn<int>(
       'order_number', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _merchandiserMeta =
+      const VerificationMeta('merchandiser');
+  @override
+  late final GeneratedColumn<String> merchandiser = GeneratedColumn<String>(
+      'merchandiser', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _lineNumberMeta =
       const VerificationMeta('lineNumber');
   @override
@@ -2471,6 +2477,7 @@ class $DraftTableTable extends DraftTable
         soldTo,
         orderType,
         orderNumber,
+        merchandiser,
         lineNumber,
         shade,
         buyer,
@@ -2525,6 +2532,14 @@ class $DraftTableTable extends DraftTable
               data['order_number']!, _orderNumberMeta));
     } else if (isInserting) {
       context.missing(_orderNumberMeta);
+    }
+    if (data.containsKey('merchandiser')) {
+      context.handle(
+          _merchandiserMeta,
+          merchandiser.isAcceptableOrUnknown(
+              data['merchandiser']!, _merchandiserMeta));
+    } else if (isInserting) {
+      context.missing(_merchandiserMeta);
     }
     if (data.containsKey('line_number')) {
       context.handle(
@@ -2683,6 +2698,8 @@ class $DraftTableTable extends DraftTable
           .read(DriftSqlType.string, data['${effectivePrefix}order_type'])!,
       orderNumber: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}order_number'])!,
+      merchandiser: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}merchandiser'])!,
       lineNumber: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}line_number'])!,
       shade: attachedDatabase.typeMapping
@@ -2739,6 +2756,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
   final String soldTo;
   final String orderType;
   final int orderNumber;
+  final String merchandiser;
   final int lineNumber;
   final String shade;
   final String buyer;
@@ -2765,6 +2783,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       required this.soldTo,
       required this.orderType,
       required this.orderNumber,
+      required this.merchandiser,
       required this.lineNumber,
       required this.shade,
       required this.buyer,
@@ -2793,6 +2812,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
     map['sold_to'] = Variable<String>(soldTo);
     map['order_type'] = Variable<String>(orderType);
     map['order_number'] = Variable<int>(orderNumber);
+    map['merchandiser'] = Variable<String>(merchandiser);
     map['line_number'] = Variable<int>(lineNumber);
     map['shade'] = Variable<String>(shade);
     map['buyer'] = Variable<String>(buyer);
@@ -2823,6 +2843,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       soldTo: Value(soldTo),
       orderType: Value(orderType),
       orderNumber: Value(orderNumber),
+      merchandiser: Value(merchandiser),
       lineNumber: Value(lineNumber),
       shade: Value(shade),
       buyer: Value(buyer),
@@ -2855,6 +2876,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       soldTo: serializer.fromJson<String>(json['soldTo']),
       orderType: serializer.fromJson<String>(json['orderType']),
       orderNumber: serializer.fromJson<int>(json['orderNumber']),
+      merchandiser: serializer.fromJson<String>(json['merchandiser']),
       lineNumber: serializer.fromJson<int>(json['lineNumber']),
       shade: serializer.fromJson<String>(json['shade']),
       buyer: serializer.fromJson<String>(json['buyer']),
@@ -2886,6 +2908,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       'soldTo': serializer.toJson<String>(soldTo),
       'orderType': serializer.toJson<String>(orderType),
       'orderNumber': serializer.toJson<int>(orderNumber),
+      'merchandiser': serializer.toJson<String>(merchandiser),
       'lineNumber': serializer.toJson<int>(lineNumber),
       'shade': serializer.toJson<String>(shade),
       'buyer': serializer.toJson<String>(buyer),
@@ -2915,6 +2938,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           String? soldTo,
           String? orderType,
           int? orderNumber,
+          String? merchandiser,
           int? lineNumber,
           String? shade,
           String? buyer,
@@ -2941,6 +2965,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         soldTo: soldTo ?? this.soldTo,
         orderType: orderType ?? this.orderType,
         orderNumber: orderNumber ?? this.orderNumber,
+        merchandiser: merchandiser ?? this.merchandiser,
         lineNumber: lineNumber ?? this.lineNumber,
         shade: shade ?? this.shade,
         buyer: buyer ?? this.buyer,
@@ -2970,6 +2995,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       orderType: data.orderType.present ? data.orderType.value : this.orderType,
       orderNumber:
           data.orderNumber.present ? data.orderNumber.value : this.orderNumber,
+      merchandiser: data.merchandiser.present
+          ? data.merchandiser.value
+          : this.merchandiser,
       lineNumber:
           data.lineNumber.present ? data.lineNumber.value : this.lineNumber,
       shade: data.shade.present ? data.shade.value : this.shade,
@@ -3010,6 +3038,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           ..write('soldTo: $soldTo, ')
           ..write('orderType: $orderType, ')
           ..write('orderNumber: $orderNumber, ')
+          ..write('merchandiser: $merchandiser, ')
           ..write('lineNumber: $lineNumber, ')
           ..write('shade: $shade, ')
           ..write('buyer: $buyer, ')
@@ -3041,6 +3070,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         soldTo,
         orderType,
         orderNumber,
+        merchandiser,
         lineNumber,
         shade,
         buyer,
@@ -3071,6 +3101,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           other.soldTo == this.soldTo &&
           other.orderType == this.orderType &&
           other.orderNumber == this.orderNumber &&
+          other.merchandiser == this.merchandiser &&
           other.lineNumber == this.lineNumber &&
           other.shade == this.shade &&
           other.buyer == this.buyer &&
@@ -3099,6 +3130,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   final Value<String> soldTo;
   final Value<String> orderType;
   final Value<int> orderNumber;
+  final Value<String> merchandiser;
   final Value<int> lineNumber;
   final Value<String> shade;
   final Value<String> buyer;
@@ -3125,6 +3157,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.soldTo = const Value.absent(),
     this.orderType = const Value.absent(),
     this.orderNumber = const Value.absent(),
+    this.merchandiser = const Value.absent(),
     this.lineNumber = const Value.absent(),
     this.shade = const Value.absent(),
     this.buyer = const Value.absent(),
@@ -3152,6 +3185,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     required String soldTo,
     required String orderType,
     required int orderNumber,
+    required String merchandiser,
     required int lineNumber,
     required String shade,
     required String buyer,
@@ -3176,6 +3210,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   })  : soldTo = Value(soldTo),
         orderType = Value(orderType),
         orderNumber = Value(orderNumber),
+        merchandiser = Value(merchandiser),
         lineNumber = Value(lineNumber),
         shade = Value(shade),
         buyer = Value(buyer),
@@ -3202,6 +3237,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     Expression<String>? soldTo,
     Expression<String>? orderType,
     Expression<int>? orderNumber,
+    Expression<String>? merchandiser,
     Expression<int>? lineNumber,
     Expression<String>? shade,
     Expression<String>? buyer,
@@ -3229,6 +3265,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       if (soldTo != null) 'sold_to': soldTo,
       if (orderType != null) 'order_type': orderType,
       if (orderNumber != null) 'order_number': orderNumber,
+      if (merchandiser != null) 'merchandiser': merchandiser,
       if (lineNumber != null) 'line_number': lineNumber,
       if (shade != null) 'shade': shade,
       if (buyer != null) 'buyer': buyer,
@@ -3258,6 +3295,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       Value<String>? soldTo,
       Value<String>? orderType,
       Value<int>? orderNumber,
+      Value<String>? merchandiser,
       Value<int>? lineNumber,
       Value<String>? shade,
       Value<String>? buyer,
@@ -3284,6 +3322,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       soldTo: soldTo ?? this.soldTo,
       orderType: orderType ?? this.orderType,
       orderNumber: orderNumber ?? this.orderNumber,
+      merchandiser: merchandiser ?? this.merchandiser,
       lineNumber: lineNumber ?? this.lineNumber,
       shade: shade ?? this.shade,
       buyer: buyer ?? this.buyer,
@@ -3322,6 +3361,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     }
     if (orderNumber.present) {
       map['order_number'] = Variable<int>(orderNumber.value);
+    }
+    if (merchandiser.present) {
+      map['merchandiser'] = Variable<String>(merchandiser.value);
     }
     if (lineNumber.present) {
       map['line_number'] = Variable<int>(lineNumber.value);
@@ -3396,6 +3438,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
           ..write('soldTo: $soldTo, ')
           ..write('orderType: $orderType, ')
           ..write('orderNumber: $orderNumber, ')
+          ..write('merchandiser: $merchandiser, ')
           ..write('lineNumber: $lineNumber, ')
           ..write('shade: $shade, ')
           ..write('buyer: $buyer, ')
@@ -4576,6 +4619,7 @@ typedef $$DraftTableTableCreateCompanionBuilder = DraftTableCompanion Function({
   required String soldTo,
   required String orderType,
   required int orderNumber,
+  required String merchandiser,
   required int lineNumber,
   required String shade,
   required String buyer,
@@ -4603,6 +4647,7 @@ typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<String> soldTo,
   Value<String> orderType,
   Value<int> orderNumber,
+  Value<String> merchandiser,
   Value<int> lineNumber,
   Value<String> shade,
   Value<String> buyer,
@@ -4646,6 +4691,9 @@ class $$DraftTableTableFilterComposer
 
   ColumnFilters<int> get orderNumber => $composableBuilder(
       column: $table.orderNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get merchandiser => $composableBuilder(
+      column: $table.merchandiser, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get lineNumber => $composableBuilder(
       column: $table.lineNumber, builder: (column) => ColumnFilters(column));
@@ -4734,6 +4782,10 @@ class $$DraftTableTableOrderingComposer
   ColumnOrderings<int> get orderNumber => $composableBuilder(
       column: $table.orderNumber, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get merchandiser => $composableBuilder(
+      column: $table.merchandiser,
+      builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<int> get lineNumber => $composableBuilder(
       column: $table.lineNumber, builder: (column) => ColumnOrderings(column));
 
@@ -4820,6 +4872,9 @@ class $$DraftTableTableAnnotationComposer
 
   GeneratedColumn<int> get orderNumber => $composableBuilder(
       column: $table.orderNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get merchandiser => $composableBuilder(
+      column: $table.merchandiser, builder: (column) => column);
 
   GeneratedColumn<int> get lineNumber => $composableBuilder(
       column: $table.lineNumber, builder: (column) => column);
@@ -4915,6 +4970,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<String> soldTo = const Value.absent(),
             Value<String> orderType = const Value.absent(),
             Value<int> orderNumber = const Value.absent(),
+            Value<String> merchandiser = const Value.absent(),
             Value<int> lineNumber = const Value.absent(),
             Value<String> shade = const Value.absent(),
             Value<String> buyer = const Value.absent(),
@@ -4942,6 +4998,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             soldTo: soldTo,
             orderType: orderType,
             orderNumber: orderNumber,
+            merchandiser: merchandiser,
             lineNumber: lineNumber,
             shade: shade,
             buyer: buyer,
@@ -4969,6 +5026,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             required String soldTo,
             required String orderType,
             required int orderNumber,
+            required String merchandiser,
             required int lineNumber,
             required String shade,
             required String buyer,
@@ -4996,6 +5054,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             soldTo: soldTo,
             orderType: orderType,
             orderNumber: orderNumber,
+            merchandiser: merchandiser,
             lineNumber: lineNumber,
             shade: shade,
             buyer: buyer,

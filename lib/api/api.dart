@@ -676,6 +676,62 @@ class Api {
     return buyerInfos;
   }
 
+  static Future<List<String>> fetchMerchandiserNames(
+      {required String soldToNumber}) async {
+    final merchandiserNames = <String>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.RMK",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "MR", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "MR", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": soldToNumber, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SBN1",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+
+        for (var row in rowset) {
+          merchandiserNames.add(row['F00092_RMK']);
+        }
+      }
+    } catch (e) {
+      log('fetchBuyerInfos error - $e');
+    }
+
+    return merchandiserNames;
+  }
+
   static Future<List<int>> fetchInvoicesInProcessing(
       String soldToNumber) async {
     final docNumbers = <int>[];

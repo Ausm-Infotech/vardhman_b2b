@@ -5,6 +5,7 @@ class DraftTable extends Table {
   TextColumn get soldTo => text()();
   TextColumn get orderType => text()();
   IntColumn get orderNumber => integer()();
+  TextColumn get merchandiser => text()();
   IntColumn get lineNumber => integer()();
   TextColumn get shade => text()();
   TextColumn get buyer => text()();
