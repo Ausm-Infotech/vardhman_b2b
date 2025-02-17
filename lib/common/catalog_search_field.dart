@@ -85,6 +85,7 @@ class CatalogSearchField extends StatelessWidget {
                         fontWeight: isEnabled ? null : FontWeight.w500,
                       ),
                       searchInputDecoration: SearchInputDecoration(
+                        hintText: isEnabled ? 'select' : null,
                         fillColor: VardhmanColors.dividerGrey,
                         contentPadding: EdgeInsets.only(left: 8),
                         border: border,

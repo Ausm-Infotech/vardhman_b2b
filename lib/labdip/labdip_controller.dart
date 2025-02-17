@@ -16,7 +16,9 @@ class LabdipController extends GetxController {
 
   final rxSelectedOrderHeaderLine = Rxn<OrderHeaderLine>();
 
-  final rxSelectedOrderDetailLines = <OrderDetailLine>[].obs;
+  final rxOrderDetailLines = <OrderDetailLine>[].obs;
+
+  final rxSelectedOrderDetailLinesReasonMap = <OrderDetailLine, String>{}.obs;
 
   final Database _database = Get.find<Database>();
 
@@ -52,6 +54,14 @@ class LabdipController extends GetxController {
     );
   }
 
+  void selectOrderDetailLine(OrderDetailLine orderDetailLine) {
+    if (rxSelectedOrderDetailLinesReasonMap.containsKey(orderDetailLine)) {
+      rxSelectedOrderDetailLinesReasonMap.remove(orderDetailLine);
+    } else {
+      rxSelectedOrderDetailLinesReasonMap[orderDetailLine] = '';
+    }
+  }
+
   Future<void> selectOrder(OrderHeaderLine orderHeaderLine) async {
     rxSelectedOrderHeaderLine.value = orderHeaderLine;
 
@@ -69,7 +79,9 @@ class LabdipController extends GetxController {
   }
 
   Future<void> refreshSelectedOrderDetails() async {
-    rxSelectedOrderDetailLines.clear();
+    rxOrderDetailLines.clear();
+
+    rxSelectedOrderDetailLinesReasonMap.clear();
 
     if (rxSelectedOrderHeaderLine.value != null) {
       final orderDetailLines = await Api.fetchOrderDetails(
@@ -78,7 +90,7 @@ class LabdipController extends GetxController {
         orderCompany: rxSelectedOrderHeaderLine.value!.orderCompany,
       );
 
-      rxSelectedOrderDetailLines.addAll(orderDetailLines);
+      rxOrderDetailLines.addAll(orderDetailLines);
     }
   }
 

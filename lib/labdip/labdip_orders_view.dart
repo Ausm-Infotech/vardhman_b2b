@@ -63,8 +63,8 @@ class LabdipOrdersView extends StatelessWidget {
                   Get.dialog(
                     const Dialog(
                       insetPadding: EdgeInsets.symmetric(
-                        horizontal: 80,
-                        vertical: 48,
+                        horizontal: 40,
+                        vertical: 24,
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: CreateLabdipOrderView(),
@@ -96,6 +96,8 @@ class LabdipOrdersView extends StatelessWidget {
                       headingRowHeight: 40,
                       dataRowHeight: 40,
                       headingRowColor: WidgetStatePropertyAll(Colors.grey),
+                      // headingRowColor:
+                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
                       headingTextStyle: TextStyle(
                         fontSize: 13,
                         color: Colors.white,
@@ -125,6 +127,7 @@ class LabdipOrdersView extends StatelessWidget {
                           size: ColumnSize.S,
                           // headingRowAlignment: MainAxisAlignment.end,
                           numeric: true,
+                          fixedWidth: 70,
                         ),
                       ],
                       rows: [
@@ -153,8 +156,8 @@ class LabdipOrdersView extends StatelessWidget {
                                 Get.dialog(
                                   const Dialog(
                                     insetPadding: EdgeInsets.symmetric(
-                                      horizontal: 80,
-                                      vertical: 48,
+                                      horizontal: 40,
+                                      vertical: 24,
                                     ),
                                     clipBehavior: Clip.hardEdge,
                                     child: CreateLabdipOrderView(),
@@ -164,6 +167,8 @@ class LabdipOrdersView extends StatelessWidget {
                               cells: [
                                 DataCell(
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text('Draft'),
                                       SizedBox(
@@ -226,6 +231,8 @@ class LabdipOrdersView extends StatelessWidget {
                                   DefaultTextStyle(
                                     style: textStyle,
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
                                             labdipOrder.orderNumber.toString()),

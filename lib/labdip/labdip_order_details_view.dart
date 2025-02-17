@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
-import 'package:vardhman_b2b/common/secondary_button.dart';
+import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 
@@ -29,11 +29,6 @@ class LabdipOrderDetailsView extends StatelessWidget {
           children: <Widget>[
             HeaderView(
               elevation: 4,
-              trailing: SecondaryButton(
-                iconData: Icons.refresh,
-                text: 'Refresh',
-                onPressed: labdipController.refreshSelectedOrderDetails,
-              ),
               title: DefaultTextStyle(
                 style: const TextStyle(
                   fontSize: 14,
@@ -71,41 +66,71 @@ class LabdipOrderDetailsView extends StatelessWidget {
                     )
                   : DataTable2(
                       columnSpacing: 16,
-                      horizontalMargin: 16,
-                      headingRowHeight: 40,
-                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
-                      headingTextStyle: TextStyle(
+                      showBottomBorder: true,
+                      border: TableBorder.symmetric(
+                        inside: BorderSide(
+                            color: VardhmanColors.darkGrey, width: 0.2),
+                        outside: BorderSide(
+                            color: VardhmanColors.darkGrey, width: 0.2),
+                      ),
+                      headingCheckboxTheme: CheckboxThemeData(
+                        fillColor: WidgetStatePropertyAll(Colors.white),
+                        checkColor: WidgetStatePropertyAll(VardhmanColors.red),
+                      ),
+                      datarowCheckboxTheme: CheckboxThemeData(
+                        fillColor: WidgetStatePropertyAll(Colors.white),
+                        checkColor: WidgetStatePropertyAll(VardhmanColors.red),
+                      ),
+                      dataTextStyle: TextStyle(
+                        color: VardhmanColors.darkGrey,
                         fontSize: 13,
+                      ),
+                      checkboxHorizontalMargin: 0,
+                      headingRowHeight: 40,
+                      dataRowHeight: 40,
+                      headingRowColor:
+                          WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                      headingTextStyle: TextStyle(
                         color: Colors.white,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
-                      dataRowHeight: 40,
-                      dataTextStyle: TextStyle(
-                        fontSize: 13,
-                        color: VardhmanColors.darkGrey,
-                      ),
-                      border: TableBorder.all(
-                        color: VardhmanColors.darkGrey,
-                        width: 0.2,
-                      ),
-                      showBottomBorder: true,
                       columns: const [
-                        DataColumn2(label: Text('Line'), size: ColumnSize.S),
-                        DataColumn2(label: Text('Article'), size: ColumnSize.M),
-                        DataColumn2(label: Text('Brand'), size: ColumnSize.M),
-                        DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
-                        DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                        DataColumn2(label: Text('Shade'), size: ColumnSize.M),
                         DataColumn2(
-                          label: Text('Permanent\nShade'),
-                          size: ColumnSize.M,
+                          label: Text('#'),
+                          size: ColumnSize.S,
+                          fixedWidth: 30,
+                          numeric: true,
+                        ),
+                        DataColumn2(
+                          label: Text('Article'),
+                          fixedWidth: 60,
+                        ),
+                        DataColumn2(label: Text('Brand'), size: ColumnSize.M),
+                        DataColumn2(
+                          label: Text('Ticket'),
+                          fixedWidth: 50,
+                          numeric: true,
+                        ),
+                        DataColumn2(
+                          label: Text('Tex'),
+                          numeric: true,
+                          fixedWidth: 40,
+                        ),
+                        DataColumn2(
+                          label: Text('Shade'),
+                          fixedWidth: 60,
+                        ),
+                        DataColumn2(
+                          label: Text('Final\nShade'),
+                          fixedWidth: 60,
                         ),
                         DataColumn2(
                             label: Text('Reference'), size: ColumnSize.M),
                         DataColumn2(label: Text('Comment'), size: ColumnSize.M),
                         DataColumn2(label: Text('Status'), size: ColumnSize.M),
                       ],
-                      rows: labdipController.rxSelectedOrderDetailLines.map(
+                      rows: labdipController.rxOrderDetailLines.map(
                         (orderDetail) {
                           final itemParts =
                               orderDetail.item.split(RegExp('\\s+'));
@@ -124,10 +149,27 @@ class LabdipOrderDetailsView extends StatelessWidget {
                           final labdipTableRow = labdipController
                               .getLabdipTableRow(orderDetail.workOrderNumber);
 
+                          final index = labdipController.rxOrderDetailLines
+                              .indexOf(orderDetail);
+
                           return DataRow(
+                            selected: labdipController
+                                .rxSelectedOrderDetailLinesReasonMap.keys
+                                .contains(orderDetail),
+                            onSelectChanged: orderDetail.status != 'Dispatched'
+                                ? null
+                                : (_) {
+                                    labdipController
+                                        .selectOrderDetailLine(orderDetail);
+                                  },
+                            color: WidgetStatePropertyAll(
+                              index.isEven
+                                  ? Colors.white
+                                  : VardhmanColors.dividerGrey,
+                            ),
                             cells: [
                               DataCell(
-                                Text(orderDetail.lineNumber.toStringAsFixed(2)),
+                                Text(orderDetail.lineNumber.toString()),
                               ),
                               DataCell(
                                 Text(article),
@@ -162,6 +204,30 @@ class LabdipOrderDetailsView extends StatelessWidget {
                       ).toList(),
                     ),
             ),
+            if (labdipController.rxSelectedOrderDetailLinesReasonMap.isNotEmpty)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(
+                      color: VardhmanColors.darkGrey,
+                      width: 0.2,
+                    ),
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        '${labdipController.rxSelectedOrderDetailLinesReasonMap.length} line${labdipController.rxSelectedOrderDetailLinesReasonMap.length > 1 ? 's' : ''} selected'),
+                    PrimaryButton(
+                      text: 'Rematch',
+                      onPressed: () async {},
+                    ),
+                  ],
+                ),
+              )
           ],
         ),
       ),

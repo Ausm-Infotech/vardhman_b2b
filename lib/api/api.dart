@@ -220,6 +220,85 @@ class Api {
     }
   }
 
+  static Future<List<String>> fetchShades({
+    required String article,
+    required String uom,
+  }) async {
+    final shades = <String>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F4101",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F4101.SEG3",
+          "maxPageSize": "No Max",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F4101.SEG1",
+                "operator": "EQUAL",
+                "value": [
+                  {
+                    "specialValueId": "LITERAL",
+                    "content": article,
+                  }
+                ],
+              },
+              {
+                "controlId": "F4101.SEG2",
+                "operator": "EQUAL",
+                "value": [
+                  {
+                    "specialValueId": "LITERAL",
+                    "content": uom,
+                  }
+                ],
+              },
+              {
+                "controlId": "F4101.SRP1",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "IND"}
+                ]
+              },
+              {
+                "controlId": "F4101.PRP1",
+                "operator": "LIST",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "Z"},
+                  {"specialValueId": "LITERAL", "content": "M"}
+                ]
+              },
+              {
+                "controlId": "F4101.STKT",
+                "operator": "NOT_EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "O"}
+                ]
+              }
+            ],
+          },
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F4101']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          shades.add(row['F4101_SEG3']);
+        }
+      }
+    } catch (e) {
+      log('fetchShades error - $e');
+    }
+
+    return shades;
+  }
+
   static Future<UserDetailsCompanion?> fetchUserData(
     String userId,
   ) async {

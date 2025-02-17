@@ -69,6 +69,13 @@ class LabdipEntryController extends GetxController {
 
   final rxEndUse = ''.obs;
 
+  final rxShades = <String>[].obs;
+
+  final _swatchShades = <String>[
+    'SWT',
+    ...List.generate(9, (index) => 'SWT${index + 1}'),
+  ];
+
   final endUseOptions = [
     "Active/sportswear",
     "Apparel",
@@ -182,11 +189,35 @@ class LabdipEntryController extends GetxController {
       },
     );
 
-    rxArticle.listen((_) => selectIfOnlyOneOption(rxArticle.hashCode));
+    rxArticle.listen(
+      (newArticle) {
+        selectIfOnlyOneOption(rxArticle.hashCode);
+
+        rxShade.value = '';
+
+        rxShades.clear();
+
+        final article = newArticle.trim();
+
+        if (article.isNotEmpty) {
+          Api.fetchShades(article: article, uom: 'AC').then(
+            (shades) {
+              rxShades.addAll(_swatchShades);
+
+              rxShades.addAll(shades);
+            },
+          );
+        }
+      },
+    );
+
     rxBrand.listen((_) => selectIfOnlyOneOption(rxBrand.hashCode));
     rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
     rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
   }
+
+  bool get isSwatchShade =>
+      rxShade.value.isNotEmpty && _swatchShades.contains(rxShade.value);
 
   bool get isOtherBuyer => rxBuyerName.value == 'OTHER';
 
@@ -264,9 +295,10 @@ class LabdipEntryController extends GetxController {
   }
 
   bool get canAddOrderLine =>
-      rxShade.value.isNotEmpty &&
+      rxShade.isNotEmpty &&
+      (!isSwatchShade || rxColor.isNotEmpty) &&
       _buyerName.isNotEmpty &&
-      _merchandiser.isNotEmpty &&
+      merchandiser.isNotEmpty &&
       rxFirstLightSource.value.isNotEmpty &&
       rxSecondLightSource.value.isNotEmpty &&
       rxArticle.value.isNotEmpty;
@@ -318,7 +350,7 @@ class LabdipEntryController extends GetxController {
           uom: uom,
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
-          merchandiser: _merchandiser,
+          merchandiser: merchandiser,
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -330,7 +362,7 @@ class LabdipEntryController extends GetxController {
   String get _buyerName =>
       isOtherBuyer ? rxOtherBuyer.value : rxBuyerName.value;
 
-  String get _merchandiser =>
+  String get merchandiser =>
       isOtherMerchandiser ? rxOtherMerchandiser.value : rxMerchandiser.value;
 
   void updateLapdipOrderLine() {
@@ -368,7 +400,7 @@ class LabdipEntryController extends GetxController {
               uom: drift.Value(uom),
               colorRemark: drift.Value(_colorRemark),
               lastUpdated: drift.Value(DateTime.now()),
-              merchandiser: drift.Value(_merchandiser),
+              merchandiser: drift.Value(merchandiser),
             ),
           );
     }
@@ -545,11 +577,6 @@ class LabdipEntryController extends GetxController {
       .map((e) => e.ticket)
       .toSet()
       .toList();
-
-  List<String> shades = [
-    'SWT',
-    ...List.generate(9, (index) => 'SWT${index + 1}'),
-  ];
 
   Future<void> submitOrder() async {
     final OrderReviewController orderReviewController =

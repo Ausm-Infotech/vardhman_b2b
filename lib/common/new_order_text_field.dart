@@ -93,6 +93,7 @@ class NewOrderTextField extends StatelessWidget {
                         ),
                       ),
                       decoration: InputDecoration(
+                        hintText: hintText,
                         contentPadding: EdgeInsets.only(
                           left: 8,
                         ),
