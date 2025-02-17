@@ -32,12 +32,17 @@ class LabdipOrdersView extends StatelessWidget {
           HeaderView(
             leading: SecondaryButton(
               iconData: Icons.refresh,
-              text: 'Refresh',
+              text: '',
               onPressed: ordersController.refreshOrders,
             ),
             title: const Text(
               'Labdip Orders',
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: VardhmanColors.darkGrey,
+              ),
             ),
             trailing: PrimaryButton(
               text: 'New Order',
@@ -75,95 +80,178 @@ class LabdipOrdersView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: labdipController.filteredLabdipOrders.isEmpty
+            child: labdipController.filteredLabdipOrders.isEmpty &&
+                    labdipController.rxDraftOrders.isEmpty
                 ? const Center(
                     child: Text('No Labdip Orders'),
                   )
                 : Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     child: DataTable2(
+                      columnSpacing: 16,
+                      horizontalMargin: 16,
+                      headingRowHeight: 40,
+                      dataRowHeight: 40,
+                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
+                      headingTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      dataTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: VardhmanColors.darkGrey,
+                      ),
+                      border: TableBorder.symmetric(
+                        inside: BorderSide(
+                          width: 0.1,
+                          color: VardhmanColors.darkGrey,
+                        ),
+                      ),
                       showCheckboxColumn: false,
                       columns: const [
                         DataColumn2(
-                            label: Text('Order No.'), size: ColumnSize.S),
+                          label: Text('Order No.'),
+                          size: ColumnSize.L,
+                          headingRowAlignment: MainAxisAlignment.start,
+                        ),
+                        // DataColumn2(
+                        //     label: Text('Reference'), size: ColumnSize.M),
                         DataColumn2(
-                            label: Text('Reference'), size: ColumnSize.M),
-                        DataColumn2(label: Text('Date'), size: ColumnSize.S),
+                          label: Text('Date'),
+                          size: ColumnSize.S,
+                          // headingRowAlignment: MainAxisAlignment.end,
+                          numeric: true,
+                        ),
                       ],
                       rows: [
                         ...labdipController.rxDraftOrders.map(
-                          (draftTableData) => DataRow(
-                            onSelectChanged: (value) {
-                              if (Get.isRegistered<LabdipEntryController>()) {
-                                Get.delete<LabdipEntryController>();
-                              }
+                          (draftTableData) {
+                            final index = labdipController.rxDraftOrders
+                                .indexOf(draftTableData);
 
-                              Get.put(
-                                LabdipEntryController(
-                                  orderNumber: draftTableData.orderNumber,
-                                ),
-                              );
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                index.isEven
+                                    ? Colors.white
+                                    : VardhmanColors.dividerGrey,
+                              ),
+                              onSelectChanged: (value) {
+                                if (Get.isRegistered<LabdipEntryController>()) {
+                                  Get.delete<LabdipEntryController>();
+                                }
 
-                              Get.dialog(
-                                const Dialog(
-                                  insetPadding: EdgeInsets.symmetric(
-                                    horizontal: 80,
-                                    vertical: 48,
+                                Get.put(
+                                  LabdipEntryController(
+                                    orderNumber: draftTableData.orderNumber,
                                   ),
-                                  clipBehavior: Clip.hardEdge,
-                                  child: CreateLabdipOrderView(),
-                                ),
-                              );
-                            },
-                            cells: [
-                              DataCell(
-                                Text('Draft'),
-                              ),
-                              DataCell(
-                                Text(draftTableData.orderNumber.toString()),
-                              ),
-                              DataCell(
-                                Text(
-                                  DateFormat('dd/MM/yyyy').format(
-                                    draftTableData.lastUpdated,
+                                );
+
+                                Get.dialog(
+                                  const Dialog(
+                                    insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 80,
+                                      vertical: 48,
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: CreateLabdipOrderView(),
+                                  ),
+                                );
+                              },
+                              cells: [
+                                DataCell(
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Draft'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(draftTableData.orderNumber
+                                          .toString()),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      draftTableData.lastUpdated,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                         ...labdipController.filteredLabdipOrders.map(
-                          (labdipOrder) => DataRow(
-                            selected: labdipOrder ==
-                                labdipController
-                                    .rxSelectedOrderHeaderLine.value,
-                            onSelectChanged: (value) {
-                              if (value == true &&
+                          (labdipOrder) {
+                            final index = labdipController.filteredLabdipOrders
+                                    .indexOf(labdipOrder) +
+                                labdipController.rxDraftOrders.length;
+
+                            final isSelected = labdipController
+                                    .rxSelectedOrderHeaderLine.value ==
+                                labdipOrder;
+
+                            final textStyle = TextStyle(
+                              fontSize: 13,
+                              color: isSelected
+                                  ? Colors.white
+                                  : VardhmanColors.darkGrey,
+                            );
+
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                isSelected
+                                    ? VardhmanColors.red
+                                    : index.isEven
+                                        ? Colors.white
+                                        : VardhmanColors.dividerGrey,
+                              ),
+                              selected: labdipOrder ==
                                   labdipController
-                                          .rxSelectedOrderHeaderLine.value !=
-                                      labdipOrder) {
-                                labdipController.selectOrder(labdipOrder);
-                              }
-                            },
-                            cells: [
-                              DataCell(
-                                Text(labdipOrder.orderNumber.toString()),
-                              ),
-                              DataCell(
-                                Text(labdipOrder.orderReference),
-                              ),
-                              DataCell(
-                                Text(
-                                  DateFormat('dd/MM/yyyy').format(
-                                    labdipOrder.orderDate,
+                                      .rxSelectedOrderHeaderLine.value,
+                              onSelectChanged: (value) {
+                                if (value == true &&
+                                    labdipController
+                                            .rxSelectedOrderHeaderLine.value !=
+                                        labdipOrder) {
+                                  labdipController.selectOrder(labdipOrder);
+                                }
+                              },
+                              cells: [
+                                DataCell(
+                                  DefaultTextStyle(
+                                    style: textStyle,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                            labdipOrder.orderNumber.toString()),
+                                        if (labdipOrder.orderReference
+                                            .trim()
+                                            .isNotEmpty) ...[
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          Text(labdipOrder.orderReference),
+                                        ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      labdipOrder.orderDate,
+                                    ),
+                                    style: textStyle,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -193,7 +281,7 @@ class LabdipOrdersView extends StatelessWidget {
                       isDense: true,
                       label: Text('Order No.'),
                       labelStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                       border: OutlineInputBorder(),
@@ -209,7 +297,7 @@ class LabdipOrdersView extends StatelessWidget {
                       labelText: 'From Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderFromDate.value,
                       ),
                       prefixStyle: TextStyle(
@@ -217,7 +305,7 @@ class LabdipOrdersView extends StatelessWidget {
                                 .isAtSameMomentAs(oldestDateTime)
                             ? Colors.white
                             : VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxEarliestOrderDate.value,
@@ -239,12 +327,12 @@ class LabdipOrdersView extends StatelessWidget {
                       labelText: 'To Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderToDate.value,
                       ),
                       prefixStyle: TextStyle(
                         color: VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxOrderFromDate.value,

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/home/nav_rail.dart';
 import 'package:vardhman_b2b/bulk/bulk_view.dart';
-import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/dtm/dtm_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_view.dart';
 import 'package:vardhman_b2b/open/open_view.dart';
@@ -17,13 +16,17 @@ class HomeScaffold extends StatelessWidget {
     final HomeController homeController = Get.find();
 
     return Scaffold(
-      backgroundColor: VardhmanColors.dividerGrey,
+      // backgroundColor: Colors.grey,
       body: Obx(
         () => Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const NavRail(),
+            // VerticalDivider(
+            //   thickness: 8,
+            //   width: 8,
+            //   color: VardhmanColors.darkGrey,
+            // ),
             Expanded(
               child: homeController.rxNavRailIndex.value == 0
                   ? const LabdipView()

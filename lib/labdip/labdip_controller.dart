@@ -32,6 +32,9 @@ class LabdipController extends GetxController {
           (f) =>
               f.soldTo.equals(_userController.rxUserDetail.value.soldToNumber),
         )
+        .orderBy(
+          (o) => o.lastUpdated.desc(),
+        )
         .watch()
         .listen(
       (draftTableDatas) {

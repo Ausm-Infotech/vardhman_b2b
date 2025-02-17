@@ -12,21 +12,24 @@ class LabdipView extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.find<OrdersController>();
 
-    return const Row(
-      children: <Widget>[
-        Expanded(
-          child: LabdipOrdersView(),
-        ),
-        VerticalDivider(
-          thickness: 0.5,
-          width: 1,
-          color: VardhmanColors.dividerGrey,
-        ),
-        Expanded(
-          flex: 3,
-          child: LabdipOrderDetailsView(),
-        ),
-      ],
+    return Container(
+      color: VardhmanColors.dividerGrey,
+      child: const Row(
+        children: <Widget>[
+          Expanded(
+            child: LabdipOrdersView(),
+          ),
+          VerticalDivider(
+            thickness: 8,
+            width: 8,
+            color: VardhmanColors.darkGrey,
+          ),
+          Expanded(
+            flex: 3,
+            child: LabdipOrderDetailsView(),
+          ),
+        ],
+      ),
     );
   }
 }

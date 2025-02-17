@@ -21,16 +21,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
 
     return Obx(
       () => Container(
-        padding: const EdgeInsets.all(0),
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             HeaderView(
-              elevation: 1,
+              elevation: 4,
               trailing: SecondaryButton(
                 iconData: Icons.refresh,
                 text: 'Refresh',
@@ -38,7 +36,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
               ),
               title: DefaultTextStyle(
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: VardhmanColors.darkGrey,
                 ),
@@ -71,86 +69,97 @@ class LabdipOrderDetailsView extends StatelessWidget {
                   ? const Center(
                       child: Text('No Order Selected'),
                     )
-                  : SingleChildScrollView(
-                      child: DataTable(
-                        columns: const [
-                          DataColumn2(label: Text('Line'), size: ColumnSize.S),
-                          DataColumn2(
-                              label: Text('Article'), size: ColumnSize.M),
-                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
-                          DataColumn2(
-                              label: Text('Ticket'), size: ColumnSize.S),
-                          DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                          DataColumn2(label: Text('Shade'), size: ColumnSize.M),
-                          DataColumn2(
-                            label: Text('Permanent\nShade'),
-                            size: ColumnSize.M,
-                          ),
-                          DataColumn2(
-                              label: Text('Reference'), size: ColumnSize.M),
-                          DataColumn2(
-                              label: Text('Comment'), size: ColumnSize.M),
-                          DataColumn2(
-                              label: Text('Status'), size: ColumnSize.M),
-                        ],
-                        rows: labdipController.rxSelectedOrderDetailLines.map(
-                          (orderDetail) {
-                            final itemParts =
-                                orderDetail.item.split(RegExp('\\s+'));
-
-                            final String article = itemParts[0];
-                            final String uom = itemParts[1];
-                            final String shade = itemParts[2];
-
-                            final catalogItem = catalogController
-                                .rxFilteredItems
-                                .firstWhereOrNull(
-                              (itemCatalogInfo) =>
-                                  itemCatalogInfo.article == article &&
-                                  itemCatalogInfo.uom == uom,
-                            );
-
-                            final labdipTableRow = labdipController
-                                .getLabdipTableRow(orderDetail.workOrderNumber);
-
-                            return DataRow(
-                              cells: [
-                                DataCell(
-                                  Text(orderDetail.lineNumber
-                                      .toStringAsFixed(2)),
-                                ),
-                                DataCell(
-                                  Text(article),
-                                ),
-                                DataCell(
-                                  Text(catalogItem?.brandDesc ?? ''),
-                                ),
-                                DataCell(
-                                  Text(catalogItem?.ticket ?? ''),
-                                ),
-                                DataCell(
-                                  Text(catalogItem?.tex ?? ''),
-                                ),
-                                DataCell(
-                                  Text(shade),
-                                ),
-                                DataCell(
-                                  Text(labdipTableRow?.permanentShade ?? ''),
-                                ),
-                                DataCell(
-                                  Text(labdipTableRow?.reference ?? ''),
-                                ),
-                                DataCell(
-                                  Text(orderDetail.userComment),
-                                ),
-                                DataCell(
-                                  Text(orderDetail.status),
-                                ),
-                              ],
-                            );
-                          },
-                        ).toList(),
+                  : DataTable2(
+                      columnSpacing: 16,
+                      horizontalMargin: 16,
+                      headingRowHeight: 40,
+                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
+                      headingTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
+                      dataRowHeight: 40,
+                      dataTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: VardhmanColors.darkGrey,
+                      ),
+                      border: TableBorder.all(
+                        color: VardhmanColors.darkGrey,
+                        width: 0.2,
+                      ),
+                      showBottomBorder: true,
+                      columns: const [
+                        DataColumn2(label: Text('Line'), size: ColumnSize.S),
+                        DataColumn2(label: Text('Article'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Brand'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Ticket'), size: ColumnSize.S),
+                        DataColumn2(label: Text('Tex'), size: ColumnSize.S),
+                        DataColumn2(label: Text('Shade'), size: ColumnSize.M),
+                        DataColumn2(
+                          label: Text('Permanent\nShade'),
+                          size: ColumnSize.M,
+                        ),
+                        DataColumn2(
+                            label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Comment'), size: ColumnSize.M),
+                        DataColumn2(label: Text('Status'), size: ColumnSize.M),
+                      ],
+                      rows: labdipController.rxSelectedOrderDetailLines.map(
+                        (orderDetail) {
+                          final itemParts =
+                              orderDetail.item.split(RegExp('\\s+'));
+
+                          final String article = itemParts[0];
+                          final String uom = itemParts[1];
+                          final String shade = itemParts[2];
+
+                          final catalogItem = catalogController.rxFilteredItems
+                              .firstWhereOrNull(
+                            (itemCatalogInfo) =>
+                                itemCatalogInfo.article == article &&
+                                itemCatalogInfo.uom == uom,
+                          );
+
+                          final labdipTableRow = labdipController
+                              .getLabdipTableRow(orderDetail.workOrderNumber);
+
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(orderDetail.lineNumber.toStringAsFixed(2)),
+                              ),
+                              DataCell(
+                                Text(article),
+                              ),
+                              DataCell(
+                                Text(catalogItem?.brandDesc ?? ''),
+                              ),
+                              DataCell(
+                                Text(catalogItem?.ticket ?? ''),
+                              ),
+                              DataCell(
+                                Text(catalogItem?.tex ?? ''),
+                              ),
+                              DataCell(
+                                Text(shade),
+                              ),
+                              DataCell(
+                                Text(labdipTableRow?.permanentShade ?? ''),
+                              ),
+                              DataCell(
+                                Text(labdipTableRow?.reference ?? ''),
+                              ),
+                              DataCell(
+                                Text(orderDetail.userComment),
+                              ),
+                              DataCell(
+                                Text(orderDetail.status),
+                              ),
+                            ],
+                          );
+                        },
+                      ).toList(),
                     ),
             ),
           ],
