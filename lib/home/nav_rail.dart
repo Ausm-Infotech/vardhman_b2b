@@ -30,15 +30,45 @@ class NavRail extends StatelessWidget {
             Get.find<UserController>(tag: 'userController');
 
         return Container(
-          color: Colors.white,
           padding: const EdgeInsets.all(16),
           width: 150,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Image.asset(
-                  'assets/vytl_icon_white.png',
-                  width: 100,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.asset(
+                    'assets/vytl_icon_white.png',
+                    width: 100,
+                  ),
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                NavRailContainer(
+                  title: 'USER',
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      Text(
+                        userController.rxCustomerDetail.value.name,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      PrimaryButton(
+                        iconData: Icons.logout,
+                        text: 'Logout',
+                        onPressed: () async {
+                          Get.find<UserController>(tag: 'userController')
+                              .logOut();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 24,
@@ -122,34 +152,6 @@ class NavRail extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
-                NavRailContainer(
-                  title: 'USER',
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      Text(
-                        userController.rxCustomerDetail.value.name,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      PrimaryButton(
-                        iconData: Icons.logout,
-                        text: 'Logout',
-                        onPressed: () async {
-                          Get.find<UserController>(tag: 'userController')
-                              .logOut();
-                        },
-                      ),
-                    ],
                   ),
                 ),
               ],

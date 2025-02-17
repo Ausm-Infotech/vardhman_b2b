@@ -28,7 +28,7 @@ class CatalogSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,8 +39,8 @@ class CatalogSearchField extends StatelessWidget {
                   text: labelText,
                   style: TextStyle(
                     color: VardhmanColors.darkGrey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
                   children: [
                     if (isRequired)
@@ -48,8 +48,8 @@ class CatalogSearchField extends StatelessWidget {
                         text: ' *',
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                   ],
@@ -60,22 +60,30 @@ class CatalogSearchField extends StatelessWidget {
               height: 4,
             ),
             Container(
+              height: 36,
               margin: const EdgeInsets.all(0),
               decoration: BoxDecoration(
                 color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: VardhmanColors.darkGrey,
-                  width: 0.5,
+                  width: 1,
                 ),
               ),
-              padding: EdgeInsets.all(4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: SearchField(
                       key: GlobalKey(debugLabel: labelText),
+                      suggestionsDecoration: SuggestionDecoration(
+                        selectionColor: VardhmanColors.dividerGrey,
+                      ),
+                      suggestionStyle: TextStyle(
+                        color: VardhmanColors.darkGrey,
+                        fontSize: 13,
+                        fontWeight: isEnabled ? null : FontWeight.w500,
+                      ),
                       searchInputDecoration: SearchInputDecoration(
                         fillColor: VardhmanColors.dividerGrey,
                         contentPadding: EdgeInsets.only(left: 8),
@@ -84,7 +92,9 @@ class CatalogSearchField extends StatelessWidget {
                         focusedBorder: border,
                         disabledBorder: border,
                         searchStyle: TextStyle(
-                          color: isEnabled ? null : VardhmanColors.darkGrey,
+                          color: VardhmanColors.darkGrey,
+                          fontSize: 13,
+                          fontWeight: isEnabled ? null : FontWeight.w500,
                         ),
                       ),
                       enabled: isEnabled && searchList.isNotEmpty,
@@ -101,10 +111,6 @@ class CatalogSearchField extends StatelessWidget {
                           ? null
                           : SearchFieldListItem(rxString.value),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                    height: 38,
                   ),
                   if (isEnabled && rxString.value.isNotEmpty)
                     SecondaryButton(

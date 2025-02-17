@@ -18,6 +18,7 @@ class NavRailContainer extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Container(
+          clipBehavior: Clip.antiAlias,
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             border: Border.all(

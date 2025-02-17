@@ -31,7 +31,7 @@ class NewOrderTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,8 +42,8 @@ class NewOrderTextField extends StatelessWidget {
                   text: labelText,
                   style: TextStyle(
                     color: VardhmanColors.darkGrey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
                   children: [
                     if (isRequired)
@@ -51,7 +51,7 @@ class NewOrderTextField extends StatelessWidget {
                         text: ' *',
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -63,20 +63,25 @@ class NewOrderTextField extends StatelessWidget {
               height: 4,
             ),
             Container(
-              margin: const EdgeInsets.all(0),
+              height: 36,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: VardhmanColors.darkGrey,
-                  width: 0.5,
+                  width: 1,
                 ),
+                color: Colors.white,
               ),
-              padding: EdgeInsets.all(4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: TextField(
+                      style: TextStyle(
+                        color: VardhmanColors.darkGrey,
+                        fontSize: 13,
+                        fontWeight: isEnabled ? null : FontWeight.w500,
+                      ),
                       minLines: minLines,
                       maxLines: minLines,
                       controller: TextEditingController.fromValue(
@@ -98,10 +103,6 @@ class NewOrderTextField extends StatelessWidget {
                       onChanged: (value) => rxString.value = value,
                       enabled: isEnabled,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                    height: 38,
                   ),
                   if (isEnabled && rxString.value.isNotEmpty)
                     SecondaryButton(

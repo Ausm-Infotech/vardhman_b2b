@@ -16,39 +16,26 @@ class HomeScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find();
 
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/home_background.jpg"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Obx(
-          () => Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const NavRail(),
-              const VerticalDivider(
-                thickness: 0.5,
-                width: 1,
-                color: VardhmanColors.dividerGrey,
-              ),
-              Expanded(
-                child: homeController.rxNavRailIndex.value == 0
-                    ? const LabdipView()
-                    : homeController.rxNavRailIndex.value == 1
-                        ? const DtmView()
-                        : homeController.rxNavRailIndex.value == 2
-                            ? const BulkView()
-                            : homeController.rxNavRailIndex.value == 3
-                                ? const OpenView()
-                                : const PaidView(),
-              ),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: VardhmanColors.dividerGrey,
+      body: Obx(
+        () => Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const NavRail(),
+            Expanded(
+              child: homeController.rxNavRailIndex.value == 0
+                  ? const LabdipView()
+                  : homeController.rxNavRailIndex.value == 1
+                      ? const DtmView()
+                      : homeController.rxNavRailIndex.value == 2
+                          ? const BulkView()
+                          : homeController.rxNavRailIndex.value == 3
+                              ? const OpenView()
+                              : const PaidView(),
+            ),
+          ],
         ),
       ),
     );

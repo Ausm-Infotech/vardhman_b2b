@@ -23,7 +23,7 @@ class LabdipEntryController extends GetxController {
 
   final rxColor = ''.obs;
 
-  final rxShade = 'SWT'.obs;
+  final rxShade = ''.obs;
 
   final rxBuyerName = ''.obs;
 
@@ -190,10 +190,10 @@ class LabdipEntryController extends GetxController {
 
   bool get isOtherBuyer => rxBuyerName.value == 'OTHER';
 
+  bool get isOtherMerchandiser => rxMerchandiser.value == 'OTHER';
+
   List<String> get buyerNames =>
       ['OTHER', ..._rxBuyerInfos.map((buyerInfo) => buyerInfo.name)];
-
-  bool get isOtherMerchandiser => rxMerchandiser.value == 'OTHER';
 
   List<String> get merchandiserNames => ['OTHER', ..._rxMerchandisers];
 
@@ -216,32 +216,54 @@ class LabdipEntryController extends GetxController {
       : [rxSecondLightSource.value];
 
   void selectIfOnlyOneOption(int hashCode) {
-    if (hashCode != rxArticle.hashCode && uniqueFilteredArticles.length == 1) {
-      rxArticle.value = uniqueFilteredArticles.first;
-    }
-
-    if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
-      rxBrand.value = uniqueFilteredBrands.first;
-    }
-
-    if (hashCode != rxSubstrate.hashCode &&
-        uniqueFilteredSubstrates.length == 1) {
-      rxSubstrate.value = uniqueFilteredSubstrates.first;
-    }
-
-    if (hashCode != rxTex.hashCode && uniqueFilteredTexs.length == 1) {
-      rxTex.value = uniqueFilteredTexs.first;
-    }
-
-    if (uniqueFilteredTickets.length == 1) {
-      rxTicket.value = uniqueFilteredTickets.first;
-    } else {
+    if (hashCode == rxArticle.hashCode && rxArticle.value.isEmpty) {
+      rxBrand.value = '';
+      rxSubstrate.value = '';
+      rxTex.value = '';
       rxTicket.value = '';
+    } else if (hashCode == rxBrand.hashCode && rxBrand.value.isEmpty) {
+      rxArticle.value = '';
+      rxSubstrate.value = '';
+      rxTex.value = '';
+      rxTicket.value = '';
+    } else if (hashCode == rxSubstrate.hashCode && rxSubstrate.value.isEmpty) {
+      rxArticle.value = '';
+      rxBrand.value = '';
+      rxTex.value = '';
+      rxTicket.value = '';
+    } else if (hashCode == rxTex.hashCode && rxTex.value.isEmpty) {
+      rxArticle.value = '';
+      rxBrand.value = '';
+      rxSubstrate.value = '';
+      rxTicket.value = '';
+    } else {
+      if (hashCode != rxArticle.hashCode &&
+          uniqueFilteredArticles.length == 1) {
+        rxArticle.value = uniqueFilteredArticles.first;
+      }
+
+      if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
+        rxBrand.value = uniqueFilteredBrands.first;
+      }
+
+      if (hashCode != rxSubstrate.hashCode &&
+          uniqueFilteredSubstrates.length == 1) {
+        rxSubstrate.value = uniqueFilteredSubstrates.first;
+      }
+
+      if (hashCode != rxTex.hashCode && uniqueFilteredTexs.length == 1) {
+        rxTex.value = uniqueFilteredTexs.first;
+      }
+
+      if (uniqueFilteredTickets.length == 1) {
+        rxTicket.value = uniqueFilteredTickets.first;
+      } else {
+        rxTicket.value = '';
+      }
     }
   }
 
   bool get canAddOrderLine =>
-      rxMerchandiser.value.isNotEmpty &&
       rxShade.value.isNotEmpty &&
       _buyerName.isNotEmpty &&
       _merchandiser.isNotEmpty &&
@@ -296,9 +318,7 @@ class LabdipEntryController extends GetxController {
           uom: uom,
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
-          merchandiser: isOtherMerchandiser
-              ? rxOtherMerchandiser.value
-              : rxMerchandiser.value,
+          merchandiser: _merchandiser,
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -348,11 +368,7 @@ class LabdipEntryController extends GetxController {
               uom: drift.Value(uom),
               colorRemark: drift.Value(_colorRemark),
               lastUpdated: drift.Value(DateTime.now()),
-              merchandiser: drift.Value(
-                isOtherMerchandiser
-                    ? rxOtherMerchandiser.value
-                    : rxMerchandiser.value,
-              ),
+              merchandiser: drift.Value(_merchandiser),
             ),
           );
     }
@@ -410,7 +426,7 @@ class LabdipEntryController extends GetxController {
       rxTex.value != '' ||
       rxBrand.value != '' ||
       rxArticle.value != '' ||
-      rxShade.value != 'SWT' ||
+      rxShade.value != '' ||
       rxMerchandiser.value != '' ||
       rxOtherMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
@@ -432,7 +448,7 @@ class LabdipEntryController extends GetxController {
     rxTex.value = '';
     rxBrand.value = '';
     rxArticle.value = '';
-    rxShade.value = 'SWT';
+    rxShade.value = '';
     rxMerchandiser.value = '';
     rxOtherMerchandiser.value = '';
     rxBuyerName.value = '';

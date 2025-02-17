@@ -15,6 +15,15 @@ class App extends StatelessWidget {
 
     return ToastificationWrapper(
       child: GetMaterialApp(
+        builder: (context, child) {
+          const double customTextScaleFactor = 1; // Set your desired value
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(customTextScaleFactor),
+            ),
+            child: child!,
+          );
+        },
         theme: ThemeData(
           primaryColor: VardhmanColors.red,
           colorScheme: ColorScheme.fromSwatch().copyWith(
