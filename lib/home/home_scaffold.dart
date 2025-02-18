@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/home/nav_rail.dart';
 import 'package:vardhman_b2b/bulk/bulk_view.dart';

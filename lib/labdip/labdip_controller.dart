@@ -10,6 +10,19 @@ import 'package:vardhman_b2b/user/user_controller.dart';
 class LabdipController extends GetxController {
   final OrdersController ordersController = Get.find<OrdersController>();
 
+  final rejectionReasons = [
+    'Late Delivery',
+    'Tonel Difference',
+    'Brighter',
+    'Lighter',
+    'Darker',
+    'Wrong Dispatch',
+    'Metamerism',
+    'Duller',
+    'Order Cancel by Buyer',
+    'Other',
+  ];
+
   final rxDraftOrders = <DraftTableData>[].obs;
 
   final rxLabdipTableRows = <LabdipTableRow>[].obs;
