@@ -70,6 +70,7 @@ class Api {
               userController.logOut();
 
               toastification.show(
+                autoCloseDuration: Duration(seconds: 5),
                 primaryColor: VardhmanColors.red,
                 title: Text('Session Expired'),
               );

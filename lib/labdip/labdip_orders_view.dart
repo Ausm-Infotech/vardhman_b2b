@@ -72,6 +72,7 @@ class LabdipOrdersView extends StatelessWidget {
                   );
                 } else {
                   toastification.show(
+                    autoCloseDuration: Duration(seconds: 5),
                     primaryColor: VardhmanColors.red,
                     title: Text('Failed to fetch new order number!'),
                   );

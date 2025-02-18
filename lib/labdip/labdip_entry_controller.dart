@@ -320,6 +320,7 @@ class LabdipEntryController extends GetxController {
           labdipOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );
@@ -616,19 +617,14 @@ class LabdipEntryController extends GetxController {
 
   void _populateInputs({required DraftTableData labdipOrderLine}) {
     final labParts = labdipOrderLine.lab.split(',');
-
     final isOtherBuyer = !buyerNames.contains(labdipOrderLine.buyer);
-
     final isOtherMerchandiser =
         !merchandiserNames.contains(labdipOrderLine.merchandiser);
-
     rxMerchandiser.value =
         isOtherMerchandiser ? 'OTHER' : labdipOrderLine.merchandiser;
-
     rxOtherMerchandiser.value =
         isOtherMerchandiser ? labdipOrderLine.merchandiser : '';
     rxColor.value = labdipOrderLine.colorName;
-    rxShade.value = labdipOrderLine.shade;
     rxBuyerName.value = isOtherBuyer ? 'OTHER' : labdipOrderLine.buyer;
     rxOtherBuyer.value = isOtherBuyer ? labdipOrderLine.buyer : '';
     _rxBuyerCode.value = labdipOrderLine.buyerCode;
@@ -645,5 +641,6 @@ class LabdipEntryController extends GetxController {
     rxRemark.value = labdipOrderLine.remark;
     rxRequestType.value = labdipOrderLine.requestType;
     rxEndUse.value = labdipOrderLine.endUse;
+    rxShade.value = labdipOrderLine.shade;
   }
 }

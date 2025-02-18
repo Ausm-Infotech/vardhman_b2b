@@ -142,6 +142,7 @@ class AdvancePaymentDialog extends StatelessWidget {
                               Get.back();
 
                               toastification.show(
+                                autoCloseDuration: Duration(seconds: 5),
                                 primaryColor: VardhmanColors.green,
                                 title: Text(
                                   'Navigating to Payment Gateway, payment confirmation will be sent via E-mail/SMS in some time. ',
@@ -153,6 +154,7 @@ class AdvancePaymentDialog extends StatelessWidget {
                           }
 
                           toastification.show(
+                            autoCloseDuration: Duration(seconds: 5),
                             primaryColor: VardhmanColors.red,
                             title: Text(
                               'Some error initiating payment, please try later.',

@@ -78,6 +78,7 @@ class ExcelDialog extends StatelessWidget {
                 await file.writeAsBytes(data.buffer.asUint8List());
 
                 toastification.show(
+                  autoCloseDuration: Duration(seconds: 5),
                   primaryColor: VardhmanColors.green,
                   title: Text('Sample.xlsx saved in Downloads'),
                 );

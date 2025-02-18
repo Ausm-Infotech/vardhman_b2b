@@ -108,6 +108,7 @@ class LoginController extends GetxController {
       return true;
     } else {
       toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
         primaryColor: VardhmanColors.red,
         title: const Text('Connection error!'),
       );
@@ -130,6 +131,7 @@ class LoginController extends GetxController {
           otp = "1234";
 
           toastification.show(
+            autoCloseDuration: Duration(seconds: 5),
             primaryColor: VardhmanColors.green,
             title: Text(
                 'OTP sent to ${_userDetailsCompanion!.mobileNumber.value}'),
@@ -140,12 +142,14 @@ class LoginController extends GetxController {
           userIdTextEditingController.clear();
         } else {
           toastification.show(
+            autoCloseDuration: Duration(seconds: 5),
             primaryColor: VardhmanColors.red,
             title: const Text('User is not a B2B Portal user!'),
           );
         }
       } else {
         toastification.show(
+          autoCloseDuration: Duration(seconds: 5),
           primaryColor: VardhmanColors.red,
           title: const Text('User not found!'),
         );
@@ -187,6 +191,7 @@ class LoginController extends GetxController {
       );
     } else {
       toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
         primaryColor: VardhmanColors.red,
         title: const Text('OTP incorrect!'),
       );
@@ -225,6 +230,7 @@ class LoginController extends GetxController {
     await resetController(() => HomeController());
 
     toastification.show(
+      autoCloseDuration: Duration(seconds: 5),
       primaryColor: VardhmanColors.green,
       title: Text('Logged in as ${userDetail.name}'),
     );

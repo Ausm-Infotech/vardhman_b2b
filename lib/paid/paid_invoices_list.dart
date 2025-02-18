@@ -131,6 +131,7 @@ class PaidInvoicesList extends StatelessWidget {
                             log('File downloaded!');
                           } else {
                             toastification.show(
+                              autoCloseDuration: Duration(seconds: 5),
                               primaryColor: VardhmanColors.red,
                               title: Text('Invoice not found'),
                             );

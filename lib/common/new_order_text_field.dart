@@ -93,7 +93,15 @@ class NewOrderTextField extends StatelessWidget {
                         ),
                       ),
                       decoration: InputDecoration(
-                        hintText: hintText,
+                        hintText: isEnabled && isRequired
+                            ? hintText ?? 'input needed'
+                            : null,
+                        hintStyle: TextStyle(
+                          color: isRequired
+                              ? VardhmanColors.red
+                              : VardhmanColors.darkGrey,
+                          fontSize: 13,
+                        ),
                         contentPadding: EdgeInsets.only(
                           left: 8,
                         ),

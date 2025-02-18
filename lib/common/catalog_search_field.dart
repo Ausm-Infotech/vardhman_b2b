@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -16,6 +17,7 @@ class CatalogSearchField extends StatelessWidget {
 
   final String labelText;
   final RxString rxString;
+
   final List<String> searchList;
   final bool isEnabled;
   final bool isRequired;
@@ -85,7 +87,16 @@ class CatalogSearchField extends StatelessWidget {
                         fontWeight: isEnabled ? null : FontWeight.w500,
                       ),
                       searchInputDecoration: SearchInputDecoration(
+                        suffixIcon: rxString.value.isEmpty
+                            ? Icon(Icons.arrow_drop_down_sharp)
+                            : null,
                         hintText: isEnabled ? 'select' : null,
+                        hintStyle: TextStyle(
+                          color: isRequired
+                              ? VardhmanColors.red
+                              : VardhmanColors.darkGrey,
+                          fontSize: 13,
+                        ),
                         fillColor: VardhmanColors.dividerGrey,
                         contentPadding: EdgeInsets.only(left: 8),
                         border: border,

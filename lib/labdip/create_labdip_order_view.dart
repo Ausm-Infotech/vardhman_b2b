@@ -39,7 +39,9 @@ class CreateLabdipOrderView extends StatelessWidget {
             ),
             trailing: PrimaryButton(
               text: 'Submit',
-              onPressed: labdipEntryController.submitOrder,
+              onPressed: labdipEntryController.rxLabdipOrderLines.isEmpty
+                  ? null
+                  : labdipEntryController.submitOrder,
             ),
           ),
           Container(
@@ -281,16 +283,20 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   },
                           ),
                           Spacer(),
-                          PrimaryButton(
-                            text: 'Add Line',
-                            onPressed: !labdipEntryController.canAddOrderLine ||
-                                    labdipEntryController
-                                        .rxSelectedLabdipOrderLines.isNotEmpty
-                                ? null
-                                : () async {
+                          (!labdipEntryController.canAddOrderLine ||
+                                  labdipEntryController
+                                      .rxSelectedLabdipOrderLines.isNotEmpty)
+                              ? SecondaryButton(
+                                  text: 'Add Line',
+                                  onPressed: () async {
+                                    labdipEntryController.addLapdipOrderLine();
+                                  })
+                              : PrimaryButton(
+                                  text: 'Add Line',
+                                  onPressed: () async {
                                     labdipEntryController.addLapdipOrderLine();
                                   },
-                          ),
+                                ),
                           Spacer(),
                           PrimaryButton(
                             text: 'Update',
