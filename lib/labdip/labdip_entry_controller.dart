@@ -231,6 +231,30 @@ class LabdipEntryController extends GetxController {
     rxBrand.listen((_) => selectIfOnlyOneOption(rxBrand.hashCode));
     rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
     rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
+
+    rxOtherBuyerName.listen(
+      (otherBuyerName) {
+        if (otherBuyerName.isNotEmpty && buyerNames.contains(otherBuyerName)) {
+          final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
+            (buyerInfo) => buyerInfo.name == otherBuyerName,
+          );
+
+          if (buyerInfo != null) {
+            _rxBuyerCode.value = buyerInfo.code;
+            rxFirstLightSource.value = buyerInfo.firstLightSource;
+            rxSecondLightSource.value = buyerInfo.secondLightSource;
+          }
+        } else {
+          if (!firstLightSources.contains(rxFirstLightSource.value)) {
+            rxFirstLightSource.value = '';
+          }
+
+          if (!secondLightSources.contains(rxSecondLightSource.value)) {
+            rxSecondLightSource.value = '';
+          }
+        }
+      },
+    );
   }
 
   bool get isSwatchShade =>
@@ -248,13 +272,13 @@ class LabdipEntryController extends GetxController {
   List<String> get _allLightSouces =>
       ['D65', 'TL84', 'U35', 'HORIZON', 'INCA-A', 'CWF', 'UV', 'U30'];
 
-  List<String> get firstLightSources => isOtherBuyer
+  List<String> get firstLightSources => !buyerNames.contains(buyerOrOtherName)
       ? _allLightSouces
           .where((lightSource) => lightSource != rxSecondLightSource.value)
           .toList()
       : [rxFirstLightSource.value];
 
-  List<String> get secondLightSources => isOtherBuyer
+  List<String> get secondLightSources => !buyerNames.contains(buyerOrOtherName)
       ? _allLightSouces
           .where((lightSource) => lightSource != rxFirstLightSource.value)
           .toList()
@@ -311,7 +335,7 @@ class LabdipEntryController extends GetxController {
   bool get canAddOrderLine =>
       rxShade.isNotEmpty &&
       (!isSwatchShade || rxColor.isNotEmpty) &&
-      _buyerName.isNotEmpty &&
+      buyerOrOtherName.isNotEmpty &&
       _merchandiser.isNotEmpty &&
       rxFirstLightSource.value.isNotEmpty &&
       rxArticle.value.isNotEmpty;
@@ -343,7 +367,7 @@ class LabdipEntryController extends GetxController {
           article: rxArticle.value,
           billingType: rxBillingType.value,
           brand: rxBrand.value,
-          buyer: _buyerName,
+          buyer: buyerOrOtherName,
           buyerCode: _rxBuyerCode.value,
           colorName: rxColor.value,
           remark: rxRemark.value,
@@ -383,7 +407,7 @@ class LabdipEntryController extends GetxController {
     }
   }
 
-  String get _buyerName =>
+  String get buyerOrOtherName =>
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
   String get _merchandiser =>
@@ -402,7 +426,7 @@ class LabdipEntryController extends GetxController {
               article: drift.Value(rxArticle.value),
               billingType: drift.Value(rxBillingType.value),
               brand: drift.Value(rxBrand.value),
-              buyer: drift.Value(_buyerName),
+              buyer: drift.Value(buyerOrOtherName),
               buyerCode: drift.Value(_rxBuyerCode.value),
               colorName: drift.Value(rxColor.value),
               remark: drift.Value(rxRemark.value),

@@ -127,8 +127,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       child: CatalogSearchField(
                                         isRequired: true,
-                                        isEnabled:
-                                            labdipEntryController.isOtherBuyer,
+                                        isEnabled: labdipEntryController
+                                                .buyerOrOtherName.isNotEmpty &&
+                                            !labdipEntryController.buyerNames
+                                                .contains(labdipEntryController
+                                                    .buyerOrOtherName),
                                         labelText: 'Light Source 1',
                                         rxString: labdipEntryController
                                             .rxFirstLightSource,
@@ -141,8 +144,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: CatalogSearchField(
-                                        isEnabled:
-                                            labdipEntryController.isOtherBuyer,
+                                        isEnabled: labdipEntryController
+                                                .buyerOrOtherName.isNotEmpty &&
+                                            !labdipEntryController.buyerNames
+                                                .contains(labdipEntryController
+                                                    .buyerOrOtherName),
                                         labelText: 'Light Source 2',
                                         rxString: labdipEntryController
                                             .rxSecondLightSource,
