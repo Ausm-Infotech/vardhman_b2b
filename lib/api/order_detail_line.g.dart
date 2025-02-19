@@ -37,6 +37,7 @@ _$OrderDetailLineImpl _$$OrderDetailLineImplFromJson(
       workOrderType: json['workOrderType'] as String,
       woStatus: json['woStatus'] as String,
       catalogName: json['catalogName'] as String,
+      buyerCode: json['buyerCode'] as String,
     );
 
 Map<String, dynamic> _$$OrderDetailLineImplToJson(
@@ -66,4 +67,5 @@ Map<String, dynamic> _$$OrderDetailLineImplToJson(
       'workOrderType': instance.workOrderType,
       'woStatus': instance.woStatus,
       'catalogName': instance.catalogName,
+      'buyerCode': instance.buyerCode,
     };

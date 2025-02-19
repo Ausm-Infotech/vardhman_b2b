@@ -527,6 +527,7 @@ class Api {
               catalogName: orderDetailData['Catalog Name'],
               woStatus: orderDetailData['WOStatus'],
               workOrderType: orderDetailData['WorkOrderType'],
+              buyerCode: orderDetailData['End Use'],
             ),
           );
         }
@@ -1127,6 +1128,66 @@ class Api {
               "EndUse": labdipOrderLine.buyerCode,
               "BillingType":
                   labdipOrderLine.billingType == "Branch" ? "B" : "D",
+            },
+          )
+          .toList(),
+    };
+
+    log(jsonEncode(payload));
+
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55CreateStagingData',
+        data: payload,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log(
+        'Submit order error',
+        error: e,
+      );
+    }
+
+    return false;
+  }
+
+  static Future<bool> submitRematchOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required String soldTo,
+    required String shipTo,
+    required String branchPlant,
+    required String company,
+    required String orderTakenBy,
+    required List<OrderDetailLine> orderDetailLines,
+    required Map<OrderDetailLine, String> selectedOrderDetailLinesReasonMap,
+  }) async {
+    final payload = {
+      "Detail": orderDetailLines
+          .map(
+            (orderDetailLine) => {
+              "BatchNumber": b2bOrderNumber,
+              "Company": company,
+              "SoldTo": soldTo,
+              "ShipTo": shipTo,
+              "BranchPlant": branchPlant,
+              "ItemNumber": orderDetailLine.item,
+              "Quantity": 1,
+              "OrderTakenBy": orderTakenBy,
+              "LineNumber":
+                  (orderDetailLines.indexOf(orderDetailLine) + 1) + 1000,
+              "DocumentType": "LD",
+              "SourceFlag": "B",
+              "MerchandiserName": merchandiserName,
+              "LightSourceRemark": "",
+              "ColorRemark": selectedOrderDetailLinesReasonMap[orderDetailLine],
+              "EndUse": orderDetailLine.buyerCode,
+              "BillingType": "B",
+              "RelatedOrder":
+                  "${orderDetailLine.orderNumber}|${orderDetailLine.lineNumber}"
             },
           )
           .toList(),

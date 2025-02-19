@@ -163,10 +163,6 @@ class LabdipEntryController extends GetxController {
         rxLabdipOrderLines.clear();
 
         rxLabdipOrderLines.addAll(draftTableRows);
-
-        // clearInputs();
-
-        // _populateInputs(labdipOrderLine: draftTableRows.last);
       },
     );
 

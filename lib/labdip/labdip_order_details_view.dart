@@ -2,12 +2,15 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/user/user_controller.dart';
 
 class LabdipOrderDetailsView extends StatelessWidget {
   const LabdipOrderDetailsView({
@@ -171,14 +174,6 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 orderDetail];
 
                             return DataRow(
-                              // selected: reason != null && reason.isNotEmpty,
-                              // onSelectChanged:
-                              //     orderDetail.status != 'Dispatched'
-                              //         ? null
-                              //         : (_) {
-                              //             // labdipController
-                              //             //     .selectOrderDetailLine(orderDetail);
-                              //           },
                               color: WidgetStatePropertyAll(
                                 index.isEven
                                     ? Colors.white
@@ -310,7 +305,82 @@ class LabdipOrderDetailsView extends StatelessWidget {
                           '${labdipController.rxSelectedOrderDetailLinesReasonMap.length} line${labdipController.rxSelectedOrderDetailLinesReasonMap.length > 1 ? 's' : ''} selected'),
                       PrimaryButton(
                         text: 'Rematch',
-                        onPressed: () async {},
+                        onPressed: () async {
+                          final UserController _userController =
+                              Get.find<UserController>(tag: 'userController');
+
+                          final nextOrderNumber = await Api.fetchOrderNumber();
+
+                          final b2bOrderNumber = 'B2BL-$nextOrderNumber';
+
+                          if (nextOrderNumber != null) {
+                            final isSubmitted = await Api.submitRematchOrder(
+                              merchandiserName: '',
+                              b2bOrderNumber: b2bOrderNumber,
+                              branchPlant: _userController.branchPlant,
+                              soldTo: _userController
+                                  .rxCustomerDetail.value.soldToNumber,
+                              shipTo: (_userController.rxDeliveryAddress.value
+                                              ?.deliveryAddressNumber ==
+                                          0
+                                      ? _userController
+                                          .rxCustomerDetail.value.soldToNumber
+                                      : _userController.rxDeliveryAddress.value
+                                          ?.deliveryAddressNumber)
+                                  .toString(),
+                              company: _userController
+                                  .rxCustomerDetail.value.companyCode,
+                              orderTakenBy:
+                                  _userController.rxUserDetail.value.role,
+                              orderDetailLines: labdipController
+                                  .rxSelectedOrderDetailLinesReasonMap.keys
+                                  .toList(),
+                              selectedOrderDetailLinesReasonMap:
+                                  labdipController
+                                      .rxSelectedOrderDetailLinesReasonMap,
+                            );
+
+                            if (isSubmitted) {
+                              labdipController
+                                  .rxSelectedOrderDetailLinesReasonMap
+                                  .clear();
+
+                              toastification.show(
+                                autoCloseDuration: Duration(seconds: 5),
+                                primaryColor: VardhmanColors.green,
+                                title: Text(
+                                  'Order $b2bOrderNumber placed successfully!',
+                                ),
+                              );
+
+                              if (_userController
+                                  .rxCustomerDetail.value.canSendSMS) {
+                                Api.sendOrderEntrySMS(
+                                  orderNumber: b2bOrderNumber,
+                                  mobileNumber: _userController
+                                      .rxCustomerDetail.value.mobileNumber,
+                                );
+                              }
+
+                              if (_userController
+                                  .rxCustomerDetail.value.canSendWhatsApp) {
+                                Api.sendOrderEntryWhatsApp(
+                                  orderNumber: b2bOrderNumber,
+                                  mobileNumber: _userController
+                                      .rxCustomerDetail.value.mobileNumber,
+                                );
+                              }
+                            } else {
+                              toastification.show(
+                                autoCloseDuration: Duration(seconds: 5),
+                                primaryColor: VardhmanColors.red,
+                                title: Text(
+                                  'Some error placing the order!',
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
                     ],
                   ),
