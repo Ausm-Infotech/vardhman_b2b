@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
+import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 
@@ -215,95 +216,74 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 ),
                                 if (hasDispatchedLine)
                                   DataCell(
-                                    DropdownButton<String>(
-                                      value: reason,
-                                      hint: Text('Select reason'),
-                                      items: labdipController.rejectionReasons
-                                          .map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (String? newValue) {
-                                        labdipController
-                                                .rxSelectedOrderDetailLinesReasonMap[
-                                            orderDetail] = newValue ?? '';
-                                      },
-                                      isExpanded: true,
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 4.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Theme(
+                                            data: ThemeData(
+                                              canvasColor: Colors.white,
+                                              hoverColor: VardhmanColors.red
+                                                  .withAlpha(32),
+                                              focusColor: Colors.white,
+                                            ),
+                                            child: DropdownButton<String>(
+                                              value: reason,
+                                              hint: Text(
+                                                'Select reason',
+                                              ),
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: VardhmanColors.darkGrey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              iconSize: reason != null ? 0 : 18,
+                                              items: labdipController
+                                                  .rejectionReasons
+                                                  .map(
+                                                (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(
+                                                      value,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: value == reason
+                                                            ? VardhmanColors.red
+                                                            : VardhmanColors
+                                                                .darkGrey,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ).toList(),
+                                              onChanged: (String? newValue) {
+                                                labdipController
+                                                        .rxSelectedOrderDetailLinesReasonMap[
+                                                    orderDetail] = newValue ?? '';
+                                              },
+                                            ),
+                                          ),
+                                          if (reason != null)
+                                            SecondaryButton(
+                                              wait: false,
+                                              text: '',
+                                              iconData: Icons.clear,
+                                              onPressed: () async {
+                                                labdipController
+                                                    .rxSelectedOrderDetailLinesReasonMap
+                                                    .remove(orderDetail);
+                                              },
+                                            ),
+                                        ],
+                                      ),
                                     ),
-                                    // IconButton(
-                                    //   icon: Icon(Icons.clear),
-                                    //   onPressed: () {
-                                    //     labdipController.rxSelectedOrderDetailLinesReasonMap.remove(orderDetail);
-                                    //   },
-                                    // ),
-                                    // SearchField(
-                                    //   searchInputDecoration:
-                                    //       SearchInputDecoration(
-                                    //     hintText: 'select reason',
-                                    //     contentPadding: EdgeInsets.all(4),
-                                    //     searchStyle: TextStyle(
-                                    //       fontSize: 13,
-                                    //       fontWeight: FontWeight.w500,
-                                    //       color: reason != null &&
-                                    //               reason.isNotEmpty
-                                    //           ? VardhmanColors.red
-                                    //           : VardhmanColors.darkGrey,
-                                    //     ),
-                                    //   ),
-                                    //   onSuggestionTap: (p0) {
-                                    //     labdipController
-                                    //             .rxSelectedOrderDetailLinesReasonMap[
-                                    //         orderDetail] = p0.searchKey;
-                                    //   },
-
-                                    // onSearchTextChanged: (p0) {
-                                    //   labdipController
-                                    //           .rxSelectedOrderDetailLinesReasonMap[
-                                    //       orderDetail] = p0;
-
-                                    //   return labdipController.rejectionReasons
-                                    //       .where((element) => element
-                                    //           .toLowerCase()
-                                    //           .contains(p0.toLowerCase()))
-                                    //       .map(
-                                    //         (e) => SearchFieldListItem(
-                                    //           e,
-                                    //           child: Text(e),
-                                    //         ),
-                                    //       )
-                                    //       .toList();
-                                    // },
-                                    // suggestions:
-                                    //     labdipController.rejectionReasons
-                                    //         .map(
-                                    //           (e) => SearchFieldListItem(
-                                    //             e,
-                                    //             child: Text(e),
-                                    //           ),
-                                    //         )
-                                    //         .toList(),
                                   ),
-                                // Column(
-                                //   children: <Widget>[
-
-                                //     // if (reason == 'Other') ...[
-                                //     //   const SizedBox(width: 8),
-                                //     //   TextField(
-                                //     //     decoration: const InputDecoration(
-                                //     //       hintText: 'Enter reason',
-                                //     //     ),
-                                //     //     onChanged: (value) {
-                                //     //       labdipController
-                                //     //               .rxSelectedOrderDetailLinesReasonMap[
-                                //     //           orderDetail] = value;
-                                //     //     },
-                                //     //   ),
-                                //     // ],
-                                //   ],
-                                // ),
-                                // ),
                               ],
                             );
                           },
