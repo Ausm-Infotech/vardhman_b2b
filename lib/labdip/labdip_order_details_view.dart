@@ -139,7 +139,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                             fixedWidth: 80,
                           ),
                           DataColumn2(
-                              label: Text('Comment'), size: ColumnSize.S),
+                              label: Text('Remark'), size: ColumnSize.S),
                           DataColumn2(
                               label: Text('Status'), size: ColumnSize.M),
                           if (hasDispatchedLine)

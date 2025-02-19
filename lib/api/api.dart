@@ -1187,7 +1187,7 @@ class Api {
               "EndUse": orderDetailLine.buyerCode,
               "BillingType": "B",
               "RelatedOrder":
-                  "${orderDetailLine.orderNumber}|${orderDetailLine.lineNumber}"
+                  "${orderDetailLine.orderNumber}|${orderDetailLine.orderType}|${orderDetailLine.company}|${orderDetailLine.lineNumber}"
             },
           )
           .toList(),
