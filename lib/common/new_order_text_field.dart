@@ -30,104 +30,109 @@ class NewOrderTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4),
-              child: RichText(
-                text: TextSpan(
-                  text: labelText,
-                  style: TextStyle(
-                    color: VardhmanColors.darkGrey,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    if (isRequired)
-                      TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+      () {
+        final bool hasError = isEnabled && isRequired && rxString.value.isEmpty;
+
+        return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: RichText(
+                  text: TextSpan(
+                    text: labelText,
+                    style: TextStyle(
+                      color: VardhmanColors.darkGrey,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      if (isRequired)
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Container(
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color:
+                        hasError ? VardhmanColors.red : VardhmanColors.darkGrey,
+                    width: 1,
+                  ),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: TextStyle(
+                          color: VardhmanColors.darkGrey,
+                          fontSize: 13,
+                          fontWeight: isEnabled ? null : FontWeight.w500,
+                        ),
+                        minLines: minLines,
+                        maxLines: minLines,
+                        controller: TextEditingController.fromValue(
+                          TextEditingValue(
+                            text: rxString.value,
+                            selection: TextSelection.collapsed(
+                              offset: rxString.value.length,
+                            ),
+                          ),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: isEnabled && isRequired
+                              ? hintText ?? 'input needed'
+                              : null,
+                          hintStyle: TextStyle(
+                            color: isRequired
+                                ? VardhmanColors.red
+                                : VardhmanColors.darkGrey,
+                            fontSize: 13,
+                          ),
+                          contentPadding: EdgeInsets.only(
+                            left: 8,
+                          ),
+                          border: border,
+                          enabledBorder: border,
+                          focusedBorder: border,
+                        ),
+                        onChanged: (value) => rxString.value = value,
+                        enabled: isEnabled,
+                      ),
+                    ),
+                    if (isEnabled && rxString.value.isNotEmpty)
+                      SecondaryButton(
+                        wait: false,
+                        iconData: Icons.clear,
+                        text: '',
+                        onPressed: () async {
+                          rxString.value = '';
+                        },
                       ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Container(
-              height: 36,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: VardhmanColors.darkGrey,
-                  width: 1,
-                ),
-                color: Colors.white,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: TextStyle(
-                        color: VardhmanColors.darkGrey,
-                        fontSize: 13,
-                        fontWeight: isEnabled ? null : FontWeight.w500,
-                      ),
-                      minLines: minLines,
-                      maxLines: minLines,
-                      controller: TextEditingController.fromValue(
-                        TextEditingValue(
-                          text: rxString.value,
-                          selection: TextSelection.collapsed(
-                            offset: rxString.value.length,
-                          ),
-                        ),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: isEnabled && isRequired
-                            ? hintText ?? 'input needed'
-                            : null,
-                        hintStyle: TextStyle(
-                          color: isRequired
-                              ? VardhmanColors.red
-                              : VardhmanColors.darkGrey,
-                          fontSize: 13,
-                        ),
-                        contentPadding: EdgeInsets.only(
-                          left: 8,
-                        ),
-                        border: border,
-                        enabledBorder: border,
-                        focusedBorder: border,
-                      ),
-                      onChanged: (value) => rxString.value = value,
-                      enabled: isEnabled,
-                    ),
-                  ),
-                  if (isEnabled && rxString.value.isNotEmpty)
-                    SecondaryButton(
-                      wait: false,
-                      iconData: Icons.clear,
-                      text: '',
-                      onPressed: () async {
-                        rxString.value = '';
-                      },
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

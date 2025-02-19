@@ -45,7 +45,7 @@ class CreateLabdipOrderView extends StatelessWidget {
             ),
           ),
           Container(
-            color: VardhmanColors.dividerGrey,
+            color: VardhmanColors.dividerGrey.withAlpha(128),
             padding: EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 8,
@@ -116,7 +116,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                           labelText: 'Name',
                                           isRequired: true,
                                           rxString: labdipEntryController
-                                              .rxOtherBuyer,
+                                              .rxOtherBuyerName,
                                         ),
                                       ),
                                     ]
@@ -141,7 +141,6 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: CatalogSearchField(
-                                        isRequired: true,
                                         isEnabled:
                                             labdipEntryController.isOtherBuyer,
                                         labelText: 'Light Source 2',
@@ -279,24 +278,20 @@ class CreateLabdipOrderView extends StatelessWidget {
                             onPressed: !labdipEntryController.canClearInputs
                                 ? null
                                 : () async {
-                                    labdipEntryController.clearInputs();
+                                    labdipEntryController.clearAllInputs();
                                   },
                           ),
                           Spacer(),
-                          (!labdipEntryController.canAddOrderLine ||
-                                  labdipEntryController
-                                      .rxSelectedLabdipOrderLines.isNotEmpty)
-                              ? SecondaryButton(
-                                  text: 'Add Line',
-                                  onPressed: () async {
-                                    labdipEntryController.addLapdipOrderLine();
-                                  })
-                              : PrimaryButton(
-                                  text: 'Add Line',
-                                  onPressed: () async {
+                          PrimaryButton(
+                            text: 'Add Line',
+                            onPressed: !labdipEntryController.canAddOrderLine ||
+                                    labdipEntryController
+                                        .rxSelectedLabdipOrderLines.isNotEmpty
+                                ? null
+                                : () async {
                                     labdipEntryController.addLapdipOrderLine();
                                   },
-                                ),
+                          ),
                           Spacer(),
                           PrimaryButton(
                             text: 'Update',

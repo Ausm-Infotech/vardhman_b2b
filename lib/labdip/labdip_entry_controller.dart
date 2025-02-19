@@ -33,7 +33,7 @@ class LabdipEntryController extends GetxController {
 
   final rxSecondLightSource = ''.obs;
 
-  final rxOtherBuyer = ''.obs;
+  final rxOtherBuyerName = ''.obs;
 
   final rxSubstrate = ''.obs;
 
@@ -124,6 +124,17 @@ class LabdipEntryController extends GetxController {
     "Wire & Cable",
   ];
 
+  final _skipShades = [
+    'W32002',
+    'W32001',
+    'W32109',
+    '001',
+    '002',
+    '012',
+    '021',
+    'BLACK',
+  ];
+
   final rxSelectedLabdipOrderLines = <DraftTableData>[].obs;
 
   final Database _database = Get.find();
@@ -153,9 +164,9 @@ class LabdipEntryController extends GetxController {
 
         rxLabdipOrderLines.addAll(draftTableRows);
 
-        clearInputs();
+        // clearInputs();
 
-        _populateInputs(labdipOrderLine: draftTableRows.last);
+        // _populateInputs(labdipOrderLine: draftTableRows.last);
       },
     );
 
@@ -204,7 +215,13 @@ class LabdipEntryController extends GetxController {
             (shades) {
               rxShades.addAll(_swatchShades);
 
-              rxShades.addAll(shades);
+              final validShades = shades
+                  .where(
+                    (shade) => !_skipShades.contains(shade),
+                  )
+                  .toList();
+
+              rxShades.addAll(validShades);
             },
           );
         }
@@ -228,11 +245,8 @@ class LabdipEntryController extends GetxController {
 
   List<String> get merchandiserNames => ['OTHER', ..._rxMerchandisers];
 
-  List<String> get _allLightSouces => _rxBuyerInfos
-      .mapMany((buyerInfo) =>
-          [buyerInfo.firstLightSource, buyerInfo.secondLightSource])
-      .toSet()
-      .toList();
+  List<String> get _allLightSouces =>
+      ['D65', 'TL84', 'U35', 'HORIZON', 'INCA-A', 'CWF', 'UV', 'U30'];
 
   List<String> get firstLightSources => isOtherBuyer
       ? _allLightSouces
@@ -298,9 +312,8 @@ class LabdipEntryController extends GetxController {
       rxShade.isNotEmpty &&
       (!isSwatchShade || rxColor.isNotEmpty) &&
       _buyerName.isNotEmpty &&
-      merchandiser.isNotEmpty &&
+      _merchandiser.isNotEmpty &&
       rxFirstLightSource.value.isNotEmpty &&
-      rxSecondLightSource.value.isNotEmpty &&
       rxArticle.value.isNotEmpty;
 
   String get _colorRemark => [
@@ -351,19 +364,29 @@ class LabdipEntryController extends GetxController {
           uom: uom,
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
-          merchandiser: merchandiser,
+          merchandiser: _merchandiser,
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
 
-      clearInputs();
+      clearAllInputs(
+        skipHashCodes: [
+          rxMerchandiser.hashCode,
+          if (isOtherMerchandiser) rxOtherMerchandiser.hashCode,
+          rxBuyerName.hashCode,
+          if (isOtherBuyer) rxOtherBuyerName.hashCode,
+          rxFirstLightSource.hashCode,
+          rxSecondLightSource.hashCode,
+          rxEndUse.hashCode,
+        ],
+      );
     }
   }
 
   String get _buyerName =>
-      isOtherBuyer ? rxOtherBuyer.value : rxBuyerName.value;
+      isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
-  String get merchandiser =>
+  String get _merchandiser =>
       isOtherMerchandiser ? rxOtherMerchandiser.value : rxMerchandiser.value;
 
   void updateLapdipOrderLine() {
@@ -401,14 +424,14 @@ class LabdipEntryController extends GetxController {
               uom: drift.Value(uom),
               colorRemark: drift.Value(_colorRemark),
               lastUpdated: drift.Value(DateTime.now()),
-              merchandiser: drift.Value(merchandiser),
+              merchandiser: drift.Value(_merchandiser),
             ),
           );
     }
 
     rxSelectedLabdipOrderLines.clear();
 
-    clearInputs();
+    clearAllInputs();
   }
 
   void deleteSelectedLines() {
@@ -463,32 +486,72 @@ class LabdipEntryController extends GetxController {
       rxMerchandiser.value != '' ||
       rxOtherMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
-      rxOtherBuyer.value != '' ||
+      rxOtherBuyerName.value != '' ||
       _rxBuyerCode.value != '' ||
       rxFirstLightSource.value != '' ||
       rxSecondLightSource.value != '';
 
-  void clearInputs() {
-    rxColor.value = '';
-    rxEndUse.value = '';
-    rxRequestType.value = '';
-    rxL.value = '';
-    rxA.value = '';
-    rxB.value = '';
-    rxRemark.value = '';
-    rxSubstrate.value = '';
-    rxTicket.value = '';
-    rxTex.value = '';
-    rxBrand.value = '';
-    rxArticle.value = '';
-    rxShade.value = '';
-    rxMerchandiser.value = '';
-    rxOtherMerchandiser.value = '';
-    rxBuyerName.value = '';
-    rxOtherBuyer.value = '';
-    _rxBuyerCode.value = '';
-    rxFirstLightSource.value = '';
-    rxSecondLightSource.value = '';
+  void clearAllInputs({List<int> skipHashCodes = const []}) {
+    if (!skipHashCodes.contains(rxColor.hashCode)) {
+      rxColor.value = '';
+    }
+    if (!skipHashCodes.contains(rxEndUse.hashCode)) {
+      rxEndUse.value = '';
+    }
+    if (!skipHashCodes.contains(rxRequestType.hashCode)) {
+      rxRequestType.value = '';
+    }
+    if (!skipHashCodes.contains(rxL.hashCode)) {
+      rxL.value = '';
+    }
+    if (!skipHashCodes.contains(rxA.hashCode)) {
+      rxA.value = '';
+    }
+    if (!skipHashCodes.contains(rxB.hashCode)) {
+      rxB.value = '';
+    }
+    if (!skipHashCodes.contains(rxRemark.hashCode)) {
+      rxRemark.value = '';
+    }
+    if (!skipHashCodes.contains(rxSubstrate.hashCode)) {
+      rxSubstrate.value = '';
+    }
+    if (!skipHashCodes.contains(rxTicket.hashCode)) {
+      rxTicket.value = '';
+    }
+    if (!skipHashCodes.contains(rxTex.hashCode)) {
+      rxTex.value = '';
+    }
+    if (!skipHashCodes.contains(rxBrand.hashCode)) {
+      rxBrand.value = '';
+    }
+    if (!skipHashCodes.contains(rxArticle.hashCode)) {
+      rxArticle.value = '';
+    }
+    if (!skipHashCodes.contains(rxShade.hashCode)) {
+      rxShade.value = '';
+    }
+    if (!skipHashCodes.contains(rxMerchandiser.hashCode)) {
+      rxMerchandiser.value = '';
+    }
+    if (!skipHashCodes.contains(rxOtherMerchandiser.hashCode)) {
+      rxOtherMerchandiser.value = '';
+    }
+    if (!skipHashCodes.contains(rxBuyerName.hashCode)) {
+      rxBuyerName.value = '';
+    }
+    if (!skipHashCodes.contains(rxOtherBuyerName.hashCode)) {
+      rxOtherBuyerName.value = '';
+    }
+    if (!skipHashCodes.contains(_rxBuyerCode.hashCode)) {
+      _rxBuyerCode.value = '';
+    }
+    if (!skipHashCodes.contains(rxFirstLightSource.hashCode)) {
+      rxFirstLightSource.value = '';
+    }
+    if (!skipHashCodes.contains(rxSecondLightSource.hashCode)) {
+      rxSecondLightSource.value = '';
+    }
   }
 
   List<String> get uniqueFilteredArticles => catalogController.industryItems
@@ -606,12 +669,12 @@ class LabdipEntryController extends GetxController {
       rxSelectedLabdipOrderLines.remove(labdipOrderLine);
     } else {
       rxSelectedLabdipOrderLines.add(labdipOrderLine);
-    }
 
-    if (rxSelectedLabdipOrderLines.length == 1) {
-      clearInputs();
+      if (rxSelectedLabdipOrderLines.length == 1) {
+        clearAllInputs();
 
-      _populateInputs(labdipOrderLine: rxSelectedLabdipOrderLines.first);
+        _populateInputs(labdipOrderLine: rxSelectedLabdipOrderLines.first);
+      }
     }
   }
 
@@ -626,7 +689,7 @@ class LabdipEntryController extends GetxController {
         isOtherMerchandiser ? labdipOrderLine.merchandiser : '';
     rxColor.value = labdipOrderLine.colorName;
     rxBuyerName.value = isOtherBuyer ? 'OTHER' : labdipOrderLine.buyer;
-    rxOtherBuyer.value = isOtherBuyer ? labdipOrderLine.buyer : '';
+    rxOtherBuyerName.value = isOtherBuyer ? labdipOrderLine.buyer : '';
     _rxBuyerCode.value = labdipOrderLine.buyerCode;
     rxFirstLightSource.value = labdipOrderLine.firstLightSource;
     rxSecondLightSource.value = labdipOrderLine.secondLightSource;
