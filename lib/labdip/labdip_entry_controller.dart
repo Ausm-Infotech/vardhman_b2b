@@ -196,6 +196,14 @@ class LabdipEntryController extends GetxController {
       },
     );
 
+    rxShade.listen(
+      (shade) {
+        if (shade.isNotEmpty && _swatchShades.contains(shade)) {
+          rxColor.value = '';
+        }
+      },
+    );
+
     rxArticle.listen(
       (newArticle) {
         selectIfOnlyOneOption(rxArticle.hashCode);
