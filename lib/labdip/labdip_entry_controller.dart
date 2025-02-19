@@ -241,13 +241,9 @@ class LabdipEntryController extends GetxController {
             rxSecondLightSource.value = buyerInfo.secondLightSource;
           }
         } else {
-          if (!firstLightSources.contains(rxFirstLightSource.value)) {
-            rxFirstLightSource.value = '';
-          }
+          rxFirstLightSource.value = '';
 
-          if (!secondLightSources.contains(rxSecondLightSource.value)) {
-            rxSecondLightSource.value = '';
-          }
+          rxSecondLightSource.value = '';
         }
       },
     );
