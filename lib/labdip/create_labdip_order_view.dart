@@ -328,18 +328,17 @@ class CreateLabdipOrderView extends StatelessWidget {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          if (labdipEntryController.isSwatchShade) ...[
-                            Expanded(
-                              child: NewOrderTextField(
-                                labelText: 'Color Name',
-                                rxString: labdipEntryController.rxColor,
-                                isRequired: true,
-                              ),
+                          Expanded(
+                            child: NewOrderTextField(
+                              labelText: 'Color Name',
+                              rxString: labdipEntryController.rxColor,
+                              isRequired: labdipEntryController.isSwatchShade,
+                              isEnabled: labdipEntryController.isSwatchShade,
                             ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                          ],
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Expanded(
                             child: CatalogSearchField(
                               labelText: 'Request Type',

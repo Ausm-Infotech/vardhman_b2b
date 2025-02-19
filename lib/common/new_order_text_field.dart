@@ -74,7 +74,7 @@ class NewOrderTextField extends StatelessWidget {
                         hasError ? VardhmanColors.red : VardhmanColors.darkGrey,
                     width: 1,
                   ),
-                  color: Colors.white,
+                  color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
