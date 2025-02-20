@@ -14,6 +14,7 @@ dependencies:
   drift: ^2.24.0
   drift_db_viewer: ^2.1.0
   drift_flutter: ^0.2.4
+  dropdown_search: ^6.0.2
   excel: ^4.0.6
   file_picker: ^8.1.7
   file_saver: ^0.2.14

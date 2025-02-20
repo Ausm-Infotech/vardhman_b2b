@@ -15,6 +15,8 @@ import 'package:vardhman_b2b/user/user_controller.dart';
 class LabdipEntryController extends GetxController {
   final int orderNumber;
 
+  final List<RxString> inputErrors = <RxString>[].obs;
+
   final _rxMerchandisers = <String>[].obs;
 
   final rxMerchandiser = ''.obs;
@@ -350,8 +352,52 @@ class LabdipEntryController extends GetxController {
 
   int get _lastLineNumber => rxLabdipOrderLines.lastOrNull?.lineNumber ?? 0;
 
+  bool validateInputs() {
+    inputErrors.clear();
+
+    if (rxShade.isEmpty) {
+      inputErrors.add(rxShade);
+    }
+
+    if (isSwatchShade && rxColor.isEmpty) {
+      inputErrors.add(rxColor);
+    }
+
+    if (rxBuyerName.isEmpty) {
+      inputErrors.add(rxBuyerName);
+    }
+
+    if (isOtherBuyer && rxOtherBuyerName.isEmpty) {
+      inputErrors.add(rxOtherBuyerName);
+    }
+
+    if (rxMerchandiser.isEmpty) {
+      inputErrors.add(rxMerchandiser);
+    }
+
+    if (isOtherMerchandiser && rxOtherMerchandiser.isEmpty) {
+      inputErrors.add(rxOtherMerchandiser);
+    }
+
+    if (rxFirstLightSource.isEmpty) {
+      inputErrors.add(rxFirstLightSource);
+    }
+
+    if (rxArticle.isEmpty) {
+      inputErrors.add(rxArticle);
+    }
+
+    return inputErrors.isEmpty;
+  }
+
   void addLapdipOrderLine() {
-    if (rxLabdipOrderLines.any(
+    if (!validateInputs()) {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
+        primaryColor: VardhmanColors.red,
+        title: Text('Please fill all the required fields'),
+      );
+    } else if (rxLabdipOrderLines.any(
       (labdipOrderLine) =>
           labdipOrderLine.article == rxArticle.value &&
           labdipOrderLine.shade == rxShade.value,
@@ -455,7 +501,17 @@ class LabdipEntryController extends GetxController {
 
     rxSelectedLabdipOrderLines.clear();
 
-    clearAllInputs();
+    clearAllInputs(
+      skipHashCodes: [
+        rxMerchandiser.hashCode,
+        if (isOtherMerchandiser) rxOtherMerchandiser.hashCode,
+        rxBuyerName.hashCode,
+        if (isOtherBuyer) rxOtherBuyerName.hashCode,
+        rxFirstLightSource.hashCode,
+        rxSecondLightSource.hashCode,
+        rxEndUse.hashCode,
+      ],
+    );
   }
 
   void deleteSelectedLines() {
