@@ -77,6 +77,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                             .rxMerchandiser,
                                         searchList: labdipEntryController
                                             .merchandiserNames,
+                                        shouldEnforceList: false,
                                       ),
                                     ),
                                     if (labdipEntryController

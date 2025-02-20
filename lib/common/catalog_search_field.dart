@@ -13,6 +13,7 @@ class CatalogSearchField extends StatelessWidget {
     this.isEnabled = true,
     this.isRequired = false,
     this.errorValue,
+    this.shouldEnforceList = true,
   });
 
   final String labelText;
@@ -21,6 +22,7 @@ class CatalogSearchField extends StatelessWidget {
   final List<String> searchList;
   final bool isEnabled;
   final bool isRequired;
+  final bool shouldEnforceList;
 
   final border = OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -120,12 +122,18 @@ class CatalogSearchField extends StatelessWidget {
                         ),
                       ),
                       items: (searchText, cs) async {
-                        final trimmedSearchText = searchText.trim();
+                        if (shouldEnforceList) {
+                          return searchList;
+                        } else {
+                          final trimmedSearchText = searchText.trim();
 
-                        return [
-                          if (trimmedSearchText.isNotEmpty) trimmedSearchText,
-                          ...searchList
-                        ];
+                          return [
+                            if (trimmedSearchText.isNotEmpty &&
+                                !searchList.contains(trimmedSearchText))
+                              trimmedSearchText,
+                            ...searchList
+                          ];
+                        }
                       },
                       autoValidateMode: AutovalidateMode.disabled,
                       onChanged: (value) => rxString.value = value ?? '',
