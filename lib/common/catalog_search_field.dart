@@ -12,17 +12,17 @@ class CatalogSearchField extends StatelessWidget {
     required this.searchList,
     this.isEnabled = true,
     this.isRequired = false,
-    this.errorValue,
     this.shouldEnforceList = true,
+    this.hasError = false,
   });
 
   final String labelText;
   final RxString rxString;
-  final String? errorValue;
   final List<String> searchList;
   final bool isEnabled;
   final bool isRequired;
   final bool shouldEnforceList;
+  final bool hasError;
 
   final border = OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -70,7 +70,7 @@ class CatalogSearchField extends StatelessWidget {
                 color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: rxString.value == errorValue
+                  color: isEnabled && hasError && rxString.value.trim().isEmpty
                       ? VardhmanColors.red
                       : VardhmanColors.darkGrey,
                   width: 1,
@@ -81,6 +81,7 @@ class CatalogSearchField extends StatelessWidget {
                 children: [
                   Expanded(
                     child: DropdownSearch<String>(
+                      enabled: isEnabled,
                       decoratorProps: DropDownDecoratorProps(
                         baseStyle: TextStyle(
                           color: VardhmanColors.darkGrey,

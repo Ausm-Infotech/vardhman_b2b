@@ -15,17 +15,28 @@ import 'package:vardhman_b2b/user/user_controller.dart';
 class LabdipEntryController extends GetxController {
   final int orderNumber;
 
-  final List<RxString> inputErrors = <RxString>[].obs;
+  final List<String> _otherLightSouces = [
+    'D65',
+    'TL84',
+    'U35',
+    'HORIZON',
+    'INCA-A',
+    'CWF',
+    'UV',
+    'U30',
+  ];
 
-  final _rxMerchandisers = <String>[].obs;
+  final List<RxString> inputsInError = <RxString>[].obs;
+
+  final rxMerchandisers = <String>[].obs;
 
   final rxMerchandiser = ''.obs;
-
-  final rxOtherMerchandiser = ''.obs;
 
   final rxColor = ''.obs;
 
   final rxShade = ''.obs;
+
+  final rxBuyerInfo = Rxn<BuyerInfo>();
 
   final rxBuyerName = ''.obs;
 
@@ -175,36 +186,10 @@ class LabdipEntryController extends GetxController {
     Api.fetchMerchandiserNames(
             soldToNumber: _userController.rxUserDetail.value.soldToNumber)
         .then(
-      (merchandiserNames) => _rxMerchandisers.addAll(merchandiserNames),
+      (merchandiserNames) => rxMerchandisers.addAll(merchandiserNames),
     );
 
-    rxBuyerName.listen(
-      (buyerName) {
-        if (buyerName.isEmpty || buyerName == 'OTHER') {
-          _rxBuyerCode.value = '';
-          rxFirstLightSource.value = '';
-          rxSecondLightSource.value = '';
-        } else {
-          final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
-            (buyerInfo) => buyerInfo.name == buyerName,
-          );
-
-          if (buyerInfo != null) {
-            _rxBuyerCode.value = buyerInfo.code;
-            rxFirstLightSource.value = buyerInfo.firstLightSource;
-            rxSecondLightSource.value = buyerInfo.secondLightSource;
-          }
-        }
-      },
-    );
-
-    rxShade.listen(
-      (shade) {
-        if (shade.isNotEmpty && _swatchShades.contains(shade)) {
-          rxColor.value = '';
-        }
-      },
-    );
+    rxShade.listen(shadeListener);
 
     rxArticle.listen(
       (newArticle) {
@@ -238,25 +223,74 @@ class LabdipEntryController extends GetxController {
     rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
     rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
 
-    rxOtherBuyerName.listen(
-      (otherBuyerName) {
-        if (otherBuyerName.isNotEmpty && buyerNames.contains(otherBuyerName)) {
-          final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
-            (buyerInfo) => buyerInfo.name == otherBuyerName,
-          );
+    rxBuyerName.listen(buyerNameListener);
 
-          if (buyerInfo != null) {
-            _rxBuyerCode.value = buyerInfo.code;
-            rxFirstLightSource.value = buyerInfo.firstLightSource;
-            rxSecondLightSource.value = buyerInfo.secondLightSource;
-          }
-        } else {
-          rxFirstLightSource.value = '';
+    rxOtherBuyerName.listen(otherBuyerListener);
+  }
 
-          rxSecondLightSource.value = '';
-        }
-      },
-    );
+  void shadeListener(String newShade) {
+    rxColor.value = '';
+  }
+
+  void buyerNameListener(String newBuyerName) {
+    final buyerName = newBuyerName.trim();
+
+    rxBuyerInfo.value = null;
+    rxOtherBuyerName.value = '';
+    _rxBuyerCode.value = '';
+    rxFirstLightSource.value = '';
+    rxSecondLightSource.value = '';
+
+    if (buyerName.isNotEmpty && buyerName != 'OTHER') {
+      final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
+        (buyerInfo) => buyerInfo.name == buyerName,
+      );
+
+      if (buyerInfo != null) {
+        rxBuyerInfo.value = buyerInfo;
+        _rxBuyerCode.value = buyerInfo.code;
+        rxFirstLightSource.value = buyerInfo.firstLightSource;
+        rxSecondLightSource.value = buyerInfo.secondLightSource;
+      }
+    }
+  }
+
+  void otherBuyerListener(String newOtherBuyerName) {
+    final otherBuyerName = newOtherBuyerName.trim();
+
+    rxBuyerInfo.value = null;
+    _rxBuyerCode.value = '';
+    rxFirstLightSource.value = '';
+    rxSecondLightSource.value = '';
+
+    if (otherBuyerName.isNotEmpty && buyerNames.contains(otherBuyerName)) {
+      final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
+        (buyerInfo) => buyerInfo.name == otherBuyerName,
+      );
+
+      if (buyerInfo != null) {
+        rxBuyerInfo.value = buyerInfo;
+        _rxBuyerCode.value = buyerInfo.code;
+        rxFirstLightSource.value = buyerInfo.firstLightSource;
+        rxSecondLightSource.value = buyerInfo.secondLightSource;
+      }
+    }
+  }
+
+  bool get isLightSource1Enabled {
+    if (rxBuyerInfo.value != null) {
+      return rxBuyerInfo.value!.firstLightSource.trim().isEmpty;
+    } else {
+      return rxOtherBuyerName.value.trim().isNotEmpty;
+    }
+  }
+
+  bool get isLightSource2Enabled {
+    if (rxBuyerInfo.value != null) {
+      return rxBuyerInfo.value!.secondLightSource.trim().isEmpty;
+    } else {
+      return rxOtherBuyerName.value.trim().isNotEmpty;
+    }
   }
 
   bool get isSwatchShade =>
@@ -264,27 +298,22 @@ class LabdipEntryController extends GetxController {
 
   bool get isOtherBuyer => rxBuyerName.value == 'OTHER';
 
-  bool get isOtherMerchandiser => rxMerchandiser.value == 'OTHER';
-
   List<String> get buyerNames =>
       ['OTHER', ..._rxBuyerInfos.map((buyerInfo) => buyerInfo.name)];
 
-  List<String> get merchandiserNames => ['OTHER', ..._rxMerchandisers];
+  List<String> get firstLightSources =>
+      rxBuyerInfo.value?.firstLightSource.trim().isEmpty ?? true
+          ? _otherLightSouces
+              .where((lightSource) => lightSource != rxSecondLightSource.value)
+              .toList()
+          : [rxFirstLightSource.value];
 
-  List<String> get _allLightSouces =>
-      ['D65', 'TL84', 'U35', 'HORIZON', 'INCA-A', 'CWF', 'UV', 'U30'];
-
-  List<String> get firstLightSources => !buyerNames.contains(buyerOrOtherName)
-      ? _allLightSouces
-          .where((lightSource) => lightSource != rxSecondLightSource.value)
-          .toList()
-      : [rxFirstLightSource.value];
-
-  List<String> get secondLightSources => !buyerNames.contains(buyerOrOtherName)
-      ? _allLightSouces
-          .where((lightSource) => lightSource != rxFirstLightSource.value)
-          .toList()
-      : [rxSecondLightSource.value];
+  List<String> get secondLightSources =>
+      rxBuyerInfo.value?.secondLightSource.trim().isEmpty ?? true
+          ? _otherLightSouces
+              .where((lightSource) => lightSource != rxFirstLightSource.value)
+              .toList()
+          : [rxSecondLightSource.value];
 
   void selectIfOnlyOneOption(int hashCode) {
     if (hashCode == rxArticle.hashCode && rxArticle.value.isEmpty) {
@@ -338,7 +367,7 @@ class LabdipEntryController extends GetxController {
       rxShade.isNotEmpty &&
       (!isSwatchShade || rxColor.isNotEmpty) &&
       buyerOrOtherName.isNotEmpty &&
-      _merchandiser.isNotEmpty &&
+      rxMerchandiser.isNotEmpty &&
       rxFirstLightSource.value.isNotEmpty &&
       rxArticle.value.isNotEmpty;
 
@@ -353,50 +382,46 @@ class LabdipEntryController extends GetxController {
   int get _lastLineNumber => rxLabdipOrderLines.lastOrNull?.lineNumber ?? 0;
 
   bool validateInputs() {
-    inputErrors.clear();
+    inputsInError.clear();
 
-    if (rxShade.isEmpty) {
-      inputErrors.add(rxShade);
+    if (rxMerchandiser.value.trim().isEmpty) {
+      inputsInError.add(rxMerchandiser);
     }
 
-    if (isSwatchShade && rxColor.isEmpty) {
-      inputErrors.add(rxColor);
+    if (rxBuyerName.value.trim().isEmpty) {
+      inputsInError.add(rxBuyerName);
     }
 
-    if (rxBuyerName.isEmpty) {
-      inputErrors.add(rxBuyerName);
+    if (isOtherBuyer && rxOtherBuyerName.value.trim().isEmpty) {
+      inputsInError.add(rxOtherBuyerName);
     }
 
-    if (isOtherBuyer && rxOtherBuyerName.isEmpty) {
-      inputErrors.add(rxOtherBuyerName);
+    if (rxFirstLightSource.value.trim().isEmpty) {
+      inputsInError.add(rxFirstLightSource);
     }
 
-    if (rxMerchandiser.isEmpty) {
-      inputErrors.add(rxMerchandiser);
+    if (rxArticle.value.trim().isEmpty) {
+      inputsInError.add(rxArticle);
     }
 
-    if (isOtherMerchandiser && rxOtherMerchandiser.isEmpty) {
-      inputErrors.add(rxOtherMerchandiser);
+    if (rxShade.value.trim().isEmpty) {
+      inputsInError.add(rxShade);
     }
 
-    if (rxFirstLightSource.isEmpty) {
-      inputErrors.add(rxFirstLightSource);
+    if (isSwatchShade && rxColor.value.trim().isEmpty) {
+      inputsInError.add(rxColor);
     }
 
-    if (rxArticle.isEmpty) {
-      inputErrors.add(rxArticle);
-    }
-
-    return inputErrors.isEmpty;
+    return inputsInError.isEmpty;
   }
 
   void addLapdipOrderLine() {
     if (!validateInputs()) {
-      toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
-        primaryColor: VardhmanColors.red,
-        title: Text('Please fill all the required fields'),
-      );
+      // toastification.show(
+      //   autoCloseDuration: Duration(seconds: 5),
+      //   primaryColor: VardhmanColors.red,
+      //   title: Text('Please fill all the required fields'),
+      // );
     } else if (rxLabdipOrderLines.any(
       (labdipOrderLine) =>
           labdipOrderLine.article == rxArticle.value &&
@@ -434,7 +459,7 @@ class LabdipEntryController extends GetxController {
           uom: uom,
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
-          merchandiser: _merchandiser,
+          merchandiser: rxMerchandiser.value,
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -442,7 +467,6 @@ class LabdipEntryController extends GetxController {
       clearAllInputs(
         skipHashCodes: [
           rxMerchandiser.hashCode,
-          if (isOtherMerchandiser) rxOtherMerchandiser.hashCode,
           rxBuyerName.hashCode,
           if (isOtherBuyer) rxOtherBuyerName.hashCode,
           rxFirstLightSource.hashCode,
@@ -456,62 +480,66 @@ class LabdipEntryController extends GetxController {
   String get buyerOrOtherName =>
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
-  String get _merchandiser =>
-      isOtherMerchandiser ? rxOtherMerchandiser.value : rxMerchandiser.value;
-
   void updateLapdipOrderLine() {
-    final selectedLabdipOrderLine = rxSelectedLabdipOrderLines.firstOrNull;
+    if (!validateInputs()) {
+      // toastification.show(
+      //   autoCloseDuration: Duration(seconds: 5),
+      //   primaryColor: VardhmanColors.red,
+      //   title: Text('Please fill all the required fields'),
+      // );
+    } else {
+      final selectedLabdipOrderLine = rxSelectedLabdipOrderLines.firstOrNull;
 
-    if (selectedLabdipOrderLine != null) {
-      _database.managers.draftTable
-          .filter((f) => f.orderNumber.equals(orderNumber))
-          .filter(
-              (f) => f.lineNumber.equals(selectedLabdipOrderLine.lineNumber))
-          .update(
-            (o) => o(
-              article: drift.Value(rxArticle.value),
-              billingType: drift.Value(rxBillingType.value),
-              brand: drift.Value(rxBrand.value),
-              buyer: drift.Value(buyerOrOtherName),
-              buyerCode: drift.Value(_rxBuyerCode.value),
-              colorName: drift.Value(rxColor.value),
-              remark: drift.Value(rxRemark.value),
-              endUse: drift.Value(rxEndUse.value),
-              firstLightSource: drift.Value(rxFirstLightSource.value),
-              lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
-              lineNumber: drift.Value(selectedLabdipOrderLine.lineNumber),
-              orderNumber: drift.Value(selectedLabdipOrderLine.orderNumber),
-              orderType: drift.Value(selectedLabdipOrderLine.orderType),
-              quantity: drift.Value(selectedLabdipOrderLine.quantity),
-              requestType: drift.Value(rxRequestType.value),
-              secondLightSource: drift.Value(rxSecondLightSource.value),
-              shade: drift.Value(rxShade.value),
-              soldTo:
-                  drift.Value(_userController.rxUserDetail.value.soldToNumber),
-              substrate: drift.Value(rxSubstrate.value),
-              tex: drift.Value(rxTex.value),
-              ticket: drift.Value(rxTicket.value),
-              uom: drift.Value(uom),
-              colorRemark: drift.Value(_colorRemark),
-              lastUpdated: drift.Value(DateTime.now()),
-              merchandiser: drift.Value(_merchandiser),
-            ),
-          );
+      if (selectedLabdipOrderLine != null) {
+        _database.managers.draftTable
+            .filter((f) => f.orderNumber.equals(orderNumber))
+            .filter(
+                (f) => f.lineNumber.equals(selectedLabdipOrderLine.lineNumber))
+            .update(
+              (o) => o(
+                article: drift.Value(rxArticle.value),
+                billingType: drift.Value(rxBillingType.value),
+                brand: drift.Value(rxBrand.value),
+                buyer: drift.Value(buyerOrOtherName),
+                buyerCode: drift.Value(_rxBuyerCode.value),
+                colorName: drift.Value(rxColor.value),
+                remark: drift.Value(rxRemark.value),
+                endUse: drift.Value(rxEndUse.value),
+                firstLightSource: drift.Value(rxFirstLightSource.value),
+                lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
+                lineNumber: drift.Value(selectedLabdipOrderLine.lineNumber),
+                orderNumber: drift.Value(selectedLabdipOrderLine.orderNumber),
+                orderType: drift.Value(selectedLabdipOrderLine.orderType),
+                quantity: drift.Value(selectedLabdipOrderLine.quantity),
+                requestType: drift.Value(rxRequestType.value),
+                secondLightSource: drift.Value(rxSecondLightSource.value),
+                shade: drift.Value(rxShade.value),
+                soldTo: drift.Value(
+                    _userController.rxUserDetail.value.soldToNumber),
+                substrate: drift.Value(rxSubstrate.value),
+                tex: drift.Value(rxTex.value),
+                ticket: drift.Value(rxTicket.value),
+                uom: drift.Value(uom),
+                colorRemark: drift.Value(_colorRemark),
+                lastUpdated: drift.Value(DateTime.now()),
+                merchandiser: drift.Value(rxMerchandiser.value),
+              ),
+            );
+      }
+
+      rxSelectedLabdipOrderLines.clear();
+
+      clearAllInputs(
+        skipHashCodes: [
+          rxMerchandiser.hashCode,
+          rxBuyerName.hashCode,
+          if (isOtherBuyer) rxOtherBuyerName.hashCode,
+          rxFirstLightSource.hashCode,
+          rxSecondLightSource.hashCode,
+          rxEndUse.hashCode,
+        ],
+      );
     }
-
-    rxSelectedLabdipOrderLines.clear();
-
-    clearAllInputs(
-      skipHashCodes: [
-        rxMerchandiser.hashCode,
-        if (isOtherMerchandiser) rxOtherMerchandiser.hashCode,
-        rxBuyerName.hashCode,
-        if (isOtherBuyer) rxOtherBuyerName.hashCode,
-        rxFirstLightSource.hashCode,
-        rxSecondLightSource.hashCode,
-        rxEndUse.hashCode,
-      ],
-    );
   }
 
   void deleteSelectedLines() {
@@ -564,7 +592,6 @@ class LabdipEntryController extends GetxController {
       rxArticle.value != '' ||
       rxShade.value != '' ||
       rxMerchandiser.value != '' ||
-      rxOtherMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
       rxOtherBuyerName.value != '' ||
       _rxBuyerCode.value != '' ||
@@ -613,9 +640,6 @@ class LabdipEntryController extends GetxController {
     }
     if (!skipHashCodes.contains(rxMerchandiser.hashCode)) {
       rxMerchandiser.value = '';
-    }
-    if (!skipHashCodes.contains(rxOtherMerchandiser.hashCode)) {
-      rxOtherMerchandiser.value = '';
     }
     if (!skipHashCodes.contains(rxBuyerName.hashCode)) {
       rxBuyerName.value = '';
@@ -761,13 +785,7 @@ class LabdipEntryController extends GetxController {
   void _populateInputs({required DraftTableData labdipOrderLine}) {
     final labParts = labdipOrderLine.lab.split(',');
     final isOtherBuyer = !buyerNames.contains(labdipOrderLine.buyer);
-    final isOtherMerchandiser =
-        !merchandiserNames.contains(labdipOrderLine.merchandiser);
-    rxMerchandiser.value =
-        isOtherMerchandiser ? 'OTHER' : labdipOrderLine.merchandiser;
-    rxOtherMerchandiser.value =
-        isOtherMerchandiser ? labdipOrderLine.merchandiser : '';
-    rxColor.value = labdipOrderLine.colorName;
+    rxMerchandiser.value = labdipOrderLine.merchandiser;
     rxBuyerName.value = isOtherBuyer ? 'OTHER' : labdipOrderLine.buyer;
     rxOtherBuyerName.value = isOtherBuyer ? labdipOrderLine.buyer : '';
     _rxBuyerCode.value = labdipOrderLine.buyerCode;
@@ -785,5 +803,21 @@ class LabdipEntryController extends GetxController {
     rxRequestType.value = labdipOrderLine.requestType;
     rxEndUse.value = labdipOrderLine.endUse;
     rxShade.value = labdipOrderLine.shade;
+    rxColor.value = labdipOrderLine.colorName;
   }
+
+  bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);
+
+  bool get buyerNameHasError => inputsInError.contains(rxBuyerName);
+
+  bool get otherBuyerNameHasError => inputsInError.contains(rxOtherBuyerName);
+
+  bool get firstLightSourceHasError =>
+      inputsInError.contains(rxFirstLightSource);
+
+  bool get articleHasError => inputsInError.contains(rxArticle);
+
+  bool get shadeHasError => inputsInError.contains(rxShade);
+
+  bool get colorHasError => inputsInError.contains(rxColor);
 }

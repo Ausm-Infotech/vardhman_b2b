@@ -306,7 +306,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                       PrimaryButton(
                         text: 'Rematch',
                         onPressed: () async {
-                          final UserController _userController =
+                          final UserController userController =
                               Get.find<UserController>(tag: 'userController');
 
                           final nextOrderNumber = await Api.fetchOrderNumber();
@@ -317,21 +317,21 @@ class LabdipOrderDetailsView extends StatelessWidget {
                             final isSubmitted = await Api.submitRematchOrder(
                               merchandiserName: '',
                               b2bOrderNumber: b2bOrderNumber,
-                              branchPlant: _userController.branchPlant,
-                              soldTo: _userController
+                              branchPlant: userController.branchPlant,
+                              soldTo: userController
                                   .rxCustomerDetail.value.soldToNumber,
-                              shipTo: (_userController.rxDeliveryAddress.value
+                              shipTo: (userController.rxDeliveryAddress.value
                                               ?.deliveryAddressNumber ==
                                           0
-                                      ? _userController
+                                      ? userController
                                           .rxCustomerDetail.value.soldToNumber
-                                      : _userController.rxDeliveryAddress.value
+                                      : userController.rxDeliveryAddress.value
                                           ?.deliveryAddressNumber)
                                   .toString(),
-                              company: _userController
+                              company: userController
                                   .rxCustomerDetail.value.companyCode,
                               orderTakenBy:
-                                  _userController.rxUserDetail.value.role,
+                                  userController.rxUserDetail.value.role,
                               orderDetailLines: labdipController
                                   .rxSelectedOrderDetailLinesReasonMap.keys
                                   .toList(),
@@ -353,20 +353,20 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 ),
                               );
 
-                              if (_userController
+                              if (userController
                                   .rxCustomerDetail.value.canSendSMS) {
                                 Api.sendOrderEntrySMS(
                                   orderNumber: b2bOrderNumber,
-                                  mobileNumber: _userController
+                                  mobileNumber: userController
                                       .rxCustomerDetail.value.mobileNumber,
                                 );
                               }
 
-                              if (_userController
+                              if (userController
                                   .rxCustomerDetail.value.canSendWhatsApp) {
                                 Api.sendOrderEntryWhatsApp(
                                   orderNumber: b2bOrderNumber,
-                                  mobileNumber: _userController
+                                  mobileNumber: userController
                                       .rxCustomerDetail.value.mobileNumber,
                                 );
                               }

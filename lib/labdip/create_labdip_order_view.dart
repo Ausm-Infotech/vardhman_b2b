@@ -67,39 +67,23 @@ class CreateLabdipOrderView extends StatelessWidget {
                             flex: 4,
                             child: Column(
                               children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: CatalogSearchField(
-                                        isRequired: true,
-                                        labelText: 'Merchandiser',
-                                        rxString: labdipEntryController
-                                            .rxMerchandiser,
-                                        searchList: labdipEntryController
-                                            .merchandiserNames,
-                                        shouldEnforceList: false,
-                                      ),
-                                    ),
-                                    if (labdipEntryController
-                                        .isOtherMerchandiser) ...[
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        child: NewOrderTextField(
-                                          isRequired: true,
-                                          labelText: 'Name',
-                                          rxString: labdipEntryController
-                                              .rxOtherMerchandiser,
-                                        ),
-                                      ),
-                                    ]
-                                  ],
+                                CatalogSearchField(
+                                  isRequired: true,
+                                  labelText: 'Merchandiser',
+                                  rxString:
+                                      labdipEntryController.rxMerchandiser,
+                                  searchList:
+                                      labdipEntryController.rxMerchandisers,
+                                  shouldEnforceList: false,
+                                  hasError: labdipEntryController
+                                      .merchandiserHasError,
                                 ),
                                 Row(
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        hasError: labdipEntryController
+                                            .buyerNameHasError,
                                         labelText: 'Buyer',
                                         isRequired: true,
                                         rxString:
@@ -114,6 +98,8 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: NewOrderTextField(
+                                          hasError: labdipEntryController
+                                              .otherBuyerNameHasError,
                                           labelText: 'Name',
                                           isRequired: true,
                                           rxString: labdipEntryController
@@ -127,12 +113,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        hasError: labdipEntryController
+                                            .firstLightSourceHasError,
                                         isRequired: true,
                                         isEnabled: labdipEntryController
-                                                .buyerOrOtherName.isNotEmpty &&
-                                            !labdipEntryController.buyerNames
-                                                .contains(labdipEntryController
-                                                    .buyerOrOtherName),
+                                            .isLightSource1Enabled,
                                         labelText: 'Light Source 1',
                                         rxString: labdipEntryController
                                             .rxFirstLightSource,
@@ -146,10 +131,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       child: CatalogSearchField(
                                         isEnabled: labdipEntryController
-                                                .buyerOrOtherName.isNotEmpty &&
-                                            !labdipEntryController.buyerNames
-                                                .contains(labdipEntryController
-                                                    .buyerOrOtherName),
+                                            .isLightSource2Enabled,
                                         labelText: 'Light Source 2',
                                         rxString: labdipEntryController
                                             .rxSecondLightSource,
@@ -171,6 +153,8 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        hasError: labdipEntryController
+                                            .articleHasError,
                                         labelText: 'Article',
                                         isRequired: true,
                                         rxString:
@@ -184,6 +168,8 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: CatalogSearchField(
+                                        hasError:
+                                            labdipEntryController.shadeHasError,
                                         labelText: 'Shade',
                                         isRequired: true,
                                         isEnabled: labdipEntryController
@@ -198,7 +184,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 2,
+                                      flex: 3,
                                       child: CatalogSearchField(
                                         labelText: 'Brand',
                                         rxString: labdipEntryController.rxBrand,
@@ -210,6 +196,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       width: 8,
                                     ),
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         isEnabled: false,
                                         labelText: 'Ticket',
@@ -224,7 +211,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 2,
+                                      flex: 3,
                                       child: CatalogSearchField(
                                         labelText: 'Substrate',
                                         rxString:
@@ -237,6 +224,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       width: 8,
                                     ),
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         labelText: 'Tex',
                                         rxString: labdipEntryController.rxTex,
@@ -291,13 +279,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                           Spacer(),
                           PrimaryButton(
                             text: 'Add Line',
-                            onPressed: !labdipEntryController.canAddOrderLine ||
-                                    labdipEntryController
-                                        .rxSelectedLabdipOrderLines.isNotEmpty
-                                ? null
-                                : () async {
-                                    labdipEntryController.addLapdipOrderLine();
-                                  },
+                            onPressed: () async {
+                              labdipEntryController.addLapdipOrderLine();
+                            },
                           ),
                           Spacer(),
                           PrimaryButton(
@@ -337,6 +321,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: NewOrderTextField(
+                              hasError: labdipEntryController.colorHasError,
                               labelText: 'Color Name',
                               rxString: labdipEntryController.rxColor,
                               isRequired: labdipEntryController.isSwatchShade,

@@ -12,6 +12,7 @@ class NewOrderTextField extends StatelessWidget {
     this.isEnabled = true,
     this.minLines,
     this.isRequired = false,
+    this.hasError = false,
   });
 
   final String labelText;
@@ -20,6 +21,7 @@ class NewOrderTextField extends StatelessWidget {
   final bool isEnabled;
   final int? minLines;
   final bool isRequired;
+  final bool hasError;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -31,8 +33,6 @@ class NewOrderTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        final bool hasError = isEnabled && isRequired && rxString.value.isEmpty;
-
         return Padding(
           padding: const EdgeInsets.all(4.0),
           child: Column(
@@ -71,7 +71,9 @@ class NewOrderTextField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color:
-                        hasError ? VardhmanColors.red : VardhmanColors.darkGrey,
+                        isEnabled && hasError && rxString.value.trim().isEmpty
+                            ? VardhmanColors.red
+                            : VardhmanColors.darkGrey,
                     width: 1,
                   ),
                   color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
@@ -101,9 +103,7 @@ class NewOrderTextField extends StatelessWidget {
                               ? hintText ?? 'input needed'
                               : null,
                           hintStyle: TextStyle(
-                            color: isRequired
-                                ? VardhmanColors.red
-                                : VardhmanColors.darkGrey,
+                            color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                           contentPadding: EdgeInsets.only(
