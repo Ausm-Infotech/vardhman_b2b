@@ -100,10 +100,24 @@ class CatalogSearchField extends StatelessWidget {
                       popupProps: PopupProps.menu(
                         searchFieldProps: TextFieldProps(
                           autocorrect: false,
+                          style: TextStyle(
+                            color: VardhmanColors.darkGrey,
+                            fontSize: 13,
+                          ),
                         ),
                         showSearchBox: true,
                         fit: FlexFit.loose,
                         searchDelay: Duration(milliseconds: 0),
+                        itemBuilder: (context, item, isDisabled, isSelected) =>
+                            ListTile(
+                          title: Text(
+                            item,
+                            style: TextStyle(
+                              color: VardhmanColors.darkGrey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
                       ),
                       items: (searchText, cs) async {
                         final trimmedSearchText = searchText.trim();

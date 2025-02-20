@@ -231,11 +231,11 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F4101",
           "targetType": "table",
           "dataServiceType": "BROWSE",
           "returnControlIDs": "F4101.SEG3",
-          "maxPageSize": "No Max",
           "query": {
             "autoFind": true,
             "condition": [
@@ -547,11 +547,11 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F5630111",
           "targetType": "table",
           "dataServiceType": "BROWSE",
           "returnControlIDs": "F5630111.WCP3|F5630111.REFERENC|F5630111.DOCO",
-          "maxPageSize": "No Max",
           "query": {
             "autoFind": true,
             "condition": [
@@ -709,6 +709,7 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F00092",
           "targetType": "table",
           "dataServiceType": "BROWSE",
@@ -765,6 +766,7 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F00092",
           "targetType": "table",
           "dataServiceType": "BROWSE",
@@ -821,6 +823,7 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F550313Z",
           "targetType": "table",
           "dataServiceType": "BROWSE",
@@ -877,6 +880,7 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F03B14",
           "targetType": "table",
           "dataServiceType": "BROWSE",
@@ -1531,11 +1535,11 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F0005",
           "targetType": "table",
           "dataServiceType": "BROWSE",
           "returnControlIDs": "F0005.KY|F0005.DL01",
-          "maxPageSize": "No Max",
           "query": {
             "autoFind": true,
             "condition": [
@@ -1586,11 +1590,11 @@ class Api {
       final response = await _dio.post(
         '/v2/dataservice',
         data: {
+          "maxPageSize": "No Max",
           "targetName": "F4101",
           "targetType": "table",
           "dataServiceType": "BROWSE",
           "returnControlIDs": "F4101.LITM|F4101.URCD|F4101.DSC1|F4101.UPMJ",
-          "maxPageSize": "No Max",
           "query": {
             "autoFind": true,
             "condition": [
