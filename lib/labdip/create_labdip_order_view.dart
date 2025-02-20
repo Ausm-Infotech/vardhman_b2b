@@ -279,18 +279,19 @@ class CreateLabdipOrderView extends StatelessWidget {
                           Spacer(),
                           PrimaryButton(
                             text: 'Add Line',
-                            onPressed: () async {
-                              labdipEntryController.addLapdipOrderLine();
-                            },
+                            onPressed: labdipEntryController
+                                    .rxSelectedLabdipOrderLines.isNotEmpty
+                                ? null
+                                : () async {
+                                    labdipEntryController.addLapdipOrderLine();
+                                  },
                           ),
                           Spacer(),
                           PrimaryButton(
                             text: 'Update',
                             onPressed: labdipEntryController
-                                            .rxSelectedLabdipOrderLines
-                                            .length ==
-                                        1 &&
-                                    labdipEntryController.canAddOrderLine
+                                        .rxSelectedLabdipOrderLines.length ==
+                                    1
                                 ? () async {
                                     labdipEntryController
                                         .updateLapdipOrderLine();
