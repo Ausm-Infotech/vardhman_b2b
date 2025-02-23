@@ -7,7 +7,7 @@ class NewOrderTextField extends StatelessWidget {
   NewOrderTextField({
     super.key,
     required this.labelText,
-    this.hintText,
+    this.hintText = '',
     required this.rxString,
     this.isEnabled = true,
     this.minLines,
@@ -16,7 +16,7 @@ class NewOrderTextField extends StatelessWidget {
   });
 
   final String labelText;
-  final String? hintText;
+  final String hintText;
   final RxString rxString;
   final bool isEnabled;
   final int? minLines;
@@ -33,6 +33,12 @@ class NewOrderTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
+        String finalHintText = hintText;
+
+        if (isEnabled && isRequired && finalHintText.isEmpty) {
+          finalHintText = 'input required';
+        }
+
         return Padding(
           padding: const EdgeInsets.all(4.0),
           child: Column(
@@ -99,9 +105,7 @@ class NewOrderTextField extends StatelessWidget {
                           ),
                         ),
                         decoration: InputDecoration(
-                          hintText: isEnabled && isRequired
-                              ? hintText ?? 'input needed'
-                              : null,
+                          hintText: finalHintText,
                           hintStyle: TextStyle(
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,

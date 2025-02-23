@@ -14,8 +14,10 @@ class CatalogSearchField extends StatelessWidget {
     this.isRequired = false,
     this.shouldEnforceList = true,
     this.hasError = false,
+    this.isSearchboxEnabled = true,
   });
 
+  final bool isSearchboxEnabled;
   final String labelText;
   final RxString rxString;
   final List<String> searchList;
@@ -73,7 +75,7 @@ class CatalogSearchField extends StatelessWidget {
                   color: isEnabled && hasError && rxString.value.trim().isEmpty
                       ? VardhmanColors.red
                       : VardhmanColors.darkGrey,
-                  width: 1,
+                  width: 1.5,
                 ),
               ),
               child: Row(
@@ -108,7 +110,7 @@ class CatalogSearchField extends StatelessWidget {
                             fontSize: 13,
                           ),
                         ),
-                        showSearchBox: true,
+                        showSearchBox: isSearchboxEnabled,
                         fit: FlexFit.loose,
                         searchDelay: Duration(milliseconds: 0),
                         itemBuilder: (context, item, isDisabled, isSelected) =>

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,6 +53,8 @@ class LabdipEntryController extends GetxController {
   final rxTex = ''.obs;
 
   final rxArticle = ''.obs;
+
+  final rxUom = ''.obs;
 
   final rxBrand = ''.obs;
 
@@ -202,7 +202,7 @@ class LabdipEntryController extends GetxController {
         final article = newArticle.trim();
 
         if (article.isNotEmpty) {
-          Api.fetchShades(article: article, uom: 'AC').then(
+          Api.fetchShades(article: article, uom: rxUom.value).then(
             (shades) {
               rxShades.addAll(_swatchShades);
 
@@ -317,22 +317,32 @@ class LabdipEntryController extends GetxController {
 
   void selectIfOnlyOneOption(int hashCode) {
     if (hashCode == rxArticle.hashCode && rxArticle.value.isEmpty) {
+      rxUom.value = '';
+      rxBrand.value = '';
+      rxSubstrate.value = '';
+      rxTex.value = '';
+      rxTicket.value = '';
+    } else if (hashCode == rxUom.hashCode && rxUom.value.isEmpty) {
+      rxArticle.value = '';
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTex.value = '';
       rxTicket.value = '';
     } else if (hashCode == rxBrand.hashCode && rxBrand.value.isEmpty) {
       rxArticle.value = '';
+      rxUom.value = '';
       rxSubstrate.value = '';
       rxTex.value = '';
       rxTicket.value = '';
     } else if (hashCode == rxSubstrate.hashCode && rxSubstrate.value.isEmpty) {
       rxArticle.value = '';
+      rxUom.value = '';
       rxBrand.value = '';
       rxTex.value = '';
       rxTicket.value = '';
     } else if (hashCode == rxTex.hashCode && rxTex.value.isEmpty) {
       rxArticle.value = '';
+      rxUom.value = '';
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTicket.value = '';
@@ -340,6 +350,10 @@ class LabdipEntryController extends GetxController {
       if (hashCode != rxArticle.hashCode &&
           uniqueFilteredArticles.length == 1) {
         rxArticle.value = uniqueFilteredArticles.first;
+      }
+
+      if (hashCode != rxUom.hashCode && uniqueFilteredUoms.length == 1) {
+        rxUom.value = uniqueFilteredUoms.first;
       }
 
       if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
@@ -456,7 +470,7 @@ class LabdipEntryController extends GetxController {
           substrate: rxSubstrate.value,
           tex: rxTex.value,
           ticket: rxTicket.value,
-          uom: uom,
+          uom: rxUom.value,
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
           merchandiser: rxMerchandiser.value,
@@ -519,7 +533,7 @@ class LabdipEntryController extends GetxController {
                 substrate: drift.Value(rxSubstrate.value),
                 tex: drift.Value(rxTex.value),
                 ticket: drift.Value(rxTicket.value),
-                uom: drift.Value(uom),
+                uom: drift.Value(rxUom.value),
                 colorRemark: drift.Value(_colorRemark),
                 lastUpdated: drift.Value(DateTime.now()),
                 merchandiser: drift.Value(rxMerchandiser.value),
@@ -553,30 +567,6 @@ class LabdipEntryController extends GetxController {
     rxSelectedLabdipOrderLines.clear();
   }
 
-  String get uom {
-    String? uom;
-
-    final sameArticleIndustryItems = catalogController.industryItems
-        .where(
-          (itemCatalogInfo) => itemCatalogInfo.article == rxArticle.value,
-        )
-        .toList();
-
-    try {
-      if (sameArticleIndustryItems.any(
-        (itemCatalogInfo) => itemCatalogInfo.uom == 'AC',
-      )) {
-        uom = 'AC';
-      } else {
-        uom = sameArticleIndustryItems.firstOrNull?.uom;
-      }
-    } catch (error) {
-      log(error.toString());
-    }
-
-    return uom ?? '';
-  }
-
   bool get canClearInputs =>
       rxColor.value != '' ||
       rxEndUse.value != '' ||
@@ -590,6 +580,7 @@ class LabdipEntryController extends GetxController {
       rxTex.value != '' ||
       rxBrand.value != '' ||
       rxArticle.value != '' ||
+      rxUom.value != '' ||
       rxShade.value != '' ||
       rxMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
@@ -661,6 +652,9 @@ class LabdipEntryController extends GetxController {
   List<String> get uniqueFilteredArticles => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
+            (rxUom.value.isNotEmpty
+                ? itemCatalogInfo.uom == (rxUom.value)
+                : true) &&
             (rxBrand.value.isNotEmpty
                 ? itemCatalogInfo.brandDesc == (rxBrand.value)
                 : true) &&
@@ -675,11 +669,34 @@ class LabdipEntryController extends GetxController {
       .toSet()
       .toList();
 
+  List<String> get uniqueFilteredUoms => catalogController.industryItems
+      .where(
+        (itemCatalogInfo) =>
+            (rxArticle.value.isNotEmpty
+                ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                : true) &&
+            (rxSubstrate.value.isNotEmpty
+                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                : true) &&
+            (rxTex.value.isNotEmpty
+                ? itemCatalogInfo.tex == (rxTex.value)
+                : true),
+      )
+      .map((e) => e.uom)
+      .toSet()
+      .toList();
+
   List<String> get uniqueFilteredBrands => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
             (rxArticle.value.isNotEmpty
                 ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxUom.value.isNotEmpty
+                ? itemCatalogInfo.uom == (rxUom.value)
                 : true) &&
             (rxSubstrate.value.isNotEmpty
                 ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
@@ -695,11 +712,14 @@ class LabdipEntryController extends GetxController {
   List<String> get uniqueFilteredSubstrates => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
             (rxArticle.value.isNotEmpty
                 ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxUom.value.isNotEmpty
+                ? itemCatalogInfo.uom == (rxUom.value)
+                : true) &&
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
                 : true) &&
             (rxTex.value.isNotEmpty
                 ? itemCatalogInfo.tex == (rxTex.value)
@@ -712,11 +732,14 @@ class LabdipEntryController extends GetxController {
   List<String> get uniqueFilteredTexs => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
             (rxArticle.value.isNotEmpty
                 ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxUom.value.isNotEmpty
+                ? itemCatalogInfo.uom == (rxUom.value)
+                : true) &&
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
                 : true) &&
             (rxSubstrate.value.isNotEmpty
                 ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
@@ -729,11 +752,14 @@ class LabdipEntryController extends GetxController {
   List<String> get uniqueFilteredTickets => catalogController.industryItems
       .where(
         (itemCatalogInfo) =>
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
             (rxArticle.value.isNotEmpty
                 ? itemCatalogInfo.article == (rxArticle.value)
+                : true) &&
+            (rxUom.value.isNotEmpty
+                ? itemCatalogInfo.uom == (rxUom.value)
+                : true) &&
+            (rxBrand.value.isNotEmpty
+                ? itemCatalogInfo.brandDesc == (rxBrand.value)
                 : true) &&
             (rxSubstrate.value.isNotEmpty
                 ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
@@ -820,4 +846,6 @@ class LabdipEntryController extends GetxController {
   bool get shadeHasError => inputsInError.contains(rxShade);
 
   bool get colorHasError => inputsInError.contains(rxColor);
+
+  bool get uomHasError => inputsInError.contains(rxUom);
 }

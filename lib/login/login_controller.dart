@@ -20,9 +20,12 @@ import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
+import 'package:video_player/video_player.dart';
 
 class LoginController extends GetxController {
   final _database = Get.find<Database>();
+
+  late final VideoPlayerController videoPlayerController;
 
   final TextEditingController userIdTextEditingController =
       TextEditingController();
@@ -61,6 +64,20 @@ class LoginController extends GetxController {
   }
 
   Future<void> init() async {
+    videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
+    );
+
+    videoPlayerController.initialize().then(
+      (_) async {
+        videoPlayerController.play();
+
+        videoPlayerController.setLooping(true);
+
+        videoPlayerController.setVolume(0);
+      },
+    );
+
     final userDetail = await _database.managers.userDetails.getSingleOrNull();
 
     if (userDetail != null) {
