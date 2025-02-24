@@ -20,7 +20,6 @@ class LabdipController extends GetxController {
     'Metamerism',
     'Duller',
     'Order Cancel by Buyer',
-    'Other',
   ];
 
   final rxDraftOrders = <DraftTableData>[].obs;
