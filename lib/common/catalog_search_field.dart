@@ -26,7 +26,7 @@ class CatalogSearchField extends StatelessWidget {
   final bool shouldEnforceList;
   final bool hasError;
 
-  final border = OutlineInputBorder(
+  final noneBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
   );
 
@@ -96,10 +96,10 @@ class CatalogSearchField extends StatelessWidget {
                             fontSize: 13,
                           ),
                           contentPadding: EdgeInsets.only(left: 8),
-                          border: border,
-                          enabledBorder: border,
-                          focusedBorder: border,
-                          disabledBorder: border,
+                          border: noneBorder,
+                          enabledBorder: noneBorder,
+                          focusedBorder: noneBorder,
+                          disabledBorder: noneBorder,
                         ),
                       ),
                       popupProps: PopupProps.menu(

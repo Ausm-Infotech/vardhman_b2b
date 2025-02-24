@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -173,6 +174,13 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                     .rxSelectedOrderDetailLinesReasonMap[
                                 orderDetail];
 
+                            final isDispatchedLine =
+                                orderDetail.status == 'Dispatched';
+
+                            final noneBorder = OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            );
+
                             return DataRow(
                               color: WidgetStatePropertyAll(
                                 index.isEven
@@ -210,75 +218,203 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   Text(orderDetail.status),
                                 ),
                                 if (hasDispatchedLine)
-                                  DataCell(
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 4.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Theme(
-                                            data: ThemeData(
-                                              canvasColor: Colors.white,
-                                              hoverColor: VardhmanColors.red
-                                                  .withAlpha(32),
-                                              focusColor: Colors.white,
-                                            ),
-                                            child: DropdownButton<String>(
-                                              value: reason,
-                                              hint: Text(
-                                                'Select reason',
+                                  DataCell(!isDispatchedLine
+                                          ? SizedBox()
+                                          : Container(
+                                              height: 36,
+                                              margin: const EdgeInsets.all(0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                border: Border.all(
+                                                  color:
+                                                      VardhmanColors.darkGrey,
+                                                  width: 1.5,
+                                                ),
                                               ),
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: VardhmanColors.darkGrey,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              iconSize: reason != null ? 0 : 18,
-                                              items: labdipController
-                                                  .rejectionReasons
-                                                  .map(
-                                                (String value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value,
-                                                    child: Text(
-                                                      value,
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        color: value == reason
-                                                            ? VardhmanColors.red
-                                                            : VardhmanColors
-                                                                .darkGrey,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child:
+                                                        DropdownSearch<String>(
+                                                      enabled: true,
+                                                      decoratorProps:
+                                                          DropDownDecoratorProps(
+                                                        baseStyle: TextStyle(
+                                                          color: VardhmanColors
+                                                              .darkGrey,
+                                                          fontSize: 13,
+                                                        ),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          hintText: 'select',
+                                                          hintStyle: TextStyle(
+                                                            color:
+                                                                VardhmanColors
+                                                                    .darkGrey,
+                                                            fontSize: 13,
+                                                          ),
+                                                          contentPadding:
+                                                              EdgeInsets.only(
+                                                                  left: 8),
+                                                          border: noneBorder,
+                                                          enabledBorder:
+                                                              noneBorder,
+                                                          focusedBorder:
+                                                              noneBorder,
+                                                          disabledBorder:
+                                                              noneBorder,
+                                                        ),
                                                       ),
+                                                      popupProps:
+                                                          PopupProps.menu(
+                                                        searchFieldProps:
+                                                            TextFieldProps(
+                                                          autocorrect: false,
+                                                          style: TextStyle(
+                                                            color:
+                                                                VardhmanColors
+                                                                    .darkGrey,
+                                                            fontSize: 13,
+                                                          ),
+                                                        ),
+                                                        showSearchBox: true,
+                                                        fit: FlexFit.loose,
+                                                        searchDelay: Duration(
+                                                            milliseconds: 0),
+                                                        itemBuilder: (context,
+                                                                item,
+                                                                isDisabled,
+                                                                isSelected) =>
+                                                            ListTile(
+                                                          title: Text(
+                                                            item,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  VardhmanColors
+                                                                      .darkGrey,
+                                                              fontSize: 13,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      items: (searchText,
+                                                          cs) async {
+                                                        final trimmedSearchText =
+                                                            searchText.trim();
+
+                                                        return [
+                                                          if (trimmedSearchText
+                                                                  .isNotEmpty &&
+                                                              !labdipController
+                                                                  .rejectionReasons
+                                                                  .contains(
+                                                                      trimmedSearchText))
+                                                            trimmedSearchText,
+                                                          ...labdipController
+                                                              .rejectionReasons
+                                                        ];
+                                                      },
+                                                      autoValidateMode:
+                                                          AutovalidateMode
+                                                              .disabled,
+                                                      onChanged: (newValue) {
+                                                        labdipController
+                                                                    .rxSelectedOrderDetailLinesReasonMap[
+                                                                orderDetail] =
+                                                            newValue ?? '';
+                                                      },
+                                                      selectedItem: reason,
                                                     ),
-                                                  );
-                                                },
-                                              ).toList(),
-                                              onChanged: (String? newValue) {
-                                                labdipController
-                                                        .rxSelectedOrderDetailLinesReasonMap[
-                                                    orderDetail] = newValue ?? '';
-                                              },
-                                            ),
-                                          ),
-                                          if (reason != null)
-                                            SecondaryButton(
-                                              wait: false,
-                                              text: '',
-                                              iconData: Icons.clear,
-                                              onPressed: () async {
-                                                labdipController
-                                                    .rxSelectedOrderDetailLinesReasonMap
-                                                    .remove(orderDetail);
-                                              },
-                                            ),
-                                        ],
+                                                  ),
+                                                  if (reason != null &&
+                                                      reason.isNotEmpty)
+                                                    SecondaryButton(
+                                                      wait: false,
+                                                      iconData: Icons.clear,
+                                                      text: '',
+                                                      onPressed: () async {
+                                                        labdipController
+                                                            .rxSelectedOrderDetailLinesReasonMap
+                                                            .remove(
+                                                                orderDetail);
+                                                      },
+                                                    ),
+                                                ],
+                                              ),
+                                            )
+
+                                      // Padding(
+                                      //   padding: const EdgeInsets.only(left: 4.0),
+                                      //   child: Row(
+                                      //     mainAxisAlignment:
+                                      //         MainAxisAlignment.spaceBetween,
+                                      //     children: [
+                                      //       Theme(
+                                      //         data: ThemeData(
+                                      //           canvasColor: Colors.white,
+                                      //           hoverColor: VardhmanColors.red
+                                      //               .withAlpha(32),
+                                      //           focusColor: Colors.white,
+                                      //         ),
+                                      //         child: DropdownButton<String>(
+                                      //           value: reason,
+                                      //           hint: Text(
+                                      //             'Select reason',
+                                      //           ),
+                                      //           style: TextStyle(
+                                      //             fontSize: 14,
+                                      //             color: VardhmanColors.darkGrey,
+                                      //             fontWeight: FontWeight.w500,
+                                      //           ),
+                                      //           iconSize: reason != null ? 0 : 18,
+                                      //           items: labdipController
+                                      //               .rejectionReasons
+                                      //               .map(
+                                      //             (String value) {
+                                      //               return DropdownMenuItem<
+                                      //                   String>(
+                                      //                 value: value,
+                                      //                 child: Text(
+                                      //                   value,
+                                      //                   style: TextStyle(
+                                      //                     fontSize: 13,
+                                      //                     color: value == reason
+                                      //                         ? VardhmanColors.red
+                                      //                         : VardhmanColors
+                                      //                             .darkGrey,
+                                      //                     fontWeight:
+                                      //                         FontWeight.w500,
+                                      //                   ),
+                                      //                 ),
+                                      //               );
+                                      //             },
+                                      //           ).toList(),
+                                      //           onChanged: (String? newValue) {
+                                      //             labdipController
+                                      //                     .rxSelectedOrderDetailLinesReasonMap[
+                                      //                 orderDetail] = newValue ?? '';
+                                      //           },
+                                      //         ),
+                                      //       ),
+                                      //       if (reason != null)
+                                      //         SecondaryButton(
+                                      //           wait: false,
+                                      //           text: '',
+                                      //           iconData: Icons.clear,
+                                      //           onPressed: () async {
+                                      //             labdipController
+                                      //                 .rxSelectedOrderDetailLinesReasonMap
+                                      //                 .remove(orderDetail);
+                                      //           },
+                                      //         ),
+                                      //     ],
+                                      //   ),
+                                      // ),
                                       ),
-                                    ),
-                                  ),
                               ],
                             );
                           },
