@@ -151,7 +151,7 @@ class DtmEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2BL-$orderNumber';
+  String get b2bOrderNumber => 'B2BD-$orderNumber';
 
   DtmEntryController({required this.orderNumber}) {
     _database.managers.draftTable
@@ -445,7 +445,7 @@ class DtmEntryController extends GetxController {
     } else {
       final quantity = int.tryParse(rxQuantity.value) ?? 0;
 
-      rxQuantity.value = quantity.toString();
+      rxQuantity.value = quantity > 0 ? quantity.toString() : '';
 
       if (quantity <= 0) {
         inputsInError.add(rxQuantity);

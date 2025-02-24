@@ -88,7 +88,7 @@ class DtmOrderDetailsView extends StatelessWidget {
                           fontSize: 13,
                         ),
                         checkboxHorizontalMargin: 0,
-                        horizontalMargin: 0,
+                        horizontalMargin: 8,
                         showCheckboxColumn: false,
                         headingRowHeight: 40,
                         dataRowHeight: 40,
@@ -109,8 +109,13 @@ class DtmOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                             label: Text('Article'),
                             fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
-                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
+                          DataColumn2(
+                            label: Text('Brand'),
+                            size: ColumnSize.M,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           DataColumn2(
                             label: Text('Ticket'),
                             fixedWidth: 50,
@@ -120,19 +125,33 @@ class DtmOrderDetailsView extends StatelessWidget {
                             label: Text('Tex'),
                             numeric: true,
                             fixedWidth: 40,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Shade'),
                             fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Final Shade'),
                             fixedWidth: 80,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                              label: Text('Remark'), size: ColumnSize.S),
+                            label: Text('Remark'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           DataColumn2(
-                              label: Text('Status'), size: ColumnSize.M),
+                            label: Text('Quantity'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Status'),
+                            size: ColumnSize.M,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                         ],
                         rows: dtmController.primaryOrderDetailLines.map(
                           (orderDetail) {
@@ -198,31 +217,66 @@ class DtmOrderDetailsView extends StatelessWidget {
                               ),
                               cells: [
                                 DataCell(
-                                  Text(orderDetail.lineNumber.toString()),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        Text(orderDetail.lineNumber.toString()),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(article),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(article),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.brandDesc ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.brandDesc ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.ticket ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.ticket ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.tex ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.tex ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(shade),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(shade),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(permanentShade),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(permanentShade),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.userComment),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(orderDetail.userComment),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(status),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                        orderDetail.quantityOrdered.toString()),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(status),
+                                  ),
                                 ),
                               ],
                             );
