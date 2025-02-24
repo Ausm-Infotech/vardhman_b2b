@@ -84,11 +84,6 @@ class LabdipEntryController extends GetxController {
 
   final rxShades = <String>[].obs;
 
-  final _swatchShades = <String>[
-    'SWT',
-    ...List.generate(9, (index) => 'SWT${index + 1}'),
-  ];
-
   final endUseOptions = [
     "Active/sportswear",
     "Apparel",
@@ -204,13 +199,26 @@ class LabdipEntryController extends GetxController {
         if (article.isNotEmpty) {
           Api.fetchShades(article: article, uom: rxUom.value).then(
             (shades) {
-              rxShades.addAll(_swatchShades);
-
               final validShades = shades
                   .where(
                     (shade) => !_skipShades.contains(shade),
                   )
-                  .toList();
+                  .toList()
+                ..sort(
+                  (a, b) {
+                    if (a.startsWith('SWT') && b.startsWith('SWT')) {
+                      final aNum = int.tryParse(a.substring(3)) ?? 0;
+                      final bNum = int.tryParse(b.substring(3)) ?? 0;
+                      return aNum.compareTo(bNum);
+                    } else if (a.startsWith('SWT')) {
+                      return -1;
+                    } else if (b.startsWith('SWT')) {
+                      return 1;
+                    } else {
+                      return a.compareTo(b);
+                    }
+                  },
+                );
 
               rxShades.addAll(validShades);
             },
@@ -294,7 +302,7 @@ class LabdipEntryController extends GetxController {
   }
 
   bool get isSwatchShade =>
-      rxShade.value.isNotEmpty && _swatchShades.contains(rxShade.value);
+      rxShade.value.isNotEmpty && rxShade.value.startsWith('SWT');
 
   bool get isOtherBuyer => rxBuyerName.value == 'OTHER';
 
