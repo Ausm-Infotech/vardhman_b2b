@@ -236,9 +236,9 @@ class LoginController extends GetxController {
 
     await resetController(() => OrdersController());
 
-    await resetController(() => LabdipController());
-
     await resetController(() => DtmController());
+
+    await resetController(() => LabdipController());
 
     await resetController(() => BulkController());
 

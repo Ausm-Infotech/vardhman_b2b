@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/dtm/create_dtm_order_view.dart';
 import 'package:vardhman_b2b/dtm/dtm_controller.dart';
+import 'package:vardhman_b2b/dtm/dtm_entry_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class DtmOrdersView extends StatelessWidget {
@@ -29,83 +32,234 @@ class DtmOrdersView extends StatelessWidget {
           HeaderView(
             leading: SecondaryButton(
               iconData: Icons.refresh,
-              text: 'Refresh',
+              text: '',
               onPressed: ordersController.refreshOrders,
             ),
             title: const Text(
               'DTM Orders',
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: VardhmanColors.darkGrey,
+              ),
             ),
             trailing: PrimaryButton(
               text: 'New Order',
               onPressed: () async {
-                Get.dialog(
-                  const Dialog(
-                    insetPadding: EdgeInsets.symmetric(
-                      horizontal: 80,
-                      vertical: 48,
+                final newOrderNumber = await Api.fetchOrderNumber();
+
+                if (newOrderNumber != null) {
+                  if (Get.isRegistered<DtmEntryController>()) {
+                    Get.delete<DtmEntryController>();
+                  }
+
+                  Get.put(
+                    DtmEntryController(
+                      orderNumber: newOrderNumber,
                     ),
-                    clipBehavior: Clip.hardEdge,
-                    child: CreateDtmOrderView(),
-                  ),
-                );
+                  );
+
+                  Get.dialog(
+                    const Dialog(
+                      insetPadding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 24,
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: CreateDtmOrderView(),
+                    ),
+                  );
+                } else {
+                  toastification.show(
+                    autoCloseDuration: Duration(seconds: 5),
+                    primaryColor: VardhmanColors.red,
+                    title: Text('Failed to fetch new order number!'),
+                  );
+                }
               },
             ),
           ),
           Expanded(
-            child: dtmController.filteredDtmOrders.isEmpty
+            child: dtmController.filteredDtmOrders.isEmpty &&
+                    dtmController.rxDraftOrders.isEmpty
                 ? const Center(
                     child: Text('No DTM Orders'),
                   )
                 : Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     child: DataTable2(
+                      columnSpacing: 16,
+                      horizontalMargin: 16,
+                      headingRowHeight: 40,
+                      dataRowHeight: 40,
+                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
+                      // headingRowColor:
+                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                      headingTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      dataTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: VardhmanColors.darkGrey,
+                      ),
+                      border: TableBorder.symmetric(
+                        inside: BorderSide(
+                          width: 0.1,
+                          color: VardhmanColors.darkGrey,
+                        ),
+                      ),
                       showCheckboxColumn: false,
                       columns: const [
-                        DataColumn(
-                          label: Text('Order Number'),
+                        DataColumn2(
+                          label: Text('Order No.'),
+                          size: ColumnSize.L,
+                          headingRowAlignment: MainAxisAlignment.start,
                         ),
-                        DataColumn(
-                          label: Text('Reference'),
-                        ),
-                        DataColumn(
+                        // DataColumn2(
+                        //     label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(
                           label: Text('Date'),
+                          size: ColumnSize.S,
+                          // headingRowAlignment: MainAxisAlignment.end,
+                          numeric: true,
+                          fixedWidth: 70,
                         ),
                       ],
-                      rows: dtmController.filteredDtmOrders
-                          .map(
-                            (orderHeaderLine) => DataRow(
-                              selected: orderHeaderLine ==
+                      rows: [
+                        ...dtmController.rxDraftOrders.map(
+                          (draftTableData) {
+                            final index = dtmController.rxDraftOrders
+                                .indexOf(draftTableData);
+
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                index.isEven
+                                    ? Colors.white
+                                    : VardhmanColors.dividerGrey,
+                              ),
+                              onSelectChanged: (value) {
+                                if (Get.isRegistered<DtmEntryController>()) {
+                                  Get.delete<DtmEntryController>();
+                                }
+
+                                Get.put(
+                                  DtmEntryController(
+                                    orderNumber: draftTableData.orderNumber,
+                                  ),
+                                );
+
+                                Get.dialog(
+                                  const Dialog(
+                                    insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 40,
+                                      vertical: 24,
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: CreateDtmOrderView(),
+                                  ),
+                                );
+                              },
+                              cells: [
+                                DataCell(
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Draft'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(draftTableData.orderNumber
+                                          .toString()),
+                                    ],
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      draftTableData.lastUpdated,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        ...dtmController.filteredDtmOrders.map(
+                          (dtmOrder) {
+                            final index = dtmController.filteredDtmOrders
+                                    .indexOf(dtmOrder) +
+                                dtmController.rxDraftOrders.length;
+
+                            final isSelected =
+                                dtmController.rxSelectedOrderHeaderLine.value ==
+                                    dtmOrder;
+
+                            final textStyle = TextStyle(
+                              fontSize: 13,
+                              color: isSelected
+                                  ? Colors.white
+                                  : VardhmanColors.darkGrey,
+                            );
+
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                isSelected
+                                    ? VardhmanColors.red
+                                    : index.isEven
+                                        ? Colors.white
+                                        : VardhmanColors.dividerGrey,
+                              ),
+                              selected: dtmOrder ==
                                   dtmController.rxSelectedOrderHeaderLine.value,
                               onSelectChanged: (value) {
                                 if (value == true &&
                                     dtmController
                                             .rxSelectedOrderHeaderLine.value !=
-                                        orderHeaderLine) {
-                                  dtmController.selectOrder(orderHeaderLine);
+                                        dtmOrder) {
+                                  dtmController.selectOrder(dtmOrder);
                                 }
                               },
                               cells: [
                                 DataCell(
-                                  Text(orderHeaderLine.orderNumber.toString()),
-                                ),
-                                DataCell(
-                                  Text(orderHeaderLine.orderReference),
-                                ),
-                                DataCell(
-                                  Text(
-                                    DateFormat('dd/MM/yyyy').format(
-                                      orderHeaderLine.orderDate,
+                                  DefaultTextStyle(
+                                    style: textStyle,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(dtmOrder.orderNumber.toString()),
+                                        if (dtmOrder.orderReference
+                                            .trim()
+                                            .isNotEmpty) ...[
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          Text(dtmOrder.orderReference),
+                                        ],
+                                      ],
                                     ),
                                   ),
                                 ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      dtmOrder.orderDate,
+                                    ),
+                                    style: textStyle,
+                                  ),
+                                ),
                               ],
-                            ),
-                          )
-                          .toList(),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
           ),
@@ -133,16 +287,14 @@ class DtmOrdersView extends StatelessWidget {
                       isDense: true,
                       label: Text('Order No.'),
                       labelStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -151,7 +303,7 @@ class DtmOrdersView extends StatelessWidget {
                       labelText: 'From Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderFromDate.value,
                       ),
                       prefixStyle: TextStyle(
@@ -159,7 +311,7 @@ class DtmOrdersView extends StatelessWidget {
                                 .isAtSameMomentAs(oldestDateTime)
                             ? Colors.white
                             : VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxEarliestOrderDate.value,
@@ -172,9 +324,7 @@ class DtmOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -183,12 +333,12 @@ class DtmOrdersView extends StatelessWidget {
                       labelText: 'To Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderToDate.value,
                       ),
                       prefixStyle: TextStyle(
                         color: VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxOrderFromDate.value,
@@ -201,9 +351,7 @@ class DtmOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 SecondaryButton(
                   wait: false,
                   iconData: FontAwesomeIcons.arrowRotateLeft,

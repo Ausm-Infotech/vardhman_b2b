@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
-import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/dtm/dtm_controller.dart';
 
@@ -20,77 +19,118 @@ class DtmOrderDetailsView extends StatelessWidget {
     final CatalogController catalogController = Get.find<CatalogController>();
 
     return Obx(
-      () => Container(
-        padding: const EdgeInsets.all(0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            HeaderView(
-              elevation: 1,
-              trailing: SecondaryButton(
-                iconData: Icons.refresh,
-                text: 'Refresh',
-                onPressed: dtmController.refreshSelectedOrderDetails,
-              ),
-              title: DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: VardhmanColors.darkGrey,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (dtmController.rxSelectedOrderHeaderLine.value !=
-                          null) ...[
-                        Text(
-                          'Order Details for ${dtmController.rxSelectedOrderHeaderLine.value!.orderReference}',
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'JDE order no. ${dtmController.rxSelectedOrderHeaderLine.value!.orderNumber}',
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Dated ${DateFormat('dd/MM/yyyy').format(dtmController.rxSelectedOrderHeaderLine.value!.orderDate)}',
-                        ),
+      () {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              HeaderView(
+                elevation: 4,
+                title: DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: VardhmanColors.darkGrey,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (dtmController.rxSelectedOrderHeaderLine.value !=
+                            null) ...[
+                          Text(
+                            'Order Details for ${dtmController.rxSelectedOrderHeaderLine.value!.orderReference}',
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'JDE order no. ${dtmController.rxSelectedOrderHeaderLine.value!.orderNumber}',
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Dated ${DateFormat('dd/MM/yyyy').format(dtmController.rxSelectedOrderHeaderLine.value!.orderDate)}',
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Flexible(
-              child: dtmController.rxSelectedOrderHeaderLine.value == null
-                  ? const Center(
-                      child: Text('No Order Selected'),
-                    )
-                  : SingleChildScrollView(
-                      child: DataTable(
-                        columns: const [
-                          DataColumn2(label: Text('Line'), size: ColumnSize.S),
+              Flexible(
+                child: dtmController.rxSelectedOrderHeaderLine.value == null
+                    ? const Center(
+                        child: Text('No Order Selected'),
+                      )
+                    : DataTable2(
+                        columnSpacing: 8,
+                        showBottomBorder: true,
+                        border: TableBorder.symmetric(
+                          inside: BorderSide(
+                              color: VardhmanColors.darkGrey, width: 0.2),
+                          outside: BorderSide(
+                              color: VardhmanColors.darkGrey, width: 0.2),
+                        ),
+                        headingCheckboxTheme: CheckboxThemeData(
+                          fillColor: WidgetStatePropertyAll(Colors.white),
+                          checkColor:
+                              WidgetStatePropertyAll(VardhmanColors.red),
+                        ),
+                        datarowCheckboxTheme: CheckboxThemeData(
+                          fillColor: WidgetStatePropertyAll(Colors.white),
+                          checkColor:
+                              WidgetStatePropertyAll(VardhmanColors.red),
+                        ),
+                        dataTextStyle: TextStyle(
+                          color: VardhmanColors.darkGrey,
+                          fontSize: 13,
+                        ),
+                        checkboxHorizontalMargin: 0,
+                        horizontalMargin: 0,
+                        showCheckboxColumn: false,
+                        headingRowHeight: 40,
+                        dataRowHeight: 40,
+                        headingRowColor:
+                            WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                        headingTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        columns: [
                           DataColumn2(
-                              label: Text('Article'), size: ColumnSize.M),
-                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
-                          DataColumn2(
-                              label: Text('Ticket'), size: ColumnSize.S),
-                          DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                          DataColumn2(
-                            label: Text('Shade'),
-                            size: ColumnSize.M,
+                            label: Text('#'),
+                            size: ColumnSize.S,
+                            fixedWidth: 30,
+                            numeric: true,
                           ),
                           DataColumn2(
-                              label: Text('Quantity'), size: ColumnSize.M),
+                            label: Text('Article'),
+                            fixedWidth: 60,
+                          ),
+                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
                           DataColumn2(
-                              label: Text('Shipped'), size: ColumnSize.M),
+                            label: Text('Ticket'),
+                            fixedWidth: 50,
+                            numeric: true,
+                          ),
                           DataColumn2(
-                              label: Text('Comment'), size: ColumnSize.M),
+                            label: Text('Tex'),
+                            numeric: true,
+                            fixedWidth: 40,
+                          ),
+                          DataColumn2(
+                            label: Text('Shade'),
+                            fixedWidth: 60,
+                          ),
+                          DataColumn2(
+                            label: Text('Final Shade'),
+                            fixedWidth: 80,
+                          ),
+                          DataColumn2(
+                              label: Text('Remark'), size: ColumnSize.S),
                           DataColumn2(
                               label: Text('Status'), size: ColumnSize.M),
                         ],
@@ -101,13 +141,18 @@ class DtmOrderDetailsView extends StatelessWidget {
 
                             final String article = itemParts[0];
                             final String uom = itemParts[1];
+                            final String shade = itemParts[2];
 
-                            final catalogItem =
-                                catalogController.rxFilteredItems.firstWhere(
+                            final catalogItem = catalogController
+                                .rxFilteredItems
+                                .firstWhereOrNull(
                               (itemCatalogInfo) =>
                                   itemCatalogInfo.article == article &&
                                   itemCatalogInfo.uom == uom,
                             );
+
+                            final index = dtmController.rxOrderDetailLines
+                                .indexOf(orderDetail);
 
                             final permanentShadeLine =
                                 dtmController.getPermanentShadeLine(
@@ -146,31 +191,32 @@ class DtmOrderDetailsView extends StatelessWidget {
                             }
 
                             return DataRow(
+                              color: WidgetStatePropertyAll(
+                                index.isEven
+                                    ? Colors.white
+                                    : VardhmanColors.dividerGrey,
+                              ),
                               cells: [
                                 DataCell(
-                                  Text(orderDetail.lineNumber
-                                      .toStringAsFixed(2)),
+                                  Text(orderDetail.lineNumber.toString()),
                                 ),
                                 DataCell(
                                   Text(article),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.brandDesc),
+                                  Text(catalogItem?.brandDesc ?? ''),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.ticket),
+                                  Text(catalogItem?.ticket ?? ''),
                                 ),
                                 DataCell(
-                                  Text(catalogItem.tex),
+                                  Text(catalogItem?.tex ?? ''),
+                                ),
+                                DataCell(
+                                  Text(shade),
                                 ),
                                 DataCell(
                                   Text(permanentShade),
-                                ),
-                                DataCell(
-                                  Text(orderDetail.quantityOrdered.toString()),
-                                ),
-                                DataCell(
-                                  Text(quantityShipped.toString()),
                                 ),
                                 DataCell(
                                   Text(orderDetail.userComment),
@@ -183,11 +229,11 @@ class DtmOrderDetailsView extends StatelessWidget {
                           },
                         ).toList(),
                       ),
-                    ),
-            ),
-          ],
-        ),
-      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

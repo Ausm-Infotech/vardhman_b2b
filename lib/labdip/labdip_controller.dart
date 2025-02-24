@@ -54,6 +54,8 @@ class LabdipController extends GetxController {
       (draftTableDatas) {
         rxDraftOrders.clear();
 
+        // LOGIC to remove duplicate orders
+
         for (DraftTableData draftTableData in draftTableDatas) {
           if (!rxDraftOrders.any(
             (draftOrder) =>

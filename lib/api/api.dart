@@ -18,7 +18,6 @@ import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
-import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
 import 'dart:developer';
 import 'package:vardhman_b2b/sample_data.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -224,6 +223,7 @@ class Api {
   static Future<List<String>> fetchShades({
     required String article,
     required String uom,
+    String shadeStartsWith = '',
   }) async {
     final shades = <String>[];
 
@@ -259,6 +259,17 @@ class Api {
                   }
                 ],
               },
+              if (shadeStartsWith.isNotEmpty)
+                {
+                  "controlId": "F4101.SEG3",
+                  "operator": "STR_START_WITH",
+                  "value": [
+                    {
+                      "specialValueId": "LITERAL",
+                      "content": shadeStartsWith,
+                    }
+                  ],
+                },
               {
                 "controlId": "F4101.SRP1",
                 "operator": "EQUAL",
@@ -1226,7 +1237,7 @@ class Api {
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<DtmEntryLine> dtmEntryLines,
+    required List<DraftTableData> dtmEntryLines,
   }) async {
     final payload = {
       "Detail": dtmEntryLines

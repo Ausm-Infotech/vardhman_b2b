@@ -5,7 +5,6 @@ import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
-import 'package:vardhman_b2b/dtm/dtm_entry_line.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class OrderReviewController extends GetxController {
@@ -93,7 +92,7 @@ class OrderReviewController extends GetxController {
   Future<bool> submitDtmOrder({
     required String merchandiserName,
     required String b2bOrderNumber,
-    required List<DtmEntryLine> dtmEntryLines,
+    required List<DraftTableData> dtmEntryLines,
   }) async {
     bool isSubmitted = false;
 
