@@ -16,11 +16,13 @@ class ItemMasterController extends GetxController {
   }
 
   Future<void> init() async {
-    database.managers.itemMaster.watch().listen((itemMasterDatas) {
-      rxItems.clear();
+    database.managers.itemMaster.watch().listen(
+      (itemMasterDatas) {
+        rxItems.clear();
 
-      rxItems.addAll(itemMasterDatas);
-    });
+        rxItems.addAll(itemMasterDatas);
+      },
+    );
 
     DateTime newestItemDateTime = oldestDateTime;
 

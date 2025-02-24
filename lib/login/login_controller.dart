@@ -68,17 +68,20 @@ class LoginController extends GetxController {
     // );
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
+      videoPlayerOptions: VideoPlayerOptions(
+        webOptions: VideoPlayerWebOptions(
+          allowRemotePlayback: true,
+        ),
+      ),
     );
 
-    videoPlayerController.initialize().then(
-      (_) async {
-        videoPlayerController.play();
+    await videoPlayerController.initialize();
 
-        videoPlayerController.setLooping(true);
+    await videoPlayerController.setVolume(0);
 
-        videoPlayerController.setVolume(0);
-      },
-    );
+    await videoPlayerController.setLooping(true);
+
+    await videoPlayerController.play();
 
     final userDetail = await _database.managers.userDetails.getSingleOrNull();
 

@@ -358,7 +358,7 @@ class CreateDtmOrderView extends StatelessWidget {
                       NewOrderTextField(
                         labelText: 'Remark',
                         rxString: dtmEntryController.rxRemark,
-                        hintText: 'Mention Request Type, End Use',
+                        hintText: 'Enter remark',
                       ),
                     ],
                   ),

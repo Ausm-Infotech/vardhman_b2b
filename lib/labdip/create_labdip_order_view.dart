@@ -8,6 +8,7 @@ import 'package:vardhman_b2b/common/catalog_search_field.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
+import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class CreateLabdipOrderView extends StatelessWidget {
   const CreateLabdipOrderView({super.key});
@@ -15,6 +16,9 @@ class CreateLabdipOrderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labdipEntryController = Get.find<LabdipEntryController>();
+
+    final OrderReviewController orderReviewController =
+        Get.find<OrderReviewController>();
 
     return Obx(
       () => Column(
@@ -174,13 +178,20 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       width: 8,
                                     ),
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         hasError:
                                             labdipEntryController.uomHasError,
                                         labelText: 'UOM',
-                                        rxString: labdipEntryController.rxUom,
+                                        rxString:
+                                            labdipEntryController.rxUomWithDesc,
                                         searchList: labdipEntryController
-                                            .uniqueFilteredUoms,
+                                            .uniqueFilteredUoms
+                                            .map(
+                                          (uom) {
+                                            return '$uom - ${orderReviewController.getUomDescription(uom)}';
+                                          },
+                                        ).toList(),
                                       ),
                                     ),
                                   ],
@@ -350,6 +361,14 @@ class CreateLabdipOrderView extends StatelessWidget {
                         ],
                       ),
                       Row(
+                        children: <Widget>[
+                          SecondaryButton(
+                            text: 'Pick Files',
+                            onPressed: () async {},
+                          ),
+                        ],
+                      ),
+                      Row(
                         children: [
                           Expanded(
                             child: NewOrderTextField(
@@ -431,6 +450,10 @@ class CreateLabdipOrderView extends StatelessWidget {
                   fixedWidth: 60,
                 ),
                 DataColumn2(
+                  label: Text('UOM'),
+                  size: ColumnSize.M,
+                ),
+                DataColumn2(
                   label: Text('Shade'),
                   size: ColumnSize.S,
                   fixedWidth: 60,
@@ -465,6 +488,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                   final index = labdipEntryController.rxLabdipOrderLines
                       .indexOf(labdipOrderLine);
 
+                  final uomDesc = orderReviewController
+                      .getUomDescription(labdipOrderLine.uom);
+
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
@@ -479,6 +505,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                       DataCell(Text((index + 1).toString())),
                       DataCell(Text(labdipOrderLine.buyer)),
                       DataCell(Text(labdipOrderLine.article)),
+                      DataCell(Text("${labdipOrderLine.uom} - $uomDesc")),
                       DataCell(Text(labdipOrderLine.shade)),
                       DataCell(Text(labdipOrderLine.brand)),
                       DataCell(Text(labdipOrderLine.ticket)),

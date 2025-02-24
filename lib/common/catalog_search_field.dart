@@ -84,6 +84,11 @@ class CatalogSearchField extends StatelessWidget {
                   Expanded(
                     child: DropdownSearch<String>(
                       enabled: isEnabled,
+                      suffixProps: DropdownSuffixProps(
+                        dropdownButtonProps: DropdownButtonProps(
+                          isVisible: isEnabled && rxString.value.isEmpty,
+                        ),
+                      ),
                       decoratorProps: DropDownDecoratorProps(
                         baseStyle: TextStyle(
                           color: VardhmanColors.darkGrey,

@@ -14,8 +14,18 @@ class OrderReviewController extends GetxController {
 
   final rxIsProcessing = false.obs;
 
+  final rxUomDescriptionMap = <String, String>{}.obs;
+
   OrderReviewController() {
     fetchOrderNumber();
+
+    Api.fetchUoMDescriptions().then(
+      (uomDescMap) {
+        rxUomDescriptionMap.clear();
+
+        rxUomDescriptionMap.addAll(uomDescMap);
+      },
+    );
   }
 
   void fetchOrderNumber() {
@@ -26,6 +36,10 @@ class OrderReviewController extends GetxController {
         }
       },
     );
+  }
+
+  String getUomDescription(String uom) {
+    return rxUomDescriptionMap[uom] ?? '';
   }
 
   Future<bool> submitLabdipOrder({

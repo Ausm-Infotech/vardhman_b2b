@@ -56,6 +56,8 @@ class LabdipEntryController extends GetxController {
 
   final rxUom = ''.obs;
 
+  final rxUomWithDesc = ''.obs;
+
   final rxBrand = ''.obs;
 
   final rxL = ''.obs;
@@ -234,6 +236,14 @@ class LabdipEntryController extends GetxController {
     rxBuyerName.listen(buyerNameListener);
 
     rxOtherBuyerName.listen(otherBuyerListener);
+  }
+
+  void uomWithDesc(String newUomWithDesc) {
+    if (newUomWithDesc.isNotEmpty) {
+      rxUom.value = newUomWithDesc.split(' - ')[0];
+    } else {
+      rxUom.value = '';
+    }
   }
 
   void shadeListener(String newShade) {
