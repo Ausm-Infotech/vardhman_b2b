@@ -33,15 +33,20 @@ class CreateLabdipOrderView extends StatelessWidget {
               'New Labdip Order : ${labdipEntryController.b2bOrderNumber}',
               style: const TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            trailing: PrimaryButton(
-              text: 'Submit',
-              onPressed: labdipEntryController.rxLabdipOrderLines.isEmpty
-                  ? null
-                  : labdipEntryController.submitOrder,
+            trailing: DefaultTextStyle(
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              child: PrimaryButton(
+                text: 'Submit Order',
+                onPressed: labdipEntryController.rxLabdipOrderLines.isEmpty
+                    ? null
+                    : labdipEntryController.submitOrder,
+              ),
             ),
           ),
           Container(
