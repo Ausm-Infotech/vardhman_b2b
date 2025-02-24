@@ -18,11 +18,16 @@ class OtpView extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Flexible(
-                child: AspectRatio(
-                  aspectRatio:
-                      loginController.videoPlayerController.value.aspectRatio,
-                  child: VideoPlayer(loginController.videoPlayerController),
+              Positioned.fill(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width:
+                        loginController.videoPlayerController.value.size.width,
+                    height:
+                        loginController.videoPlayerController.value.size.height,
+                    child: VideoPlayer(loginController.videoPlayerController),
+                  ),
                 ),
               ),
               Center(

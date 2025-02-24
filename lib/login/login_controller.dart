@@ -64,6 +64,9 @@ class LoginController extends GetxController {
   }
 
   Future<void> init() async {
+    // videoPlayerController = VideoPlayerController.asset(
+    //   ('assets/B2B.mp4'),
+    // );
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
     );
