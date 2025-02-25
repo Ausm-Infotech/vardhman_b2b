@@ -2,7 +2,6 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
@@ -426,15 +425,6 @@ class CreateLabdipOrderView extends StatelessWidget {
 
                                         labdipEntryController
                                             .rxFileBytes.value = file.bytes;
-
-                                        // await Api.uploadMediaAttachment(
-                                        //   fileBytes: file.bytes!,
-                                        //   fileName: file.name,
-                                        //   moKey: 'QTX|QT|||1001|0|LD|B2BL-1099',
-                                        //   moStructure: 'GT00092',
-                                        //   version: 'TEST1',
-                                        //   formName: 'P00092_W00092D',
-                                        // );
                                       }
                                     },
                                   )

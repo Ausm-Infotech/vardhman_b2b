@@ -11,6 +11,8 @@ import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class DtmEntryController extends GetxController {
+  final OrderReviewController orderReviewController = Get.find();
+
   final int orderNumber;
 
   final List<String> _otherLightSouces = [
@@ -55,6 +57,8 @@ class DtmEntryController extends GetxController {
   final rxArticle = ''.obs;
 
   final rxUom = ''.obs;
+
+  final rxUomWithDesc = ''.obs;
 
   final rxBrand = ''.obs;
 
@@ -189,57 +193,73 @@ class DtmEntryController extends GetxController {
     rxShade.listen(shadeListener);
 
     rxArticle.listen(
-      (newArticle) {
+      (_) {
         selectIfOnlyOneOption(rxArticle.hashCode);
 
-        rxShade.value = '';
-
-        rxShades.clear();
-
-        final article = newArticle.trim();
-
-        if (article.isNotEmpty) {
-          Api.fetchShades(
-                  article: article, uom: rxUom.value, shadeStartsWith: 'SWT*')
-              .then(
-            (shades) {
-              final validShades = shades
-                  .where(
-                    (shade) => !_skipShades.contains(shade),
-                  )
-                  .toList()
-                ..sort(
-                  (a, b) {
-                    if (a.startsWith('SWT') && b.startsWith('SWT')) {
-                      final aNum = int.tryParse(a.substring(3)) ?? 0;
-                      final bNum = int.tryParse(b.substring(3)) ?? 0;
-                      return aNum.compareTo(bNum);
-                    } else if (a.startsWith('SWT')) {
-                      return -1;
-                    } else if (b.startsWith('SWT')) {
-                      return 1;
-                    } else {
-                      return a.compareTo(b);
-                    }
-                  },
-                );
-
-              rxShades.addAll(validShades);
-            },
-          );
-        }
+        resetShade();
       },
     );
 
     rxBrand.listen((_) => selectIfOnlyOneOption(rxBrand.hashCode));
-
     rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
-
     rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
 
     rxBuyerName.listen(buyerNameListener);
 
     rxOtherBuyerName.listen(otherBuyerListener);
+
+    rxUomWithDesc.listen(uomWithDescListener);
+
+    rxUom.listen((_) => selectIfOnlyOneOption(rxUom.hashCode));
+  }
+
+  void uomWithDescListener(String newUomWithDesc) {
+    if (newUomWithDesc.isNotEmpty) {
+      rxUom.value = newUomWithDesc.split(' - ')[0];
+    } else {
+      rxUom.value = '';
+    }
+
+    resetShade();
+  }
+
+  void resetShade() {
+    rxShade.value = '';
+
+    rxShades.clear();
+
+    final article = rxArticle.value.trim();
+
+    final uom = rxUom.value.trim();
+
+    if (article.isNotEmpty && uom.isNotEmpty) {
+      Api.fetchShades(article: article, uom: uom, shadeStartsWith: 'SWT').then(
+        (shades) {
+          final validShades = shades
+              .where(
+                (shade) => !_skipShades.contains(shade),
+              )
+              .toList()
+            ..sort(
+              (a, b) {
+                if (a.startsWith('SWT') && b.startsWith('SWT')) {
+                  final aNum = int.tryParse(a.substring(3)) ?? 0;
+                  final bNum = int.tryParse(b.substring(3)) ?? 0;
+                  return aNum.compareTo(bNum);
+                } else if (a.startsWith('SWT')) {
+                  return -1;
+                } else if (b.startsWith('SWT')) {
+                  return 1;
+                } else {
+                  return a.compareTo(b);
+                }
+              },
+            );
+
+          rxShades.addAll(validShades);
+        },
+      );
+    }
   }
 
   void shadeListener(String newShade) {
@@ -332,6 +352,7 @@ class DtmEntryController extends GetxController {
   void selectIfOnlyOneOption(int hashCode) {
     if (hashCode == rxArticle.hashCode && rxArticle.value.isEmpty) {
       rxUom.value = '';
+      rxUomWithDesc.value = '';
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTex.value = '';
@@ -345,18 +366,21 @@ class DtmEntryController extends GetxController {
     } else if (hashCode == rxBrand.hashCode && rxBrand.value.isEmpty) {
       rxArticle.value = '';
       rxUom.value = '';
+      rxUomWithDesc.value = '';
       rxSubstrate.value = '';
       rxTex.value = '';
       rxTicket.value = '';
     } else if (hashCode == rxSubstrate.hashCode && rxSubstrate.value.isEmpty) {
       rxArticle.value = '';
       rxUom.value = '';
+      rxUomWithDesc.value = '';
       rxBrand.value = '';
       rxTex.value = '';
       rxTicket.value = '';
     } else if (hashCode == rxTex.hashCode && rxTex.value.isEmpty) {
       rxArticle.value = '';
       rxUom.value = '';
+      rxUomWithDesc.value = '';
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTicket.value = '';
@@ -366,8 +390,14 @@ class DtmEntryController extends GetxController {
         rxArticle.value = uniqueFilteredArticles.first;
       }
 
-      if (hashCode != rxUom.hashCode && uniqueFilteredUoms.length == 1) {
-        rxUom.value = uniqueFilteredUoms.first;
+      if (hashCode != rxUom.hashCode && rxUom.isEmpty) {
+        if ((hashCode == rxArticle.hashCode && uniqueFilteredUoms.isNotEmpty) ||
+            uniqueFilteredUoms.length == 1) {
+          rxUom.value = uniqueFilteredUoms.first;
+
+          rxUomWithDesc.value =
+              '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
+        }
       }
 
       if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
@@ -411,6 +441,10 @@ class DtmEntryController extends GetxController {
 
   bool validateInputs() {
     inputsInError.clear();
+
+    if (rxUom.value.trim().isEmpty) {
+      inputsInError.add(rxUom);
+    }
 
     if (rxMerchandiser.value.trim().isEmpty) {
       inputsInError.add(rxMerchandiser);

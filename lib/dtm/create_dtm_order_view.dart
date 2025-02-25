@@ -8,6 +8,7 @@ import 'package:vardhman_b2b/common/catalog_search_field.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_controller.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
+import 'package:vardhman_b2b/orders/order_review_controller.dart';
 
 class CreateDtmOrderView extends StatelessWidget {
   const CreateDtmOrderView({super.key});
@@ -15,6 +16,9 @@ class CreateDtmOrderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dtmEntryController = Get.find<DtmEntryController>();
+
+    final OrderReviewController orderReviewController =
+        Get.find<OrderReviewController>();
 
     return Obx(
       () => Column(
@@ -172,13 +176,20 @@ class CreateDtmOrderView extends StatelessWidget {
                                       width: 8,
                                     ),
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         hasError:
                                             dtmEntryController.uomHasError,
                                         labelText: 'UOM',
-                                        rxString: dtmEntryController.rxUom,
+                                        rxString:
+                                            dtmEntryController.rxUomWithDesc,
                                         searchList: dtmEntryController
-                                            .uniqueFilteredUoms,
+                                            .uniqueFilteredUoms
+                                            .map(
+                                          (uom) {
+                                            return '$uom - ${orderReviewController.getUomDescription(uom)}';
+                                          },
+                                        ).toList(),
                                       ),
                                     ),
                                   ],
@@ -409,6 +420,10 @@ class CreateDtmOrderView extends StatelessWidget {
                   fixedWidth: 60,
                 ),
                 DataColumn2(
+                  label: Text('UOM'),
+                  size: ColumnSize.M,
+                ),
+                DataColumn2(
                   label: Text('Shade'),
                   size: ColumnSize.S,
                   fixedWidth: 60,
@@ -443,6 +458,9 @@ class CreateDtmOrderView extends StatelessWidget {
                   final index =
                       dtmEntryController.rxDtmOrderLines.indexOf(dtmOrderLine);
 
+                  final uomDesc =
+                      orderReviewController.getUomDescription(dtmOrderLine.uom);
+
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
@@ -456,6 +474,7 @@ class CreateDtmOrderView extends StatelessWidget {
                       DataCell(Text((index + 1).toString())),
                       DataCell(Text(dtmOrderLine.buyer)),
                       DataCell(Text(dtmOrderLine.article)),
+                      DataCell(Text("${dtmOrderLine.uom} - $uomDesc")),
                       DataCell(Text(dtmOrderLine.shade)),
                       DataCell(Text(dtmOrderLine.brand)),
                       DataCell(Text(dtmOrderLine.ticket)),
