@@ -29,9 +29,11 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
+              Align(
+                alignment: Alignment.bottomCenter,
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
+                  margin: EdgeInsets.all(16),
+                  constraints: const BoxConstraints(maxWidth: 300),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.0),
@@ -51,9 +53,11 @@ class LoginView extends StatelessWidget {
                     children: <Widget>[
                       Image.asset(
                         'assets/digital-nws.png',
+                        height: 80,
+                        width: 160,
                       ),
                       const SizedBox(
-                        height: 36,
+                        height: 16,
                       ),
                       TextField(
                         controller: loginController.userIdTextEditingController,
@@ -63,7 +67,7 @@ class LoginView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 36,
+                        height: 16,
                       ),
                       PrimaryButton(
                         iconData: Icons.login_outlined,

@@ -30,9 +30,11 @@ class OtpView extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
+              Align(
+                alignment: Alignment.bottomCenter,
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
+                  margin: EdgeInsets.all(16),
+                  constraints: const BoxConstraints(maxWidth: 300),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.0),
@@ -52,9 +54,11 @@ class OtpView extends StatelessWidget {
                     children: <Widget>[
                       Image.asset(
                         'assets/digital-nws.png',
+                        width: 160,
+                        height: 80,
                       ),
                       const SizedBox(
-                        height: 36,
+                        height: 16,
                       ),
                       TextField(
                         controller: loginController.otpTextEditingController,
@@ -64,7 +68,7 @@ class OtpView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 36,
+                        height: 16,
                       ),
                       PrimaryButton(
                         iconData: Icons.check,
