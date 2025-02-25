@@ -899,6 +899,9 @@ class DtmEntryController extends GetxController {
     rxQuantity.value = dtmOrderLine.quantity.toString();
     rxUomWithDesc.value =
         '${dtmOrderLine.uom} - ${orderReviewController.getUomDescription(dtmOrderLine.uom)}';
+    if (dtmOrderLine.requestedDate != null) {
+      rxRequestedDate.value = dtmOrderLine.requestedDate;
+    }
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);
