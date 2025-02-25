@@ -29,4 +29,5 @@ class DraftTable extends Table {
   DateTimeColumn get lastUpdated => dateTime()();
   BlobColumn get qtxFileBytes => blob().nullable()();
   TextColumn get qtxFileName => text()();
+  DateTimeColumn get requestedDate => dateTime().nullable()();
 }

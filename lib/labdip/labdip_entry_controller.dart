@@ -151,6 +151,8 @@ class LabdipEntryController extends GetxController {
     '012',
     '021',
     'BLACK',
+    'NW',
+    'WHITE',
   ];
 
   final rxSelectedLabdipOrderLines = <DraftTableData>[].obs;
@@ -259,6 +261,8 @@ class LabdipEntryController extends GetxController {
                 }
               },
             );
+
+          rxShades.clear();
 
           rxShades.addAll(validShades);
         },
@@ -703,6 +707,18 @@ class LabdipEntryController extends GetxController {
     if (!skipHashCodes.contains(rxSecondLightSource.hashCode)) {
       rxSecondLightSource.value = '';
     }
+
+    if (!skipHashCodes.contains(rxFileName.hashCode)) {
+      rxFileName.value = '';
+    }
+
+    if (!skipHashCodes.contains(rxFileBytes.hashCode)) {
+      rxFileBytes.value = null;
+    }
+
+    if (!skipHashCodes.contains(rxUomWithDesc.hashCode)) {
+      rxUomWithDesc.value = '';
+    }
   }
 
   List<String> get uniqueFilteredArticles => catalogController.industryItems
@@ -894,6 +910,8 @@ class LabdipEntryController extends GetxController {
     rxTicket.value = labdipOrderLine.ticket;
     rxTex.value = labdipOrderLine.tex;
     rxArticle.value = labdipOrderLine.article;
+    rxUomWithDesc.value =
+        '${labdipOrderLine.uom} - ${orderReviewController.getUomDescription(labdipOrderLine.uom)}';
     rxBrand.value = labdipOrderLine.brand;
     rxL.value = labParts[0];
     rxA.value = labParts[1];
@@ -903,6 +921,8 @@ class LabdipEntryController extends GetxController {
     rxEndUse.value = labdipOrderLine.endUse;
     rxShade.value = labdipOrderLine.shade;
     rxColor.value = labdipOrderLine.colorName;
+    rxFileName.value = labdipOrderLine.qtxFileName;
+    rxFileBytes.value = labdipOrderLine.qtxFileBytes;
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);

@@ -1,7 +1,9 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
+import 'package:vardhman_b2b/common/new_order_date_field.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/common/catalog_search_field.dart';
@@ -178,6 +180,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        isRequired: true,
                                         hasError:
                                             dtmEntryController.uomHasError,
                                         labelText: 'UOM',
@@ -301,7 +304,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     .rxSelectedDtmOrderLines.isNotEmpty
                                 ? null
                                 : () async {
-                                    dtmEntryController.addLapdipOrderLine();
+                                    dtmEntryController.addDtmOrderLine();
                                   },
                           ),
                           Spacer(),
@@ -311,7 +314,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         .rxSelectedDtmOrderLines.length ==
                                     1
                                 ? () async {
-                                    dtmEntryController.updateLapdipOrderLine();
+                                    dtmEntryController.updateDtmOrderLine();
                                   }
                                 : null,
                           ),
@@ -361,15 +364,31 @@ class CreateDtmOrderView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      NewOrderTextField(
-                        labelText: 'Quantity',
-                        rxString: dtmEntryController.rxQuantity,
-                        hasError: dtmEntryController.quantityHasError,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: NewOrderTextField(
+                              labelText: 'Quantity',
+                              rxString: dtmEntryController.rxQuantity,
+                              hasError: dtmEntryController.quantityHasError,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            child: NewOrderDateField(
+                              labelText: 'Requested Date',
+                              rxDate: dtmEntryController.rxRequestedDate,
+                              hintText: 'select',
+                            ),
+                          ),
+                        ],
                       ),
                       NewOrderTextField(
                         labelText: 'Remark',
                         rxString: dtmEntryController.rxRemark,
-                        hintText: 'Enter remark',
+                        hintText: 'enter remark',
                       ),
                     ],
                   ),
@@ -428,29 +447,10 @@ class CreateDtmOrderView extends StatelessWidget {
                   size: ColumnSize.S,
                   fixedWidth: 60,
                 ),
-                DataColumn2(
-                  label: Text('Brand'),
-                  size: ColumnSize.M,
-                ),
-                DataColumn2(
-                  label: Text('Ticket'),
-                  numeric: true,
-                  size: ColumnSize.S,
-                  fixedWidth: 50,
-                ),
-                DataColumn2(
-                  label: Text('Substrate'),
-                  size: ColumnSize.M,
-                ),
-                DataColumn2(
-                  label: Text('Tex'),
-                  size: ColumnSize.S,
-                  numeric: true,
-                  fixedWidth: 40,
-                ),
                 DataColumn2(label: Text('Color'), size: ColumnSize.M),
                 DataColumn2(label: Text('Quantity'), size: ColumnSize.S),
                 DataColumn2(label: Text('Remark'), size: ColumnSize.L),
+                DataColumn2(label: Text('Req Date'), size: ColumnSize.S),
               ],
               empty: Center(child: const Text('No Order Lines')),
               rows: dtmEntryController.rxDtmOrderLines.map(
@@ -476,13 +476,17 @@ class CreateDtmOrderView extends StatelessWidget {
                       DataCell(Text(dtmOrderLine.article)),
                       DataCell(Text("${dtmOrderLine.uom} - $uomDesc")),
                       DataCell(Text(dtmOrderLine.shade)),
-                      DataCell(Text(dtmOrderLine.brand)),
-                      DataCell(Text(dtmOrderLine.ticket)),
-                      DataCell(Text(dtmOrderLine.substrate)),
-                      DataCell(Text(dtmOrderLine.tex)),
                       DataCell(Text(dtmOrderLine.colorName)),
                       DataCell(Text(dtmOrderLine.quantity.toString())),
                       DataCell(Text(dtmOrderLine.remark)),
+                      DataCell(
+                        Text(
+                          dtmOrderLine.requestedDate == null
+                              ? ''
+                              : DateFormat('d MMM yyyy')
+                                  .format(dtmOrderLine.requestedDate!),
+                        ),
+                      ),
                     ],
                   );
                 },

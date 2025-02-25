@@ -28,6 +28,8 @@ class DtmEntryController extends GetxController {
 
   final List<RxString> inputsInError = <RxString>[].obs;
 
+  final Rxn<DateTime> rxRequestedDate = Rxn<DateTime>(DateTime.now());
+
   final rxMerchandisers = <String>[].obs;
 
   final rxMerchandiser = ''.obs;
@@ -138,17 +140,6 @@ class DtmEntryController extends GetxController {
     "Wire & Cable",
   ];
 
-  final _skipShades = [
-    'W32002',
-    'W32001',
-    'W32109',
-    '001',
-    '002',
-    '012',
-    '021',
-    'BLACK',
-  ];
-
   final rxSelectedDtmOrderLines = <DraftTableData>[].obs;
 
   final Database _database = Get.find();
@@ -235,28 +226,25 @@ class DtmEntryController extends GetxController {
     if (article.isNotEmpty && uom.isNotEmpty) {
       Api.fetchShades(article: article, uom: uom, shadeStartsWith: 'SWT').then(
         (shades) {
-          final validShades = shades
-              .where(
-                (shade) => !_skipShades.contains(shade),
-              )
-              .toList()
-            ..sort(
-              (a, b) {
-                if (a.startsWith('SWT') && b.startsWith('SWT')) {
-                  final aNum = int.tryParse(a.substring(3)) ?? 0;
-                  final bNum = int.tryParse(b.substring(3)) ?? 0;
-                  return aNum.compareTo(bNum);
-                } else if (a.startsWith('SWT')) {
-                  return -1;
-                } else if (b.startsWith('SWT')) {
-                  return 1;
-                } else {
-                  return a.compareTo(b);
-                }
-              },
-            );
+          shades.sort(
+            (a, b) {
+              if (a.startsWith('SWT') && b.startsWith('SWT')) {
+                final aNum = int.tryParse(a.substring(3)) ?? 0;
+                final bNum = int.tryParse(b.substring(3)) ?? 0;
+                return aNum.compareTo(bNum);
+              } else if (a.startsWith('SWT')) {
+                return -1;
+              } else if (b.startsWith('SWT')) {
+                return 1;
+              } else {
+                return a.compareTo(b);
+              }
+            },
+          );
 
-          rxShades.addAll(validShades);
+          rxShades.clear();
+
+          rxShades.addAll(shades);
         },
       );
     }
@@ -489,7 +477,7 @@ class DtmEntryController extends GetxController {
     return inputsInError.isEmpty;
   }
 
-  void addLapdipOrderLine() {
+  void addDtmOrderLine() {
     if (!validateInputs()) {
       // toastification.show(
       //   autoCloseDuration: Duration(seconds: 5),
@@ -535,6 +523,7 @@ class DtmEntryController extends GetxController {
           lastUpdated: DateTime.now(),
           merchandiser: rxMerchandiser.value,
           qtxFileName: '',
+          requestedDate: drift.Value(rxRequestedDate.value),
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -547,6 +536,7 @@ class DtmEntryController extends GetxController {
           rxFirstLightSource.hashCode,
           rxSecondLightSource.hashCode,
           rxEndUse.hashCode,
+          rxRequestedDate.hashCode,
         ],
       );
     }
@@ -555,7 +545,7 @@ class DtmEntryController extends GetxController {
   String get buyerOrOtherName =>
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
-  void updateLapdipOrderLine() {
+  void updateDtmOrderLine() {
     if (!validateInputs()) {
       // toastification.show(
       //   autoCloseDuration: Duration(seconds: 5),
@@ -597,6 +587,7 @@ class DtmEntryController extends GetxController {
                 colorRemark: drift.Value(_colorRemark),
                 lastUpdated: drift.Value(DateTime.now()),
                 merchandiser: drift.Value(rxMerchandiser.value),
+                requestedDate: drift.Value(rxRequestedDate.value),
               ),
             );
       }
@@ -611,6 +602,7 @@ class DtmEntryController extends GetxController {
           rxFirstLightSource.hashCode,
           rxSecondLightSource.hashCode,
           rxEndUse.hashCode,
+          rxRequestedDate.hashCode,
         ],
       );
     }
@@ -648,7 +640,8 @@ class DtmEntryController extends GetxController {
       _rxBuyerCode.value != '' ||
       rxFirstLightSource.value != '' ||
       rxSecondLightSource.value != '' ||
-      rxQuantity.value != '';
+      rxQuantity.value != '' ||
+      rxRequestedDate.value != null;
 
   void clearAllInputs({List<int> skipHashCodes = const []}) {
     if (!skipHashCodes.contains(rxColor.hashCode)) {
@@ -707,6 +700,18 @@ class DtmEntryController extends GetxController {
     }
     if (!skipHashCodes.contains(rxSecondLightSource.hashCode)) {
       rxSecondLightSource.value = '';
+    }
+
+    if (!skipHashCodes.contains(rxQuantity.hashCode)) {
+      rxQuantity.value = '';
+    }
+
+    if (!skipHashCodes.contains(rxRequestedDate.hashCode)) {
+      rxRequestedDate.value = null;
+    }
+
+    if (!skipHashCodes.contains(rxUomWithDesc.hashCode)) {
+      rxUomWithDesc.value = '';
     }
   }
 
@@ -891,6 +896,9 @@ class DtmEntryController extends GetxController {
     rxEndUse.value = dtmOrderLine.endUse;
     rxShade.value = dtmOrderLine.shade;
     rxColor.value = dtmOrderLine.colorName;
+    rxQuantity.value = dtmOrderLine.quantity.toString();
+    rxUomWithDesc.value =
+        '${dtmOrderLine.uom} - ${orderReviewController.getUomDescription(dtmOrderLine.uom)}';
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);

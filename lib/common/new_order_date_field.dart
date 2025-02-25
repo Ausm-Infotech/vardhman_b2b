@@ -1,14 +1,16 @@
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 
-class NewOrderTextField extends StatelessWidget {
-  NewOrderTextField({
+class NewOrderDateField extends StatelessWidget {
+  NewOrderDateField({
     super.key,
     required this.labelText,
     this.hintText = '',
-    required this.rxString,
+    required this.rxDate,
     this.isEnabled = true,
     this.minLines,
     this.isRequired = false,
@@ -17,15 +19,13 @@ class NewOrderTextField extends StatelessWidget {
 
   final String labelText;
   final String hintText;
-  final RxString rxString;
+  final Rxn<DateTime> rxDate;
   final bool isEnabled;
   final int? minLines;
   final bool isRequired;
   final bool hasError;
 
-  final TextEditingController textEditingController = TextEditingController();
-
-  final border = OutlineInputBorder(
+  final noneBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
   );
 
@@ -33,12 +33,6 @@ class NewOrderTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        String finalHintText = hintText;
-
-        if (isEnabled && isRequired && finalHintText.isEmpty) {
-          finalHintText = 'input required';
-        }
-
         return Padding(
           padding: const EdgeInsets.all(4.0),
           child: Column(
@@ -76,10 +70,9 @@ class NewOrderTextField extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color:
-                        isEnabled && hasError && rxString.value.trim().isEmpty
-                            ? VardhmanColors.red
-                            : VardhmanColors.darkGrey,
+                    color: isEnabled && hasError && rxDate.value == null
+                        ? VardhmanColors.red
+                        : VardhmanColors.darkGrey,
                     width: 1.5,
                   ),
                   color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
@@ -88,46 +81,47 @@ class NewOrderTextField extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: TextField(
-                        style: TextStyle(
-                          color: VardhmanColors.darkGrey,
-                          fontSize: 13,
-                          fontWeight: isEnabled ? null : FontWeight.w500,
-                        ),
-                        minLines: minLines,
-                        maxLines: minLines,
-                        controller: TextEditingController.fromValue(
-                          TextEditingValue(
-                            text: rxString.value,
-                            selection: TextSelection.collapsed(
-                              offset: rxString.value.length,
-                            ),
-                          ),
-                        ),
+                      child: DateTimeField(
+                        mode: DateTimeFieldPickerMode.date,
                         decoration: InputDecoration(
-                          hintText: finalHintText,
+                          errorBorder: noneBorder,
+                          focusedBorder: noneBorder,
+                          enabledBorder: noneBorder,
+                          focusedErrorBorder: noneBorder,
+                          border: OutlineInputBorder(),
+                          suffixIcon: Container(),
+                          hintText: isEnabled ? 'select' : null,
                           hintStyle: TextStyle(
+                            color: VardhmanColors.darkGrey,
+                            fontSize: 13,
+                          ),
+                          prefixText: rxDate.value != null
+                              ? DateFormat('d MMM yyyy').format(rxDate.value!)
+                              : null,
+                          prefixStyle: TextStyle(
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                           contentPadding: EdgeInsets.only(
                             left: 8,
+                            top: 0,
                           ),
-                          border: border,
-                          enabledBorder: border,
-                          focusedBorder: border,
                         ),
-                        onChanged: (value) => rxString.value = value,
-                        enabled: isEnabled,
+                        value: rxDate.value,
+                        onChanged: (DateTime? date) {
+                          if (date != null) {
+                            rxDate.value = date;
+                          }
+                        },
                       ),
                     ),
-                    if (isEnabled && rxString.value.isNotEmpty)
+                    if (isEnabled && rxDate.value != null)
                       SecondaryButton(
                         wait: false,
                         iconData: Icons.clear,
                         text: '',
                         onPressed: () async {
-                          rxString.value = '';
+                          rxDate.value = null;
                         },
                       ),
                   ],
