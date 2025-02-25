@@ -638,6 +638,45 @@ class Api {
     return itemCatalogInfos;
   }
 
+  static Future<bool> uploadMediaAttachment({
+    required Uint8List fileBytes,
+    required String fileName,
+    required String moKey,
+    required String moStructure,
+    required String version,
+    required String formName,
+  }) async {
+    try {
+      final formData = FormData.fromMap(
+        {
+          'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+          'moAdd': jsonEncode(
+            {
+              "moStructure": moStructure,
+              "moKey": [moKey],
+              "formName": formName,
+              "version": version,
+              "file": {"fileName": fileName}
+            },
+          ),
+        },
+      );
+
+      final response = await _dio.post(
+        '/v2/file/upload',
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log('uploadMediaAttachment error - $e');
+    }
+
+    return false;
+  }
+
   static Future<int?> fetchOrderNumber() async {
     int? nextNumber;
 

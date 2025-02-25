@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
@@ -180,6 +181,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        isRequired: true,
                                         hasError:
                                             labdipEntryController.uomHasError,
                                         labelText: 'UOM',
@@ -361,14 +363,6 @@ class CreateLabdipOrderView extends StatelessWidget {
                         ],
                       ),
                       Row(
-                        children: <Widget>[
-                          SecondaryButton(
-                            text: 'Pick Files',
-                            onPressed: () async {},
-                          ),
-                        ],
-                      ),
-                      Row(
                         children: [
                           Expanded(
                             child: NewOrderTextField(
@@ -396,10 +390,61 @@ class CreateLabdipOrderView extends StatelessWidget {
                           ),
                         ],
                       ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: NewOrderTextField(
+                              isEnabled: false,
+                              labelText: 'File Upload (QTX/XML Files Only)',
+                              rxString: labdipEntryController.rxFileName,
+                              hintText: 'no file chosen',
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: labdipEntryController.rxFileName.isEmpty
+                                ? SecondaryButton(
+                                    wait: false,
+                                    text: 'Choose File',
+                                    onPressed: () async {
+                                      final FilePickerResult? filePickerResult =
+                                          await FilePicker.platform.pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: ['qtx', 'xml'],
+                                      );
+
+                                      if (filePickerResult != null) {
+                                        final file =
+                                            filePickerResult.files.single;
+
+                                        labdipEntryController.rxFileName.value =
+                                            file.name;
+
+                                        labdipEntryController
+                                            .rxFileBytes.value = file.bytes;
+                                      }
+                                    },
+                                  )
+                                : SecondaryButton(
+                                    wait: false,
+                                    iconData: Icons.clear,
+                                    text: '',
+                                    onPressed: () async {
+                                      labdipEntryController.rxFileName.value =
+                                          '';
+
+                                      labdipEntryController.rxFileBytes.value =
+                                          null;
+                                    },
+                                  ),
+                          ),
+                        ],
+                      ),
                       NewOrderTextField(
                         labelText: 'Remark',
                         rxString: labdipEntryController.rxRemark,
-                        hintText: 'Mention Request Type, End Use',
+                        hintText: 'mention Request Type, End Use',
                       ),
                     ],
                   ),
