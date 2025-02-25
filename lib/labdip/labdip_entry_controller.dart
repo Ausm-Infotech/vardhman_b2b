@@ -829,6 +829,23 @@ class LabdipEntryController extends GetxController {
       .toList();
 
   Future<void> submitOrder() async {
+    for (var labdipOrderLine in rxLabdipOrderLines) {
+      if (labdipOrderLine.qtxFileName.isNotEmpty &&
+          labdipOrderLine.qtxFileBytes != null) {
+        final lineNumber =
+            (rxLabdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000;
+
+        await Api.uploadMediaAttachment(
+          fileBytes: labdipOrderLine.qtxFileBytes!,
+          fileName: labdipOrderLine.qtxFileName,
+          moKey: 'QTX|QT|||$lineNumber|0|LD|$b2bOrderNumber',
+          moStructure: 'GT00092',
+          version: 'TEST1',
+          formName: 'P00092_W00092D',
+        );
+      }
+    }
+
     final OrderReviewController orderReviewController =
         Get.find<OrderReviewController>();
 
