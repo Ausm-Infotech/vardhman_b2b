@@ -2470,6 +2470,18 @@ class $DraftTableTable extends DraftTable
   late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
       'last_updated', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _qtxFileBytesMeta =
+      const VerificationMeta('qtxFileBytes');
+  @override
+  late final GeneratedColumn<Uint8List> qtxFileBytes =
+      GeneratedColumn<Uint8List>('qtx_file_bytes', aliasedName, true,
+          type: DriftSqlType.blob, requiredDuringInsert: false);
+  static const VerificationMeta _qtxFileNameMeta =
+      const VerificationMeta('qtxFileName');
+  @override
+  late final GeneratedColumn<String> qtxFileName = GeneratedColumn<String>(
+      'qtx_file_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2497,7 +2509,9 @@ class $DraftTableTable extends DraftTable
         endUse,
         quantity,
         colorRemark,
-        lastUpdated
+        lastUpdated,
+        qtxFileBytes,
+        qtxFileName
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2680,6 +2694,20 @@ class $DraftTableTable extends DraftTable
     } else if (isInserting) {
       context.missing(_lastUpdatedMeta);
     }
+    if (data.containsKey('qtx_file_bytes')) {
+      context.handle(
+          _qtxFileBytesMeta,
+          qtxFileBytes.isAcceptableOrUnknown(
+              data['qtx_file_bytes']!, _qtxFileBytesMeta));
+    }
+    if (data.containsKey('qtx_file_name')) {
+      context.handle(
+          _qtxFileNameMeta,
+          qtxFileName.isAcceptableOrUnknown(
+              data['qtx_file_name']!, _qtxFileNameMeta));
+    } else if (isInserting) {
+      context.missing(_qtxFileNameMeta);
+    }
     return context;
   }
 
@@ -2741,6 +2769,10 @@ class $DraftTableTable extends DraftTable
           .read(DriftSqlType.string, data['${effectivePrefix}color_remark'])!,
       lastUpdated: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
+      qtxFileBytes: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}qtx_file_bytes']),
+      qtxFileName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}qtx_file_name'])!,
     );
   }
 
@@ -2777,6 +2809,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
   final int quantity;
   final String colorRemark;
   final DateTime lastUpdated;
+  final Uint8List? qtxFileBytes;
+  final String qtxFileName;
   const DraftTableData(
       {required this.id,
       required this.soldTo,
@@ -2803,7 +2837,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       required this.endUse,
       required this.quantity,
       required this.colorRemark,
-      required this.lastUpdated});
+      required this.lastUpdated,
+      this.qtxFileBytes,
+      required this.qtxFileName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2833,6 +2869,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
     map['quantity'] = Variable<int>(quantity);
     map['color_remark'] = Variable<String>(colorRemark);
     map['last_updated'] = Variable<DateTime>(lastUpdated);
+    if (!nullToAbsent || qtxFileBytes != null) {
+      map['qtx_file_bytes'] = Variable<Uint8List>(qtxFileBytes);
+    }
+    map['qtx_file_name'] = Variable<String>(qtxFileName);
     return map;
   }
 
@@ -2864,6 +2904,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       quantity: Value(quantity),
       colorRemark: Value(colorRemark),
       lastUpdated: Value(lastUpdated),
+      qtxFileBytes: qtxFileBytes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(qtxFileBytes),
+      qtxFileName: Value(qtxFileName),
     );
   }
 
@@ -2897,6 +2941,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       quantity: serializer.fromJson<int>(json['quantity']),
       colorRemark: serializer.fromJson<String>(json['colorRemark']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
+      qtxFileBytes: serializer.fromJson<Uint8List?>(json['qtxFileBytes']),
+      qtxFileName: serializer.fromJson<String>(json['qtxFileName']),
     );
   }
   @override
@@ -2929,6 +2975,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       'quantity': serializer.toJson<int>(quantity),
       'colorRemark': serializer.toJson<String>(colorRemark),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
+      'qtxFileBytes': serializer.toJson<Uint8List?>(qtxFileBytes),
+      'qtxFileName': serializer.toJson<String>(qtxFileName),
     };
   }
 
@@ -2958,7 +3006,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           String? endUse,
           int? quantity,
           String? colorRemark,
-          DateTime? lastUpdated}) =>
+          DateTime? lastUpdated,
+          Value<Uint8List?> qtxFileBytes = const Value.absent(),
+          String? qtxFileName}) =>
       DraftTableData(
         id: id ?? this.id,
         soldTo: soldTo ?? this.soldTo,
@@ -2986,6 +3036,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         quantity: quantity ?? this.quantity,
         colorRemark: colorRemark ?? this.colorRemark,
         lastUpdated: lastUpdated ?? this.lastUpdated,
+        qtxFileBytes:
+            qtxFileBytes.present ? qtxFileBytes.value : this.qtxFileBytes,
+        qtxFileName: qtxFileName ?? this.qtxFileName,
       );
   DraftTableData copyWithCompanion(DraftTableCompanion data) {
     return DraftTableData(
@@ -3027,6 +3080,11 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           data.colorRemark.present ? data.colorRemark.value : this.colorRemark,
       lastUpdated:
           data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
+      qtxFileBytes: data.qtxFileBytes.present
+          ? data.qtxFileBytes.value
+          : this.qtxFileBytes,
+      qtxFileName:
+          data.qtxFileName.present ? data.qtxFileName.value : this.qtxFileName,
     );
   }
 
@@ -3058,7 +3116,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           ..write('endUse: $endUse, ')
           ..write('quantity: $quantity, ')
           ..write('colorRemark: $colorRemark, ')
-          ..write('lastUpdated: $lastUpdated')
+          ..write('lastUpdated: $lastUpdated, ')
+          ..write('qtxFileBytes: $qtxFileBytes, ')
+          ..write('qtxFileName: $qtxFileName')
           ..write(')'))
         .toString();
   }
@@ -3090,7 +3150,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         endUse,
         quantity,
         colorRemark,
-        lastUpdated
+        lastUpdated,
+        $driftBlobEquality.hash(qtxFileBytes),
+        qtxFileName
       ]);
   @override
   bool operator ==(Object other) =>
@@ -3121,7 +3183,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           other.endUse == this.endUse &&
           other.quantity == this.quantity &&
           other.colorRemark == this.colorRemark &&
-          other.lastUpdated == this.lastUpdated);
+          other.lastUpdated == this.lastUpdated &&
+          $driftBlobEquality.equals(other.qtxFileBytes, this.qtxFileBytes) &&
+          other.qtxFileName == this.qtxFileName);
 }
 
 class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
@@ -3151,6 +3215,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   final Value<int> quantity;
   final Value<String> colorRemark;
   final Value<DateTime> lastUpdated;
+  final Value<Uint8List?> qtxFileBytes;
+  final Value<String> qtxFileName;
   const DraftTableCompanion({
     this.id = const Value.absent(),
     this.soldTo = const Value.absent(),
@@ -3178,6 +3244,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.quantity = const Value.absent(),
     this.colorRemark = const Value.absent(),
     this.lastUpdated = const Value.absent(),
+    this.qtxFileBytes = const Value.absent(),
+    this.qtxFileName = const Value.absent(),
   });
   DraftTableCompanion.insert({
     this.id = const Value.absent(),
@@ -3206,6 +3274,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     required int quantity,
     required String colorRemark,
     required DateTime lastUpdated,
+    this.qtxFileBytes = const Value.absent(),
+    required String qtxFileName,
   })  : soldTo = Value(soldTo),
         orderType = Value(orderType),
         orderNumber = Value(orderNumber),
@@ -3230,7 +3300,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
         endUse = Value(endUse),
         quantity = Value(quantity),
         colorRemark = Value(colorRemark),
-        lastUpdated = Value(lastUpdated);
+        lastUpdated = Value(lastUpdated),
+        qtxFileName = Value(qtxFileName);
   static Insertable<DraftTableData> custom({
     Expression<int>? id,
     Expression<String>? soldTo,
@@ -3258,6 +3329,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     Expression<int>? quantity,
     Expression<String>? colorRemark,
     Expression<DateTime>? lastUpdated,
+    Expression<Uint8List>? qtxFileBytes,
+    Expression<String>? qtxFileName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3286,6 +3359,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       if (quantity != null) 'quantity': quantity,
       if (colorRemark != null) 'color_remark': colorRemark,
       if (lastUpdated != null) 'last_updated': lastUpdated,
+      if (qtxFileBytes != null) 'qtx_file_bytes': qtxFileBytes,
+      if (qtxFileName != null) 'qtx_file_name': qtxFileName,
     });
   }
 
@@ -3315,7 +3390,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       Value<String>? endUse,
       Value<int>? quantity,
       Value<String>? colorRemark,
-      Value<DateTime>? lastUpdated}) {
+      Value<DateTime>? lastUpdated,
+      Value<Uint8List?>? qtxFileBytes,
+      Value<String>? qtxFileName}) {
     return DraftTableCompanion(
       id: id ?? this.id,
       soldTo: soldTo ?? this.soldTo,
@@ -3343,6 +3420,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       quantity: quantity ?? this.quantity,
       colorRemark: colorRemark ?? this.colorRemark,
       lastUpdated: lastUpdated ?? this.lastUpdated,
+      qtxFileBytes: qtxFileBytes ?? this.qtxFileBytes,
+      qtxFileName: qtxFileName ?? this.qtxFileName,
     );
   }
 
@@ -3427,6 +3506,12 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
     }
+    if (qtxFileBytes.present) {
+      map['qtx_file_bytes'] = Variable<Uint8List>(qtxFileBytes.value);
+    }
+    if (qtxFileName.present) {
+      map['qtx_file_name'] = Variable<String>(qtxFileName.value);
+    }
     return map;
   }
 
@@ -3458,7 +3543,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
           ..write('endUse: $endUse, ')
           ..write('quantity: $quantity, ')
           ..write('colorRemark: $colorRemark, ')
-          ..write('lastUpdated: $lastUpdated')
+          ..write('lastUpdated: $lastUpdated, ')
+          ..write('qtxFileBytes: $qtxFileBytes, ')
+          ..write('qtxFileName: $qtxFileName')
           ..write(')'))
         .toString();
   }
@@ -4640,6 +4727,8 @@ typedef $$DraftTableTableCreateCompanionBuilder = DraftTableCompanion Function({
   required int quantity,
   required String colorRemark,
   required DateTime lastUpdated,
+  Value<Uint8List?> qtxFileBytes,
+  required String qtxFileName,
 });
 typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<int> id,
@@ -4668,6 +4757,8 @@ typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<int> quantity,
   Value<String> colorRemark,
   Value<DateTime> lastUpdated,
+  Value<Uint8List?> qtxFileBytes,
+  Value<String> qtxFileName,
 });
 
 class $$DraftTableTableFilterComposer
@@ -4758,6 +4849,12 @@ class $$DraftTableTableFilterComposer
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<Uint8List> get qtxFileBytes => $composableBuilder(
+      column: $table.qtxFileBytes, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get qtxFileName => $composableBuilder(
+      column: $table.qtxFileName, builder: (column) => ColumnFilters(column));
 }
 
 class $$DraftTableTableOrderingComposer
@@ -4849,6 +4946,13 @@ class $$DraftTableTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Uint8List> get qtxFileBytes => $composableBuilder(
+      column: $table.qtxFileBytes,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get qtxFileName => $composableBuilder(
+      column: $table.qtxFileName, builder: (column) => ColumnOrderings(column));
 }
 
 class $$DraftTableTableAnnotationComposer
@@ -4937,6 +5041,12 @@ class $$DraftTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get qtxFileBytes => $composableBuilder(
+      column: $table.qtxFileBytes, builder: (column) => column);
+
+  GeneratedColumn<String> get qtxFileName => $composableBuilder(
+      column: $table.qtxFileName, builder: (column) => column);
 }
 
 class $$DraftTableTableTableManager extends RootTableManager<
@@ -4991,6 +5101,8 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<int> quantity = const Value.absent(),
             Value<String> colorRemark = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
+            Value<Uint8List?> qtxFileBytes = const Value.absent(),
+            Value<String> qtxFileName = const Value.absent(),
           }) =>
               DraftTableCompanion(
             id: id,
@@ -5019,6 +5131,8 @@ class $$DraftTableTableTableManager extends RootTableManager<
             quantity: quantity,
             colorRemark: colorRemark,
             lastUpdated: lastUpdated,
+            qtxFileBytes: qtxFileBytes,
+            qtxFileName: qtxFileName,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -5047,6 +5161,8 @@ class $$DraftTableTableTableManager extends RootTableManager<
             required int quantity,
             required String colorRemark,
             required DateTime lastUpdated,
+            Value<Uint8List?> qtxFileBytes = const Value.absent(),
+            required String qtxFileName,
           }) =>
               DraftTableCompanion.insert(
             id: id,
@@ -5075,6 +5191,8 @@ class $$DraftTableTableTableManager extends RootTableManager<
             quantity: quantity,
             colorRemark: colorRemark,
             lastUpdated: lastUpdated,
+            qtxFileBytes: qtxFileBytes,
+            qtxFileName: qtxFileName,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

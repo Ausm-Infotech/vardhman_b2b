@@ -500,6 +500,7 @@ class DtmEntryController extends GetxController {
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
           merchandiser: rxMerchandiser.value,
+          qtxFileName: '',
         ),
         mode: drift.InsertMode.insertOrReplace,
       );

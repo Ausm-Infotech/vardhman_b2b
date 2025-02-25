@@ -27,6 +27,6 @@ class DraftTable extends Table {
   IntColumn get quantity => integer()();
   TextColumn get colorRemark => text()();
   DateTimeColumn get lastUpdated => dateTime()();
-  BlobColumn get qtxFileBytes => blob()();
+  BlobColumn get qtxFileBytes => blob().nullable()();
   TextColumn get qtxFileName => text()();
 }

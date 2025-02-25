@@ -526,6 +526,8 @@ class LabdipEntryController extends GetxController {
           colorRemark: _colorRemark,
           lastUpdated: DateTime.now(),
           merchandiser: rxMerchandiser.value,
+          qtxFileName: rxFileName.value,
+          qtxFileBytes: drift.Value(rxFileBytes.value),
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -589,6 +591,8 @@ class LabdipEntryController extends GetxController {
                 colorRemark: drift.Value(_colorRemark),
                 lastUpdated: drift.Value(DateTime.now()),
                 merchandiser: drift.Value(rxMerchandiser.value),
+                qtxFileName: drift.Value(rxFileName.value),
+                qtxFileBytes: drift.Value(rxFileBytes.value),
               ),
             );
       }
