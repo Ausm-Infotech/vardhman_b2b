@@ -427,14 +427,14 @@ class CreateLabdipOrderView extends StatelessWidget {
                                         labdipEntryController
                                             .rxFileBytes.value = file.bytes;
 
-                                        await Api.uploadMediaAttachment(
-                                          fileBytes: file.bytes!,
-                                          fileName: file.name,
-                                          moKey: 'QTX|QT|||1001|0|LD|B2BL-1099',
-                                          moStructure: 'GT00092',
-                                          version: 'TEST1',
-                                          formName: 'P00092_W00092D',
-                                        );
+                                        // await Api.uploadMediaAttachment(
+                                        //   fileBytes: file.bytes!,
+                                        //   fileName: file.name,
+                                        //   moKey: 'QTX|QT|||1001|0|LD|B2BL-1099',
+                                        //   moStructure: 'GT00092',
+                                        //   version: 'TEST1',
+                                        //   formName: 'P00092_W00092D',
+                                        // );
                                       }
                                     },
                                   )
