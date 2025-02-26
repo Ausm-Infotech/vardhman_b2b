@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
-import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/bulk/bulk_controller.dart';
 
@@ -20,79 +19,134 @@ class BulkOrderDetailsView extends StatelessWidget {
     final CatalogController catalogController = Get.find<CatalogController>();
 
     return Obx(
-      () => Container(
-        padding: const EdgeInsets.all(0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            HeaderView(
-              elevation: 1,
-              trailing: SecondaryButton(
-                iconData: Icons.refresh,
-                text: 'Refresh',
-                onPressed: bulkController.refreshSelectedOrderDetails,
-              ),
-              title: DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: VardhmanColors.darkGrey,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (bulkController.rxSelectedOrderHeaderLine.value !=
-                          null) ...[
-                        Text(
-                          'Order Details for ${bulkController.rxSelectedOrderHeaderLine.value!.orderReference}',
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'JDE order no. ${bulkController.rxSelectedOrderHeaderLine.value!.orderNumber}',
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Dated ${DateFormat('dd/MM/yyyy').format(bulkController.rxSelectedOrderHeaderLine.value!.orderDate)}',
-                        ),
+      () {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              HeaderView(
+                elevation: 4,
+                title: DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: VardhmanColors.darkGrey,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (bulkController.rxSelectedOrderHeaderLine.value !=
+                            null) ...[
+                          Text(
+                            'Order Details for ${bulkController.rxSelectedOrderHeaderLine.value!.orderReference}',
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'JDE order no. ${bulkController.rxSelectedOrderHeaderLine.value!.orderNumber}',
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Dated ${DateFormat('dd/MM/yyyy').format(bulkController.rxSelectedOrderHeaderLine.value!.orderDate)}',
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Flexible(
-              child: bulkController.rxSelectedOrderHeaderLine.value == null
-                  ? const Center(
-                      child: Text('No Order Selected'),
-                    )
-                  : SingleChildScrollView(
-                      child: DataTable(
-                        columns: const [
-                          DataColumn2(label: Text('Line'), size: ColumnSize.S),
+              Flexible(
+                child: bulkController.rxSelectedOrderHeaderLine.value == null
+                    ? const Center(
+                        child: Text('No Order Selected'),
+                      )
+                    : DataTable2(
+                        columnSpacing: 8,
+                        showBottomBorder: true,
+                        border: TableBorder.symmetric(
+                          inside: BorderSide(
+                              color: VardhmanColors.darkGrey, width: 0.2),
+                          outside: BorderSide(
+                              color: VardhmanColors.darkGrey, width: 0.2),
+                        ),
+                        headingCheckboxTheme: CheckboxThemeData(
+                          fillColor: WidgetStatePropertyAll(Colors.white),
+                          checkColor:
+                              WidgetStatePropertyAll(VardhmanColors.red),
+                        ),
+                        datarowCheckboxTheme: CheckboxThemeData(
+                          fillColor: WidgetStatePropertyAll(Colors.white),
+                          checkColor:
+                              WidgetStatePropertyAll(VardhmanColors.red),
+                        ),
+                        dataTextStyle: TextStyle(
+                          color: VardhmanColors.darkGrey,
+                          fontSize: 13,
+                        ),
+                        checkboxHorizontalMargin: 0,
+                        horizontalMargin: 8,
+                        showCheckboxColumn: false,
+                        headingRowHeight: 40,
+                        dataRowHeight: 40,
+                        headingRowColor:
+                            WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                        headingTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        columns: [
                           DataColumn2(
-                              label: Text('Article'), size: ColumnSize.M),
-                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
-                          DataColumn2(
-                              label: Text('Ticket'), size: ColumnSize.S),
-                          DataColumn2(label: Text('Tex'), size: ColumnSize.S),
-                          DataColumn2(
-                            label: Text('Shade'),
-                            size: ColumnSize.M,
+                            label: Text('#'),
+                            size: ColumnSize.S,
+                            fixedWidth: 40,
+                            numeric: true,
                           ),
                           DataColumn2(
-                              label: Text('Quantity'), size: ColumnSize.M),
+                            label: Text('Article'),
+                            fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           DataColumn2(
-                              label: Text('Shipped'), size: ColumnSize.M),
+                            label: Text('Brand'),
+                            size: ColumnSize.M,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           DataColumn2(
-                              label: Text('Comment'), size: ColumnSize.M),
+                            label: Text('Ticket'),
+                            fixedWidth: 50,
+                            numeric: true,
+                          ),
                           DataColumn2(
-                              label: Text('Status'), size: ColumnSize.M),
+                            label: Text('Tex'),
+                            numeric: true,
+                            fixedWidth: 40,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Shade'),
+                            fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Remark'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Quantity'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Status'),
+                            size: ColumnSize.M,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                         ],
                         rows: bulkController.rxOrderDetailLines.map(
                           (orderDetail) {
@@ -111,49 +165,84 @@ class BulkOrderDetailsView extends StatelessWidget {
                                   itemCatalogInfo.uom == uom,
                             );
 
+                            final index = bulkController.rxOrderDetailLines
+                                .indexOf(orderDetail);
+
+                            var status = orderDetail.status;
+
                             return DataRow(
+                              color: WidgetStatePropertyAll(
+                                index.isEven
+                                    ? Colors.white
+                                    : VardhmanColors.dividerGrey,
+                              ),
                               cells: [
                                 DataCell(
-                                  Text(orderDetail.lineNumber
-                                      .toStringAsFixed(2)),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        Text(orderDetail.lineNumber.toString()),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(article),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(article),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.brandDesc ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.brandDesc ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.ticket ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.ticket ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.tex ?? ''),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(catalogItem?.tex ?? ''),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(shade),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(shade),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.quantityOrdered.toString()),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(orderDetail.userComment),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.quantityShipped.toString()),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                        orderDetail.quantityOrdered.toString()),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.userComment),
-                                ),
-                                DataCell(
-                                  Text(orderDetail.status),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(status),
+                                  ),
                                 ),
                               ],
                             );
                           },
                         ).toList(),
                       ),
-                    ),
-            ),
-          ],
-        ),
-      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -33,4 +33,5 @@ class DraftTable extends Table {
   TextColumn get poNumber => text()();
   TextColumn get poFileName => text()();
   BlobColumn get poFileBytes => blob().nullable()();
+  RealColumn get unitPrice => real().nullable()();
 }

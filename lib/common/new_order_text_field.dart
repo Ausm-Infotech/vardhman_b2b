@@ -94,6 +94,7 @@ class NewOrderTextField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
                         inputFormatters: inputFormatters,
                         style: TextStyle(
                           color: VardhmanColors.darkGrey,

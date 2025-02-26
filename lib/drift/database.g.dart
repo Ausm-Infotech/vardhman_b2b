@@ -2506,6 +2506,12 @@ class $DraftTableTable extends DraftTable
   late final GeneratedColumn<Uint8List> poFileBytes =
       GeneratedColumn<Uint8List>('po_file_bytes', aliasedName, true,
           type: DriftSqlType.blob, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2539,7 +2545,8 @@ class $DraftTableTable extends DraftTable
         requestedDate,
         poNumber,
         poFileName,
-        poFileBytes
+        poFileBytes,
+        unitPrice
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2762,6 +2769,10 @@ class $DraftTableTable extends DraftTable
           poFileBytes.isAcceptableOrUnknown(
               data['po_file_bytes']!, _poFileBytesMeta));
     }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
     return context;
   }
 
@@ -2835,6 +2846,8 @@ class $DraftTableTable extends DraftTable
           .read(DriftSqlType.string, data['${effectivePrefix}po_file_name'])!,
       poFileBytes: attachedDatabase.typeMapping
           .read(DriftSqlType.blob, data['${effectivePrefix}po_file_bytes']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
     );
   }
 
@@ -2877,6 +2890,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
   final String poNumber;
   final String poFileName;
   final Uint8List? poFileBytes;
+  final double? unitPrice;
   const DraftTableData(
       {required this.id,
       required this.soldTo,
@@ -2909,7 +2923,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       this.requestedDate,
       required this.poNumber,
       required this.poFileName,
-      this.poFileBytes});
+      this.poFileBytes,
+      this.unitPrice});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2950,6 +2965,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
     map['po_file_name'] = Variable<String>(poFileName);
     if (!nullToAbsent || poFileBytes != null) {
       map['po_file_bytes'] = Variable<Uint8List>(poFileBytes);
+    }
+    if (!nullToAbsent || unitPrice != null) {
+      map['unit_price'] = Variable<double>(unitPrice);
     }
     return map;
   }
@@ -2994,6 +3012,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       poFileBytes: poFileBytes == null && nullToAbsent
           ? const Value.absent()
           : Value(poFileBytes),
+      unitPrice: unitPrice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(unitPrice),
     );
   }
 
@@ -3033,6 +3054,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       poNumber: serializer.fromJson<String>(json['poNumber']),
       poFileName: serializer.fromJson<String>(json['poFileName']),
       poFileBytes: serializer.fromJson<Uint8List?>(json['poFileBytes']),
+      unitPrice: serializer.fromJson<double?>(json['unitPrice']),
     );
   }
   @override
@@ -3071,6 +3093,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       'poNumber': serializer.toJson<String>(poNumber),
       'poFileName': serializer.toJson<String>(poFileName),
       'poFileBytes': serializer.toJson<Uint8List?>(poFileBytes),
+      'unitPrice': serializer.toJson<double?>(unitPrice),
     };
   }
 
@@ -3106,7 +3129,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           Value<DateTime?> requestedDate = const Value.absent(),
           String? poNumber,
           String? poFileName,
-          Value<Uint8List?> poFileBytes = const Value.absent()}) =>
+          Value<Uint8List?> poFileBytes = const Value.absent(),
+          Value<double?> unitPrice = const Value.absent()}) =>
       DraftTableData(
         id: id ?? this.id,
         soldTo: soldTo ?? this.soldTo,
@@ -3142,6 +3166,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         poNumber: poNumber ?? this.poNumber,
         poFileName: poFileName ?? this.poFileName,
         poFileBytes: poFileBytes.present ? poFileBytes.value : this.poFileBytes,
+        unitPrice: unitPrice.present ? unitPrice.value : this.unitPrice,
       );
   DraftTableData copyWithCompanion(DraftTableCompanion data) {
     return DraftTableData(
@@ -3196,6 +3221,7 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           data.poFileName.present ? data.poFileName.value : this.poFileName,
       poFileBytes:
           data.poFileBytes.present ? data.poFileBytes.value : this.poFileBytes,
+      unitPrice: data.unitPrice.present ? data.unitPrice.value : this.unitPrice,
     );
   }
 
@@ -3233,7 +3259,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           ..write('requestedDate: $requestedDate, ')
           ..write('poNumber: $poNumber, ')
           ..write('poFileName: $poFileName, ')
-          ..write('poFileBytes: $poFileBytes')
+          ..write('poFileBytes: $poFileBytes, ')
+          ..write('unitPrice: $unitPrice')
           ..write(')'))
         .toString();
   }
@@ -3271,7 +3298,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         requestedDate,
         poNumber,
         poFileName,
-        $driftBlobEquality.hash(poFileBytes)
+        $driftBlobEquality.hash(poFileBytes),
+        unitPrice
       ]);
   @override
   bool operator ==(Object other) =>
@@ -3308,7 +3336,8 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           other.requestedDate == this.requestedDate &&
           other.poNumber == this.poNumber &&
           other.poFileName == this.poFileName &&
-          $driftBlobEquality.equals(other.poFileBytes, this.poFileBytes));
+          $driftBlobEquality.equals(other.poFileBytes, this.poFileBytes) &&
+          other.unitPrice == this.unitPrice);
 }
 
 class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
@@ -3344,6 +3373,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   final Value<String> poNumber;
   final Value<String> poFileName;
   final Value<Uint8List?> poFileBytes;
+  final Value<double?> unitPrice;
   const DraftTableCompanion({
     this.id = const Value.absent(),
     this.soldTo = const Value.absent(),
@@ -3377,6 +3407,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.poNumber = const Value.absent(),
     this.poFileName = const Value.absent(),
     this.poFileBytes = const Value.absent(),
+    this.unitPrice = const Value.absent(),
   });
   DraftTableCompanion.insert({
     this.id = const Value.absent(),
@@ -3411,6 +3442,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     required String poNumber,
     required String poFileName,
     this.poFileBytes = const Value.absent(),
+    this.unitPrice = const Value.absent(),
   })  : soldTo = Value(soldTo),
         orderType = Value(orderType),
         orderNumber = Value(orderNumber),
@@ -3472,6 +3504,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     Expression<String>? poNumber,
     Expression<String>? poFileName,
     Expression<Uint8List>? poFileBytes,
+    Expression<double>? unitPrice,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3506,6 +3539,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       if (poNumber != null) 'po_number': poNumber,
       if (poFileName != null) 'po_file_name': poFileName,
       if (poFileBytes != null) 'po_file_bytes': poFileBytes,
+      if (unitPrice != null) 'unit_price': unitPrice,
     });
   }
 
@@ -3541,7 +3575,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       Value<DateTime?>? requestedDate,
       Value<String>? poNumber,
       Value<String>? poFileName,
-      Value<Uint8List?>? poFileBytes}) {
+      Value<Uint8List?>? poFileBytes,
+      Value<double?>? unitPrice}) {
     return DraftTableCompanion(
       id: id ?? this.id,
       soldTo: soldTo ?? this.soldTo,
@@ -3575,6 +3610,7 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       poNumber: poNumber ?? this.poNumber,
       poFileName: poFileName ?? this.poFileName,
       poFileBytes: poFileBytes ?? this.poFileBytes,
+      unitPrice: unitPrice ?? this.unitPrice,
     );
   }
 
@@ -3677,6 +3713,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     if (poFileBytes.present) {
       map['po_file_bytes'] = Variable<Uint8List>(poFileBytes.value);
     }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
     return map;
   }
 
@@ -3714,7 +3753,8 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
           ..write('requestedDate: $requestedDate, ')
           ..write('poNumber: $poNumber, ')
           ..write('poFileName: $poFileName, ')
-          ..write('poFileBytes: $poFileBytes')
+          ..write('poFileBytes: $poFileBytes, ')
+          ..write('unitPrice: $unitPrice')
           ..write(')'))
         .toString();
   }
@@ -4902,6 +4942,7 @@ typedef $$DraftTableTableCreateCompanionBuilder = DraftTableCompanion Function({
   required String poNumber,
   required String poFileName,
   Value<Uint8List?> poFileBytes,
+  Value<double?> unitPrice,
 });
 typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<int> id,
@@ -4936,6 +4977,7 @@ typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<String> poNumber,
   Value<String> poFileName,
   Value<Uint8List?> poFileBytes,
+  Value<double?> unitPrice,
 });
 
 class $$DraftTableTableFilterComposer
@@ -5044,6 +5086,9 @@ class $$DraftTableTableFilterComposer
 
   ColumnFilters<Uint8List> get poFileBytes => $composableBuilder(
       column: $table.poFileBytes, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get unitPrice => $composableBuilder(
+      column: $table.unitPrice, builder: (column) => ColumnFilters(column));
 }
 
 class $$DraftTableTableOrderingComposer
@@ -5155,6 +5200,9 @@ class $$DraftTableTableOrderingComposer
 
   ColumnOrderings<Uint8List> get poFileBytes => $composableBuilder(
       column: $table.poFileBytes, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get unitPrice => $composableBuilder(
+      column: $table.unitPrice, builder: (column) => ColumnOrderings(column));
 }
 
 class $$DraftTableTableAnnotationComposer
@@ -5261,6 +5309,9 @@ class $$DraftTableTableAnnotationComposer
 
   GeneratedColumn<Uint8List> get poFileBytes => $composableBuilder(
       column: $table.poFileBytes, builder: (column) => column);
+
+  GeneratedColumn<double> get unitPrice =>
+      $composableBuilder(column: $table.unitPrice, builder: (column) => column);
 }
 
 class $$DraftTableTableTableManager extends RootTableManager<
@@ -5321,6 +5372,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<String> poNumber = const Value.absent(),
             Value<String> poFileName = const Value.absent(),
             Value<Uint8List?> poFileBytes = const Value.absent(),
+            Value<double?> unitPrice = const Value.absent(),
           }) =>
               DraftTableCompanion(
             id: id,
@@ -5355,6 +5407,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             poNumber: poNumber,
             poFileName: poFileName,
             poFileBytes: poFileBytes,
+            unitPrice: unitPrice,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -5389,6 +5442,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             required String poNumber,
             required String poFileName,
             Value<Uint8List?> poFileBytes = const Value.absent(),
+            Value<double?> unitPrice = const Value.absent(),
           }) =>
               DraftTableCompanion.insert(
             id: id,
@@ -5423,6 +5477,7 @@ class $$DraftTableTableTableManager extends RootTableManager<
             poNumber: poNumber,
             poFileName: poFileName,
             poFileBytes: poFileBytes,
+            unitPrice: unitPrice,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

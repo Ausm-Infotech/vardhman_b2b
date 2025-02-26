@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
-import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -162,7 +161,7 @@ class OrderReviewController extends GetxController {
   Future<bool> submitBulkOrder({
     required String merchandiserName,
     required String b2bOrderNumber,
-    required List<BulkEntryLine> bulkEntryLines,
+    required List<DraftTableData> bulkEntryLines,
   }) async {
     bool isSubmitted = false;
 

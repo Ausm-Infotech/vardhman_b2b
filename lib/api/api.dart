@@ -16,7 +16,6 @@ import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
-import 'package:vardhman_b2b/bulk/bulk_entry_line.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
@@ -310,6 +309,46 @@ class Api {
     }
 
     return shades;
+  }
+
+  static Future<double?> fetchUnitPrice({
+    required String soldToNumber,
+    required String shipToNumber,
+    required String itemNumber,
+    required String businessUnit,
+    required DateTime effectiveDate,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH554074_GetUnitPrice',
+        data: {
+          "Address_Number": soldToNumber,
+          "Ship_To": shipToNumber,
+          "Item_Number": itemNumber,
+          "Business_Unit": businessUnit,
+          "Price_Effective": DateFormat('MM/dd/yyyy').format(effectiveDate),
+          "P4074_Version": "ZJDE0001"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final unitPrices = response.data['GetUnitPrice'] as List;
+        double totalUnitPrice = 0.0;
+
+        for (var unitPrice in unitPrices) {
+          if (['SBP', 'DISC1', 'DISC2', 'CDIS']
+              .contains(unitPrice['Adj Name'])) {
+            totalUnitPrice += unitPrice['Unit Price'];
+          }
+        }
+
+        return totalUnitPrice;
+      }
+    } catch (e) {
+      log('fetchUnitPrice error - $e');
+    }
+
+    return null;
   }
 
   static Future<UserDetailsCompanion?> fetchUserData(
@@ -1350,7 +1389,7 @@ class Api {
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<BulkEntryLine> bulkEntryLines,
+    required List<DraftTableData> bulkEntryLines,
   }) async {
     final payload = {
       "Detail": bulkEntryLines

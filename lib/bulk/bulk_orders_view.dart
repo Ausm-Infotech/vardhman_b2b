@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/bulk/create_bulk_order_view.dart';
 import 'package:vardhman_b2b/bulk/bulk_controller.dart';
+import 'package:vardhman_b2b/bulk/bulk_entry_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class BulkOrdersView extends StatelessWidget {
@@ -29,84 +32,235 @@ class BulkOrdersView extends StatelessWidget {
           HeaderView(
             leading: SecondaryButton(
               iconData: Icons.refresh,
-              text: 'Refresh',
+              text: '',
               onPressed: ordersController.refreshOrders,
             ),
             title: const Text(
               'Bulk Orders',
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: VardhmanColors.darkGrey,
+              ),
             ),
             trailing: PrimaryButton(
               text: 'New Order',
               onPressed: () async {
-                Get.dialog(
-                  const Dialog(
-                    insetPadding: EdgeInsets.symmetric(
-                      horizontal: 80,
-                      vertical: 48,
+                final newOrderNumber = await Api.fetchOrderNumber();
+
+                if (newOrderNumber != null) {
+                  if (Get.isRegistered<BulkEntryController>()) {
+                    Get.delete<BulkEntryController>();
+                  }
+
+                  Get.put(
+                    BulkEntryController(
+                      orderNumber: newOrderNumber,
                     ),
-                    clipBehavior: Clip.hardEdge,
-                    child: CreateBulkOrderView(),
-                  ),
-                );
+                  );
+
+                  Get.dialog(
+                    const Dialog(
+                      insetPadding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 24,
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: CreateBulkOrderView(),
+                    ),
+                  );
+                } else {
+                  toastification.show(
+                    autoCloseDuration: Duration(seconds: 5),
+                    primaryColor: VardhmanColors.red,
+                    title: Text('Failed to fetch new order number!'),
+                  );
+                }
               },
             ),
           ),
           Expanded(
-            child: bulkController.filteredBulkOrders.isEmpty
+            child: bulkController.filteredBulkOrders.isEmpty &&
+                    bulkController.rxDraftOrders.isEmpty
                 ? const Center(
                     child: Text('No Bulk Orders'),
                   )
                 : Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     child: DataTable2(
+                      columnSpacing: 16,
+                      horizontalMargin: 16,
+                      headingRowHeight: 40,
+                      dataRowHeight: 40,
+                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
+                      // headingRowColor:
+                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                      headingTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      dataTextStyle: TextStyle(
+                        fontSize: 13,
+                        color: VardhmanColors.darkGrey,
+                      ),
+                      border: TableBorder.symmetric(
+                        inside: BorderSide(
+                          width: 0.1,
+                          color: VardhmanColors.darkGrey,
+                        ),
+                      ),
                       showCheckboxColumn: false,
                       columns: const [
-                        DataColumn(
-                          label: Text('Order Number'),
+                        DataColumn2(
+                          label: Text('Order No.'),
+                          size: ColumnSize.L,
+                          headingRowAlignment: MainAxisAlignment.start,
                         ),
-                        DataColumn(
-                          label: Text('Reference'),
-                        ),
-                        DataColumn(
+                        // DataColumn2(
+                        //     label: Text('Reference'), size: ColumnSize.M),
+                        DataColumn2(
                           label: Text('Date'),
+                          size: ColumnSize.S,
+                          // headingRowAlignment: MainAxisAlignment.end,
+                          numeric: true,
+                          fixedWidth: 70,
                         ),
                       ],
-                      rows: bulkController.filteredBulkOrders
-                          .map(
-                            (orderHeaderLine) => DataRow(
-                              selected: orderHeaderLine ==
+                      rows: [
+                        ...bulkController.rxDraftOrders.map(
+                          (draftTableData) {
+                            final index = bulkController.rxDraftOrders
+                                .indexOf(draftTableData);
+
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                index.isEven
+                                    ? Colors.white
+                                    : VardhmanColors.dividerGrey,
+                              ),
+                              onSelectChanged: (value) {
+                                if (Get.isRegistered<BulkEntryController>()) {
+                                  Get.delete<BulkEntryController>();
+                                }
+
+                                Get.put(
+                                  BulkEntryController(
+                                    orderNumber: draftTableData.orderNumber,
+                                  ),
+                                );
+
+                                Get.dialog(
+                                  const Dialog(
+                                    insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 40,
+                                      vertical: 24,
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: CreateBulkOrderView(),
+                                  ),
+                                );
+                              },
+                              cells: [
+                                DataCell(
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Draft'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(draftTableData.orderNumber
+                                          .toString()),
+                                    ],
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      draftTableData.lastUpdated,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        ...bulkController.filteredBulkOrders.map(
+                          (bulkOrder) {
+                            final index = bulkController.filteredBulkOrders
+                                    .indexOf(bulkOrder) +
+                                bulkController.rxDraftOrders.length;
+
+                            final isSelected = bulkController
+                                    .rxSelectedOrderHeaderLine.value ==
+                                bulkOrder;
+
+                            final textStyle = TextStyle(
+                              fontSize: 13,
+                              color: isSelected
+                                  ? Colors.white
+                                  : VardhmanColors.darkGrey,
+                            );
+
+                            return DataRow(
+                              color: WidgetStatePropertyAll(
+                                isSelected
+                                    ? VardhmanColors.red
+                                    : index.isEven
+                                        ? Colors.white
+                                        : VardhmanColors.dividerGrey,
+                              ),
+                              selected: bulkOrder ==
                                   bulkController
                                       .rxSelectedOrderHeaderLine.value,
                               onSelectChanged: (value) {
                                 if (value == true &&
                                     bulkController
                                             .rxSelectedOrderHeaderLine.value !=
-                                        orderHeaderLine) {
-                                  bulkController.selectOrder(orderHeaderLine);
+                                        bulkOrder) {
+                                  bulkController.selectOrder(bulkOrder);
                                 }
                               },
                               cells: [
                                 DataCell(
-                                  Text(orderHeaderLine.orderNumber.toString()),
-                                ),
-                                DataCell(
-                                  Text(orderHeaderLine.orderReference),
-                                ),
-                                DataCell(
-                                  Text(
-                                    DateFormat('dd/MM/yyyy').format(
-                                      orderHeaderLine.orderDate,
+                                  DefaultTextStyle(
+                                    style: textStyle,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(bulkOrder.orderNumber.toString()),
+                                        if (bulkOrder.orderReference
+                                            .trim()
+                                            .isNotEmpty) ...[
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          Text(bulkOrder.orderReference),
+                                        ],
+                                      ],
                                     ),
                                   ),
                                 ),
+                                DataCell(
+                                  Text(
+                                    DateFormat('d MMM yy').format(
+                                      bulkOrder.orderDate,
+                                    ),
+                                    style: textStyle,
+                                  ),
+                                ),
                               ],
-                            ),
-                          )
-                          .toList(),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
           ),
@@ -134,16 +288,14 @@ class BulkOrdersView extends StatelessWidget {
                       isDense: true,
                       label: Text('Order No.'),
                       labelStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -152,7 +304,7 @@ class BulkOrdersView extends StatelessWidget {
                       labelText: 'From Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderFromDate.value,
                       ),
                       prefixStyle: TextStyle(
@@ -160,7 +312,7 @@ class BulkOrdersView extends StatelessWidget {
                                 .isAtSameMomentAs(oldestDateTime)
                             ? Colors.white
                             : VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxEarliestOrderDate.value,
@@ -173,9 +325,7 @@ class BulkOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Flexible(
                   child: DateTimeField(
                     mode: DateTimeFieldPickerMode.date,
@@ -184,12 +334,12 @@ class BulkOrdersView extends StatelessWidget {
                       labelText: 'To Date',
                       border: OutlineInputBorder(),
                       suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yyyy').format(
+                      prefixText: DateFormat('d MMM yy').format(
                         ordersController.rxOrderToDate.value,
                       ),
                       prefixStyle: TextStyle(
                         color: VardhmanColors.darkGrey,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     firstDate: ordersController.rxOrderFromDate.value,
@@ -202,9 +352,7 @@ class BulkOrdersView extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 SecondaryButton(
                   wait: false,
                   iconData: FontAwesomeIcons.arrowRotateLeft,
