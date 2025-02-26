@@ -66,6 +66,144 @@ class CreateDtmOrderView extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Spacer(),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: NewOrderTextField(
+                              labelText: 'PO Number',
+                              rxString: dtmEntryController.rxPoNumber,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: NewOrderTextField(
+                              isEnabled: false,
+                              labelText: 'PO File',
+                              rxString: dtmEntryController.rxPoFileName,
+                              hintText: 'no file chosen',
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: dtmEntryController.rxPoFileName.isEmpty
+                                ? SecondaryButton(
+                                    wait: false,
+                                    text: 'Choose File',
+                                    onPressed: () async {
+                                      final FilePickerResult? filePickerResult =
+                                          await FilePicker.platform.pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: ['pdf'],
+                                        withData: true,
+                                        readSequential: true,
+                                      );
+
+                                      if (filePickerResult != null) {
+                                        final file =
+                                            filePickerResult.files.single;
+
+                                        dtmEntryController.rxPoFileName.value =
+                                            file.name;
+
+                                        dtmEntryController.rxPoFileBytes.value =
+                                            file.bytes;
+                                      }
+                                    },
+                                  )
+                                : SecondaryButton(
+                                    wait: false,
+                                    iconData: Icons.clear,
+                                    text: '',
+                                    onPressed: () async {
+                                      dtmEntryController.rxPoFileName.value =
+                                          '';
+
+                                      dtmEntryController.rxPoFileBytes.value =
+                                          null;
+                                    },
+                                  ),
+                          ),
+                        ],
+                      ),
+                      CatalogSearchField(
+                        isRequired: true,
+                        labelText: 'Merchandiser',
+                        rxString: dtmEntryController.rxMerchandiser,
+                        searchList: dtmEntryController.rxMerchandisers,
+                        shouldEnforceList: false,
+                        hasError: dtmEntryController.merchandiserHasError,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: CatalogSearchField(
+                              hasError: dtmEntryController.buyerNameHasError,
+                              labelText: 'Buyer',
+                              isRequired: true,
+                              rxString: dtmEntryController.rxBuyerName,
+                              searchList: dtmEntryController.buyerNames,
+                            ),
+                          ),
+                          if (dtmEntryController.isOtherBuyer) ...[
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Expanded(
+                              child: NewOrderTextField(
+                                hasError:
+                                    dtmEntryController.otherBuyerNameHasError,
+                                labelText: 'Name',
+                                isRequired: true,
+                                rxString: dtmEntryController.rxOtherBuyerName,
+                              ),
+                            ),
+                          ]
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: CatalogSearchField(
+                              isSearchboxEnabled: false,
+                              hasError:
+                                  dtmEntryController.firstLightSourceHasError,
+                              isRequired: true,
+                              isEnabled:
+                                  dtmEntryController.isLightSource1Enabled,
+                              labelText: 'Light Source 1',
+                              rxString: dtmEntryController.rxFirstLightSource,
+                              searchList: dtmEntryController.firstLightSources,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: CatalogSearchField(
+                              isSearchboxEnabled: false,
+                              isEnabled:
+                                  dtmEntryController.isLightSource2Enabled,
+                              labelText: 'Light Source 2',
+                              rxString: dtmEntryController.rxSecondLightSource,
+                              searchList: dtmEntryController.secondLightSources,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   flex: 10,
                   child: Column(
@@ -76,89 +214,6 @@ class CreateDtmOrderView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Spacer(),
-                          Expanded(
-                            flex: 4,
-                            child: Column(
-                              children: <Widget>[
-                                CatalogSearchField(
-                                  isRequired: true,
-                                  labelText: 'Merchandiser',
-                                  rxString: dtmEntryController.rxMerchandiser,
-                                  searchList:
-                                      dtmEntryController.rxMerchandisers,
-                                  shouldEnforceList: false,
-                                  hasError:
-                                      dtmEntryController.merchandiserHasError,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: CatalogSearchField(
-                                        hasError: dtmEntryController
-                                            .buyerNameHasError,
-                                        labelText: 'Buyer',
-                                        isRequired: true,
-                                        rxString:
-                                            dtmEntryController.rxBuyerName,
-                                        searchList:
-                                            dtmEntryController.buyerNames,
-                                      ),
-                                    ),
-                                    if (dtmEntryController.isOtherBuyer) ...[
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Expanded(
-                                        child: NewOrderTextField(
-                                          hasError: dtmEntryController
-                                              .otherBuyerNameHasError,
-                                          labelText: 'Name',
-                                          isRequired: true,
-                                          rxString: dtmEntryController
-                                              .rxOtherBuyerName,
-                                        ),
-                                      ),
-                                    ]
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: CatalogSearchField(
-                                        isSearchboxEnabled: false,
-                                        hasError: dtmEntryController
-                                            .firstLightSourceHasError,
-                                        isRequired: true,
-                                        isEnabled: dtmEntryController
-                                            .isLightSource1Enabled,
-                                        labelText: 'Light Source 1',
-                                        rxString: dtmEntryController
-                                            .rxFirstLightSource,
-                                        searchList: dtmEntryController
-                                            .firstLightSources,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 4,
-                                    ),
-                                    Expanded(
-                                      child: CatalogSearchField(
-                                        isSearchboxEnabled: false,
-                                        isEnabled: dtmEntryController
-                                            .isLightSource2Enabled,
-                                        labelText: 'Light Source 2',
-                                        rxString: dtmEntryController
-                                            .rxSecondLightSource,
-                                        searchList: dtmEntryController
-                                            .secondLightSources,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
                           Spacer(),
                           Expanded(
                             flex: 4,
@@ -260,6 +315,76 @@ class CreateDtmOrderView extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: CatalogSearchField(
+                                        hasError:
+                                            dtmEntryController.shadeHasError,
+                                        labelText: 'Shade',
+                                        isRequired: true,
+                                        isEnabled: dtmEntryController
+                                            .rxArticle.isNotEmpty,
+                                        rxString: dtmEntryController.rxShade,
+                                        searchList: dtmEntryController.rxShades,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Expanded(
+                                      child: NewOrderTextField(
+                                        hasError:
+                                            dtmEntryController.colorHasError,
+                                        labelText: 'Color Name',
+                                        rxString: dtmEntryController.rxColor,
+                                        isRequired: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: NewOrderTextField(
+                                        labelText: 'Quantity',
+                                        isRequired: true,
+                                        rxString: dtmEntryController.rxQuantity,
+                                        hasError:
+                                            dtmEntryController.quantityHasError,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                            RegExp(r'^[1-9]\d*'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Expanded(
+                                      child: NewOrderDateField(
+                                        labelText: 'Requested Date',
+                                        rxDate:
+                                            dtmEntryController.rxRequestedDate,
+                                        hintText: 'select',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                NewOrderTextField(
+                                  labelText: 'Remark',
+                                  rxString: dtmEntryController.rxRemark,
+                                  hintText: 'Enter Remark',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
                         ],
                       ),
                       SizedBox(
@@ -336,137 +461,6 @@ class CreateDtmOrderView extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: CatalogSearchField(
-                              hasError: dtmEntryController.shadeHasError,
-                              labelText: 'Shade',
-                              isRequired: true,
-                              isEnabled:
-                                  dtmEntryController.rxArticle.isNotEmpty,
-                              rxString: dtmEntryController.rxShade,
-                              searchList: dtmEntryController.rxShades,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: NewOrderTextField(
-                              hasError: dtmEntryController.colorHasError,
-                              labelText: 'Color Name',
-                              rxString: dtmEntryController.rxColor,
-                              isRequired: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: NewOrderTextField(
-                              labelText: 'Quantity',
-                              isRequired: true,
-                              rxString: dtmEntryController.rxQuantity,
-                              hasError: dtmEntryController.quantityHasError,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^[1-9]\d*'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: NewOrderDateField(
-                              labelText: 'Requested Date',
-                              rxDate: dtmEntryController.rxRequestedDate,
-                              hintText: 'select',
-                            ),
-                          ),
-                        ],
-                      ),
-                      NewOrderTextField(
-                        labelText: 'Remark',
-                        rxString: dtmEntryController.rxRemark,
-                        hintText: 'Enter Remark',
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: NewOrderTextField(
-                              labelText: 'PO Number',
-                              rxString: dtmEntryController.rxPoNumber,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: NewOrderTextField(
-                              isEnabled: false,
-                              labelText: 'PO File',
-                              rxString: dtmEntryController.rxPoFileName,
-                              hintText: 'no file chosen',
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: dtmEntryController.rxPoFileName.isEmpty
-                                ? SecondaryButton(
-                                    wait: false,
-                                    text: 'Choose File',
-                                    onPressed: () async {
-                                      final FilePickerResult? filePickerResult =
-                                          await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: ['pdf'],
-                                        withData: true,
-                                        readSequential: true,
-                                      );
-
-                                      if (filePickerResult != null) {
-                                        final file =
-                                            filePickerResult.files.single;
-
-                                        dtmEntryController.rxPoFileName.value =
-                                            file.name;
-
-                                        dtmEntryController.rxPoFileBytes.value =
-                                            file.bytes;
-                                      }
-                                    },
-                                  )
-                                : SecondaryButton(
-                                    wait: false,
-                                    iconData: Icons.clear,
-                                    text: '',
-                                    onPressed: () async {
-                                      dtmEntryController.rxPoFileName.value =
-                                          '';
-
-                                      dtmEntryController.rxPoFileBytes.value =
-                                          null;
-                                    },
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
               ],
             ),
           ),
