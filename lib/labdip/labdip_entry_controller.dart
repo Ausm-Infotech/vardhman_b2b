@@ -200,36 +200,38 @@ class LabdipEntryController extends GetxController {
 
     rxArticle.listen(
       (_) {
-        selectIfOnlyOneOption(rxArticle.hashCode);
+        _selectIfOnlyOneOption(rxArticle.hashCode);
 
-        resetShade();
+        _resetShade();
       },
     );
 
-    rxBrand.listen((_) => selectIfOnlyOneOption(rxBrand.hashCode));
-    rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
-    rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
+    rxBrand.listen((_) => _selectIfOnlyOneOption(rxBrand.hashCode));
+    rxSubstrate.listen((_) => _selectIfOnlyOneOption(rxSubstrate.hashCode));
+    rxTex.listen((_) => _selectIfOnlyOneOption(rxTex.hashCode));
 
-    rxBuyerName.listen(buyerNameListener);
+    rxBuyerName.listen(_buyerNameListener);
 
-    rxOtherBuyerName.listen(otherBuyerListener);
+    rxOtherBuyerName.listen(_otherBuyerListener);
 
-    rxUomWithDesc.listen(uomWithDescListener);
+    rxUomWithDesc.listen(_uomWithDescListener);
 
-    rxUom.listen((_) => selectIfOnlyOneOption(rxUom.hashCode));
+    rxUom.listen((_) => _selectIfOnlyOneOption(rxUom.hashCode));
+
+    rxFileName.listen(_fileNameListener);
   }
 
-  void uomWithDescListener(String newUomWithDesc) {
+  void _uomWithDescListener(String newUomWithDesc) {
     if (newUomWithDesc.isNotEmpty) {
       rxUom.value = newUomWithDesc.split(' - ')[0];
     } else {
       rxUom.value = '';
     }
 
-    resetShade();
+    _resetShade();
   }
 
-  void resetShade() {
+  void _resetShade() {
     rxShade.value = '';
 
     rxShades.clear();
@@ -270,11 +272,17 @@ class LabdipEntryController extends GetxController {
     }
   }
 
+  void _fileNameListener(String newFileName) {
+    if (newFileName.isEmpty) {
+      rxFileBytes.value = null;
+    }
+  }
+
   void shadeListener(String newShade) {
     rxColor.value = '';
   }
 
-  void buyerNameListener(String newBuyerName) {
+  void _buyerNameListener(String newBuyerName) {
     final buyerName = newBuyerName.trim();
 
     rxBuyerInfo.value = null;
@@ -297,7 +305,7 @@ class LabdipEntryController extends GetxController {
     }
   }
 
-  void otherBuyerListener(String newOtherBuyerName) {
+  void _otherBuyerListener(String newOtherBuyerName) {
     final otherBuyerName = newOtherBuyerName.trim();
 
     rxBuyerInfo.value = null;
@@ -357,7 +365,7 @@ class LabdipEntryController extends GetxController {
               .toList()
           : [rxSecondLightSource.value];
 
-  void selectIfOnlyOneOption(int hashCode) {
+  void _selectIfOnlyOneOption(int hashCode) {
     if (hashCode == rxArticle.hashCode && rxArticle.value.isEmpty) {
       rxUom.value = '';
       rxUomWithDesc.value = '';
@@ -532,6 +540,8 @@ class LabdipEntryController extends GetxController {
           merchandiser: rxMerchandiser.value,
           qtxFileName: rxFileName.value,
           qtxFileBytes: drift.Value(rxFileBytes.value),
+          poNumber: '',
+          poFileName: '',
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -640,14 +650,17 @@ class LabdipEntryController extends GetxController {
       rxTex.value != '' ||
       rxBrand.value != '' ||
       rxArticle.value != '' ||
-      rxUom.value != '' ||
       rxShade.value != '' ||
       rxMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
       rxOtherBuyerName.value != '' ||
       _rxBuyerCode.value != '' ||
       rxFirstLightSource.value != '' ||
-      rxSecondLightSource.value != '';
+      rxSecondLightSource.value != '' ||
+      rxFileName.value != '' ||
+      rxFileBytes.value != null ||
+      rxUomWithDesc.value != '' ||
+      rxUom.value != '';
 
   void clearAllInputs({List<int> skipHashCodes = const []}) {
     if (!skipHashCodes.contains(rxColor.hashCode)) {
@@ -707,15 +720,9 @@ class LabdipEntryController extends GetxController {
     if (!skipHashCodes.contains(rxSecondLightSource.hashCode)) {
       rxSecondLightSource.value = '';
     }
-
     if (!skipHashCodes.contains(rxFileName.hashCode)) {
       rxFileName.value = '';
     }
-
-    if (!skipHashCodes.contains(rxFileBytes.hashCode)) {
-      rxFileBytes.value = null;
-    }
-
     if (!skipHashCodes.contains(rxUomWithDesc.hashCode)) {
       rxUomWithDesc.value = '';
     }

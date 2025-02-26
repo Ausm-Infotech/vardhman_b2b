@@ -82,6 +82,7 @@ class NewOrderDateField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DateTimeField(
+                        padding: EdgeInsets.only(top: 4),
                         mode: DateTimeFieldPickerMode.date,
                         decoration: InputDecoration(
                           errorBorder: noneBorder,

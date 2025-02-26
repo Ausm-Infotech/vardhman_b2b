@@ -30,4 +30,7 @@ class DraftTable extends Table {
   BlobColumn get qtxFileBytes => blob().nullable()();
   TextColumn get qtxFileName => text()();
   DateTimeColumn get requestedDate => dateTime().nullable()();
+  TextColumn get poNumber => text()();
+  TextColumn get poFileName => text()();
+  BlobColumn get poFileBytes => blob().nullable()();
 }

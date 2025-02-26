@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -13,6 +14,7 @@ class NewOrderTextField extends StatelessWidget {
     this.minLines,
     this.isRequired = false,
     this.hasError = false,
+    this.inputFormatters = const [],
   });
 
   final String labelText;
@@ -22,6 +24,7 @@ class NewOrderTextField extends StatelessWidget {
   final int? minLines;
   final bool isRequired;
   final bool hasError;
+  final List<TextInputFormatter> inputFormatters;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -82,13 +85,16 @@ class NewOrderTextField extends StatelessWidget {
                             : VardhmanColors.darkGrey,
                     width: 1.5,
                   ),
-                  color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
+                  color: isEnabled
+                      ? Colors.white
+                      : VardhmanColors.dividerGrey.withAlpha(128),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: TextField(
+                        inputFormatters: inputFormatters,
                         style: TextStyle(
                           color: VardhmanColors.darkGrey,
                           fontSize: 13,
@@ -110,9 +116,7 @@ class NewOrderTextField extends StatelessWidget {
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
-                          contentPadding: EdgeInsets.only(
-                            left: 8,
-                          ),
+                          contentPadding: EdgeInsets.only(left: 8),
                           border: border,
                           enabledBorder: border,
                           focusedBorder: border,

@@ -1,5 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
@@ -74,6 +76,7 @@ class CreateDtmOrderView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          Spacer(),
                           Expanded(
                             flex: 4,
                             child: Column(
@@ -104,7 +107,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     ),
                                     if (dtmEntryController.isOtherBuyer) ...[
                                       SizedBox(
-                                        width: 8,
+                                        width: 4,
                                       ),
                                       Expanded(
                                         child: NewOrderTextField(
@@ -137,7 +140,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 8,
+                                      width: 4,
                                     ),
                                     Expanded(
                                       child: CatalogSearchField(
@@ -164,6 +167,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         hasError:
                                             dtmEntryController.articleHasError,
@@ -175,10 +179,10 @@ class CreateDtmOrderView extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 8,
+                                      width: 4,
                                     ),
                                     Expanded(
-                                      flex: 2,
+                                      flex: 3,
                                       child: CatalogSearchField(
                                         isRequired: true,
                                         hasError:
@@ -197,64 +201,61 @@ class CreateDtmOrderView extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                if (dtmEntryController
-                                    .rxArticle.isNotEmpty) ...[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 3,
-                                        child: CatalogSearchField(
-                                          labelText: 'Brand',
-                                          rxString: dtmEntryController.rxBrand,
-                                          searchList: dtmEntryController
-                                              .uniqueFilteredBrands,
-                                          isEnabled: false,
-                                        ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: CatalogSearchField(
+                                        isEnabled: false,
+                                        labelText: 'Ticket',
+                                        rxString: dtmEntryController.rxTicket,
+                                        searchList: dtmEntryController
+                                            .uniqueFilteredTickets,
                                       ),
-                                      SizedBox(
-                                        width: 8,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: CatalogSearchField(
+                                        labelText: 'Brand',
+                                        rxString: dtmEntryController.rxBrand,
+                                        searchList: dtmEntryController
+                                            .uniqueFilteredBrands,
+                                        isEnabled: false,
                                       ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: CatalogSearchField(
-                                          isEnabled: false,
-                                          labelText: 'Ticket',
-                                          rxString: dtmEntryController.rxTicket,
-                                          searchList: dtmEntryController
-                                              .uniqueFilteredTickets,
-                                        ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: CatalogSearchField(
+                                        labelText: 'Tex',
+                                        isEnabled: false,
+                                        rxString: dtmEntryController.rxTex,
+                                        searchList: dtmEntryController
+                                            .uniqueFilteredTexs,
                                       ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 3,
-                                        child: CatalogSearchField(
-                                          isEnabled: false,
-                                          labelText: 'Substrate',
-                                          rxString:
-                                              dtmEntryController.rxSubstrate,
-                                          searchList: dtmEntryController
-                                              .uniqueFilteredSubstrates,
-                                        ),
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: CatalogSearchField(
+                                        isEnabled: false,
+                                        labelText: 'Substrate',
+                                        rxString:
+                                            dtmEntryController.rxSubstrate,
+                                        searchList: dtmEntryController
+                                            .uniqueFilteredSubstrates,
                                       ),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: CatalogSearchField(
-                                          labelText: 'Tex',
-                                          isEnabled: false,
-                                          rxString: dtmEntryController.rxTex,
-                                          searchList: dtmEntryController
-                                              .uniqueFilteredTexs,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -267,6 +268,7 @@ class CreateDtmOrderView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Spacer(),
                           RichText(
                             text: TextSpan(
                               text: '*',
@@ -352,7 +354,7 @@ class CreateDtmOrderView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 8,
+                            width: 4,
                           ),
                           Expanded(
                             child: NewOrderTextField(
@@ -372,10 +374,15 @@ class CreateDtmOrderView extends StatelessWidget {
                               isRequired: true,
                               rxString: dtmEntryController.rxQuantity,
                               hasError: dtmEntryController.quantityHasError,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*'),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
-                            width: 8,
+                            width: 4,
                           ),
                           Expanded(
                             child: NewOrderDateField(
@@ -389,11 +396,77 @@ class CreateDtmOrderView extends StatelessWidget {
                       NewOrderTextField(
                         labelText: 'Remark',
                         rxString: dtmEntryController.rxRemark,
-                        hintText: 'enter remark',
+                        hintText: 'Enter Remark',
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: NewOrderTextField(
+                              labelText: 'PO Number',
+                              rxString: dtmEntryController.rxPoNumber,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: NewOrderTextField(
+                              isEnabled: false,
+                              labelText: 'PO File',
+                              rxString: dtmEntryController.rxPoFileName,
+                              hintText: 'no file chosen',
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: dtmEntryController.rxPoFileName.isEmpty
+                                ? SecondaryButton(
+                                    wait: false,
+                                    text: 'Choose File',
+                                    onPressed: () async {
+                                      final FilePickerResult? filePickerResult =
+                                          await FilePicker.platform.pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: ['pdf'],
+                                        withData: true,
+                                        readSequential: true,
+                                      );
+
+                                      if (filePickerResult != null) {
+                                        final file =
+                                            filePickerResult.files.single;
+
+                                        dtmEntryController.rxPoFileName.value =
+                                            file.name;
+
+                                        dtmEntryController.rxPoFileBytes.value =
+                                            file.bytes;
+                                      }
+                                    },
+                                  )
+                                : SecondaryButton(
+                                    wait: false,
+                                    iconData: Icons.clear,
+                                    text: '',
+                                    onPressed: () async {
+                                      dtmEntryController.rxPoFileName.value =
+                                          '';
+
+                                      dtmEntryController.rxPoFileBytes.value =
+                                          null;
+                                    },
+                                  ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
+                Spacer(),
               ],
             ),
           ),
@@ -431,27 +504,50 @@ class CreateDtmOrderView extends StatelessWidget {
                   label: Text('#'),
                   size: ColumnSize.S,
                   fixedWidth: 30,
-                  numeric: true,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn2(label: Text('Buyer'), size: ColumnSize.M),
+                DataColumn2(
+                  label: Text('Buyer'),
+                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
                 DataColumn2(
                   label: Text('Article'),
                   size: ColumnSize.S,
-                  fixedWidth: 60,
+                  fixedWidth: 80,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('UOM'),
                   size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Shade'),
                   size: ColumnSize.S,
-                  fixedWidth: 60,
+                  fixedWidth: 80,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn2(label: Text('Color'), size: ColumnSize.M),
-                DataColumn2(label: Text('Quantity'), size: ColumnSize.S),
-                DataColumn2(label: Text('Remark'), size: ColumnSize.L),
-                DataColumn2(label: Text('Req Date'), size: ColumnSize.S),
+                DataColumn2(
+                  label: Text('Color'),
+                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Quantity'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Remark'),
+                  size: ColumnSize.L,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Req Date'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
               ],
               empty: Center(child: const Text('No Order Lines')),
               rows: dtmEntryController.rxDtmOrderLines.map(
@@ -472,20 +568,63 @@ class CreateDtmOrderView extends StatelessWidget {
                       dtmEntryController.selectDtmOrderLine(dtmOrderLine);
                     },
                     cells: [
-                      DataCell(Text((index + 1).toString())),
-                      DataCell(Text(dtmOrderLine.buyer)),
-                      DataCell(Text(dtmOrderLine.article)),
-                      DataCell(Text("${dtmOrderLine.uom} - $uomDesc")),
-                      DataCell(Text(dtmOrderLine.shade)),
-                      DataCell(Text(dtmOrderLine.colorName)),
-                      DataCell(Text(dtmOrderLine.quantity.toString())),
-                      DataCell(Text(dtmOrderLine.remark)),
                       DataCell(
-                        Text(
-                          dtmOrderLine.requestedDate == null
-                              ? ''
-                              : DateFormat('d MMM yyyy')
-                                  .format(dtmOrderLine.requestedDate!),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text((index + 1).toString()),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.buyer),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.article),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text("${dtmOrderLine.uom} - $uomDesc"),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.shade),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.colorName),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.quantity.toString()),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(dtmOrderLine.remark),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.requestedDate == null
+                                ? ''
+                                : DateFormat('d MMM yyyy')
+                                    .format(dtmOrderLine.requestedDate!),
+                          ),
                         ),
                       ),
                     ],

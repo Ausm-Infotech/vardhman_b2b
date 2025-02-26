@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
@@ -220,6 +224,93 @@ class NavRail extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    SecondaryButton(
+                      text: 'Test',
+                      onPressed: () async {
+                        try {
+                          var data = dio.FormData.fromMap(
+                            {
+                              'file': dio.MultipartFile.fromString(
+                                'ABCD',
+                                filename: 'UploadTest3.txt',
+                              ),
+                              'moAdd': dio.MultipartFile.fromString(
+                                jsonEncode(
+                                  {
+                                    "moStructure": "GT00092",
+                                    "moKey": ["QTX|QT|||1011|0|LD|B2BL-90920"],
+                                    "file": {"fileName": "UploadTest3.txt"},
+                                  },
+                                ),
+                                contentType:
+                                    MediaType.parse('application/json'),
+                              ),
+                            },
+                          );
+
+                          var _dio = dio.Dio();
+
+                          var response = await _dio.request(
+                            'https://erpdev.vardhmanthreads.in/jderest/v2/file/upload',
+                            options: dio.Options(
+                              method: 'POST',
+                              headers: {
+                                'Authorization':
+                                    'Basic SkRFTUFQUE5QOkFwcFNlY3VyZSMx',
+                              },
+                            ),
+                            data: data,
+                          );
+
+                          if (response.statusCode == 200) {
+                            log(json.encode(response.data));
+                          } else {
+                            log(response.statusMessage ?? 'Error');
+                          }
+                        } catch (e) {
+                          log(e.toString());
+                        }
+
+                        // var request = MultipartRequest(
+                        //     'POST',
+                        //     Uri.parse(
+                        //         'https://erpdev.vardhmanthreads.in/jderest/v2/file/upload'));
+
+                        // request.fields.addAll(
+                        //   {
+                        //     'file': 'ABCD',
+                        //     'moAdd': jsonEncode(
+                        //       {
+                        //         "moStructure": "GT00092",
+                        //         "moKey": ["QTX|QT|||1011|0|LD|B2BL-90920"],
+                        //         "file": {
+                        //           "fileName": "UploadTest3.txt",
+                        //         }
+                        //       },
+                        //     ),
+                        //   },
+                        // );
+
+                        // request.headers.addAll(
+                        //   {
+                        //     'JDE-AIS-Auth':
+                        //         '044HorQ0bqZ3K3J97At6RWNJsnfwOnLoIcFq5o1wRIQRD4=MDE5MDA4NDY2MTQ2MTQ0MDAwMTM5MjA0MVBvc3RtYW4xMTc0MDQ4OTc1Mjg5MQ==',
+                        //     'JDE-AIS-Auth-Device': 'Postman1',
+                        //   },
+                        // );
+
+                        // StreamedResponse response = await request.send();
+
+                        // if (response.statusCode == 200) {
+                        //   print(await response.stream.bytesToString());
+                        // } else {
+                        //   print(response.reasonPhrase);
+                        // }
+                      },
                     ),
                   ],
                 ),

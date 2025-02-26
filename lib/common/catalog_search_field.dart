@@ -69,7 +69,9 @@ class CatalogSearchField extends StatelessWidget {
               height: 36,
               margin: const EdgeInsets.all(0),
               decoration: BoxDecoration(
-                color: isEnabled ? Colors.white : VardhmanColors.dividerGrey,
+                color: isEnabled
+                    ? Colors.white
+                    : VardhmanColors.dividerGrey.withAlpha(128),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isEnabled && hasError && rxString.value.trim().isEmpty

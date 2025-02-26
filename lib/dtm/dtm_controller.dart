@@ -91,6 +91,8 @@ class DtmController extends GetxController {
         orderCompany: rxSelectedOrderHeaderLine.value!.orderCompany,
       );
 
+      rxOrderDetailLines.clear();
+
       rxOrderDetailLines.addAll(orderDetailLines);
     }
   }

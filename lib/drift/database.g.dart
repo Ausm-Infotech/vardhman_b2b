@@ -2488,6 +2488,24 @@ class $DraftTableTable extends DraftTable
   late final GeneratedColumn<DateTime> requestedDate =
       GeneratedColumn<DateTime>('requested_date', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _poNumberMeta =
+      const VerificationMeta('poNumber');
+  @override
+  late final GeneratedColumn<String> poNumber = GeneratedColumn<String>(
+      'po_number', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _poFileNameMeta =
+      const VerificationMeta('poFileName');
+  @override
+  late final GeneratedColumn<String> poFileName = GeneratedColumn<String>(
+      'po_file_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _poFileBytesMeta =
+      const VerificationMeta('poFileBytes');
+  @override
+  late final GeneratedColumn<Uint8List> poFileBytes =
+      GeneratedColumn<Uint8List>('po_file_bytes', aliasedName, true,
+          type: DriftSqlType.blob, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2518,7 +2536,10 @@ class $DraftTableTable extends DraftTable
         lastUpdated,
         qtxFileBytes,
         qtxFileName,
-        requestedDate
+        requestedDate,
+        poNumber,
+        poFileName,
+        poFileBytes
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2721,6 +2742,26 @@ class $DraftTableTable extends DraftTable
           requestedDate.isAcceptableOrUnknown(
               data['requested_date']!, _requestedDateMeta));
     }
+    if (data.containsKey('po_number')) {
+      context.handle(_poNumberMeta,
+          poNumber.isAcceptableOrUnknown(data['po_number']!, _poNumberMeta));
+    } else if (isInserting) {
+      context.missing(_poNumberMeta);
+    }
+    if (data.containsKey('po_file_name')) {
+      context.handle(
+          _poFileNameMeta,
+          poFileName.isAcceptableOrUnknown(
+              data['po_file_name']!, _poFileNameMeta));
+    } else if (isInserting) {
+      context.missing(_poFileNameMeta);
+    }
+    if (data.containsKey('po_file_bytes')) {
+      context.handle(
+          _poFileBytesMeta,
+          poFileBytes.isAcceptableOrUnknown(
+              data['po_file_bytes']!, _poFileBytesMeta));
+    }
     return context;
   }
 
@@ -2788,6 +2829,12 @@ class $DraftTableTable extends DraftTable
           .read(DriftSqlType.string, data['${effectivePrefix}qtx_file_name'])!,
       requestedDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}requested_date']),
+      poNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}po_number'])!,
+      poFileName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}po_file_name'])!,
+      poFileBytes: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}po_file_bytes']),
     );
   }
 
@@ -2827,6 +2874,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
   final Uint8List? qtxFileBytes;
   final String qtxFileName;
   final DateTime? requestedDate;
+  final String poNumber;
+  final String poFileName;
+  final Uint8List? poFileBytes;
   const DraftTableData(
       {required this.id,
       required this.soldTo,
@@ -2856,7 +2906,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       required this.lastUpdated,
       this.qtxFileBytes,
       required this.qtxFileName,
-      this.requestedDate});
+      this.requestedDate,
+      required this.poNumber,
+      required this.poFileName,
+      this.poFileBytes});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2892,6 +2945,11 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
     map['qtx_file_name'] = Variable<String>(qtxFileName);
     if (!nullToAbsent || requestedDate != null) {
       map['requested_date'] = Variable<DateTime>(requestedDate);
+    }
+    map['po_number'] = Variable<String>(poNumber);
+    map['po_file_name'] = Variable<String>(poFileName);
+    if (!nullToAbsent || poFileBytes != null) {
+      map['po_file_bytes'] = Variable<Uint8List>(poFileBytes);
     }
     return map;
   }
@@ -2931,6 +2989,11 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       requestedDate: requestedDate == null && nullToAbsent
           ? const Value.absent()
           : Value(requestedDate),
+      poNumber: Value(poNumber),
+      poFileName: Value(poFileName),
+      poFileBytes: poFileBytes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(poFileBytes),
     );
   }
 
@@ -2967,6 +3030,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       qtxFileBytes: serializer.fromJson<Uint8List?>(json['qtxFileBytes']),
       qtxFileName: serializer.fromJson<String>(json['qtxFileName']),
       requestedDate: serializer.fromJson<DateTime?>(json['requestedDate']),
+      poNumber: serializer.fromJson<String>(json['poNumber']),
+      poFileName: serializer.fromJson<String>(json['poFileName']),
+      poFileBytes: serializer.fromJson<Uint8List?>(json['poFileBytes']),
     );
   }
   @override
@@ -3002,6 +3068,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       'qtxFileBytes': serializer.toJson<Uint8List?>(qtxFileBytes),
       'qtxFileName': serializer.toJson<String>(qtxFileName),
       'requestedDate': serializer.toJson<DateTime?>(requestedDate),
+      'poNumber': serializer.toJson<String>(poNumber),
+      'poFileName': serializer.toJson<String>(poFileName),
+      'poFileBytes': serializer.toJson<Uint8List?>(poFileBytes),
     };
   }
 
@@ -3034,7 +3103,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           DateTime? lastUpdated,
           Value<Uint8List?> qtxFileBytes = const Value.absent(),
           String? qtxFileName,
-          Value<DateTime?> requestedDate = const Value.absent()}) =>
+          Value<DateTime?> requestedDate = const Value.absent(),
+          String? poNumber,
+          String? poFileName,
+          Value<Uint8List?> poFileBytes = const Value.absent()}) =>
       DraftTableData(
         id: id ?? this.id,
         soldTo: soldTo ?? this.soldTo,
@@ -3067,6 +3139,9 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         qtxFileName: qtxFileName ?? this.qtxFileName,
         requestedDate:
             requestedDate.present ? requestedDate.value : this.requestedDate,
+        poNumber: poNumber ?? this.poNumber,
+        poFileName: poFileName ?? this.poFileName,
+        poFileBytes: poFileBytes.present ? poFileBytes.value : this.poFileBytes,
       );
   DraftTableData copyWithCompanion(DraftTableCompanion data) {
     return DraftTableData(
@@ -3116,6 +3191,11 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
       requestedDate: data.requestedDate.present
           ? data.requestedDate.value
           : this.requestedDate,
+      poNumber: data.poNumber.present ? data.poNumber.value : this.poNumber,
+      poFileName:
+          data.poFileName.present ? data.poFileName.value : this.poFileName,
+      poFileBytes:
+          data.poFileBytes.present ? data.poFileBytes.value : this.poFileBytes,
     );
   }
 
@@ -3150,7 +3230,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           ..write('lastUpdated: $lastUpdated, ')
           ..write('qtxFileBytes: $qtxFileBytes, ')
           ..write('qtxFileName: $qtxFileName, ')
-          ..write('requestedDate: $requestedDate')
+          ..write('requestedDate: $requestedDate, ')
+          ..write('poNumber: $poNumber, ')
+          ..write('poFileName: $poFileName, ')
+          ..write('poFileBytes: $poFileBytes')
           ..write(')'))
         .toString();
   }
@@ -3185,7 +3268,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
         lastUpdated,
         $driftBlobEquality.hash(qtxFileBytes),
         qtxFileName,
-        requestedDate
+        requestedDate,
+        poNumber,
+        poFileName,
+        $driftBlobEquality.hash(poFileBytes)
       ]);
   @override
   bool operator ==(Object other) =>
@@ -3219,7 +3305,10 @@ class DraftTableData extends DataClass implements Insertable<DraftTableData> {
           other.lastUpdated == this.lastUpdated &&
           $driftBlobEquality.equals(other.qtxFileBytes, this.qtxFileBytes) &&
           other.qtxFileName == this.qtxFileName &&
-          other.requestedDate == this.requestedDate);
+          other.requestedDate == this.requestedDate &&
+          other.poNumber == this.poNumber &&
+          other.poFileName == this.poFileName &&
+          $driftBlobEquality.equals(other.poFileBytes, this.poFileBytes));
 }
 
 class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
@@ -3252,6 +3341,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
   final Value<Uint8List?> qtxFileBytes;
   final Value<String> qtxFileName;
   final Value<DateTime?> requestedDate;
+  final Value<String> poNumber;
+  final Value<String> poFileName;
+  final Value<Uint8List?> poFileBytes;
   const DraftTableCompanion({
     this.id = const Value.absent(),
     this.soldTo = const Value.absent(),
@@ -3282,6 +3374,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.qtxFileBytes = const Value.absent(),
     this.qtxFileName = const Value.absent(),
     this.requestedDate = const Value.absent(),
+    this.poNumber = const Value.absent(),
+    this.poFileName = const Value.absent(),
+    this.poFileBytes = const Value.absent(),
   });
   DraftTableCompanion.insert({
     this.id = const Value.absent(),
@@ -3313,6 +3408,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     this.qtxFileBytes = const Value.absent(),
     required String qtxFileName,
     this.requestedDate = const Value.absent(),
+    required String poNumber,
+    required String poFileName,
+    this.poFileBytes = const Value.absent(),
   })  : soldTo = Value(soldTo),
         orderType = Value(orderType),
         orderNumber = Value(orderNumber),
@@ -3338,7 +3436,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
         quantity = Value(quantity),
         colorRemark = Value(colorRemark),
         lastUpdated = Value(lastUpdated),
-        qtxFileName = Value(qtxFileName);
+        qtxFileName = Value(qtxFileName),
+        poNumber = Value(poNumber),
+        poFileName = Value(poFileName);
   static Insertable<DraftTableData> custom({
     Expression<int>? id,
     Expression<String>? soldTo,
@@ -3369,6 +3469,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     Expression<Uint8List>? qtxFileBytes,
     Expression<String>? qtxFileName,
     Expression<DateTime>? requestedDate,
+    Expression<String>? poNumber,
+    Expression<String>? poFileName,
+    Expression<Uint8List>? poFileBytes,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3400,6 +3503,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       if (qtxFileBytes != null) 'qtx_file_bytes': qtxFileBytes,
       if (qtxFileName != null) 'qtx_file_name': qtxFileName,
       if (requestedDate != null) 'requested_date': requestedDate,
+      if (poNumber != null) 'po_number': poNumber,
+      if (poFileName != null) 'po_file_name': poFileName,
+      if (poFileBytes != null) 'po_file_bytes': poFileBytes,
     });
   }
 
@@ -3432,7 +3538,10 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       Value<DateTime>? lastUpdated,
       Value<Uint8List?>? qtxFileBytes,
       Value<String>? qtxFileName,
-      Value<DateTime?>? requestedDate}) {
+      Value<DateTime?>? requestedDate,
+      Value<String>? poNumber,
+      Value<String>? poFileName,
+      Value<Uint8List?>? poFileBytes}) {
     return DraftTableCompanion(
       id: id ?? this.id,
       soldTo: soldTo ?? this.soldTo,
@@ -3463,6 +3572,9 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
       qtxFileBytes: qtxFileBytes ?? this.qtxFileBytes,
       qtxFileName: qtxFileName ?? this.qtxFileName,
       requestedDate: requestedDate ?? this.requestedDate,
+      poNumber: poNumber ?? this.poNumber,
+      poFileName: poFileName ?? this.poFileName,
+      poFileBytes: poFileBytes ?? this.poFileBytes,
     );
   }
 
@@ -3556,6 +3668,15 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
     if (requestedDate.present) {
       map['requested_date'] = Variable<DateTime>(requestedDate.value);
     }
+    if (poNumber.present) {
+      map['po_number'] = Variable<String>(poNumber.value);
+    }
+    if (poFileName.present) {
+      map['po_file_name'] = Variable<String>(poFileName.value);
+    }
+    if (poFileBytes.present) {
+      map['po_file_bytes'] = Variable<Uint8List>(poFileBytes.value);
+    }
     return map;
   }
 
@@ -3590,7 +3711,10 @@ class DraftTableCompanion extends UpdateCompanion<DraftTableData> {
           ..write('lastUpdated: $lastUpdated, ')
           ..write('qtxFileBytes: $qtxFileBytes, ')
           ..write('qtxFileName: $qtxFileName, ')
-          ..write('requestedDate: $requestedDate')
+          ..write('requestedDate: $requestedDate, ')
+          ..write('poNumber: $poNumber, ')
+          ..write('poFileName: $poFileName, ')
+          ..write('poFileBytes: $poFileBytes')
           ..write(')'))
         .toString();
   }
@@ -4775,6 +4899,9 @@ typedef $$DraftTableTableCreateCompanionBuilder = DraftTableCompanion Function({
   Value<Uint8List?> qtxFileBytes,
   required String qtxFileName,
   Value<DateTime?> requestedDate,
+  required String poNumber,
+  required String poFileName,
+  Value<Uint8List?> poFileBytes,
 });
 typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<int> id,
@@ -4806,6 +4933,9 @@ typedef $$DraftTableTableUpdateCompanionBuilder = DraftTableCompanion Function({
   Value<Uint8List?> qtxFileBytes,
   Value<String> qtxFileName,
   Value<DateTime?> requestedDate,
+  Value<String> poNumber,
+  Value<String> poFileName,
+  Value<Uint8List?> poFileBytes,
 });
 
 class $$DraftTableTableFilterComposer
@@ -4905,6 +5035,15 @@ class $$DraftTableTableFilterComposer
 
   ColumnFilters<DateTime> get requestedDate => $composableBuilder(
       column: $table.requestedDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get poNumber => $composableBuilder(
+      column: $table.poNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get poFileName => $composableBuilder(
+      column: $table.poFileName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<Uint8List> get poFileBytes => $composableBuilder(
+      column: $table.poFileBytes, builder: (column) => ColumnFilters(column));
 }
 
 class $$DraftTableTableOrderingComposer
@@ -5007,6 +5146,15 @@ class $$DraftTableTableOrderingComposer
   ColumnOrderings<DateTime> get requestedDate => $composableBuilder(
       column: $table.requestedDate,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get poNumber => $composableBuilder(
+      column: $table.poNumber, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get poFileName => $composableBuilder(
+      column: $table.poFileName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Uint8List> get poFileBytes => $composableBuilder(
+      column: $table.poFileBytes, builder: (column) => ColumnOrderings(column));
 }
 
 class $$DraftTableTableAnnotationComposer
@@ -5104,6 +5252,15 @@ class $$DraftTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get requestedDate => $composableBuilder(
       column: $table.requestedDate, builder: (column) => column);
+
+  GeneratedColumn<String> get poNumber =>
+      $composableBuilder(column: $table.poNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get poFileName => $composableBuilder(
+      column: $table.poFileName, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get poFileBytes => $composableBuilder(
+      column: $table.poFileBytes, builder: (column) => column);
 }
 
 class $$DraftTableTableTableManager extends RootTableManager<
@@ -5161,6 +5318,9 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<Uint8List?> qtxFileBytes = const Value.absent(),
             Value<String> qtxFileName = const Value.absent(),
             Value<DateTime?> requestedDate = const Value.absent(),
+            Value<String> poNumber = const Value.absent(),
+            Value<String> poFileName = const Value.absent(),
+            Value<Uint8List?> poFileBytes = const Value.absent(),
           }) =>
               DraftTableCompanion(
             id: id,
@@ -5192,6 +5352,9 @@ class $$DraftTableTableTableManager extends RootTableManager<
             qtxFileBytes: qtxFileBytes,
             qtxFileName: qtxFileName,
             requestedDate: requestedDate,
+            poNumber: poNumber,
+            poFileName: poFileName,
+            poFileBytes: poFileBytes,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -5223,6 +5386,9 @@ class $$DraftTableTableTableManager extends RootTableManager<
             Value<Uint8List?> qtxFileBytes = const Value.absent(),
             required String qtxFileName,
             Value<DateTime?> requestedDate = const Value.absent(),
+            required String poNumber,
+            required String poFileName,
+            Value<Uint8List?> poFileBytes = const Value.absent(),
           }) =>
               DraftTableCompanion.insert(
             id: id,
@@ -5254,6 +5420,9 @@ class $$DraftTableTableTableManager extends RootTableManager<
             qtxFileBytes: qtxFileBytes,
             qtxFileName: qtxFileName,
             requestedDate: requestedDate,
+            poNumber: poNumber,
+            poFileName: poFileName,
+            poFileBytes: poFileBytes,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

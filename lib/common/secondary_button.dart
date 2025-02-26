@@ -54,11 +54,11 @@ class _SecondaryButtonState extends State<SecondaryButton> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: VardhmanColors.dividerGrey,
-            width: 1.5,
+            color: Colors.grey,
+            width: 0.5,
           ),
           color: widget.onPressed == null || isProcessing
-              ? VardhmanColors.dividerGrey
+              ? Colors.grey
               : Colors.white,
         ),
         child: Row(

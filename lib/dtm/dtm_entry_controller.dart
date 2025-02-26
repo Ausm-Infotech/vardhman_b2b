@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,12 @@ class DtmEntryController extends GetxController {
     'UV',
     'U30',
   ];
+
+  final rxPoNumber = ''.obs;
+
+  final rxPoFileName = ''.obs;
+
+  final rxPoFileBytes = Rxn<Uint8List>();
 
   final List<RxString> inputsInError = <RxString>[].obs;
 
@@ -202,6 +210,14 @@ class DtmEntryController extends GetxController {
     rxUomWithDesc.listen(uomWithDescListener);
 
     rxUom.listen((_) => selectIfOnlyOneOption(rxUom.hashCode));
+
+    rxPoFileName.listen(poFileNameListener);
+  }
+
+  void poFileNameListener(String newPoFileName) {
+    if (newPoFileName.isEmpty) {
+      rxPoFileBytes.value = null;
+    }
   }
 
   void uomWithDescListener(String newUomWithDesc) {
@@ -464,14 +480,6 @@ class DtmEntryController extends GetxController {
 
     if (rxQuantity.value.trim().isEmpty) {
       inputsInError.add(rxQuantity);
-    } else {
-      final quantity = int.tryParse(rxQuantity.value) ?? 0;
-
-      rxQuantity.value = quantity > 0 ? quantity.toString() : '';
-
-      if (quantity <= 0) {
-        inputsInError.add(rxQuantity);
-      }
     }
 
     return inputsInError.isEmpty;
@@ -524,6 +532,9 @@ class DtmEntryController extends GetxController {
           merchandiser: rxMerchandiser.value,
           qtxFileName: '',
           requestedDate: drift.Value(rxRequestedDate.value),
+          poNumber: rxPoNumber.value,
+          poFileName: rxPoFileName.value,
+          poFileBytes: drift.Value(rxPoFileBytes.value),
         ),
         mode: drift.InsertMode.insertOrReplace,
       );
@@ -570,7 +581,6 @@ class DtmEntryController extends GetxController {
                 remark: drift.Value(rxRemark.value),
                 endUse: drift.Value(rxEndUse.value),
                 firstLightSource: drift.Value(rxFirstLightSource.value),
-                lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
                 lineNumber: drift.Value(selectedDtmOrderLine.lineNumber),
                 orderNumber: drift.Value(selectedDtmOrderLine.orderNumber),
                 orderType: drift.Value(selectedDtmOrderLine.orderType),
@@ -588,6 +598,9 @@ class DtmEntryController extends GetxController {
                 lastUpdated: drift.Value(DateTime.now()),
                 merchandiser: drift.Value(rxMerchandiser.value),
                 requestedDate: drift.Value(rxRequestedDate.value),
+                poNumber: drift.Value(rxPoNumber.value),
+                poFileName: drift.Value(rxPoFileName.value),
+                poFileBytes: drift.Value(rxPoFileBytes.value),
               ),
             );
       }
@@ -620,69 +633,26 @@ class DtmEntryController extends GetxController {
   }
 
   bool get canClearInputs =>
-      rxColor.value != '' ||
-      rxEndUse.value != '' ||
-      rxRequestType.value != '' ||
-      rxL.value != '' ||
-      rxA.value != '' ||
-      rxB.value != '' ||
-      rxRemark.value != '' ||
-      rxSubstrate.value != '' ||
-      rxTicket.value != '' ||
-      rxTex.value != '' ||
-      rxBrand.value != '' ||
-      rxArticle.value != '' ||
-      rxUom.value != '' ||
-      rxShade.value != '' ||
       rxMerchandiser.value != '' ||
       rxBuyerName.value != '' ||
       rxOtherBuyerName.value != '' ||
-      _rxBuyerCode.value != '' ||
       rxFirstLightSource.value != '' ||
       rxSecondLightSource.value != '' ||
+      rxArticle.value != '' ||
+      rxUomWithDesc.value != '' ||
+      rxTicket.value != '' ||
+      rxBrand.value != '' ||
+      rxTex.value != '' ||
+      rxSubstrate.value != '' ||
+      rxShade.value != '' ||
+      rxColor.value != '' ||
       rxQuantity.value != '' ||
-      rxRequestedDate.value != null;
+      rxRequestedDate.value != null ||
+      rxRemark.value != '' ||
+      rxPoNumber.value != '' ||
+      rxPoFileName.value != '';
 
   void clearAllInputs({List<int> skipHashCodes = const []}) {
-    if (!skipHashCodes.contains(rxColor.hashCode)) {
-      rxColor.value = '';
-    }
-    if (!skipHashCodes.contains(rxEndUse.hashCode)) {
-      rxEndUse.value = '';
-    }
-    if (!skipHashCodes.contains(rxRequestType.hashCode)) {
-      rxRequestType.value = '';
-    }
-    if (!skipHashCodes.contains(rxL.hashCode)) {
-      rxL.value = '';
-    }
-    if (!skipHashCodes.contains(rxA.hashCode)) {
-      rxA.value = '';
-    }
-    if (!skipHashCodes.contains(rxB.hashCode)) {
-      rxB.value = '';
-    }
-    if (!skipHashCodes.contains(rxRemark.hashCode)) {
-      rxRemark.value = '';
-    }
-    if (!skipHashCodes.contains(rxSubstrate.hashCode)) {
-      rxSubstrate.value = '';
-    }
-    if (!skipHashCodes.contains(rxTicket.hashCode)) {
-      rxTicket.value = '';
-    }
-    if (!skipHashCodes.contains(rxTex.hashCode)) {
-      rxTex.value = '';
-    }
-    if (!skipHashCodes.contains(rxBrand.hashCode)) {
-      rxBrand.value = '';
-    }
-    if (!skipHashCodes.contains(rxArticle.hashCode)) {
-      rxArticle.value = '';
-    }
-    if (!skipHashCodes.contains(rxShade.hashCode)) {
-      rxShade.value = '';
-    }
     if (!skipHashCodes.contains(rxMerchandiser.hashCode)) {
       rxMerchandiser.value = '';
     }
@@ -692,26 +662,50 @@ class DtmEntryController extends GetxController {
     if (!skipHashCodes.contains(rxOtherBuyerName.hashCode)) {
       rxOtherBuyerName.value = '';
     }
-    if (!skipHashCodes.contains(_rxBuyerCode.hashCode)) {
-      _rxBuyerCode.value = '';
-    }
     if (!skipHashCodes.contains(rxFirstLightSource.hashCode)) {
       rxFirstLightSource.value = '';
     }
     if (!skipHashCodes.contains(rxSecondLightSource.hashCode)) {
       rxSecondLightSource.value = '';
     }
-
+    if (!skipHashCodes.contains(rxArticle.hashCode)) {
+      rxArticle.value = '';
+    }
+    if (!skipHashCodes.contains(rxUomWithDesc.hashCode)) {
+      rxUomWithDesc.value = '';
+    }
+    if (!skipHashCodes.contains(rxTicket.hashCode)) {
+      rxTicket.value = '';
+    }
+    if (!skipHashCodes.contains(rxBrand.hashCode)) {
+      rxBrand.value = '';
+    }
+    if (!skipHashCodes.contains(rxTex.hashCode)) {
+      rxTex.value = '';
+    }
+    if (!skipHashCodes.contains(rxSubstrate.hashCode)) {
+      rxSubstrate.value = '';
+    }
+    if (!skipHashCodes.contains(rxShade.hashCode)) {
+      rxShade.value = '';
+    }
+    if (!skipHashCodes.contains(rxColor.hashCode)) {
+      rxColor.value = '';
+    }
     if (!skipHashCodes.contains(rxQuantity.hashCode)) {
       rxQuantity.value = '';
     }
-
     if (!skipHashCodes.contains(rxRequestedDate.hashCode)) {
       rxRequestedDate.value = null;
     }
-
-    if (!skipHashCodes.contains(rxUomWithDesc.hashCode)) {
-      rxUomWithDesc.value = '';
+    if (!skipHashCodes.contains(rxRemark.hashCode)) {
+      rxRemark.value = '';
+    }
+    if (!skipHashCodes.contains(rxPoNumber.hashCode)) {
+      rxPoNumber.value = '';
+    }
+    if (!skipHashCodes.contains(rxPoFileName.hashCode)) {
+      rxPoFileName.value = '';
     }
   }
 
@@ -875,7 +869,6 @@ class DtmEntryController extends GetxController {
   }
 
   void _populateInputs({required DraftTableData dtmOrderLine}) {
-    final labParts = dtmOrderLine.lab.split(',');
     final isOtherBuyer = !buyerNames.contains(dtmOrderLine.buyer);
     rxMerchandiser.value = dtmOrderLine.merchandiser;
     rxBuyerName.value = isOtherBuyer ? 'OTHER' : dtmOrderLine.buyer;
@@ -888,9 +881,6 @@ class DtmEntryController extends GetxController {
     rxTex.value = dtmOrderLine.tex;
     rxArticle.value = dtmOrderLine.article;
     rxBrand.value = dtmOrderLine.brand;
-    rxL.value = labParts[0];
-    rxA.value = labParts[1];
-    rxB.value = labParts[2];
     rxRemark.value = dtmOrderLine.remark;
     rxRequestType.value = dtmOrderLine.requestType;
     rxEndUse.value = dtmOrderLine.endUse;
@@ -899,9 +889,10 @@ class DtmEntryController extends GetxController {
     rxQuantity.value = dtmOrderLine.quantity.toString();
     rxUomWithDesc.value =
         '${dtmOrderLine.uom} - ${orderReviewController.getUomDescription(dtmOrderLine.uom)}';
-    if (dtmOrderLine.requestedDate != null) {
-      rxRequestedDate.value = dtmOrderLine.requestedDate;
-    }
+    rxRequestedDate.value = dtmOrderLine.requestedDate;
+    rxPoFileName.value = dtmOrderLine.poFileName;
+    rxPoNumber.value = dtmOrderLine.poNumber;
+    rxPoFileBytes.value = dtmOrderLine.poFileBytes;
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);

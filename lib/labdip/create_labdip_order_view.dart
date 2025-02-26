@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
@@ -63,6 +64,7 @@ class CreateLabdipOrderView extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Spacer(),
                 Expanded(
                   flex: 10,
                   child: Column(
@@ -179,7 +181,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       width: 8,
                                     ),
                                     Expanded(
-                                      flex: 2,
+                                      // flex: 2,
                                       child: CatalogSearchField(
                                         isRequired: true,
                                         hasError:
@@ -201,7 +203,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 3,
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         labelText: 'Brand',
                                         rxString: labdipEntryController.rxBrand,
@@ -228,7 +230,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 3,
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         labelText: 'Substrate',
                                         rxString:
@@ -254,7 +256,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Spacer(),
+                          // Spacer(),
                         ],
                       ),
                       SizedBox(
@@ -331,6 +333,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                     ],
                   ),
                 ),
+                Spacer(),
                 Expanded(
                   flex: 4,
                   child: Column(
@@ -368,6 +371,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                             child: NewOrderTextField(
                               labelText: 'L',
                               rxString: labdipEntryController.rxL,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^-?\d*\.?\d*'),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -377,6 +385,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                             child: NewOrderTextField(
                               labelText: 'A',
                               rxString: labdipEntryController.rxA,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^-?\d*\.?\d*'),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -386,6 +399,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                             child: NewOrderTextField(
                               labelText: 'B',
                               rxString: labdipEntryController.rxB,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^-?\d*\.?\d*'),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -446,11 +464,12 @@ class CreateLabdipOrderView extends StatelessWidget {
                       NewOrderTextField(
                         labelText: 'Remark',
                         rxString: labdipEntryController.rxRemark,
-                        hintText: 'mention Request Type, End Use',
+                        hintText: 'Mention Request Type, End Use',
                       ),
                     ],
                   ),
                 ),
+                Spacer(),
               ],
             ),
           ),

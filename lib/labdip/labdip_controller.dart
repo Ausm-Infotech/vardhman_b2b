@@ -104,6 +104,8 @@ class LabdipController extends GetxController {
         orderCompany: rxSelectedOrderHeaderLine.value!.orderCompany,
       );
 
+      rxOrderDetailLines.clear();
+
       rxOrderDetailLines.addAll(orderDetailLines);
     }
   }
