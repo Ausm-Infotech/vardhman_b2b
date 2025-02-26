@@ -869,9 +869,6 @@ class LabdipEntryController extends GetxController {
       }
     }
 
-    final OrderReviewController orderReviewController =
-        Get.find<OrderReviewController>();
-
     final isSubmitted = await orderReviewController.submitLabdipOrder(
       b2bOrderNumber: b2bOrderNumber,
       merchandiserName: rxMerchandiser.value,

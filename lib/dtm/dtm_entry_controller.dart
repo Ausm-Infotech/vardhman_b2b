@@ -833,8 +833,21 @@ class DtmEntryController extends GetxController {
       .toList();
 
   Future<void> submitOrder() async {
-    final OrderReviewController orderReviewController =
-        Get.find<OrderReviewController>();
+    for (var dtmOrderLine in rxDtmOrderLines) {
+      if (dtmOrderLine.poFileName.isNotEmpty &&
+          dtmOrderLine.poFileBytes != null) {
+        final lineNumber = (rxDtmOrderLines.indexOf(dtmOrderLine) + 1) + 1000;
+
+        await Api.uploadMediaAttachment(
+          fileBytes: dtmOrderLine.poFileBytes!,
+          fileName: dtmOrderLine.poFileName,
+          moKey: 'QTX|QT|||$lineNumber|0|DT|$b2bOrderNumber',
+          moStructure: 'GT00092',
+          version: 'VYTL0016',
+          formName: 'P00092_W00092D',
+        );
+      }
+    }
 
     final isSubmitted = await orderReviewController.submitDtmOrder(
       b2bOrderNumber: b2bOrderNumber,
