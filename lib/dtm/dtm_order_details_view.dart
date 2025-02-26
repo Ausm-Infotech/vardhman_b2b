@@ -180,8 +180,6 @@ class DtmOrderDetailsView extends StatelessWidget {
 
                             var permanentShade = 'SWT';
 
-                            var quantityShipped = 0;
-
                             var status = orderDetail.status;
 
                             if (permanentShadeLine != null) {
@@ -195,12 +193,14 @@ class DtmOrderDetailsView extends StatelessWidget {
                               final invoicedLines = dtmController
                                   .getInvoicedLines(permanentShadeLine.item);
 
-                              quantityShipped = invoicedLines.fold(
-                                0,
-                                (previousValue, orderDetailLine) =>
-                                    previousValue +
-                                    orderDetailLine.quantityShipped,
-                              );
+                              // var quantityShipped = 0;
+
+                              // quantityShipped = invoicedLines.fold(
+                              //   0,
+                              //   (previousValue, orderDetailLine) =>
+                              //       previousValue +
+                              //       orderDetailLine.quantityShipped,
+                              // );
 
                               if (invoicedLines.isNotEmpty) {
                                 status = 'Dispatched';

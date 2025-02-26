@@ -376,7 +376,7 @@ class CreateDtmOrderView extends StatelessWidget {
                               hasError: dtmEntryController.quantityHasError,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*'),
+                                  RegExp(r'^[1-9]\d*'),
                                 ),
                               ],
                             ),

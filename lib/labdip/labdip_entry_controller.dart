@@ -863,7 +863,7 @@ class LabdipEntryController extends GetxController {
           fileName: labdipOrderLine.qtxFileName,
           moKey: 'QTX|QT|||$lineNumber|0|LD|$b2bOrderNumber',
           moStructure: 'GT00092',
-          version: 'TEST1',
+          version: 'VYTL0016',
           formName: 'P00092_W00092D',
         );
       }

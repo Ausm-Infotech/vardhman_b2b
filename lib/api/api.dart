@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
+import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toastification/toastification.dart';
@@ -649,16 +650,26 @@ class Api {
     try {
       var data = FormData.fromMap(
         {
-          'file': MultipartFile.fromBytes(
-            fileBytes,
-            filename: fileName,
+          'file': MultipartFile.fromBytes(fileBytes),
+          'moAdd': MultipartFile.fromString(
+            json.encode(
+              {
+                'moStructure': moStructure,
+                'moKey': [moKey],
+                'formName': formName,
+                'version': version,
+                "file": {
+                  "fileName": fileName.endsWith('.qtx')
+                      ? fileName.replaceAll('.qtx', '.txt')
+                      : fileName
+                },
+              },
+            ),
+            contentType: MediaType.parse('application/json'),
           ),
-          'moAdd':
-              '{\n    "moStructure":"GT00092",\n    "moKey":[\n        "QTX|QT|||1011|0|LD|B2BL-90920"\n    ],\n    "formName":"P00092_W00092D",\n    "version":"TEST1",\n"file":{"fileName":"UploadTest3.txt", "sequence":3\n    }\n\n}'
         },
       );
 
-      // var dio = Dio();
       var response = await _dio.request(
         '/v2/file/upload',
         options: Options(method: 'POST', contentType: 'multipart/form-data'),
@@ -667,55 +678,11 @@ class Api {
 
       if (response.statusCode == 200) {
         log(json.encode(response.data));
+
+        return true;
       } else {
         log(response.statusMessage ?? 'Error');
       }
-
-      // final formData = FormData.fromMap(
-      //   {
-      //     'file': MultipartFile.fromBytes(fileBytes, filename: 'abcd.txt'),
-      //     // 'moAdd': MultipartFile.fromString(
-      //     //   jsonEncode(
-      //     //     {
-      //     //       "moStructure": moStructure,
-      //     //       "moKey": [moKey],
-      //     //       "formName": formName,
-      //     //       "version": version,
-      //     //       "file": {"fileName": fileName}
-      //     //     },
-      //     //   ),
-      //     //   filename: 'moAdd.txt',
-      //     //   contentType: DioMediaType.parse('application/json'),
-      //     // ),
-      //   },
-      // );
-
-      // formData.fields.add(
-      //   MapEntry(
-      //     'moAdd',
-      //     jsonEncode(
-      //       {
-      //         "moStructure": moStructure,
-      //         "moKey": [moKey],
-      //         "formName": formName,
-      //         "version": version,
-      //         "file": {"fileName": fileName}
-      //       },
-      //     ),
-      //   ),
-      // );
-
-      // final response = await _dio.post(
-      //   '/v2/file/upload',
-      //   options: Options(
-      //     contentType: 'multipart/form-data',
-      //   ),
-      //   data: formData,
-      // );
-
-      // if (response.statusCode == 200) {
-      //   return true;
-      // }
     } catch (e) {
       log('uploadMediaAttachment error - $e');
     }
