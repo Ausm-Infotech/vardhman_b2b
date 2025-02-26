@@ -161,7 +161,7 @@ class LabdipEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2BL-$orderNumber';
+  String get b2bOrderNumber => 'B2B-LD-$orderNumber';
 
   LabdipEntryController({required this.orderNumber}) {
     _database.managers.draftTable

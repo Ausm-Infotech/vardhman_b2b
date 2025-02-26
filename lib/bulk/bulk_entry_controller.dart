@@ -156,7 +156,7 @@ class BulkEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2BD-$orderNumber';
+  String get b2bOrderNumber => 'B2B-BK-$orderNumber';
 
   BulkEntryController({required this.orderNumber}) {
     _database.managers.draftTable
@@ -166,7 +166,7 @@ class BulkEntryController extends GetxController {
           ),
         )
         .filter(
-          (f) => f.orderType.equals('DT'),
+          (f) => f.orderType.equals('BK'),
         )
         .filter((f) => f.orderNumber.equals(orderNumber))
         .orderBy(
@@ -527,7 +527,7 @@ class BulkEntryController extends GetxController {
           lab: '${rxL.value},${rxA.value},${rxB.value}',
           lineNumber: _lastLineNumber + 1,
           orderNumber: orderNumber,
-          orderType: 'DT',
+          orderType: 'BK',
           quantity: int.tryParse(rxQuantity.value) ?? 1,
           requestType: rxRequestType.value,
           secondLightSource: rxSecondLightSource.value,
@@ -854,7 +854,7 @@ class BulkEntryController extends GetxController {
         await Api.uploadMediaAttachment(
           fileBytes: bulkOrderLine.poFileBytes!,
           fileName: bulkOrderLine.poFileName,
-          moKey: 'QTX|QT|||$lineNumber|0|DT|$b2bOrderNumber',
+          moKey: 'QTX|QT|||$lineNumber|0|BK|$b2bOrderNumber',
           moStructure: 'GT00092',
           version: 'VYTL0016',
           formName: 'P00092_W00092D',
@@ -902,19 +902,13 @@ class BulkEntryController extends GetxController {
     _rxBuyerCode.value = bulkOrderLine.buyerCode;
     rxFirstLightSource.value = bulkOrderLine.firstLightSource;
     rxSecondLightSource.value = bulkOrderLine.secondLightSource;
-    rxSubstrate.value = bulkOrderLine.substrate;
-    rxTicket.value = bulkOrderLine.ticket;
-    rxTex.value = bulkOrderLine.tex;
     rxArticle.value = bulkOrderLine.article;
-    rxBrand.value = bulkOrderLine.brand;
-    rxRemark.value = bulkOrderLine.remark;
-    rxRequestType.value = bulkOrderLine.requestType;
-    rxEndUse.value = bulkOrderLine.endUse;
+    rxUomWithDesc.value =
+        '${bulkOrderLine.uom} - ${orderReviewController.getUomDescription(bulkOrderLine.uom)}';
+    rxUnitPrice.value = bulkOrderLine.unitPrice?.toString() ?? '';
     rxShade.value = bulkOrderLine.shade;
     rxColor.value = bulkOrderLine.colorName;
     rxQuantity.value = bulkOrderLine.quantity.toString();
-    rxUomWithDesc.value =
-        '${bulkOrderLine.uom} - ${orderReviewController.getUomDescription(bulkOrderLine.uom)}';
     rxRequestedDate.value = bulkOrderLine.requestedDate;
     rxPoFileName.value = bulkOrderLine.poFileName;
     rxPoNumber.value = bulkOrderLine.poNumber;

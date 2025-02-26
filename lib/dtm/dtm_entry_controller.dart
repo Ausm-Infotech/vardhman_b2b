@@ -154,7 +154,7 @@ class DtmEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2BD-$orderNumber';
+  String get b2bOrderNumber => 'B2B-DT-$orderNumber';
 
   DtmEntryController({required this.orderNumber}) {
     _database.managers.draftTable
