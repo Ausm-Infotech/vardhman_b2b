@@ -103,8 +103,8 @@ class BulkOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                             label: Text('#'),
                             size: ColumnSize.S,
-                            fixedWidth: 40,
-                            numeric: true,
+                            fixedWidth: 50,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Article'),
@@ -119,11 +119,10 @@ class BulkOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                             label: Text('Ticket'),
                             fixedWidth: 50,
-                            numeric: true,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Tex'),
-                            numeric: true,
                             fixedWidth: 40,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
@@ -141,6 +140,7 @@ class BulkOrderDetailsView extends StatelessWidget {
                             label: Text('Quantity'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
+                            fixedWidth: 60,
                           ),
                           DataColumn2(
                             label: Text('Status'),

@@ -50,43 +50,43 @@ class NavRail extends StatelessWidget {
                         width: 100,
                       ),
                     ),
+                    // const SizedBox(
+                    //   height: 16,
+                    // ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //       color: VardhmanColors.darkGrey,
+                    //       width: 1.5,
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(24),
+                    //     color: Colors.white,
+                    //   ),
+                    //   padding: EdgeInsets.all(12),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: <Widget>[
+                    //       Text(
+                    //         userController.rxCustomerDetail.value.name,
+                    //         textAlign: TextAlign.center,
+                    //         softWrap: true,
+                    //         overflow: TextOverflow.visible,
+                    //       ),
+                    //       SizedBox(
+                    //         height: 16,
+                    //       ),
+                    //       SecondaryButton(
+                    //         text: 'Logout',
+                    //         onPressed: () async {
+                    //           Get.find<UserController>(tag: 'userController')
+                    //               .logOut();
+                    //         },
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: VardhmanColors.darkGrey,
-                          width: 1.5,
-                        ),
-                        borderRadius: BorderRadius.circular(24),
-                        color: Colors.white,
-                      ),
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            userController.rxCustomerDetail.value.name,
-                            textAlign: TextAlign.center,
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          SecondaryButton(
-                            text: 'Logout',
-                            onPressed: () async {
-                              Get.find<UserController>(tag: 'userController')
-                                  .logOut();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
+                      height: 24,
                     ),
                     Container(
                       height: 255,
@@ -156,7 +156,7 @@ class NavRail extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 12,
+                      height: 24,
                     ),
                     Container(
                       height: 190,
