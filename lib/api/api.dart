@@ -86,8 +86,8 @@ class Api {
       final response = await _dio.post(
         '/v2/tokenrequest',
         data: {
-          "username": "JDEMAPPNP",
-          "password": "AppSecure#1",
+          "username": "JDEMAPP",
+          "password": "AppSecure#2",
           "deviceName": deviceName,
         },
       );

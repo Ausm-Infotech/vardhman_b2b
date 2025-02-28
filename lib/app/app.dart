@@ -107,7 +107,7 @@ class App extends StatelessWidget {
                             const CircularProgressIndicator(
                               valueColor:
                                   AlwaysStoppedAnimation(VardhmanColors.red),
-                            )
+                            ),
                           ],
                         ),
                       ),

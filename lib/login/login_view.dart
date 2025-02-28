@@ -16,21 +16,29 @@ class LoginView extends StatelessWidget {
       body: Obx(
         () => SafeArea(
           child: Stack(
+            fit: StackFit.expand,
             children: [
-              Positioned.fill(
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width:
-                        loginController.videoPlayerController.value.size.width,
-                    height:
-                        loginController.videoPlayerController.value.size.height,
-                    child: VideoPlayer(loginController.videoPlayerController),
-                  ),
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Text('text'),
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: SizedBox(
+                        width: loginController
+                            .videoPlayerController.value.size.width,
+                        height: loginController
+                            .videoPlayerController.value.size.height,
+                        child:
+                            VideoPlayer(loginController.videoPlayerController),
+                      ),
+                    ),
+                  )
+                ],
               ),
               Align(
-                alignment: Alignment.topCenter,
+                alignment: Alignment.center,
                 child: Container(
                   margin: EdgeInsets.all(16),
                   constraints: const BoxConstraints(maxWidth: 300),

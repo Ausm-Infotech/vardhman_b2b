@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -25,9 +24,6 @@ class NavRail extends StatelessWidget {
             ? homeController.rxNavRailIndex.value - 3
             : null;
 
-        final UserController userController =
-            Get.find<UserController>(tag: 'userController');
-
         return DefaultTextStyle(
           style: TextStyle(
             fontSize: 13,
@@ -50,41 +46,6 @@ class NavRail extends StatelessWidget {
                         width: 100,
                       ),
                     ),
-                    // const SizedBox(
-                    //   height: 16,
-                    // ),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(
-                    //       color: VardhmanColors.darkGrey,
-                    //       width: 1.5,
-                    //     ),
-                    //     borderRadius: BorderRadius.circular(24),
-                    //     color: Colors.white,
-                    //   ),
-                    //   padding: EdgeInsets.all(12),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: <Widget>[
-                    //       Text(
-                    //         userController.rxCustomerDetail.value.name,
-                    //         textAlign: TextAlign.center,
-                    //         softWrap: true,
-                    //         overflow: TextOverflow.visible,
-                    //       ),
-                    //       SizedBox(
-                    //         height: 16,
-                    //       ),
-                    //       SecondaryButton(
-                    //         text: 'Logout',
-                    //         onPressed: () async {
-                    //           Get.find<UserController>(tag: 'userController')
-                    //               .logOut();
-                    //         },
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     const SizedBox(
                       height: 24,
                     ),
