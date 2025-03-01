@@ -459,6 +459,11 @@ class CreateBulkOrderView extends StatelessWidget {
                                   },
                           ),
                           Spacer(),
+                          SecondaryButton(
+                            text: 'Import Excel',
+                            onPressed: bulkEntryController.importExcel,
+                          ),
+                          Spacer(),
                         ],
                       ),
                     ],
@@ -501,6 +506,16 @@ class CreateBulkOrderView extends StatelessWidget {
                   label: Text('#'),
                   size: ColumnSize.S,
                   fixedWidth: 30,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('PO Number'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Merchandiser'),
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -584,6 +599,18 @@ class CreateBulkOrderView extends StatelessWidget {
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
+                          child: Text(bulkOrderLine.poNumber),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(bulkOrderLine.merchandiser),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
                           child: Text(bulkOrderLine.buyer),
                         ),
                       ),
@@ -614,7 +641,8 @@ class CreateBulkOrderView extends StatelessWidget {
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.unitPrice.toString()),
+                          child:
+                              Text(bulkOrderLine.unitPrice?.toString() ?? ''),
                         ),
                       ),
                       DataCell(

@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
-import 'package:vardhman_b2b/user/user_controller.dart';
 
 class NavRail extends StatelessWidget {
   const NavRail({
@@ -43,7 +42,8 @@ class NavRail extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                       child: Image.asset(
                         'assets/vytl_icon_white.png',
-                        width: 100,
+                        width: 60,
+                        height: 60,
                       ),
                     ),
                     const SizedBox(

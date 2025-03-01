@@ -97,8 +97,6 @@ class BulkOrdersView extends StatelessWidget {
                       headingRowHeight: 40,
                       dataRowHeight: 40,
                       headingRowColor: WidgetStatePropertyAll(Colors.grey),
-                      // headingRowColor:
-                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
                       headingTextStyle: TextStyle(
                         fontSize: 13,
                         color: Colors.white,
@@ -121,14 +119,11 @@ class BulkOrdersView extends StatelessWidget {
                           size: ColumnSize.L,
                           headingRowAlignment: MainAxisAlignment.start,
                         ),
-                        // DataColumn2(
-                        //     label: Text('Reference'), size: ColumnSize.M),
                         DataColumn2(
                           label: Text('Date'),
                           size: ColumnSize.S,
-                          // headingRowAlignment: MainAxisAlignment.end,
                           numeric: true,
-                          fixedWidth: 70,
+                          fixedWidth: 120,
                         ),
                       ],
                       rows: [
@@ -182,7 +177,7 @@ class BulkOrdersView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Text(
-                                    DateFormat('d MMM yy').format(
+                                    DateFormat('d MMM yy HH:mm').format(
                                       draftTableData.lastUpdated,
                                     ),
                                   ),

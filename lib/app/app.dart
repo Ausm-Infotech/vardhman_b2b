@@ -36,7 +36,7 @@ class App extends StatelessWidget {
             buttonColor: VardhmanColors.red,
           ),
           focusColor: VardhmanColors.darkGrey,
-          hoverColor: VardhmanColors.red.withOpacity(0.1),
+          hoverColor: VardhmanColors.red.withAlpha(32),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,

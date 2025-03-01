@@ -1,11 +1,15 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:drift/drift.dart' as drift;
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
+import 'package:vardhman_b2b/bulk/excel_line.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -891,6 +895,156 @@ class BulkEntryController extends GetxController {
 
         _populateInputs(bulkOrderLine: rxSelectedBulkOrderLines.first);
       }
+    }
+  }
+
+  Future<void> importExcel() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx'],
+        withData: true,
+      );
+
+      if (result != null) {
+        var bytes = result.files.single.bytes;
+        var excel = Excel.decodeBytes(bytes!);
+
+        final excelLines = <ExcelLine>[];
+
+        for (int i = 1; i < excel.tables.values.first.maxRows; i++) {
+          final row = excel.tables.values.first.rows[i];
+
+          final excelLine = ExcelLine.fromRow(row);
+
+          if (excelLine.hasError) {
+            toastification.show(
+              autoCloseDuration: Duration(seconds: 5),
+              primaryColor: VardhmanColors.red,
+              title: Text('Required fields missing in row $i'),
+            );
+          } else if (excelLines
+                  .any((e) => e.itemNumber == excelLine.itemNumber) ||
+              rxBulkOrderLines.any(
+                (orderLine) =>
+                    orderLine.article == excelLine.article &&
+                    orderLine.uom == excelLine.uom &&
+                    orderLine.shade == excelLine.shade,
+              )) {
+            toastification.show(
+              autoCloseDuration: Duration(seconds: 5),
+              primaryColor: VardhmanColors.red,
+              title: Text('Duplicate item number in row $i'),
+            );
+          } else {
+            excelLines.add(excelLine);
+          }
+        }
+
+        final excelItemNumbers =
+            excelLines.map((excelLine) => excelLine.itemNumber).toList();
+
+        final validItemNumbers =
+            await Api.validateItemNumbers(excelItemNumbers);
+
+        final validExcelLines = excelLines
+            .where(
+                (excelLine) => validItemNumbers.contains(excelLine.itemNumber))
+            .toList();
+
+        final invalidExcelLines = excelLines
+            .where(
+                (excelLine) => !validItemNumbers.contains(excelLine.itemNumber))
+            .toList();
+
+        if (invalidExcelLines.isNotEmpty) {
+          toastification.show(
+            autoCloseDuration: Duration(seconds: 5),
+            primaryColor: VardhmanColors.red,
+            title: Text(
+                'Invalid item numbers: ${invalidExcelLines.map((e) => e.itemNumber).join(', ')}'),
+          );
+        }
+
+        for (var excelLine in validExcelLines) {
+          final catalogItem = catalogController.industryItems.firstWhereOrNull(
+            (industryItem) =>
+                industryItem.article == excelLine.article &&
+                industryItem.uom == excelLine.uom,
+          );
+
+          final buyerInfo = _rxBuyerInfos.firstWhereOrNull(
+            (buyerInfo) =>
+                buyerInfo.name.toLowerCase() == excelLine.buyer.toLowerCase(),
+          );
+
+          String lightSource1, lightSource2;
+
+          if (buyerInfo != null) {
+            lightSource1 = buyerInfo.firstLightSource;
+
+            lightSource2 = buyerInfo.secondLightSource;
+          } else {
+            final excelLightSourceParts = excelLine.lightSources.split(',');
+
+            lightSource1 = excelLightSourceParts[0];
+
+            lightSource2 = excelLightSourceParts.length > 1
+                ? excelLightSourceParts[1]
+                : '';
+          }
+
+          final unitPrice = await Api.fetchUnitPrice(
+            soldToNumber: _userController.rxUserDetail.value.soldToNumber,
+            shipToNumber: _userController.rxUserDetail.value.soldToNumber,
+            itemNumber: excelLine.itemNumber,
+            businessUnit: _userController.branchPlant,
+            effectiveDate: DateTime.now(),
+          );
+
+          _database.managers.draftTable.create(
+            (o) => o(
+              poNumber: excelLine.poNumber,
+              merchandiser: excelLine.merchandiser,
+              buyer: excelLine.buyer,
+              firstLightSource: lightSource1,
+              secondLightSource: lightSource2,
+              article: excelLine.article,
+              uom: excelLine.uom,
+              shade: excelLine.shade,
+              colorName: excelLine.styleNo,
+              quantity: excelLine.quantity,
+              buyerCode: buyerInfo?.code ?? '',
+              brand: catalogItem?.brandDesc ?? '',
+              substrate: catalogItem?.substrateDesc ?? '',
+              ticket: catalogItem?.ticket ?? '',
+              tex: catalogItem?.tex ?? '',
+              unitPrice: drift.Value(unitPrice),
+              billingType: '',
+              remark: '',
+              endUse: '',
+              lab: '',
+              lineNumber: _lastLineNumber + 1,
+              orderNumber: orderNumber,
+              orderType: 'BK',
+              requestType: '',
+              soldTo: _userController.rxUserDetail.value.soldToNumber,
+              colorRemark: '',
+              lastUpdated: DateTime.now(),
+              qtxFileName: '',
+              requestedDate: drift.Value(rxRequestedDate.value),
+              poFileName: '',
+              poFileBytes: drift.Value(null),
+            ),
+            mode: drift.InsertMode.insertOrReplace,
+          );
+        }
+      } else {
+        // User canceled the picker
+        log('No file selected');
+      }
+    } catch (e) {
+      log('Error: $e');
     }
   }
 

@@ -12,6 +12,7 @@ import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
+import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
@@ -37,7 +38,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -480,6 +481,71 @@ class Api {
     return deliveryAddresses;
   }
 
+  static Future<List<LabdipFeedback>> fetchLabdipFeedback(
+      List<int> orderNumbers) async {
+    final labdipFeedbacks = <LabdipFeedback>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.SBN1|F00092.SBA1|F00092.SBA2|F00092.RMK",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "LDF", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LD", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": orderNumbers
+                    .map(
+                      (orderNumber) =>
+                          {"content": orderNumber, "specialValueId": "LITERAL"},
+                    )
+                    .toList(),
+                "controlId": "F00092.SBN1",
+                "operator": "LIST"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          labdipFeedbacks.add(
+            LabdipFeedback(
+              orderNumber: row['F00092_SBN1'],
+              lineNumber: row['F00092_SBA2'],
+              feedback: row['F00092_RMK'],
+              isPositive: row['F00092_SBA1'],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchLabdipFeedback error - $e');
+    }
+
+    return labdipFeedbacks;
+  }
+
   static Future<List<OrderHeaderLine>> fetchOrders({
     required String soldToNumber,
   }) async {
@@ -490,6 +556,9 @@ class Api {
         '/orchestrator/ORCH5542001_GetOrderStatus',
         data: {
           "SoldTo": soldToNumber,
+          "FromOrderDate": DateFormat('MM/dd/yyyy')
+              .format(DateTime.now().subtract(Duration(days: 180))),
+          "ToOrderDate": DateFormat('MM/dd/yyyy').format(DateTime.now()),
         },
       );
 
@@ -497,7 +566,7 @@ class Api {
         for (var orderStatus in response.data["GetOrderStatus"]) {
           final OrderHeaderLine orderHeaderLine = OrderHeaderLine(
             orderNumber: orderStatus['OrderNumber'],
-            orderType: orderStatus['OrType'],
+            orderType: orderStatus['OrTy'],
             orderCompany: orderStatus['OrderCo'],
             orderDate: DateFormat('MM/dd/yyyy').parse(
               orderStatus['OrderDate'],
@@ -588,6 +657,75 @@ class Api {
     }
 
     return orderDetailLines;
+  }
+
+  static Future<List<String>> validateItemNumbers(
+      List<String> itemNumbers) async {
+    final validItemNumbers = <String>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F4101",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F4101.LITM",
+          "maxPageSize": "No Max",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F4101.LITM",
+                "operator": "LIST",
+                "value": itemNumbers
+                    .map(
+                      (itemNumber) => {
+                        "specialValueId": "LITERAL",
+                        "content": itemNumber,
+                      },
+                    )
+                    .toList(),
+              },
+              {
+                "controlId": "F4101.SRP1",
+                "operator": "EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "IND"}
+                ]
+              },
+              {
+                "controlId": "F4101.PRP1",
+                "operator": "LIST",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "Z"},
+                  {"specialValueId": "LITERAL", "content": "M"}
+                ]
+              },
+              {
+                "controlId": "F4101.STKT",
+                "operator": "NOT_EQUAL",
+                "value": [
+                  {"specialValueId": "LITERAL", "content": "O"}
+                ]
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F4101']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          validItemNumbers.add(row['F4101_LITM']);
+        }
+      }
+    } catch (e) {
+      log('fetchItemNumbers error - $e');
+    }
+
+    return validItemNumbers;
   }
 
   static Future<List<LabdipTableRow>> fetchLabdipTableRows(

@@ -11,7 +11,7 @@ class NewOrderTextField extends StatelessWidget {
     this.hintText = '',
     required this.rxString,
     this.isEnabled = true,
-    this.minLines,
+    this.minLines = 1,
     this.isRequired = false,
     this.hasError = false,
     this.inputFormatters = const [],
