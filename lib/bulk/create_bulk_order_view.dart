@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -394,9 +395,8 @@ class CreateBulkOrderView extends StatelessWidget {
                         height: 24,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Spacer(),
                           RichText(
                             text: TextSpan(
                               text: '*',
@@ -417,7 +417,6 @@ class CreateBulkOrderView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Spacer(),
                           SecondaryButton(
                             wait: false,
                             text: 'Clear Inputs',
@@ -427,7 +426,6 @@ class CreateBulkOrderView extends StatelessWidget {
                                     bulkEntryController.clearAllInputs();
                                   },
                           ),
-                          Spacer(),
                           PrimaryButton(
                             text: 'Add Line',
                             onPressed: bulkEntryController
@@ -437,7 +435,6 @@ class CreateBulkOrderView extends StatelessWidget {
                                     bulkEntryController.addBulkOrderLine();
                                   },
                           ),
-                          Spacer(),
                           PrimaryButton(
                             text: 'Update',
                             onPressed: bulkEntryController
@@ -448,7 +445,6 @@ class CreateBulkOrderView extends StatelessWidget {
                                   }
                                 : null,
                           ),
-                          Spacer(),
                           PrimaryButton(
                             text: 'Delete',
                             onPressed: bulkEntryController
@@ -458,12 +454,26 @@ class CreateBulkOrderView extends StatelessWidget {
                                     bulkEntryController.deleteSelectedLines();
                                   },
                           ),
-                          Spacer(),
+                          SecondaryButton(
+                            text: 'Sample Excel',
+                            onPressed: () async {
+                              final ByteData data = await rootBundle
+                                  .load('assets/bulk_import.xlsx');
+
+                              final Uint8List bytes = data.buffer.asUint8List();
+
+                              await FileSaver.instance.saveFile(
+                                name: 'bulk_import',
+                                bytes: bytes,
+                                ext: 'xlsx',
+                                mimeType: MimeType.microsoftExcel,
+                              );
+                            },
+                          ),
                           SecondaryButton(
                             text: 'Import Excel',
                             onPressed: bulkEntryController.importExcel,
                           ),
-                          Spacer(),
                         ],
                       ),
                     ],
