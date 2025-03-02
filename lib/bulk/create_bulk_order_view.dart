@@ -147,6 +147,15 @@ class CreateBulkOrderView extends StatelessWidget {
                         searchList: bulkEntryController.rxMerchandisers,
                         shouldEnforceList: false,
                         hasError: bulkEntryController.merchandiserHasError,
+                        inputFormatters: [
+                          TextInputFormatter.withFunction(
+                            (oldValue, newValue) {
+                              return newValue.copyWith(
+                                text: newValue.text.toUpperCase(),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                       Row(
                         children: <Widget>[
@@ -170,6 +179,15 @@ class CreateBulkOrderView extends StatelessWidget {
                                 labelText: 'Name',
                                 isRequired: true,
                                 rxString: bulkEntryController.rxOtherBuyerName,
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction(
+                                    (oldValue, newValue) {
+                                      return newValue.copyWith(
+                                        text: newValue.text.toUpperCase(),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ]

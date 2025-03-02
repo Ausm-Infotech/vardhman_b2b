@@ -77,6 +77,8 @@ class CreateDtmOrderView extends StatelessWidget {
                           Expanded(
                             child: NewOrderTextField(
                               labelText: 'PO Number',
+                              isRequired: true,
+                              hasError: dtmEntryController.poNumberHasError,
                               rxString: dtmEntryController.rxPoNumber,
                             ),
                           ),
@@ -104,7 +106,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                       final FilePickerResult? filePickerResult =
                                           await FilePicker.platform.pickFiles(
                                         type: FileType.custom,
-                                        allowedExtensions: ['pdf'],
+                                        allowedExtensions: ['pdf', 'xlsx'],
                                         withData: true,
                                         readSequential: true,
                                       );
@@ -143,6 +145,15 @@ class CreateDtmOrderView extends StatelessWidget {
                         searchList: dtmEntryController.rxMerchandisers,
                         shouldEnforceList: false,
                         hasError: dtmEntryController.merchandiserHasError,
+                        inputFormatters: [
+                          TextInputFormatter.withFunction(
+                            (oldValue, newValue) {
+                              return newValue.copyWith(
+                                text: newValue.text.toUpperCase(),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                       Row(
                         children: <Widget>[
@@ -161,6 +172,15 @@ class CreateDtmOrderView extends StatelessWidget {
                             ),
                             Expanded(
                               child: NewOrderTextField(
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction(
+                                    (oldValue, newValue) {
+                                      return newValue.copyWith(
+                                        text: newValue.text.toUpperCase(),
+                                      );
+                                    },
+                                  ),
+                                ],
                                 hasError:
                                     dtmEntryController.otherBuyerNameHasError,
                                 labelText: 'Name',

@@ -89,6 +89,15 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   shouldEnforceList: false,
                                   hasError: labdipEntryController
                                       .merchandiserHasError,
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction(
+                                      (oldValue, newValue) {
+                                        return newValue.copyWith(
+                                          text: newValue.text.toUpperCase(),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   children: <Widget>[
@@ -116,6 +125,16 @@ class CreateLabdipOrderView extends StatelessWidget {
                                           isRequired: true,
                                           rxString: labdipEntryController
                                               .rxOtherBuyerName,
+                                          inputFormatters: [
+                                            TextInputFormatter.withFunction(
+                                              (oldValue, newValue) {
+                                                return newValue.copyWith(
+                                                  text: newValue.text
+                                                      .toUpperCase(),
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ]

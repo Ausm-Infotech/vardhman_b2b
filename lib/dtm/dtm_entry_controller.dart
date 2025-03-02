@@ -450,6 +450,10 @@ class DtmEntryController extends GetxController {
       inputsInError.add(rxUom);
     }
 
+    if (rxPoNumber.value.trim().isEmpty) {
+      inputsInError.add(rxPoNumber);
+    }
+
     if (rxMerchandiser.value.trim().isEmpty) {
       inputsInError.add(rxMerchandiser);
     }
@@ -926,4 +930,6 @@ class DtmEntryController extends GetxController {
   bool get uomHasError => inputsInError.contains(rxUom);
 
   bool get quantityHasError => inputsInError.contains(rxQuantity);
+
+  bool get poNumberHasError => inputsInError.contains(rxPoNumber);
 }
