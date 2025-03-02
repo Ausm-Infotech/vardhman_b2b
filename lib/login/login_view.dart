@@ -18,24 +18,51 @@ class LoginView extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const Text('text'),
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: SizedBox(
-                        width: loginController
-                            .videoPlayerController.value.size.width,
-                        height: loginController
-                            .videoPlayerController.value.size.height,
-                        child:
-                            VideoPlayer(loginController.videoPlayerController),
-                      ),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width:
+                        loginController.videoPlayerController.value.size.width,
+                    height:
+                        loginController.videoPlayerController.value.size.height,
+                    child: VideoPlayer(loginController.videoPlayerController),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      height: 100,
                     ),
-                  )
-                ],
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const SizedBox(
+                          width: 140,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: Image.asset(
+                            'assets/digital-nws.png',
+                            height: 60,
+                          ),
+                        ),
+                        Image.asset(
+                          'assets/50_years.png',
+                          height: 140,
+                          width: 140,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Align(
                 alignment: Alignment.center,
@@ -59,14 +86,14 @@ class LoginView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset(
-                        'assets/digital-nws.png',
-                        height: 80,
-                        width: 160,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
+                      // Image.asset(
+                      //   'assets/digital-nws.png',
+                      //   height: 80,
+                      //   width: 160,
+                      // ),
+                      // const SizedBox(
+                      //   height: 16,
+                      // ),
                       TextField(
                         controller: loginController.userIdTextEditingController,
                         decoration: InputDecoration(
@@ -86,6 +113,12 @@ class LoginView extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  children: <Widget>[],
                 ),
               ),
             ],
