@@ -88,7 +88,7 @@ class CreateDtmOrderView extends StatelessWidget {
                           Expanded(
                             child: NewOrderTextField(
                               isEnabled: false,
-                              labelText: 'PO File',
+                              labelText: 'Upload PO Document',
                               rxString: dtmEntryController.rxPoFileName,
                               hintText: 'no file chosen',
                             ),

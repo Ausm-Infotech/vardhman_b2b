@@ -54,7 +54,33 @@ class CreateBulkOrderView extends StatelessWidget {
                 text: 'Submit Order',
                 onPressed: bulkEntryController.rxBulkOrderLines.isEmpty
                     ? null
-                    : bulkEntryController.submitOrder,
+                    : () async {
+                        // bulkEntryController.submitOrder
+
+                        Get.dialog(
+                          AlertDialog(
+                            title: Text('Vardhman B2B Terms and Conditions'),
+                            content: Text(
+                                'By submitting you agree to our Terms and Conditions'),
+                            actions: <Widget>[
+                              SecondaryButton(
+                                text: 'Cancel',
+                                onPressed: () async {
+                                  Get.back();
+                                },
+                              ),
+                              PrimaryButton(
+                                text: 'Submit',
+                                onPressed: () async {
+                                  await bulkEntryController.submitOrder();
+
+                                  Get.back();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
               ),
             ),
           ),
@@ -90,7 +116,7 @@ class CreateBulkOrderView extends StatelessWidget {
                           Expanded(
                             child: NewOrderTextField(
                               isEnabled: false,
-                              labelText: 'PO File',
+                              labelText: 'Upload PO Document',
                               rxString: bulkEntryController.rxPoFileName,
                               hintText: 'no file chosen',
                             ),
@@ -108,7 +134,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                       final FilePickerResult? filePickerResult =
                                           await FilePicker.platform.pickFiles(
                                         type: FileType.custom,
-                                        allowedExtensions: ['pdf'],
+                                        allowedExtensions: ['pdf', 'xlsx'],
                                         withData: true,
                                         readSequential: true,
                                       );
