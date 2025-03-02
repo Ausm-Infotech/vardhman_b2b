@@ -175,8 +175,6 @@ class LabdipController extends GetxController {
             mobileNumber: userController.rxCustomerDetail.value.mobileNumber,
           );
         }
-
-        Get.back();
       } else {
         toastification.show(
           autoCloseDuration: Duration(seconds: 5),
@@ -186,11 +184,11 @@ class LabdipController extends GetxController {
           ),
         );
       }
-    } else {
-      Get.back();
     }
 
-    ordersController.refreshLabdipFeedbacks();
+    await ordersController.refreshLabdipFeedbacks();
+
+    Get.back();
   }
 
   LabdipTableRow? getLabdipTableRow(int workOrderNumber) {
