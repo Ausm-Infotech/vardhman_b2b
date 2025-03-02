@@ -21,9 +21,10 @@ LabdipFeedback _$LabdipFeedbackFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$LabdipFeedback {
   int get orderNumber => throw _privateConstructorUsedError;
-  int get lineNumber => throw _privateConstructorUsedError;
-  String get feedback => throw _privateConstructorUsedError;
+  double get lineNumber => throw _privateConstructorUsedError;
+  String get reason => throw _privateConstructorUsedError;
   bool get isPositive => throw _privateConstructorUsedError;
+  bool get shouldRematch => throw _privateConstructorUsedError;
 
   /// Serializes this LabdipFeedback to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,7 +43,11 @@ abstract class $LabdipFeedbackCopyWith<$Res> {
       _$LabdipFeedbackCopyWithImpl<$Res, LabdipFeedback>;
   @useResult
   $Res call(
-      {int orderNumber, int lineNumber, String feedback, bool isPositive});
+      {int orderNumber,
+      double lineNumber,
+      String reason,
+      bool isPositive,
+      bool shouldRematch});
 }
 
 /// @nodoc
@@ -62,8 +67,9 @@ class _$LabdipFeedbackCopyWithImpl<$Res, $Val extends LabdipFeedback>
   $Res call({
     Object? orderNumber = null,
     Object? lineNumber = null,
-    Object? feedback = null,
+    Object? reason = null,
     Object? isPositive = null,
+    Object? shouldRematch = null,
   }) {
     return _then(_value.copyWith(
       orderNumber: null == orderNumber
@@ -73,14 +79,18 @@ class _$LabdipFeedbackCopyWithImpl<$Res, $Val extends LabdipFeedback>
       lineNumber: null == lineNumber
           ? _value.lineNumber
           : lineNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      feedback: null == feedback
-          ? _value.feedback
-          : feedback // ignore: cast_nullable_to_non_nullable
+              as double,
+      reason: null == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
               as String,
       isPositive: null == isPositive
           ? _value.isPositive
           : isPositive // ignore: cast_nullable_to_non_nullable
+              as bool,
+      shouldRematch: null == shouldRematch
+          ? _value.shouldRematch
+          : shouldRematch // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -95,7 +105,11 @@ abstract class _$$LabdipFeedbackImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int orderNumber, int lineNumber, String feedback, bool isPositive});
+      {int orderNumber,
+      double lineNumber,
+      String reason,
+      bool isPositive,
+      bool shouldRematch});
 }
 
 /// @nodoc
@@ -113,8 +127,9 @@ class __$$LabdipFeedbackImplCopyWithImpl<$Res>
   $Res call({
     Object? orderNumber = null,
     Object? lineNumber = null,
-    Object? feedback = null,
+    Object? reason = null,
     Object? isPositive = null,
+    Object? shouldRematch = null,
   }) {
     return _then(_$LabdipFeedbackImpl(
       orderNumber: null == orderNumber
@@ -124,14 +139,18 @@ class __$$LabdipFeedbackImplCopyWithImpl<$Res>
       lineNumber: null == lineNumber
           ? _value.lineNumber
           : lineNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      feedback: null == feedback
-          ? _value.feedback
-          : feedback // ignore: cast_nullable_to_non_nullable
+              as double,
+      reason: null == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
               as String,
       isPositive: null == isPositive
           ? _value.isPositive
           : isPositive // ignore: cast_nullable_to_non_nullable
+              as bool,
+      shouldRematch: null == shouldRematch
+          ? _value.shouldRematch
+          : shouldRematch // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -143,8 +162,9 @@ class _$LabdipFeedbackImpl implements _LabdipFeedback {
   const _$LabdipFeedbackImpl(
       {required this.orderNumber,
       required this.lineNumber,
-      required this.feedback,
-      required this.isPositive});
+      required this.reason,
+      required this.isPositive,
+      required this.shouldRematch});
 
   factory _$LabdipFeedbackImpl.fromJson(Map<String, dynamic> json) =>
       _$$LabdipFeedbackImplFromJson(json);
@@ -152,15 +172,17 @@ class _$LabdipFeedbackImpl implements _LabdipFeedback {
   @override
   final int orderNumber;
   @override
-  final int lineNumber;
+  final double lineNumber;
   @override
-  final String feedback;
+  final String reason;
   @override
   final bool isPositive;
+  @override
+  final bool shouldRematch;
 
   @override
   String toString() {
-    return 'LabdipFeedback(orderNumber: $orderNumber, lineNumber: $lineNumber, feedback: $feedback, isPositive: $isPositive)';
+    return 'LabdipFeedback(orderNumber: $orderNumber, lineNumber: $lineNumber, reason: $reason, isPositive: $isPositive, shouldRematch: $shouldRematch)';
   }
 
   @override
@@ -172,16 +194,17 @@ class _$LabdipFeedbackImpl implements _LabdipFeedback {
                 other.orderNumber == orderNumber) &&
             (identical(other.lineNumber, lineNumber) ||
                 other.lineNumber == lineNumber) &&
-            (identical(other.feedback, feedback) ||
-                other.feedback == feedback) &&
+            (identical(other.reason, reason) || other.reason == reason) &&
             (identical(other.isPositive, isPositive) ||
-                other.isPositive == isPositive));
+                other.isPositive == isPositive) &&
+            (identical(other.shouldRematch, shouldRematch) ||
+                other.shouldRematch == shouldRematch));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, orderNumber, lineNumber, feedback, isPositive);
+  int get hashCode => Object.hash(
+      runtimeType, orderNumber, lineNumber, reason, isPositive, shouldRematch);
 
   /// Create a copy of LabdipFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -203,9 +226,10 @@ class _$LabdipFeedbackImpl implements _LabdipFeedback {
 abstract class _LabdipFeedback implements LabdipFeedback {
   const factory _LabdipFeedback(
       {required final int orderNumber,
-      required final int lineNumber,
-      required final String feedback,
-      required final bool isPositive}) = _$LabdipFeedbackImpl;
+      required final double lineNumber,
+      required final String reason,
+      required final bool isPositive,
+      required final bool shouldRematch}) = _$LabdipFeedbackImpl;
 
   factory _LabdipFeedback.fromJson(Map<String, dynamic> json) =
       _$LabdipFeedbackImpl.fromJson;
@@ -213,11 +237,13 @@ abstract class _LabdipFeedback implements LabdipFeedback {
   @override
   int get orderNumber;
   @override
-  int get lineNumber;
+  double get lineNumber;
   @override
-  String get feedback;
+  String get reason;
   @override
   bool get isPositive;
+  @override
+  bool get shouldRematch;
 
   /// Create a copy of LabdipFeedback
   /// with the given fields replaced by the non-null parameter values.

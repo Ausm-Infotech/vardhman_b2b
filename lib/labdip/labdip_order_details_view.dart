@@ -1,17 +1,15 @@
 import 'package:data_table_2/data_table_2.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:toastification/toastification.dart';
-import 'package:vardhman_b2b/api/api.dart';
+import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
-import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
+import 'package:vardhman_b2b/labdip/feedback_dialog.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
-import 'package:vardhman_b2b/user/user_controller.dart';
+import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrderDetailsView extends StatelessWidget {
   const LabdipOrderDetailsView({
@@ -145,12 +143,12 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               label: Text('Status'), size: ColumnSize.M),
                           if (hasDispatchedLine)
                             DataColumn2(
-                                label: Text('Feedback'), size: ColumnSize.L),
+                                label: Text('Feedback'), size: ColumnSize.S),
                         ],
                         rows: labdipController.rxOrderDetailLines.map(
-                          (orderDetail) {
+                          (orderDetailLine) {
                             final itemParts =
-                                orderDetail.item.split(RegExp('\\s+'));
+                                orderDetailLine.item.split(RegExp('\\s+'));
 
                             final String article = itemParts[0];
                             final String uom = itemParts[1];
@@ -164,22 +162,25 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   itemCatalogInfo.uom == uom,
                             );
 
-                            final labdipTableRow = labdipController
-                                .getLabdipTableRow(orderDetail.workOrderNumber);
+                            final labdipTableRow =
+                                labdipController.getLabdipTableRow(
+                                    orderDetailLine.workOrderNumber);
 
                             final index = labdipController.rxOrderDetailLines
-                                .indexOf(orderDetail);
-
-                            final reason = labdipController
-                                    .rxSelectedOrderDetailLinesReasonMap[
-                                orderDetail];
+                                .indexOf(orderDetailLine);
 
                             final isDispatchedLine =
-                                orderDetail.status == 'Dispatched';
+                                orderDetailLine.status == 'Dispatched';
 
-                            final noneBorder = OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            );
+                            final OrdersController ordersController =
+                                Get.find<OrdersController>();
+
+                            final feedback = ordersController.rxLabdipFeedbacks
+                                .firstWhereOrNull((labdipFeedback) =>
+                                    labdipFeedback.orderNumber ==
+                                        orderDetailLine.orderNumber &&
+                                    labdipFeedback.lineNumber ==
+                                        orderDetailLine.lineNumber);
 
                             return DataRow(
                               color: WidgetStatePropertyAll(
@@ -189,7 +190,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               ),
                               cells: [
                                 DataCell(
-                                  Text(orderDetail.lineNumber.toString()),
+                                  Text(orderDetailLine.lineNumber.toString()),
                                 ),
                                 DataCell(
                                   Text(article),
@@ -212,135 +213,63 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                       : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}'),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.userComment),
+                                  Text(orderDetailLine.userComment),
                                 ),
                                 DataCell(
-                                  Text(orderDetail.status),
+                                  Text(orderDetailLine.status),
                                 ),
                                 if (hasDispatchedLine)
                                   DataCell(
                                     !isDispatchedLine
                                         ? SizedBox()
-                                        : Container(
-                                            height: 36,
-                                            margin: const EdgeInsets.all(0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                color: VardhmanColors.darkGrey,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Expanded(
-                                                  child: DropdownSearch<String>(
-                                                    enabled: true,
-                                                    decoratorProps:
-                                                        DropDownDecoratorProps(
-                                                      baseStyle: TextStyle(
-                                                        color:
-                                                            VardhmanColors.red,
-                                                        fontSize: 13,
-                                                      ),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        hintText: 'select',
-                                                        hintStyle: TextStyle(
-                                                          color: VardhmanColors
-                                                              .darkGrey,
-                                                          fontSize: 13,
-                                                        ),
-                                                        contentPadding:
-                                                            EdgeInsets.only(
-                                                                left: 8),
-                                                        border: noneBorder,
-                                                        enabledBorder:
-                                                            noneBorder,
-                                                        focusedBorder:
-                                                            noneBorder,
-                                                        disabledBorder:
-                                                            noneBorder,
-                                                      ),
-                                                    ),
-                                                    popupProps: PopupProps.menu(
-                                                      searchFieldProps:
-                                                          TextFieldProps(
-                                                        autocorrect: false,
-                                                        style: TextStyle(
-                                                          color: VardhmanColors
-                                                              .darkGrey,
-                                                          fontSize: 13,
-                                                        ),
-                                                      ),
-                                                      showSearchBox: true,
-                                                      fit: FlexFit.loose,
-                                                      searchDelay: Duration(
-                                                          milliseconds: 0),
-                                                      itemBuilder: (context,
-                                                              item,
-                                                              isDisabled,
-                                                              isSelected) =>
-                                                          ListTile(
-                                                        title: Text(
-                                                          item,
-                                                          style: TextStyle(
-                                                            color:
-                                                                VardhmanColors
-                                                                    .darkGrey,
-                                                            fontSize: 13,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    items:
-                                                        (searchText, cs) async {
-                                                      final trimmedSearchText =
-                                                          searchText.trim();
-
-                                                      return [
-                                                        if (trimmedSearchText
-                                                                .isNotEmpty &&
-                                                            !labdipController
-                                                                .rejectionReasons
-                                                                .contains(
-                                                                    trimmedSearchText))
-                                                          trimmedSearchText,
-                                                        ...labdipController
-                                                            .rejectionReasons
-                                                      ];
-                                                    },
-                                                    autoValidateMode:
-                                                        AutovalidateMode
-                                                            .disabled,
-                                                    onChanged: (newValue) {
-                                                      labdipController
-                                                                  .rxSelectedOrderDetailLinesReasonMap[
-                                                              orderDetail] =
-                                                          newValue ?? '';
-                                                    },
-                                                    selectedItem: reason,
-                                                  ),
+                                        : feedback != null
+                                            ? Text(
+                                                feedback.reason,
+                                                style: TextStyle(
+                                                  color: feedback.isPositive
+                                                      ? VardhmanColors.green
+                                                      : VardhmanColors.red,
                                                 ),
-                                                if (reason != null &&
-                                                    reason.isNotEmpty)
-                                                  SecondaryButton(
-                                                    wait: false,
-                                                    iconData: Icons.clear,
-                                                    text: '',
-                                                    onPressed: () async {
-                                                      labdipController
-                                                          .rxSelectedOrderDetailLinesReasonMap
-                                                          .remove(orderDetail);
-                                                    },
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
+                                              )
+                                            : Checkbox(
+                                                fillColor:
+                                                    WidgetStatePropertyAll(
+                                                  Colors.white,
+                                                ),
+                                                checkColor: VardhmanColors.red,
+                                                side: BorderSide(
+                                                  color:
+                                                      VardhmanColors.darkGrey,
+                                                  width: 0.5,
+                                                ),
+                                                value: labdipController
+                                                    .rxOrderDetailFeedbackMap
+                                                    .keys
+                                                    .contains(orderDetailLine),
+                                                onChanged: (bool? value) {
+                                                  if (value == true) {
+                                                    labdipController
+                                                                .rxOrderDetailFeedbackMap[
+                                                            orderDetailLine] =
+                                                        LabdipFeedback(
+                                                      orderNumber:
+                                                          orderDetailLine
+                                                              .orderNumber,
+                                                      lineNumber:
+                                                          orderDetailLine
+                                                              .lineNumber,
+                                                      reason: '',
+                                                      isPositive: false,
+                                                      shouldRematch: false,
+                                                    );
+                                                  } else {
+                                                    labdipController
+                                                        .rxOrderDetailFeedbackMap
+                                                        .remove(
+                                                            orderDetailLine);
+                                                  }
+                                                },
+                                              ),
                                   ),
                               ],
                             );
@@ -348,8 +277,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         ).toList(),
                       ),
               ),
-              if (labdipController
-                  .rxSelectedOrderDetailLinesReasonMap.isNotEmpty)
+              if (labdipController.rxOrderDetailFeedbackMap.isNotEmpty)
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -365,84 +293,11 @@ class LabdipOrderDetailsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          '${labdipController.rxSelectedOrderDetailLinesReasonMap.length} line${labdipController.rxSelectedOrderDetailLinesReasonMap.length > 1 ? 's' : ''} selected'),
+                          '${labdipController.rxOrderDetailFeedbackMap.length} line${labdipController.rxOrderDetailFeedbackMap.length > 1 ? 's' : ''} selected for feedback'),
                       PrimaryButton(
-                        text: 'Rematch',
+                        text: 'Submit Feedback',
                         onPressed: () async {
-                          final UserController userController =
-                              Get.find<UserController>(tag: 'userController');
-
-                          final nextOrderNumber = await Api.fetchOrderNumber();
-
-                          final b2bOrderNumber = 'B2BL-$nextOrderNumber';
-
-                          if (nextOrderNumber != null) {
-                            final isSubmitted = await Api.submitRematchOrder(
-                              merchandiserName: '',
-                              b2bOrderNumber: b2bOrderNumber,
-                              branchPlant: userController.branchPlant,
-                              soldTo: userController
-                                  .rxCustomerDetail.value.soldToNumber,
-                              shipTo: (userController.rxDeliveryAddress.value
-                                              ?.deliveryAddressNumber ==
-                                          0
-                                      ? userController
-                                          .rxCustomerDetail.value.soldToNumber
-                                      : userController.rxDeliveryAddress.value
-                                          ?.deliveryAddressNumber)
-                                  .toString(),
-                              company: userController
-                                  .rxCustomerDetail.value.companyCode,
-                              orderTakenBy:
-                                  userController.rxUserDetail.value.role,
-                              orderDetailLines: labdipController
-                                  .rxSelectedOrderDetailLinesReasonMap.keys
-                                  .toList(),
-                              selectedOrderDetailLinesReasonMap:
-                                  labdipController
-                                      .rxSelectedOrderDetailLinesReasonMap,
-                            );
-
-                            if (isSubmitted) {
-                              labdipController
-                                  .rxSelectedOrderDetailLinesReasonMap
-                                  .clear();
-
-                              toastification.show(
-                                autoCloseDuration: Duration(seconds: 5),
-                                primaryColor: VardhmanColors.green,
-                                title: Text(
-                                  'Order $b2bOrderNumber placed successfully!',
-                                ),
-                              );
-
-                              if (userController
-                                  .rxCustomerDetail.value.canSendSMS) {
-                                Api.sendOrderEntrySMS(
-                                  orderNumber: b2bOrderNumber,
-                                  mobileNumber: userController
-                                      .rxCustomerDetail.value.mobileNumber,
-                                );
-                              }
-
-                              if (userController
-                                  .rxCustomerDetail.value.canSendWhatsApp) {
-                                Api.sendOrderEntryWhatsApp(
-                                  orderNumber: b2bOrderNumber,
-                                  mobileNumber: userController
-                                      .rxCustomerDetail.value.mobileNumber,
-                                );
-                              }
-                            } else {
-                              toastification.show(
-                                autoCloseDuration: Duration(seconds: 5),
-                                primaryColor: VardhmanColors.red,
-                                title: Text(
-                                  'Some error placing the order!',
-                                ),
-                              );
-                            }
-                          }
+                          Get.dialog(FeedbackDialog());
                         },
                       ),
                     ],

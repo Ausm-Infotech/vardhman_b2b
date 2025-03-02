@@ -192,20 +192,29 @@ class LabdipOrdersView extends StatelessWidget {
                           },
                         ),
                         ...labdipController.filteredLabdipOrders.map(
-                          (labdipOrder) {
+                          (orderHeaderLine) {
                             final index = labdipController.filteredLabdipOrders
-                                    .indexOf(labdipOrder) +
+                                    .indexOf(orderHeaderLine) +
                                 labdipController.rxDraftOrders.length;
 
                             final isSelected = labdipController
                                     .rxSelectedOrderHeaderLine.value ==
-                                labdipOrder;
+                                orderHeaderLine;
+
+                            final hasFeedback =
+                                ordersController.rxLabdipFeedbacks.any(
+                              (labdipFeedback) =>
+                                  labdipFeedback.orderNumber ==
+                                  orderHeaderLine.orderNumber,
+                            );
 
                             final textStyle = TextStyle(
                               fontSize: 13,
                               color: isSelected
                                   ? Colors.white
-                                  : VardhmanColors.darkGrey,
+                                  : hasFeedback
+                                      ? VardhmanColors.red
+                                      : VardhmanColors.darkGrey,
                             );
 
                             return DataRow(
@@ -216,15 +225,15 @@ class LabdipOrdersView extends StatelessWidget {
                                         ? Colors.white
                                         : VardhmanColors.dividerGrey,
                               ),
-                              selected: labdipOrder ==
+                              selected: orderHeaderLine ==
                                   labdipController
                                       .rxSelectedOrderHeaderLine.value,
                               onSelectChanged: (value) {
                                 if (value == true &&
                                     labdipController
                                             .rxSelectedOrderHeaderLine.value !=
-                                        labdipOrder) {
-                                  labdipController.selectOrder(labdipOrder);
+                                        orderHeaderLine) {
+                                  labdipController.selectOrder(orderHeaderLine);
                                 }
                               },
                               cells: [
@@ -235,15 +244,15 @@ class LabdipOrdersView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Text(
-                                            labdipOrder.orderNumber.toString()),
-                                        if (labdipOrder.orderReference
+                                        Text(orderHeaderLine.orderNumber
+                                            .toString()),
+                                        if (orderHeaderLine.orderReference
                                             .trim()
                                             .isNotEmpty) ...[
                                           SizedBox(
                                             width: 16,
                                           ),
-                                          Text(labdipOrder.orderReference),
+                                          Text(orderHeaderLine.orderReference),
                                         ],
                                       ],
                                     ),
@@ -252,7 +261,7 @@ class LabdipOrdersView extends StatelessWidget {
                                 DataCell(
                                   Text(
                                     DateFormat('d MMM yy').format(
-                                      labdipOrder.orderDate,
+                                      orderHeaderLine.orderDate,
                                     ),
                                     style: textStyle,
                                   ),

@@ -38,16 +38,16 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept': '*/*',
       },
-      sendTimeout: const Duration(seconds: 30),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
@@ -532,9 +532,10 @@ class Api {
           labdipFeedbacks.add(
             LabdipFeedback(
               orderNumber: row['F00092_SBN1'],
-              lineNumber: row['F00092_SBA2'],
-              feedback: row['F00092_RMK'],
-              isPositive: row['F00092_SBA1'],
+              lineNumber: double.tryParse(row['F00092_SBA2']) ?? 0.0,
+              reason: row['F00092_RMK'],
+              isPositive: row['F00092_SBA1'] == 'A',
+              shouldRematch: false,
             ),
           );
         }
@@ -557,7 +558,7 @@ class Api {
         data: {
           "SoldTo": soldToNumber,
           "FromOrderDate": DateFormat('MM/dd/yyyy')
-              .format(DateTime.now().subtract(Duration(days: 180))),
+              .format(DateTime.now().subtract(Duration(days: 1080))),
           "ToOrderDate": DateFormat('MM/dd/yyyy').format(DateTime.now()),
         },
       );
@@ -1398,6 +1399,29 @@ class Api {
     return false;
   }
 
+  static Future<bool> submitLabdipFeedback({
+    required OrderDetailLine orderDetailLine,
+    required LabdipFeedback labdipFeedback,
+  }) async {
+    return await _dio.post(
+      '/orchestrator/ORCH5500092_SupplementalDataEntry',
+      data: {
+        "szSupplementalDatabaseCode": "LDF",
+        "cActionCode": "A",
+        "mnNumericKey1": "${orderDetailLine.orderNumber}",
+        "szAlphaKey1": labdipFeedback.isPositive ? 'A' : 'N',
+        "szAlphaKey2": "${orderDetailLine.lineNumber}",
+        "szDataType": "LD",
+        "szRemark1": labdipFeedback.reason
+      },
+    ).then((response) {
+      return response.statusCode == 200;
+    }).catchError((e) {
+      log('submitFeedback error - $e');
+      return false;
+    });
+  }
+
   static Future<bool> submitRematchOrder({
     required String merchandiserName,
     required String b2bOrderNumber,
@@ -1406,9 +1430,10 @@ class Api {
     required String branchPlant,
     required String company,
     required String orderTakenBy,
-    required List<OrderDetailLine> orderDetailLines,
-    required Map<OrderDetailLine, String> selectedOrderDetailLinesReasonMap,
+    required Map<OrderDetailLine, String> orderDetailLinesReasonMap,
   }) async {
+    final orderDetailLines = orderDetailLinesReasonMap.keys.toList();
+
     final payload = {
       "Detail": orderDetailLines
           .map(
@@ -1427,7 +1452,7 @@ class Api {
               "SourceFlag": "B",
               "MerchandiserName": merchandiserName,
               "LightSourceRemark": "",
-              "ColorRemark": selectedOrderDetailLinesReasonMap[orderDetailLine],
+              "ColorRemark": orderDetailLinesReasonMap[orderDetailLine],
               "EndUse": orderDetailLine.buyerCode,
               "BillingType": "B",
               "RelatedOrder":
@@ -1493,6 +1518,9 @@ class Api {
               "ColorRemark": dtmEntryLine.colorRemark,
               "EndUse": dtmEntryLine.buyerCode,
               "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
+              if (dtmEntryLine.requestedDate != null)
+                "RequestDate": DateFormat('MM/dd/yyyy')
+                    .format(dtmEntryLine.requestedDate!),
             },
           )
           .toList(),
@@ -1554,6 +1582,9 @@ class Api {
               "ColorRemark": bulkEntryLine.colorRemark,
               "EndUse": bulkEntryLine.buyerCode,
               "BillingType": bulkEntryLine.billingType == "Branch" ? "B" : "D",
+              if (bulkEntryLine.requestedDate != null)
+                "RequestDate": DateFormat('MM/dd/yyyy')
+                    .format(bulkEntryLine.requestedDate!),
             },
           )
           .toList(),

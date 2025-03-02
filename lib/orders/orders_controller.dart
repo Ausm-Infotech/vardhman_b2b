@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
+import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -26,6 +27,8 @@ class OrdersController extends GetxController
 
   late final tabController = TabController(length: 4, vsync: this);
 
+  final rxLabdipFeedbacks = <LabdipFeedback>[].obs;
+
   OrdersController() {
     init();
   }
@@ -42,21 +45,37 @@ class OrdersController extends GetxController
     final customerSoldToNumber =
         _userController.rxCustomerDetail.value.soldToNumber;
 
-    final orderInfos =
+    final orderHeaderLines =
         await Api.fetchOrders(soldToNumber: customerSoldToNumber);
 
     _rxOrderHeaderLines.clear();
 
-    if (orderInfos.isNotEmpty) {
-      orderInfos.sort((a, b) => b.orderDate.compareTo(a.orderDate));
+    if (orderHeaderLines.isNotEmpty) {
+      orderHeaderLines.sort((a, b) => b.orderDate.compareTo(a.orderDate));
 
-      _rxOrderHeaderLines.addAll(orderInfos);
+      _rxOrderHeaderLines.addAll(orderHeaderLines);
     }
 
     rxEarliestOrderDate.value =
-        orderInfos.lastOrNull?.orderDate ?? oldestDateTime;
+        orderHeaderLines.lastOrNull?.orderDate ?? oldestDateTime;
 
-    rxOrderFromDate.value = orderInfos.lastOrNull?.orderDate ?? oldestDateTime;
+    rxOrderFromDate.value =
+        orderHeaderLines.lastOrNull?.orderDate ?? oldestDateTime;
+
+    refreshLabdipFeedbacks();
+  }
+
+  Future<void> refreshLabdipFeedbacks() async {
+    final labdipFeedbacks = await Api.fetchLabdipFeedback(
+      _rxOrderHeaderLines
+          .where((orderHeaderLine) => orderHeaderLine.orderType == 'LD')
+          .map((orderHeaderLine) => orderHeaderLine.orderNumber)
+          .toList(),
+    );
+
+    rxLabdipFeedbacks.clear();
+
+    rxLabdipFeedbacks.addAll(labdipFeedbacks);
   }
 
   List<OrderHeaderLine> get filteredOrderHeaderLines => _rxOrderHeaderLines

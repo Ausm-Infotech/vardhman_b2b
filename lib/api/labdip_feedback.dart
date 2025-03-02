@@ -7,9 +7,10 @@ part 'labdip_feedback.g.dart';
 class LabdipFeedback with _$LabdipFeedback {
   const factory LabdipFeedback({
     required int orderNumber,
-    required int lineNumber,
-    required String feedback,
+    required double lineNumber,
+    required String reason,
     required bool isPositive,
+    required bool shouldRematch,
   }) = _LabdipFeedback;
 
   factory LabdipFeedback.fromJson(Map<String, dynamic> json) =>

@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
+import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
+import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -30,7 +34,7 @@ class LabdipController extends GetxController {
 
   final rxOrderDetailLines = <OrderDetailLine>[].obs;
 
-  final rxSelectedOrderDetailLinesReasonMap = <OrderDetailLine, String>{}.obs;
+  final rxOrderDetailFeedbackMap = <OrderDetailLine, LabdipFeedback>{}.obs;
 
   final Database _database = Get.find<Database>();
 
@@ -68,14 +72,6 @@ class LabdipController extends GetxController {
     );
   }
 
-  void selectOrderDetailLine(OrderDetailLine orderDetailLine) {
-    if (rxSelectedOrderDetailLinesReasonMap.containsKey(orderDetailLine)) {
-      rxSelectedOrderDetailLinesReasonMap.remove(orderDetailLine);
-    } else {
-      rxSelectedOrderDetailLinesReasonMap[orderDetailLine] = '';
-    }
-  }
-
   Future<void> selectOrder(OrderHeaderLine orderHeaderLine) async {
     rxSelectedOrderHeaderLine.value = orderHeaderLine;
 
@@ -95,7 +91,7 @@ class LabdipController extends GetxController {
   Future<void> refreshSelectedOrderDetails() async {
     rxOrderDetailLines.clear();
 
-    rxSelectedOrderDetailLinesReasonMap.clear();
+    rxOrderDetailFeedbackMap.clear();
 
     if (rxSelectedOrderHeaderLine.value != null) {
       final orderDetailLines = await Api.fetchOrderDetails(
@@ -108,6 +104,93 @@ class LabdipController extends GetxController {
 
       rxOrderDetailLines.addAll(orderDetailLines);
     }
+  }
+
+  Future<void> submitFeedback() async {
+    final UserController userController =
+        Get.find<UserController>(tag: 'userController');
+
+    final nextOrderNumber = await Api.fetchOrderNumber();
+
+    final b2bOrderNumber = 'B2BL-$nextOrderNumber';
+
+    rxOrderDetailFeedbackMap.forEach(
+      (orderDetailLine, labdipFeedback) {
+        Api.submitLabdipFeedback(
+          orderDetailLine: orderDetailLine,
+          labdipFeedback: labdipFeedback,
+        );
+      },
+    );
+
+    rxOrderDetailFeedbackMap.removeWhere(
+      (orderDetailLine, labdipFeedback) => !labdipFeedback.shouldRematch,
+    );
+
+    if (nextOrderNumber != null && rxOrderDetailFeedbackMap.isNotEmpty) {
+      final orderDetailLinesReasonMap = rxOrderDetailFeedbackMap.map(
+        (orderDetailLine, labdipFeedback) => MapEntry(
+          orderDetailLine,
+          labdipFeedback.reason,
+        ),
+      );
+
+      final isSubmitted = await Api.submitRematchOrder(
+        merchandiserName: '',
+        b2bOrderNumber: b2bOrderNumber,
+        branchPlant: userController.branchPlant,
+        soldTo: userController.rxCustomerDetail.value.soldToNumber,
+        shipTo:
+            (userController.rxDeliveryAddress.value?.deliveryAddressNumber == 0
+                    ? userController.rxCustomerDetail.value.soldToNumber
+                    : userController
+                        .rxDeliveryAddress.value?.deliveryAddressNumber)
+                .toString(),
+        company: userController.rxCustomerDetail.value.companyCode,
+        orderTakenBy: userController.rxUserDetail.value.role,
+        orderDetailLinesReasonMap: orderDetailLinesReasonMap,
+      );
+
+      if (isSubmitted) {
+        rxOrderDetailFeedbackMap.clear();
+
+        toastification.show(
+          autoCloseDuration: Duration(seconds: 5),
+          primaryColor: VardhmanColors.green,
+          title: Text(
+            'Rematch order $b2bOrderNumber placed successfully!',
+          ),
+        );
+
+        if (userController.rxCustomerDetail.value.canSendSMS) {
+          Api.sendOrderEntrySMS(
+            orderNumber: b2bOrderNumber,
+            mobileNumber: userController.rxCustomerDetail.value.mobileNumber,
+          );
+        }
+
+        if (userController.rxCustomerDetail.value.canSendWhatsApp) {
+          Api.sendOrderEntryWhatsApp(
+            orderNumber: b2bOrderNumber,
+            mobileNumber: userController.rxCustomerDetail.value.mobileNumber,
+          );
+        }
+
+        Get.back();
+      } else {
+        toastification.show(
+          autoCloseDuration: Duration(seconds: 5),
+          primaryColor: VardhmanColors.red,
+          title: Text(
+            'Some error placing the order!',
+          ),
+        );
+      }
+    } else {
+      Get.back();
+    }
+
+    ordersController.refreshLabdipFeedbacks();
   }
 
   LabdipTableRow? getLabdipTableRow(int workOrderNumber) {

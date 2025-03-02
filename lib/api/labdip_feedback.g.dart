@@ -9,9 +9,10 @@ part of 'labdip_feedback.dart';
 _$LabdipFeedbackImpl _$$LabdipFeedbackImplFromJson(Map<String, dynamic> json) =>
     _$LabdipFeedbackImpl(
       orderNumber: (json['orderNumber'] as num).toInt(),
-      lineNumber: (json['lineNumber'] as num).toInt(),
-      feedback: json['feedback'] as String,
+      lineNumber: (json['lineNumber'] as num).toDouble(),
+      reason: json['reason'] as String,
       isPositive: json['isPositive'] as bool,
+      shouldRematch: json['shouldRematch'] as bool,
     );
 
 Map<String, dynamic> _$$LabdipFeedbackImplToJson(
@@ -19,6 +20,7 @@ Map<String, dynamic> _$$LabdipFeedbackImplToJson(
     <String, dynamic>{
       'orderNumber': instance.orderNumber,
       'lineNumber': instance.lineNumber,
-      'feedback': instance.feedback,
+      'reason': instance.reason,
       'isPositive': instance.isPositive,
+      'shouldRematch': instance.shouldRematch,
     };
