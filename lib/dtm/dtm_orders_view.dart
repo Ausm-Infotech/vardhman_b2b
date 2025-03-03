@@ -182,7 +182,7 @@ class DtmOrdersView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Text(
-                                    DateFormat('d MMM yy').format(
+                                    DateFormat('d MMM yy HH:mm').format(
                                       draftTableData.lastUpdated,
                                     ),
                                   ),
