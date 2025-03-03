@@ -128,7 +128,7 @@ class LabdipOrdersView extends StatelessWidget {
                           size: ColumnSize.S,
                           // headingRowAlignment: MainAxisAlignment.end,
                           numeric: true,
-                          fixedWidth: 70,
+                          fixedWidth: 120,
                         ),
                       ],
                       rows: [
