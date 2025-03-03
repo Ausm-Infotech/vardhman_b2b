@@ -18,16 +18,13 @@ class LoginView extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width:
-                        loginController.videoPlayerController.value.size.width,
-                    height:
-                        loginController.videoPlayerController.value.size.height,
-                    child: VideoPlayer(loginController.videoPlayerController),
-                  ),
+              FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: loginController.videoPlayerController.value.size.width,
+                  height:
+                      loginController.videoPlayerController.value.size.height,
+                  child: VideoPlayer(loginController.videoPlayerController),
                 ),
               ),
               Align(
