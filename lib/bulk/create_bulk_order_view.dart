@@ -55,8 +55,6 @@ class CreateBulkOrderView extends StatelessWidget {
                 onPressed: bulkEntryController.rxBulkOrderLines.isEmpty
                     ? null
                     : () async {
-                        // bulkEntryController.submitOrder
-
                         Get.dialog(
                           AlertDialog(
                             title: Text('Vardhman B2B Terms and Conditions'),
@@ -114,55 +112,52 @@ class CreateBulkOrderView extends StatelessWidget {
                             width: 4,
                           ),
                           Expanded(
+                            flex: 2,
                             child: NewOrderTextField(
                               isEnabled: false,
                               labelText: 'Upload PO Document',
                               rxString: bulkEntryController.rxPoFileName,
                               hintText: 'no file chosen',
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: bulkEntryController.rxPoFileName.isEmpty
-                                ? SecondaryButton(
-                                    wait: false,
-                                    text: 'Choose File',
-                                    onPressed: () async {
-                                      final FilePickerResult? filePickerResult =
-                                          await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: ['pdf', 'xlsx'],
-                                        withData: true,
-                                        readSequential: true,
-                                      );
+                              trailingWidget: bulkEntryController
+                                      .rxPoFileName.isEmpty
+                                  ? SecondaryButton(
+                                      wait: false,
+                                      text: 'Choose File',
+                                      onPressed: () async {
+                                        final FilePickerResult?
+                                            filePickerResult =
+                                            await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['pdf', 'xlsx'],
+                                          withData: true,
+                                          readSequential: true,
+                                        );
 
-                                      if (filePickerResult != null) {
-                                        final file =
-                                            filePickerResult.files.single;
+                                        if (filePickerResult != null) {
+                                          final file =
+                                              filePickerResult.files.single;
 
+                                          bulkEntryController
+                                              .rxPoFileName.value = file.name;
+
+                                          bulkEntryController
+                                              .rxPoFileBytes.value = file.bytes;
+                                        }
+                                      },
+                                    )
+                                  : SecondaryButton(
+                                      wait: false,
+                                      iconData: Icons.clear,
+                                      text: '',
+                                      onPressed: () async {
                                         bulkEntryController.rxPoFileName.value =
-                                            file.name;
+                                            '';
 
                                         bulkEntryController
-                                            .rxPoFileBytes.value = file.bytes;
-                                      }
-                                    },
-                                  )
-                                : SecondaryButton(
-                                    wait: false,
-                                    iconData: Icons.clear,
-                                    text: '',
-                                    onPressed: () async {
-                                      bulkEntryController.rxPoFileName.value =
-                                          '';
-
-                                      bulkEntryController.rxPoFileBytes.value =
-                                          null;
-                                    },
-                                  ),
+                                            .rxPoFileBytes.value = null;
+                                      },
+                                    ),
+                            ),
                           ),
                         ],
                       ),

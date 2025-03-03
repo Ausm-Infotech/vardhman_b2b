@@ -15,6 +15,7 @@ class NewOrderTextField extends StatelessWidget {
     this.isRequired = false,
     this.hasError = false,
     this.inputFormatters = const [],
+    this.trailingWidget,
   });
 
   final String labelText;
@@ -25,6 +26,7 @@ class NewOrderTextField extends StatelessWidget {
   final bool isRequired;
   final bool hasError;
   final List<TextInputFormatter> inputFormatters;
+  final Widget? trailingWidget;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -135,6 +137,7 @@ class NewOrderTextField extends StatelessWidget {
                           rxString.value = '';
                         },
                       ),
+                    if (trailingWidget != null) trailingWidget!,
                   ],
                 ),
               ),

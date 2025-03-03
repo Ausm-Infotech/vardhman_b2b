@@ -86,55 +86,52 @@ class CreateDtmOrderView extends StatelessWidget {
                             width: 4,
                           ),
                           Expanded(
+                            flex: 2,
                             child: NewOrderTextField(
                               isEnabled: false,
                               labelText: 'Upload PO Document',
                               rxString: dtmEntryController.rxPoFileName,
                               hintText: 'no file chosen',
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: dtmEntryController.rxPoFileName.isEmpty
-                                ? SecondaryButton(
-                                    wait: false,
-                                    text: 'Choose File',
-                                    onPressed: () async {
-                                      final FilePickerResult? filePickerResult =
-                                          await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: ['pdf', 'xlsx'],
-                                        withData: true,
-                                        readSequential: true,
-                                      );
+                              trailingWidget: dtmEntryController
+                                      .rxPoFileName.isEmpty
+                                  ? SecondaryButton(
+                                      wait: false,
+                                      text: 'Choose File',
+                                      onPressed: () async {
+                                        final FilePickerResult?
+                                            filePickerResult =
+                                            await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['pdf', 'xlsx'],
+                                          withData: true,
+                                          readSequential: true,
+                                        );
 
-                                      if (filePickerResult != null) {
-                                        final file =
-                                            filePickerResult.files.single;
+                                        if (filePickerResult != null) {
+                                          final file =
+                                              filePickerResult.files.single;
 
+                                          dtmEntryController
+                                              .rxPoFileName.value = file.name;
+
+                                          dtmEntryController
+                                              .rxPoFileBytes.value = file.bytes;
+                                        }
+                                      },
+                                    )
+                                  : SecondaryButton(
+                                      wait: false,
+                                      iconData: Icons.clear,
+                                      text: '',
+                                      onPressed: () async {
                                         dtmEntryController.rxPoFileName.value =
-                                            file.name;
+                                            '';
 
                                         dtmEntryController.rxPoFileBytes.value =
-                                            file.bytes;
-                                      }
-                                    },
-                                  )
-                                : SecondaryButton(
-                                    wait: false,
-                                    iconData: Icons.clear,
-                                    text: '',
-                                    onPressed: () async {
-                                      dtmEntryController.rxPoFileName.value =
-                                          '';
-
-                                      dtmEntryController.rxPoFileBytes.value =
-                                          null;
-                                    },
-                                  ),
+                                            null;
+                                      },
+                                    ),
+                            ),
                           ),
                         ],
                       ),

@@ -436,47 +436,46 @@ class CreateLabdipOrderView extends StatelessWidget {
                               labelText: 'File Upload (QTX/XML Files Only)',
                               rxString: labdipEntryController.rxFileName,
                               hintText: 'no file chosen',
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: labdipEntryController.rxFileName.isEmpty
-                                ? SecondaryButton(
-                                    wait: false,
-                                    text: 'Choose File',
-                                    onPressed: () async {
-                                      final FilePickerResult? filePickerResult =
-                                          await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: ['qtx', 'xml'],
-                                        withData: true,
-                                        readSequential: true,
-                                      );
+                              trailingWidget: labdipEntryController
+                                      .rxFileName.isEmpty
+                                  ? SecondaryButton(
+                                      wait: false,
+                                      text: 'Choose File',
+                                      onPressed: () async {
+                                        final FilePickerResult?
+                                            filePickerResult =
+                                            await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['qtx', 'xml'],
+                                          withData: true,
+                                          readSequential: true,
+                                        );
 
-                                      if (filePickerResult != null) {
-                                        final file =
-                                            filePickerResult.files.single;
+                                        if (filePickerResult != null) {
+                                          final file =
+                                              filePickerResult.files.single;
 
+                                          labdipEntryController
+                                              .rxFileName.value = file.name;
+
+                                          labdipEntryController
+                                              .rxFileBytes.value = file.bytes;
+                                        }
+                                      },
+                                    )
+                                  : SecondaryButton(
+                                      wait: false,
+                                      iconData: Icons.clear,
+                                      text: '',
+                                      onPressed: () async {
                                         labdipEntryController.rxFileName.value =
-                                            file.name;
+                                            '';
 
                                         labdipEntryController
-                                            .rxFileBytes.value = file.bytes;
-                                      }
-                                    },
-                                  )
-                                : SecondaryButton(
-                                    wait: false,
-                                    iconData: Icons.clear,
-                                    text: '',
-                                    onPressed: () async {
-                                      labdipEntryController.rxFileName.value =
-                                          '';
-
-                                      labdipEntryController.rxFileBytes.value =
-                                          null;
-                                    },
-                                  ),
+                                            .rxFileBytes.value = null;
+                                      },
+                                    ),
+                            ),
                           ),
                         ],
                       ),
