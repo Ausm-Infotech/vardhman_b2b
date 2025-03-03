@@ -370,6 +370,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                       child: NewOrderTextField(
                                         labelText: 'Quantity',
                                         isRequired: true,
+                                        maxLength: 10,
                                         rxString: dtmEntryController.rxQuantity,
                                         hasError:
                                             dtmEntryController.quantityHasError,

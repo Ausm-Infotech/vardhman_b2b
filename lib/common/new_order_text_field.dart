@@ -16,6 +16,7 @@ class NewOrderTextField extends StatelessWidget {
     this.hasError = false,
     this.inputFormatters = const [],
     this.trailingWidget,
+    this.maxLength,
   });
 
   final String labelText;
@@ -27,6 +28,7 @@ class NewOrderTextField extends StatelessWidget {
   final bool hasError;
   final List<TextInputFormatter> inputFormatters;
   final Widget? trailingWidget;
+  final int? maxLength;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -96,6 +98,7 @@ class NewOrderTextField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        maxLength: maxLength,
                         textAlignVertical: TextAlignVertical.center,
                         inputFormatters: inputFormatters,
                         style: TextStyle(
@@ -114,6 +117,7 @@ class NewOrderTextField extends StatelessWidget {
                           ),
                         ),
                         decoration: InputDecoration(
+                          counter: const SizedBox(),
                           hintText: finalHintText,
                           hintStyle: TextStyle(
                             color: VardhmanColors.darkGrey,

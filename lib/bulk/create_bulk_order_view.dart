@@ -395,6 +395,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                       child: NewOrderTextField(
                                         labelText: 'Quantity',
                                         isRequired: true,
+                                        maxLength: 10,
                                         rxString:
                                             bulkEntryController.rxQuantity,
                                         hasError: bulkEntryController
