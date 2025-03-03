@@ -219,6 +219,20 @@ class LabdipEntryController extends GetxController {
     rxUom.listen((_) => _selectIfOnlyOneOption(rxUom.hashCode));
 
     rxFileName.listen(_fileNameListener);
+
+    rxL.listen(labListener);
+
+    rxA.listen(labListener);
+  }
+
+  void labListener(String _) {
+    if (rxL.isEmpty) {
+      rxA.value = '';
+    }
+
+    if (rxA.isEmpty) {
+      rxB.value = '';
+    }
   }
 
   void _uomWithDescListener(String newUomWithDesc) {
@@ -488,6 +502,14 @@ class LabdipEntryController extends GetxController {
 
     if (isSwatchShade && rxColor.value.trim().isEmpty) {
       inputsInError.add(rxColor);
+    }
+
+    if (rxL.isNotEmpty) {
+      if (rxA.isEmpty) {
+        inputsInError.add(rxA);
+      } else if (rxB.isEmpty) {
+        inputsInError.add(rxB);
+      }
     }
 
     return inputsInError.isEmpty;
@@ -945,4 +967,8 @@ class LabdipEntryController extends GetxController {
   bool get colorHasError => inputsInError.contains(rxColor);
 
   bool get uomHasError => inputsInError.contains(rxUom);
+
+  bool get rxAHasError => inputsInError.contains(rxA);
+
+  bool get rxBHasError => inputsInError.contains(rxB);
 }

@@ -185,6 +185,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
+                                      flex: 2,
                                       child: CatalogSearchField(
                                         hasError: labdipEntryController
                                             .articleHasError,
@@ -196,11 +197,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                                             .uniqueFilteredArticles,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
+                                    SizedBox(width: 8),
                                     Expanded(
-                                      // flex: 2,
+                                      flex: 3,
                                       child: CatalogSearchField(
                                         isRequired: true,
                                         hasError:
@@ -224,24 +223,22 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
-                                        labelText: 'Brand',
-                                        rxString: labdipEntryController.rxBrand,
-                                        searchList: labdipEntryController
-                                            .uniqueFilteredBrands,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: CatalogSearchField(
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString:
                                             labdipEntryController.rxTicket,
                                         searchList: labdipEntryController
                                             .uniqueFilteredTickets,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      flex: 3,
+                                      child: CatalogSearchField(
+                                        labelText: 'Brand',
+                                        rxString: labdipEntryController.rxBrand,
+                                        searchList: labdipEntryController
+                                            .uniqueFilteredBrands,
                                       ),
                                     ),
                                   ],
@@ -251,23 +248,21 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        labelText: 'Tex',
+                                        rxString: labdipEntryController.rxTex,
+                                        searchList: labdipEntryController
+                                            .uniqueFilteredTexs,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      flex: 3,
+                                      child: CatalogSearchField(
                                         labelText: 'Substrate',
                                         rxString:
                                             labdipEntryController.rxSubstrate,
                                         searchList: labdipEntryController
                                             .uniqueFilteredSubstrates,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: CatalogSearchField(
-                                        labelText: 'Tex',
-                                        rxString: labdipEntryController.rxTex,
-                                        searchList: labdipEntryController
-                                            .uniqueFilteredTexs,
                                       ),
                                     ),
                                   ],
@@ -403,6 +398,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                           Expanded(
                             child: NewOrderTextField(
                               labelText: 'A',
+                              hasError: labdipEntryController.rxAHasError,
+                              isEnabled: labdipEntryController.rxL.isNotEmpty,
+                              isRequired: labdipEntryController.rxL.isNotEmpty,
                               rxString: labdipEntryController.rxA,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
@@ -417,6 +415,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                           Expanded(
                             child: NewOrderTextField(
                               labelText: 'B',
+                              hasError: labdipEntryController.rxBHasError,
+                              isEnabled: labdipEntryController.rxA.isNotEmpty,
+                              isRequired: labdipEntryController.rxA.isNotEmpty,
                               rxString: labdipEntryController.rxB,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(

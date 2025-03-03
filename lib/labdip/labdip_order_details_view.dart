@@ -37,6 +37,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
             children: <Widget>[
               HeaderView(
                 elevation: 4,
+                trailing: PrimaryButton(
+                  text: 'Submit Feedback',
+                  onPressed: labdipController.rxOrderDetailFeedbackMap.isEmpty
+                      ? null
+                      : () async {
+                          Get.dialog(FeedbackDialog());
+                        },
+                ),
                 title: DefaultTextStyle(
                   style: const TextStyle(
                     fontSize: 14,
@@ -277,32 +285,32 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         ).toList(),
                       ),
               ),
-              if (labdipController.rxOrderDetailFeedbackMap.isNotEmpty)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(
-                        color: VardhmanColors.darkGrey,
-                        width: 0.2,
-                      ),
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          '${labdipController.rxOrderDetailFeedbackMap.length} line${labdipController.rxOrderDetailFeedbackMap.length > 1 ? 's' : ''} selected for feedback'),
-                      PrimaryButton(
-                        text: 'Submit Feedback',
-                        onPressed: () async {
-                          Get.dialog(FeedbackDialog());
-                        },
-                      ),
-                    ],
-                  ),
-                )
+              // if (labdipController.rxOrderDetailFeedbackMap.isNotEmpty)
+              //   Container(
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       border: Border(
+              //         top: BorderSide(
+              //           color: VardhmanColors.darkGrey,
+              //           width: 0.2,
+              //         ),
+              //       ),
+              //     ),
+              //     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         Text(
+              //             '${labdipController.rxOrderDetailFeedbackMap.length} line${labdipController.rxOrderDetailFeedbackMap.length > 1 ? 's' : ''} selected for feedback'),
+              //         PrimaryButton(
+              //           text: 'Submit Feedback',
+              //           onPressed: () async {
+              //             Get.dialog(FeedbackDialog());
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //   )
             ],
           ),
         );
