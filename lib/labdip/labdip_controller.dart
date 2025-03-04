@@ -112,7 +112,7 @@ class LabdipController extends GetxController {
 
     final nextOrderNumber = await Api.fetchOrderNumber();
 
-    final b2bOrderNumber = 'B2BL-$nextOrderNumber';
+    final b2bOrderNumber = 'B2BRL-$nextOrderNumber';
 
     rxOrderDetailFeedbackMap.forEach(
       (orderDetailLine, labdipFeedback) async {
