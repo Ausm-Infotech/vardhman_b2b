@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
@@ -21,10 +22,9 @@ class FeedbackDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Dialog(
+        insetPadding: EdgeInsets.all(80),
         clipBehavior: Clip.antiAlias,
         child: SizedBox(
-          width: 800,
-          height: 600,
           child: Column(
             children: <Widget>[
               HeaderView(
@@ -82,7 +82,7 @@ class FeedbackDialog extends StatelessWidget {
                   ),
                   checkboxHorizontalMargin: 0,
                   headingRowHeight: 40,
-                  dataRowHeight: 40,
+                  dataRowHeight: 60,
                   headingRowColor:
                       WidgetStatePropertyAll(VardhmanColors.darkGrey),
                   headingTextStyle: TextStyle(
@@ -115,9 +115,14 @@ class FeedbackDialog extends StatelessWidget {
                     DataColumn2(
                         label: Text('Feedback Reason'), size: ColumnSize.L),
                     DataColumn2(
-                      label: Text('Rematch'),
+                      label: Text('Need Revised Sample'),
                       size: ColumnSize.S,
-                      fixedWidth: 60,
+                      fixedWidth: 150,
+                    ),
+                    DataColumn2(
+                      fixedWidth: 180,
+                      label: Text("Don't Need Revised Sample"),
+                      size: ColumnSize.S,
                     ),
                   ],
                   empty: Center(child: const Text('No Order Lines')),
@@ -171,7 +176,16 @@ class FeedbackDialog extends StatelessWidget {
                                                       .rxOrderDetailFeedbackMap[
                                                   orderDetailLine] =
                                               feedback.copyWith(
-                                                  isPositive: true);
+                                            isPositive: true,
+                                            reason: 'Accepted',
+                                          );
+
+                                          toastification.show(
+                                            autoCloseDuration:
+                                                Duration(seconds: 2),
+                                            primaryColor: VardhmanColors.green,
+                                            title: Text('Accepted'),
+                                          );
                                         },
                                   icon: Icon(
                                     (feedback.isPositive)
@@ -189,7 +203,16 @@ class FeedbackDialog extends StatelessWidget {
                                                       .rxOrderDetailFeedbackMap[
                                                   orderDetailLine] =
                                               feedback.copyWith(
-                                                  isPositive: false);
+                                            isPositive: false,
+                                            reason: '',
+                                          );
+
+                                          toastification.show(
+                                            autoCloseDuration:
+                                                Duration(seconds: 2),
+                                            primaryColor: VardhmanColors.red,
+                                            title: Text('Rejected'),
+                                          );
                                         },
                                   icon: Icon(
                                     (!feedback.isPositive)
@@ -197,10 +220,10 @@ class FeedbackDialog extends StatelessWidget {
                                         : Icons.thumb_down_outlined,
                                   ),
                                 ),
+                                SizedBox(width: 16),
                                 Expanded(
                                   child: Container(
-                                    height: 36,
-                                    margin: const EdgeInsets.all(0),
+                                    margin: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8),
@@ -215,6 +238,7 @@ class FeedbackDialog extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: DropdownSearch<String>(
+                                            enabled: !feedback.isPositive,
                                             decoratorProps:
                                                 DropDownDecoratorProps(
                                               baseStyle: TextStyle(
@@ -222,7 +246,8 @@ class FeedbackDialog extends StatelessWidget {
                                                 fontSize: 13,
                                               ),
                                               decoration: InputDecoration(
-                                                hintText: 'select reason',
+                                                hintText:
+                                                    'select rejection reason',
                                                 hintStyle: TextStyle(
                                                   color:
                                                       VardhmanColors.darkGrey,
@@ -304,6 +329,7 @@ class FeedbackDialog extends StatelessWidget {
                           ),
                           DataCell(
                             Checkbox(
+                              tristate: false,
                               fillColor: WidgetStatePropertyAll(
                                 Colors.white,
                               ),
@@ -313,17 +339,44 @@ class FeedbackDialog extends StatelessWidget {
                                 width: 0.5,
                               ),
                               value: feedback.shouldRematch,
-                              onChanged: (bool? value) {
-                                if (value == true) {
-                                  labdipController.rxOrderDetailFeedbackMap[
-                                          orderDetailLine] =
-                                      feedback.copyWith(shouldRematch: true);
-                                } else {
-                                  labdipController.rxOrderDetailFeedbackMap[
-                                          orderDetailLine] =
-                                      feedback.copyWith(shouldRematch: false);
-                                }
-                              },
+                              onChanged: feedback.isPositive
+                                  ? null
+                                  : (bool? value) {
+                                      if (value == true) {
+                                        labdipController
+                                                    .rxOrderDetailFeedbackMap[
+                                                orderDetailLine] =
+                                            feedback.copyWith(
+                                          shouldRematch: true,
+                                        );
+                                      }
+                                    },
+                            ),
+                          ),
+                          DataCell(
+                            Checkbox(
+                              tristate: false,
+                              fillColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                              checkColor: VardhmanColors.red,
+                              side: BorderSide(
+                                color: VardhmanColors.darkGrey,
+                                width: 0.5,
+                              ),
+                              value: !feedback.shouldRematch,
+                              onChanged: feedback.isPositive
+                                  ? null
+                                  : (bool? value) {
+                                      if (value == true) {
+                                        labdipController
+                                                    .rxOrderDetailFeedbackMap[
+                                                orderDetailLine] =
+                                            feedback.copyWith(
+                                          shouldRematch: false,
+                                        );
+                                      }
+                                    },
                             ),
                           ),
                         ],
