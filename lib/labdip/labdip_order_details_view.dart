@@ -37,14 +37,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
             children: <Widget>[
               HeaderView(
                 elevation: 4,
-                trailing: PrimaryButton(
-                  text: 'Submit Feedback',
-                  onPressed: labdipController.rxOrderDetailFeedbackMap.isEmpty
-                      ? null
-                      : () async {
+                trailing: labdipController.rxOrderDetailFeedbackMap.isEmpty
+                    ? null
+                    : PrimaryButton(
+                        text: 'Submit Feedback',
+                        onPressed: () async {
                           Get.dialog(FeedbackDialog());
                         },
-                ),
+                      ),
                 title: DefaultTextStyle(
                   style: const TextStyle(
                     fontSize: 14,
@@ -190,6 +190,12 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                     labdipFeedback.lineNumber ==
                                         orderDetailLine.lineNumber);
 
+                            final textColor = feedback == null
+                                ? VardhmanColors.darkGrey
+                                : feedback.isPositive
+                                    ? VardhmanColors.green
+                                    : VardhmanColors.red;
+
                             return DataRow(
                               color: WidgetStatePropertyAll(
                                 index.isEven
@@ -198,33 +204,60 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               ),
                               cells: [
                                 DataCell(
-                                  Text(orderDetailLine.lineNumber.toString()),
+                                  Text(
+                                    orderDetailLine.lineNumber.toString(),
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(article),
+                                  Text(
+                                    article,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.brandDesc ?? ''),
+                                  Text(
+                                    catalogItem?.brandDesc ?? '',
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.ticket ?? ''),
+                                  Text(
+                                    catalogItem?.ticket ?? '',
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(catalogItem?.tex ?? ''),
+                                  Text(
+                                    catalogItem?.tex ?? '',
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(shade),
+                                  Text(
+                                    shade,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(labdipTableRow?.permanentShade == null
-                                      ? ''
-                                      : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}'),
+                                  Text(
+                                    labdipTableRow?.permanentShade == null
+                                        ? ''
+                                        : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}',
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetailLine.userComment),
+                                  Text(
+                                    orderDetailLine.userComment,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 DataCell(
-                                  Text(orderDetailLine.status),
+                                  Text(
+                                    orderDetailLine.status,
+                                    style: TextStyle(color: textColor),
+                                  ),
                                 ),
                                 if (hasDispatchedLine)
                                   DataCell(
@@ -234,9 +267,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                             ? Text(
                                                 feedback.reason,
                                                 style: TextStyle(
-                                                  color: feedback.isPositive
-                                                      ? VardhmanColors.green
-                                                      : VardhmanColors.red,
+                                                  color: textColor,
                                                 ),
                                               )
                                             : Checkbox(

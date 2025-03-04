@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pure_ftp/pure_ftp.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -134,4 +135,12 @@ const ftpAuthOptions = FtpAuthOptions(
 const ftpSocketInitOptions = FtpSocketInitOptions(
   host: '172.33.3.45',
   port: 21,
+);
+
+final capitalFormatter = TextInputFormatter.withFunction(
+  (oldValue, newValue) {
+    return newValue.copyWith(
+      text: newValue.text.toUpperCase(),
+    );
+  },
 );

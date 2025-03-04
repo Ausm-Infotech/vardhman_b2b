@@ -106,6 +106,7 @@ class CreateBulkOrderView extends StatelessWidget {
                               labelText: 'PO Number',
                               minLines: 1,
                               rxString: bulkEntryController.rxPoNumber,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                           SizedBox(
@@ -168,15 +169,7 @@ class CreateBulkOrderView extends StatelessWidget {
                         searchList: bulkEntryController.rxMerchandisers,
                         shouldEnforceList: false,
                         hasError: bulkEntryController.merchandiserHasError,
-                        inputFormatters: [
-                          TextInputFormatter.withFunction(
-                            (oldValue, newValue) {
-                              return newValue.copyWith(
-                                text: newValue.text.toUpperCase(),
-                              );
-                            },
-                          ),
-                        ],
+                        inputFormatters: [capitalFormatter],
                       ),
                       Row(
                         children: <Widget>[
@@ -187,6 +180,7 @@ class CreateBulkOrderView extends StatelessWidget {
                               isRequired: true,
                               rxString: bulkEntryController.rxBuyerName,
                               searchList: bulkEntryController.buyerNames,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                           if (bulkEntryController.isOtherBuyer) ...[
@@ -200,15 +194,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                 labelText: 'Name',
                                 isRequired: true,
                                 rxString: bulkEntryController.rxOtherBuyerName,
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction(
-                                    (oldValue, newValue) {
-                                      return newValue.copyWith(
-                                        text: newValue.text.toUpperCase(),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                inputFormatters: [capitalFormatter],
                               ),
                             ),
                           ]
@@ -227,6 +213,7 @@ class CreateBulkOrderView extends StatelessWidget {
                               labelText: 'Light Source 1',
                               rxString: bulkEntryController.rxFirstLightSource,
                               searchList: bulkEntryController.firstLightSources,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                           SizedBox(
@@ -241,6 +228,7 @@ class CreateBulkOrderView extends StatelessWidget {
                               rxString: bulkEntryController.rxSecondLightSource,
                               searchList:
                                   bulkEntryController.secondLightSources,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                         ],
@@ -268,6 +256,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError:
                                             bulkEntryController.articleHasError,
                                         labelText: 'Article',
@@ -283,6 +272,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isRequired: true,
                                         hasError:
                                             bulkEntryController.uomHasError,
@@ -305,6 +295,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString: bulkEntryController.rxTicket,
@@ -318,6 +309,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Brand',
                                         rxString: bulkEntryController.rxBrand,
                                         searchList: bulkEntryController
@@ -332,6 +324,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Tex',
                                         isEnabled: false,
                                         rxString: bulkEntryController.rxTex,
@@ -345,6 +338,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isEnabled: false,
                                         labelText: 'Substrate',
                                         rxString:
@@ -367,6 +361,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError:
                                             bulkEntryController.shadeHasError,
                                         labelText: 'Shade',
@@ -383,6 +378,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: NewOrderTextField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Style No./Part No.',
                                         rxString: bulkEntryController.rxColor,
                                       ),
@@ -606,8 +602,9 @@ class CreateBulkOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Total Price'),
-                  size: ColumnSize.S,
+                  label: Text('Total Pre-GST\nAmount in INR'),
+                  // size: ColumnSize.M,
+                  fixedWidth: 90,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(

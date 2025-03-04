@@ -76,6 +76,7 @@ class CreateDtmOrderView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: NewOrderTextField(
+                              inputFormatters: [capitalFormatter],
                               labelText: 'PO Number',
                               isRequired: true,
                               hasError: dtmEntryController.poNumberHasError,
@@ -142,15 +143,7 @@ class CreateDtmOrderView extends StatelessWidget {
                         searchList: dtmEntryController.rxMerchandisers,
                         shouldEnforceList: false,
                         hasError: dtmEntryController.merchandiserHasError,
-                        inputFormatters: [
-                          TextInputFormatter.withFunction(
-                            (oldValue, newValue) {
-                              return newValue.copyWith(
-                                text: newValue.text.toUpperCase(),
-                              );
-                            },
-                          ),
-                        ],
+                        inputFormatters: [capitalFormatter],
                       ),
                       Row(
                         children: <Widget>[
@@ -161,6 +154,7 @@ class CreateDtmOrderView extends StatelessWidget {
                               isRequired: true,
                               rxString: dtmEntryController.rxBuyerName,
                               searchList: dtmEntryController.buyerNames,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                           if (dtmEntryController.isOtherBuyer) ...[
@@ -169,15 +163,7 @@ class CreateDtmOrderView extends StatelessWidget {
                             ),
                             Expanded(
                               child: NewOrderTextField(
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction(
-                                    (oldValue, newValue) {
-                                      return newValue.copyWith(
-                                        text: newValue.text.toUpperCase(),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                inputFormatters: [capitalFormatter],
                                 hasError:
                                     dtmEntryController.otherBuyerNameHasError,
                                 labelText: 'Name',
@@ -201,6 +187,7 @@ class CreateDtmOrderView extends StatelessWidget {
                               labelText: 'Light Source 1',
                               rxString: dtmEntryController.rxFirstLightSource,
                               searchList: dtmEntryController.firstLightSources,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                           SizedBox(
@@ -214,6 +201,7 @@ class CreateDtmOrderView extends StatelessWidget {
                               labelText: 'Light Source 2',
                               rxString: dtmEntryController.rxSecondLightSource,
                               searchList: dtmEntryController.secondLightSources,
+                              inputFormatters: [capitalFormatter],
                             ),
                           ),
                         ],
@@ -248,6 +236,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         rxString: dtmEntryController.rxArticle,
                                         searchList: dtmEntryController
                                             .uniqueFilteredArticles,
+                                        inputFormatters: [capitalFormatter],
                                       ),
                                     ),
                                     SizedBox(
@@ -256,6 +245,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isRequired: true,
                                         hasError:
                                             dtmEntryController.uomHasError,
@@ -278,6 +268,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString: dtmEntryController.rxTicket,
@@ -291,6 +282,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Brand',
                                         rxString: dtmEntryController.rxBrand,
                                         searchList: dtmEntryController
@@ -305,6 +297,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Tex',
                                         isEnabled: false,
                                         rxString: dtmEntryController.rxTex,
@@ -318,6 +311,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isEnabled: false,
                                         labelText: 'Substrate',
                                         rxString:
@@ -340,6 +334,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError:
                                             dtmEntryController.shadeHasError,
                                         labelText: 'Shade',
@@ -355,6 +350,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: NewOrderTextField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError:
                                             dtmEntryController.colorHasError,
                                         labelText: 'Color Name',
@@ -395,6 +391,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                   ],
                                 ),
                                 NewOrderTextField(
+                                  inputFormatters: [capitalFormatter],
                                   labelText: 'Remark',
                                   rxString: dtmEntryController.rxRemark,
                                   hintText: 'Enter Remark',

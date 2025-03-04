@@ -89,20 +89,13 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   shouldEnforceList: false,
                                   hasError: labdipEntryController
                                       .merchandiserHasError,
-                                  inputFormatters: [
-                                    TextInputFormatter.withFunction(
-                                      (oldValue, newValue) {
-                                        return newValue.copyWith(
-                                          text: newValue.text.toUpperCase(),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                  inputFormatters: [capitalFormatter],
                                 ),
                                 Row(
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError: labdipEntryController
                                             .buyerNameHasError,
                                         labelText: 'Buyer',
@@ -119,22 +112,13 @@ class CreateLabdipOrderView extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: NewOrderTextField(
+                                          inputFormatters: [capitalFormatter],
                                           hasError: labdipEntryController
                                               .otherBuyerNameHasError,
                                           labelText: 'Name',
                                           isRequired: true,
                                           rxString: labdipEntryController
                                               .rxOtherBuyerName,
-                                          inputFormatters: [
-                                            TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                                return newValue.copyWith(
-                                                  text: newValue.text
-                                                      .toUpperCase(),
-                                                );
-                                              },
-                                            ),
-                                          ],
                                         ),
                                       ),
                                     ]
@@ -144,6 +128,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isSearchboxEnabled: false,
                                         hasError: labdipEntryController
                                             .firstLightSourceHasError,
@@ -162,6 +147,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isSearchboxEnabled: false,
                                         isEnabled: labdipEntryController
                                             .isLightSource2Enabled,
@@ -187,6 +173,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         hasError: labdipEntryController
                                             .articleHasError,
                                         labelText: 'Article',
@@ -201,6 +188,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isRequired: true,
                                         hasError:
                                             labdipEntryController.uomHasError,
@@ -223,6 +211,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString:
@@ -235,6 +224,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Brand',
                                         rxString: labdipEntryController.rxBrand,
                                         searchList: labdipEntryController
@@ -248,6 +238,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Tex',
                                         rxString: labdipEntryController.rxTex,
                                         searchList: labdipEntryController
@@ -258,6 +249,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                                     Expanded(
                                       flex: 3,
                                       child: CatalogSearchField(
+                                        inputFormatters: [capitalFormatter],
                                         labelText: 'Substrate',
                                         rxString:
                                             labdipEntryController.rxSubstrate,
@@ -270,7 +262,6 @@ class CreateLabdipOrderView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // Spacer(),
                         ],
                       ),
                       SizedBox(
@@ -356,6 +347,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: CatalogSearchField(
+                              inputFormatters: [capitalFormatter],
                               hasError: labdipEntryController.shadeHasError,
                               labelText: 'Shade',
                               isRequired: true,
@@ -370,6 +362,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                           ),
                           Expanded(
                             child: NewOrderTextField(
+                              inputFormatters: [capitalFormatter],
                               hasError: labdipEntryController.colorHasError,
                               labelText: 'Color Name',
                               rxString: labdipEntryController.rxColor,
@@ -482,8 +475,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                       ),
                       NewOrderTextField(
                         labelText: 'Remark',
+                        inputFormatters: [capitalFormatter],
                         rxString: labdipEntryController.rxRemark,
-                        hintText: 'Mention Request Type, End Use',
+                        hintText: 'Mention Request Type, End Use....etc',
                       ),
                     ],
                   ),

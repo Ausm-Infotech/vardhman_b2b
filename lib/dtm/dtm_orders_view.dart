@@ -87,179 +87,199 @@ class DtmOrdersView extends StatelessWidget {
                     child: Text('No DTM Orders'),
                   )
                 : Container(
-                    padding: const EdgeInsets.all(0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
-                    child: DataTable2(
-                      columnSpacing: 16,
-                      horizontalMargin: 16,
-                      headingRowHeight: 40,
-                      dataRowHeight: 40,
-                      headingRowColor: WidgetStatePropertyAll(Colors.grey),
-                      // headingRowColor:
-                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
-                      headingTextStyle: TextStyle(
-                        fontSize: 13,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      dataTextStyle: TextStyle(
-                        fontSize: 13,
-                        color: VardhmanColors.darkGrey,
-                      ),
-                      border: TableBorder.symmetric(
-                        inside: BorderSide(
-                          width: 0.1,
-                          color: VardhmanColors.darkGrey,
-                        ),
-                      ),
-                      showCheckboxColumn: false,
-                      columns: const [
-                        DataColumn2(
-                          label: Text('Order No.'),
-                          size: ColumnSize.L,
-                          headingRowAlignment: MainAxisAlignment.start,
-                        ),
-                        // DataColumn2(
-                        //     label: Text('Reference'), size: ColumnSize.M),
-                        DataColumn2(
-                          label: Text('Date'),
-                          size: ColumnSize.S,
-                          // headingRowAlignment: MainAxisAlignment.end,
-                          numeric: true,
-                          fixedWidth: 120,
-                        ),
-                      ],
-                      rows: [
-                        ...dtmController.rxDraftOrders.map(
-                          (draftTableData) {
-                            final index = dtmController.rxDraftOrders
-                                .indexOf(draftTableData);
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              columnSpacing: 16,
+                              horizontalMargin: 16,
+                              headingRowHeight: 40,
 
-                            return DataRow(
-                              color: WidgetStatePropertyAll(
-                                index.isEven
-                                    ? Colors.white
-                                    : VardhmanColors.dividerGrey,
+                              // dataRowHeight: 40,
+                              headingRowColor:
+                                  WidgetStatePropertyAll(Colors.grey),
+                              // headingRowColor:
+                              //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
+                              headingTextStyle: TextStyle(
+                                fontSize: 13,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
                               ),
-                              onSelectChanged: (value) {
-                                if (Get.isRegistered<DtmEntryController>()) {
-                                  Get.delete<DtmEntryController>();
-                                }
+                              dataTextStyle: TextStyle(
+                                fontSize: 13,
+                                color: VardhmanColors.darkGrey,
+                              ),
+                              border: TableBorder.symmetric(
+                                inside: BorderSide(
+                                  width: 0.1,
+                                  color: VardhmanColors.darkGrey,
+                                ),
+                              ),
+                              showCheckboxColumn: false,
+                              columns: [
+                                DataColumn(
+                                  label: Container(
+                                      width: 400, child: Text('Order No.')),
+                                  // size: ColumnSize.L,
+                                  headingRowAlignment: MainAxisAlignment.start,
+                                ),
+                                // DataColumn2(
+                                //     label: Text('Reference'), size: ColumnSize.M),
+                                DataColumn(
+                                  label: Text('Date'),
+                                  // size: ColumnSize.S,
+                                  // headingRowAlignment: MainAxisAlignment.end,
+                                  numeric: true,
+                                  // fixedWidth: 120,
+                                ),
+                              ],
+                              rows: [
+                                ...dtmController.rxDraftOrders.map(
+                                  (draftTableData) {
+                                    final index = dtmController.rxDraftOrders
+                                        .indexOf(draftTableData);
 
-                                Get.put(
-                                  DtmEntryController(
-                                    orderNumber: draftTableData.orderNumber,
-                                  ),
-                                );
-
-                                Get.dialog(
-                                  const Dialog(
-                                    insetPadding: EdgeInsets.symmetric(
-                                      horizontal: 40,
-                                      vertical: 24,
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: CreateDtmOrderView(),
-                                  ),
-                                );
-                              },
-                              cells: [
-                                DataCell(
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text('Draft'),
-                                      SizedBox(
-                                        width: 16,
+                                    return DataRow(
+                                      color: WidgetStatePropertyAll(
+                                        index.isEven
+                                            ? Colors.white
+                                            : VardhmanColors.dividerGrey,
                                       ),
-                                      Text(draftTableData.orderNumber
-                                          .toString()),
-                                    ],
-                                  ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy HH:mm').format(
-                                      draftTableData.lastUpdated,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        ...dtmController.filteredDtmOrders.map(
-                          (dtmOrder) {
-                            final index = dtmController.filteredDtmOrders
-                                    .indexOf(dtmOrder) +
-                                dtmController.rxDraftOrders.length;
+                                      onSelectChanged: (value) {
+                                        if (Get.isRegistered<
+                                            DtmEntryController>()) {
+                                          Get.delete<DtmEntryController>();
+                                        }
 
-                            final isSelected =
-                                dtmController.rxSelectedOrderHeaderLine.value ==
-                                    dtmOrder;
-
-                            final textStyle = TextStyle(
-                              fontSize: 13,
-                              color: isSelected
-                                  ? Colors.white
-                                  : VardhmanColors.darkGrey,
-                            );
-
-                            return DataRow(
-                              color: WidgetStatePropertyAll(
-                                isSelected
-                                    ? VardhmanColors.red
-                                    : index.isEven
-                                        ? Colors.white
-                                        : VardhmanColors.dividerGrey,
-                              ),
-                              selected: dtmOrder ==
-                                  dtmController.rxSelectedOrderHeaderLine.value,
-                              onSelectChanged: (value) {
-                                if (value == true &&
-                                    dtmController
-                                            .rxSelectedOrderHeaderLine.value !=
-                                        dtmOrder) {
-                                  dtmController.selectOrder(dtmOrder);
-                                }
-                              },
-                              cells: [
-                                DataCell(
-                                  DefaultTextStyle(
-                                    style: textStyle,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(dtmOrder.orderNumber.toString()),
-                                        if (dtmOrder.orderReference
-                                            .trim()
-                                            .isNotEmpty) ...[
-                                          SizedBox(
-                                            width: 16,
+                                        Get.put(
+                                          DtmEntryController(
+                                            orderNumber:
+                                                draftTableData.orderNumber,
                                           ),
-                                          Text(dtmOrder.orderReference),
-                                        ],
+                                        );
+
+                                        Get.dialog(
+                                          const Dialog(
+                                            insetPadding: EdgeInsets.symmetric(
+                                              horizontal: 40,
+                                              vertical: 24,
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            child: CreateDtmOrderView(),
+                                          ),
+                                        );
+                                      },
+                                      cells: [
+                                        DataCell(
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text('Draft'),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Text(draftTableData.orderNumber
+                                                  .toString()),
+                                            ],
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            DateFormat('d MMM yy HH:mm').format(
+                                              draftTableData.lastUpdated,
+                                            ),
+                                          ),
+                                        ),
                                       ],
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                                DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy').format(
-                                      dtmOrder.orderDate,
-                                    ),
-                                    style: textStyle,
-                                  ),
+                                ...dtmController.filteredDtmOrders.map(
+                                  (dtmOrder) {
+                                    final index = dtmController
+                                            .filteredDtmOrders
+                                            .indexOf(dtmOrder) +
+                                        dtmController.rxDraftOrders.length;
+
+                                    final isSelected = dtmController
+                                            .rxSelectedOrderHeaderLine.value ==
+                                        dtmOrder;
+
+                                    final textStyle = TextStyle(
+                                      fontSize: 13,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : VardhmanColors.darkGrey,
+                                    );
+
+                                    return DataRow(
+                                      color: WidgetStatePropertyAll(
+                                        isSelected
+                                            ? VardhmanColors.red
+                                            : index.isEven
+                                                ? Colors.white
+                                                : VardhmanColors.dividerGrey,
+                                      ),
+                                      selected: dtmOrder ==
+                                          dtmController
+                                              .rxSelectedOrderHeaderLine.value,
+                                      onSelectChanged: (value) {
+                                        if (value == true &&
+                                            dtmController
+                                                    .rxSelectedOrderHeaderLine
+                                                    .value !=
+                                                dtmOrder) {
+                                          dtmController.selectOrder(dtmOrder);
+                                        }
+                                      },
+                                      cells: [
+                                        DataCell(
+                                          DefaultTextStyle(
+                                            style: textStyle,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(dtmOrder.orderNumber
+                                                    .toString()),
+                                                if (dtmOrder.orderReference
+                                                    .trim()
+                                                    .isNotEmpty) ...[
+                                                  SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Text(dtmOrder.orderReference),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            DateFormat('d MMM yy').format(
+                                              dtmOrder.orderDate,
+                                            ),
+                                            style: textStyle,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
           ),

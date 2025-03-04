@@ -36,7 +36,11 @@ class DtmEntryController extends GetxController {
 
   final List<RxString> inputsInError = <RxString>[].obs;
 
-  final Rxn<DateTime> rxRequestedDate = Rxn<DateTime>(DateTime.now());
+  final Rxn<DateTime> rxRequestedDate = Rxn<DateTime>(
+    DateTime.now().add(
+      Duration(days: 15),
+    ),
+  );
 
   final rxMerchandisers = <String>[].obs;
 
@@ -552,6 +556,7 @@ class DtmEntryController extends GetxController {
           rxSecondLightSource.hashCode,
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
+          rxPoNumber.hashCode,
         ],
       );
     }
@@ -620,6 +625,7 @@ class DtmEntryController extends GetxController {
           rxSecondLightSource.hashCode,
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
+          rxPoNumber.hashCode,
         ],
       );
     }
