@@ -177,6 +177,7 @@ class FeedbackDialog extends StatelessWidget {
                                                   orderDetailLine] =
                                               feedback.copyWith(
                                             isPositive: true,
+                                            shouldRematch: false,
                                             reason: 'Accepted',
                                           );
 

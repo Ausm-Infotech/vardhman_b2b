@@ -92,13 +92,12 @@ class DtmOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
+                      // minWidth: 800,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
                       dataRowHeight: 40,
                       headingRowColor: WidgetStatePropertyAll(Colors.grey),
-                      // headingRowColor:
-                      //     WidgetStatePropertyAll(VardhmanColors.darkGrey),
                       headingTextStyle: TextStyle(
                         fontSize: 13,
                         color: Colors.white,
@@ -118,15 +117,11 @@ class DtmOrdersView extends StatelessWidget {
                       columns: const [
                         DataColumn2(
                           label: Text('Order No.'),
-                          size: ColumnSize.L,
                           headingRowAlignment: MainAxisAlignment.start,
+                          size: ColumnSize.L,
                         ),
-                        // DataColumn2(
-                        //     label: Text('Reference'), size: ColumnSize.M),
                         DataColumn2(
                           label: Text('Date'),
-                          size: ColumnSize.S,
-                          // headingRowAlignment: MainAxisAlignment.end,
                           numeric: true,
                           fixedWidth: 120,
                         ),
