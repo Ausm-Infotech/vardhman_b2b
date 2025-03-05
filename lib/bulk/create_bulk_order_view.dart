@@ -604,12 +604,7 @@ class CreateBulkOrderView extends StatelessWidget {
                 DataColumn2(
                   label: Text('Total Pre-GST\nAmount in INR'),
                   // size: ColumnSize.M,
-                  fixedWidth: 90,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
-                  label: Text('Remark'),
-                  size: ColumnSize.L,
+                  fixedWidth: 100,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -706,12 +701,6 @@ class CreateBulkOrderView extends StatelessWidget {
                                     (bulkOrderLine.unitPrice ?? 0))
                                 .toString(),
                           ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.remark),
                         ),
                       ),
                       DataCell(
