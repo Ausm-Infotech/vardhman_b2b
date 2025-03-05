@@ -132,11 +132,6 @@ class BulkOrderDetailsView extends StatelessWidget {
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('Remark'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
                             label: Text('Quantity'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
@@ -212,12 +207,6 @@ class BulkOrderDetailsView extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: Text(shade),
-                                  ),
-                                ),
-                                DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(orderDetail.userComment),
                                   ),
                                 ),
                                 DataCell(
