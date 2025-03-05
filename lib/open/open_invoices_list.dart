@@ -106,10 +106,18 @@ class OpenInvoicesList extends StatelessWidget {
                 color: WidgetStatePropertyAll(
                   isSelected ? VardhmanColors.lightBlue : Colors.white,
                 ),
-                onSelectChanged: !canSelect || invoiceInfo.docType == 'RU'
+                onSelectChanged: !canSelect
                     ? null
                     : (value) {
-                        if (value ?? false) {
+                        if (invoiceInfo.docType == 'RU') {
+                          toastification.show(
+                            autoCloseDuration: Duration(seconds: 3),
+                            primaryColor: VardhmanColors.red,
+                            title: Text(
+                              'Unapplied reciept cannot be selected for payments',
+                            ),
+                          );
+                        } else if (value ?? false) {
                           invoicesController.addInvoiceToSelected(invoiceInfo);
                         } else {
                           invoicesController
