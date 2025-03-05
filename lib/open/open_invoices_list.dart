@@ -106,8 +106,7 @@ class OpenInvoicesList extends StatelessWidget {
                 color: WidgetStatePropertyAll(
                   isSelected ? VardhmanColors.lightBlue : Colors.white,
                 ),
-                onSelectChanged: !canSelect ||
-                        invoiceInfo.status == InvoiceStatus.processing
+                onSelectChanged: !canSelect || invoiceInfo.docType == 'RU'
                     ? null
                     : (value) {
                         if (value ?? false) {

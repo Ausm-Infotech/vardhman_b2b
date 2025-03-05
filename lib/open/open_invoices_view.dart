@@ -92,8 +92,11 @@ class OpenInvoicesView extends StatelessWidget {
                                         color: getInvoiceStatusColor(
                                           InvoiceStatus.processing,
                                         ),
+                                        trailing:
+                                            '₹${invoicesController.totalProcessingAmount.toStringAsFixed(2)}',
                                       ),
                                       OpenInvoicesList(
+                                        canSelect: false,
                                         showHeader: false,
                                         invoicesDetails: invoicesController
                                             .processingInvoices,
