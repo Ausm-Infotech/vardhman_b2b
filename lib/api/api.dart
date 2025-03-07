@@ -63,18 +63,18 @@ class Api {
           if (response.statusCode == 444) {
             log('Token expired');
 
-            if (getx.Get.isRegistered<UserController>(tag: 'userController')) {
-              final UserController userController =
-                  getx.Get.find<UserController>(tag: 'userController');
+            // if (getx.Get.isRegistered<UserController>(tag: 'userController')) {
+            //   final UserController userController =
+            //       getx.Get.find<UserController>(tag: 'userController');
 
-              userController.logOut();
+            //   userController.logOut();
 
-              toastification.show(
-                autoCloseDuration: Duration(seconds: 5),
-                primaryColor: VardhmanColors.red,
-                title: Text('Session Expired'),
-              );
-            }
+            //   toastification.show(
+            //     autoCloseDuration: Duration(seconds: 5),
+            //     primaryColor: VardhmanColors.red,
+            //     title: Text('Session Expired'),
+            //   );
+            // }
           }
 
           handler.next(response);

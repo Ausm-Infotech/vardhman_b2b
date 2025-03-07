@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/bulk/bulk_controller.dart';
@@ -14,58 +14,56 @@ import 'package:vardhman_b2b/dtm/dtm_controller.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
-import 'package:vardhman_b2b/login/otp_view.dart';
 import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 import 'package:video_player/video_player.dart';
 
+enum LoginState {
+  unknown,
+  loggedOut,
+  otp,
+  setPassword,
+  password,
+  loggedIn,
+}
+
 class LoginController extends GetxController {
   final _database = Get.find<Database>();
 
   late final VideoPlayerController videoPlayerController;
 
-  final TextEditingController userIdTextEditingController =
-      TextEditingController();
-
-  final TextEditingController otpTextEditingController =
-      TextEditingController();
-
   final rxUserId = ''.obs;
 
   final rxOtp = ''.obs;
 
+  final rxPassword = ''.obs;
+
+  final rxConfirmPassword = ''.obs;
+
   final rxUserDetail = Rxn<UserDetail>();
 
-  UserDetailsCompanion? _userDetailsCompanion;
+  final rxLoginState = LoginState.unknown.obs;
 
-  final rxIsProcessing = true.obs;
-
-  String otp = '';
+  String _otp = '';
+  String? _password;
 
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   LoginController() {
-    userIdTextEditingController.addListener(
-      () {
-        rxUserId.value = userIdTextEditingController.text;
-      },
-    );
+    rxPassword.listen(passwordListener);
 
-    otpTextEditingController.addListener(
-      () {
-        rxOtp.value = otpTextEditingController.text;
-      },
-    );
-
-    init();
+    _init();
   }
 
-  Future<void> init() async {
-    // videoPlayerController = VideoPlayerController.asset(
-    //   ('assets/B2B.mp4'),
-    // );
+  void passwordListener(String newPassword) {
+    if (newPassword.trim().isEmpty) {
+      rxConfirmPassword.value = '';
+    }
+  }
+
+  Future<void> _init() async {
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
       videoPlayerOptions: VideoPlayerOptions(
@@ -83,17 +81,28 @@ class LoginController extends GetxController {
 
     await videoPlayerController.play();
 
-    final userDetail = await _database.managers.userDetails.getSingleOrNull();
+    _checkUser();
+  }
 
-    if (userDetail != null) {
-      final isTokenRefreshed = await refreshToken(userDetail.soldToNumber);
+  Future<void> _checkUser() async {
+    rxUserDetail.value = await _database.managers.userDetails.getSingleOrNull();
 
-      if (isTokenRefreshed) {
-        await _logIn(userDetail);
+    rxLoginState.value = LoginState.loggedOut;
+
+    if (rxUserDetail.value != null) {
+      rxUserId.value = rxUserDetail.value!.soldToNumber;
+
+      await refreshToken(rxUserDetail.value!.soldToNumber);
+
+      final SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+
+      _password = sharedPreferences.getString('password');
+
+      if (_password != null) {
+        rxLoginState.value = LoginState.password;
       }
     }
-
-    rxIsProcessing.value = false;
   }
 
   Future<String> getDeviceInfoString() async {
@@ -130,9 +139,10 @@ class LoginController extends GetxController {
       return true;
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 2),
         primaryColor: VardhmanColors.red,
         title: const Text('Connection error!'),
+        alignment: Alignment.bottomCenter,
       );
 
       return false;
@@ -143,84 +153,98 @@ class LoginController extends GetxController {
     final isTokenRefreshed = await refreshToken(rxUserId.value);
 
     if (isTokenRefreshed) {
-      _userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
+      final userDetailsCompanion = await Api.fetchUserData(rxUserId.value);
 
-      if (_userDetailsCompanion != null) {
-        if (!_userDetailsCompanion!.isMobileUser.value) {
+      if (userDetailsCompanion != null) {
+        if (!userDetailsCompanion.isMobileUser.value) {
           // otp = await Api.generateAndSendOtp(
           //     _userDetailsCompanion!.mobileNumber.value);
 
-          otp = "1234";
+          _otp = "1234";
 
           toastification.show(
-            autoCloseDuration: Duration(seconds: 5),
+            autoCloseDuration: Duration(seconds: 2),
             primaryColor: VardhmanColors.green,
+            alignment: Alignment.bottomCenter,
             title: Text(
-                'OTP sent to ${_userDetailsCompanion!.mobileNumber.value}'),
+              'OTP sent to ${userDetailsCompanion.mobileNumber.value}',
+            ),
           );
 
-          Get.to(() => const OtpView());
+          rxUserDetail.value = UserDetail(
+            soldToNumber: userDetailsCompanion.soldToNumber.value,
+            isMobileUser: userDetailsCompanion.isMobileUser.value,
+            mobileNumber: userDetailsCompanion.mobileNumber.value,
+            canSendSMS: userDetailsCompanion.canSendSMS.value,
+            whatsAppNumber: userDetailsCompanion.whatsAppNumber.value,
+            canSendWhatsApp: userDetailsCompanion.canSendWhatsApp.value,
+            email: userDetailsCompanion.email.value,
+            name: userDetailsCompanion.name.value,
+            companyCode: userDetailsCompanion.companyCode.value,
+            companyName: userDetailsCompanion.companyName.value,
+            role: userDetailsCompanion.role.value,
+            category: userDetailsCompanion.category.value,
+            discountPercent: userDetailsCompanion.discountPercent.value,
+          );
 
-          userIdTextEditingController.clear();
+          rxLoginState.value = LoginState.otp;
         } else {
           toastification.show(
-            autoCloseDuration: Duration(seconds: 5),
+            autoCloseDuration: Duration(seconds: 2),
             primaryColor: VardhmanColors.red,
             title: const Text('User is not a B2B Portal user!'),
+            alignment: Alignment.bottomCenter,
           );
         }
       } else {
         toastification.show(
-          autoCloseDuration: Duration(seconds: 5),
+          autoCloseDuration: Duration(seconds: 2),
           primaryColor: VardhmanColors.red,
           title: const Text('User not found!'),
+          alignment: Alignment.bottomCenter,
         );
       }
     }
   }
 
   Future<void> validateOtp() async {
-    if (_userDetailsCompanion != null &&
-        otpTextEditingController.value.text == otp) {
-      await _logIn(
-        UserDetail(
-          soldToNumber: _userDetailsCompanion!.soldToNumber.value,
-          isMobileUser: _userDetailsCompanion!.isMobileUser.value,
-          mobileNumber: _userDetailsCompanion!.mobileNumber.value,
-          canSendSMS: _userDetailsCompanion!.canSendSMS.value,
-          email: _userDetailsCompanion!.email.value,
-          whatsAppNumber: _userDetailsCompanion!.whatsAppNumber.value,
-          canSendWhatsApp: _userDetailsCompanion!.canSendWhatsApp.value,
-          name: _userDetailsCompanion!.name.value,
-          companyCode: _userDetailsCompanion!.companyCode.value,
-          companyName: _userDetailsCompanion!.companyName.value,
-          role: _userDetailsCompanion!.role.value,
-          category: _userDetailsCompanion!.category.value,
-          discountPercent: _userDetailsCompanion!.discountPercent.value,
-        ),
-      );
-
-      _database.managers.userDetails.create(
-        (o) => _userDetailsCompanion!,
-        mode: InsertMode.insertOrReplace,
-      );
-
-      otpTextEditingController.clear();
-
-      Get.back(
-        canPop: true,
-        closeOverlays: true,
-      );
+    if (rxOtp.value == _otp) {
+      rxLoginState.value = LoginState.setPassword;
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 2),
         primaryColor: VardhmanColors.red,
-        title: const Text('OTP incorrect!'),
+        title: const Text('Incorrect OTP!'),
+        alignment: Alignment.bottomCenter,
       );
     }
   }
 
-  //
+  Future<void> validatePassword() async {
+    if (rxPassword.value == _password) {
+      await _logIn(
+        rxUserDetail.value!,
+      );
+    } else {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 2),
+        primaryColor: VardhmanColors.red,
+        title: const Text('Incorrect password!'),
+        alignment: Alignment.bottomCenter,
+      );
+    }
+  }
+
+  Future<void> setPassword() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    await sharedPreferences.setString('password', rxConfirmPassword.value);
+
+    if (rxUserDetail.value != null) {
+      _logIn(rxUserDetail.value!);
+    }
+  }
 
   Future<void> _logIn(UserDetail userDetail) async {
     await resetController(
@@ -249,13 +273,32 @@ class LoginController extends GetxController {
 
     await resetController(() => HomeController());
 
+    await _database.managers.userDetails.create(
+      (o) => UserDetailsCompanion.insert(
+        soldToNumber: rxUserDetail.value!.soldToNumber,
+        isMobileUser: rxUserDetail.value!.isMobileUser,
+        mobileNumber: rxUserDetail.value!.mobileNumber,
+        canSendSMS: rxUserDetail.value!.canSendSMS,
+        whatsAppNumber: rxUserDetail.value!.whatsAppNumber,
+        canSendWhatsApp: rxUserDetail.value!.canSendWhatsApp,
+        email: rxUserDetail.value!.email,
+        name: rxUserDetail.value!.name,
+        companyCode: rxUserDetail.value!.companyCode,
+        companyName: rxUserDetail.value!.companyName,
+        role: rxUserDetail.value!.role,
+        category: rxUserDetail.value!.category,
+        discountPercent: rxUserDetail.value!.discountPercent,
+      ),
+      mode: InsertMode.insertOrReplace,
+    );
+
+    rxLoginState.value = LoginState.loggedIn;
+
     toastification.show(
       autoCloseDuration: Duration(seconds: 5),
       primaryColor: VardhmanColors.green,
       title: Text('Logged in as ${userDetail.name}'),
     );
-
-    rxUserDetail.value = userDetail;
   }
 
   Future<void> resetController<T extends GetxController>(
@@ -268,5 +311,31 @@ class LoginController extends GetxController {
       permanent: true,
       tag: tag,
     );
+  }
+
+  void lockUser() {
+    rxOtp.value = '';
+
+    rxPassword.value = '';
+
+    rxConfirmPassword.value = '';
+
+    _checkUser();
+  }
+
+  Future<void> forgotPassword() async {
+    _clearAllInputs();
+
+    rxLoginState.value = LoginState.loggedOut;
+  }
+
+  void _clearAllInputs() {
+    rxUserId.value = '';
+
+    rxOtp.value = '';
+
+    rxPassword.value = '';
+
+    rxConfirmPassword.value = '';
   }
 }

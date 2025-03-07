@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 
@@ -17,6 +18,7 @@ class NewOrderTextField extends StatelessWidget {
     this.inputFormatters = const [],
     this.trailingWidget,
     this.maxLength,
+    this.obscureText = false,
   });
 
   final String labelText;
@@ -29,6 +31,7 @@ class NewOrderTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final Widget? trailingWidget;
   final int? maxLength;
+  final bool obscureText;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -98,6 +101,7 @@ class NewOrderTextField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        obscureText: obscureText,
                         maxLength: maxLength,
                         textAlignVertical: TextAlignVertical.center,
                         inputFormatters: inputFormatters,

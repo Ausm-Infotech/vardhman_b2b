@@ -15,15 +15,6 @@ class App extends StatelessWidget {
 
     return ToastificationWrapper(
       child: GetMaterialApp(
-        builder: (context, child) {
-          const double customTextScaleFactor = 1; // Set your desired value
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: TextScaler.linear(customTextScaleFactor),
-            ),
-            child: child!,
-          );
-        },
         theme: ThemeData(
           primaryColor: VardhmanColors.red,
           colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -89,34 +80,9 @@ class App extends StatelessWidget {
           ),
         ),
         home: Obx(
-          () => loginController.rxIsProcessing.value
-              ? Scaffold(
-                  body: SafeArea(
-                    child: Center(
-                      child: Container(
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Image.asset('assets/digital-nws.png'),
-                            const SizedBox(
-                              height: 36,
-                            ),
-                            const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(VardhmanColors.red),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : loginController.rxUserDetail.value != null
-                  ? const HomeScaffold()
-                  : const LoginView(),
+          () => loginController.rxLoginState.value != LoginState.loggedIn
+              ? const LoginView()
+              : const HomeScaffold(),
         ),
       ),
     );

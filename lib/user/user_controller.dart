@@ -108,9 +108,7 @@ class UserController extends GetxController {
   }
 
   Future<void> logOut() async {
-    await _database.managers.userDetails.delete();
-
-    loginController.rxUserDetail.value = null;
+    loginController.lockUser();
   }
 
   UserAddress? get _billingAddress => rxDeliveryAddresses.firstWhereOrNull(
