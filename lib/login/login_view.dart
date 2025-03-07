@@ -216,7 +216,7 @@ class LoginView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SecondaryButton(
-                                    text: 'Forgot Password',
+                                    text: 'Change User/Password',
                                     wait: false,
                                     onPressed: loginController.forgotPassword,
                                   ),
