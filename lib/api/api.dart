@@ -3,12 +3,9 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart' as getx;
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
@@ -21,7 +18,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'dart:developer';
 import 'package:vardhman_b2b/sample_data.dart';
-import 'package:vardhman_b2b/user/user_controller.dart';
 
 class Api {
   static final _fileDio = Dio(

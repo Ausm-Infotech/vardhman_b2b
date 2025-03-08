@@ -120,10 +120,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
                             label: Text('#'),
                             size: ColumnSize.S,
                             fixedWidth: 30,
-                            numeric: true,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Article'),
+                            fixedWidth: 60,
+                          ),
+                          DataColumn2(
+                            label: Text('UOM'),
                             fixedWidth: 60,
                           ),
                           DataColumn2(label: Text('Brand'), size: ColumnSize.M),

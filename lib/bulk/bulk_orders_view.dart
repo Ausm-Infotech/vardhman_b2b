@@ -92,6 +92,7 @@ class BulkOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
+                      minWidth: 300,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -116,14 +117,13 @@ class BulkOrdersView extends StatelessWidget {
                       columns: const [
                         DataColumn2(
                           label: Text('Order No.'),
-                          size: ColumnSize.L,
                           headingRowAlignment: MainAxisAlignment.start,
+                          size: ColumnSize.L,
                         ),
                         DataColumn2(
                           label: Text('Date'),
-                          size: ColumnSize.S,
                           numeric: true,
-                          fixedWidth: 120,
+                          size: ColumnSize.S,
                         ),
                       ],
                       rows: [

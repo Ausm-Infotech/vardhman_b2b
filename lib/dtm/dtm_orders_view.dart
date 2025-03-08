@@ -92,7 +92,7 @@ class DtmOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
-                      // minWidth: 800,
+                      minWidth: 300,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -123,7 +123,7 @@ class DtmOrdersView extends StatelessWidget {
                         DataColumn2(
                           label: Text('Date'),
                           numeric: true,
-                          fixedWidth: 120,
+                          size: ColumnSize.S,
                         ),
                       ],
                       rows: [
