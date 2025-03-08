@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -65,6 +66,7 @@ class DtmOrderDetailsView extends StatelessWidget {
                         child: Text('No Order Selected'),
                       )
                     : DataTable2(
+                        minWidth: 300,
                         columnSpacing: 8,
                         showBottomBorder: true,
                         border: TableBorder.symmetric(
@@ -143,13 +145,28 @@ class DtmOrderDetailsView extends StatelessWidget {
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
+                            label: Text('UOM'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
                             label: Text('Quantity'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Shipped'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Status'),
                             size: ColumnSize.M,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Invoice'),
+                            size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                         ],
@@ -178,9 +195,13 @@ class DtmOrderDetailsView extends StatelessWidget {
                               orderDetail.workOrderNumber,
                             );
 
-                            var permanentShade = 'SWT';
+                            var permanentShade = '';
 
                             var status = orderDetail.status;
+
+                            var quantityShipped = 0;
+
+                            var invoicedLines = <OrderDetailLine>[];
 
                             if (permanentShadeLine != null) {
                               final permanentShadeParts =
@@ -190,17 +211,15 @@ class DtmOrderDetailsView extends StatelessWidget {
                                 permanentShade = permanentShadeParts[2];
                               }
 
-                              final invoicedLines = dtmController
+                              invoicedLines = dtmController
                                   .getInvoicedLines(permanentShadeLine.item);
 
-                              // var quantityShipped = 0;
-
-                              // quantityShipped = invoicedLines.fold(
-                              //   0,
-                              //   (previousValue, orderDetailLine) =>
-                              //       previousValue +
-                              //       orderDetailLine.quantityShipped,
-                              // );
+                              quantityShipped = invoicedLines.fold(
+                                quantityShipped,
+                                (previousValue, orderDetailLine) =>
+                                    previousValue +
+                                    orderDetailLine.quantityShipped,
+                              );
 
                               if (invoicedLines.isNotEmpty) {
                                 status = 'Dispatched';
@@ -268,6 +287,12 @@ class DtmOrderDetailsView extends StatelessWidget {
                                 DataCell(
                                   Align(
                                     alignment: Alignment.centerRight,
+                                    child: Text(uom),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
                                     child: Text(
                                         orderDetail.quantityOrdered.toString()),
                                   ),
@@ -275,7 +300,23 @@ class DtmOrderDetailsView extends StatelessWidget {
                                 DataCell(
                                   Align(
                                     alignment: Alignment.centerRight,
+                                    child: Text(quantityShipped.toString()),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
                                     child: Text(status),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      invoicedLines.firstOrNull != null
+                                          ? ("${invoicedLines.first.invoiceNumber} ${invoicedLines.first.invoiceType}")
+                                          : '',
+                                    ),
                                   ),
                                 ),
                               ],

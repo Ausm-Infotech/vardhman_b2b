@@ -34,7 +34,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -554,7 +554,7 @@ class Api {
         data: {
           "SoldTo": soldToNumber,
           "FromOrderDate": DateFormat('MM/dd/yyyy')
-              .format(DateTime.now().subtract(Duration(days: 1080))),
+              .format(DateTime.now().subtract(Duration(days: 180))),
           "ToOrderDate": DateFormat('MM/dd/yyyy').format(DateTime.now()),
         },
       );

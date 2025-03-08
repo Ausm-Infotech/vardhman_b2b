@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -132,18 +133,32 @@ class BulkOrderDetailsView extends StatelessWidget {
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
+                            label: Text('UOM'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
                             label: Text('Quantity'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
-                            fixedWidth: 60,
+                          ),
+                          DataColumn2(
+                            label: Text('Shipped'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Status'),
                             size: ColumnSize.M,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
+                          DataColumn2(
+                            label: Text('Invoice'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                         ],
-                        rows: bulkController.rxOrderDetailLines.map(
+                        rows: bulkController.primaryOrderDetailLines.map(
                           (orderDetail) {
                             final itemParts =
                                 orderDetail.item.split(RegExp('\\s+'));
@@ -164,6 +179,20 @@ class BulkOrderDetailsView extends StatelessWidget {
                                 .indexOf(orderDetail);
 
                             var status = orderDetail.status;
+
+                            var quantityShipped = 0;
+
+                            var invoicedLines = <OrderDetailLine>[];
+
+                            invoicedLines = bulkController
+                                .getInvoicedLines(orderDetail.item);
+
+                            quantityShipped = invoicedLines.fold(
+                              quantityShipped,
+                              (previousValue, orderDetailLine) =>
+                                  previousValue +
+                                  orderDetailLine.quantityShipped,
+                            );
 
                             return DataRow(
                               color: WidgetStatePropertyAll(
@@ -212,6 +241,12 @@ class BulkOrderDetailsView extends StatelessWidget {
                                 DataCell(
                                   Align(
                                     alignment: Alignment.centerRight,
+                                    child: Text(uom),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
                                     child: Text(
                                         orderDetail.quantityOrdered.toString()),
                                   ),
@@ -219,7 +254,23 @@ class BulkOrderDetailsView extends StatelessWidget {
                                 DataCell(
                                   Align(
                                     alignment: Alignment.centerRight,
+                                    child: Text(quantityShipped.toString()),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
                                     child: Text(status),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      invoicedLines.firstOrNull != null
+                                          ? ("${invoicedLines.first.invoiceNumber} ${invoicedLines.first.invoiceType}")
+                                          : '',
+                                    ),
                                   ),
                                 ),
                               ],

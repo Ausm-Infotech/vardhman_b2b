@@ -97,6 +97,13 @@ class BulkController extends GetxController {
     }
   }
 
+  List<OrderDetailLine> get primaryOrderDetailLines => rxOrderDetailLines.where(
+        (orderDetailLine) {
+          return orderDetailLine.workOrderNumber > 0 &&
+              orderDetailLine.workOrderType.isNotEmpty;
+        },
+      ).toList();
+
   List<OrderHeaderLine> get filteredBulkOrders =>
       ordersController.filteredOrderHeaderLines
           .where(
@@ -104,4 +111,13 @@ class BulkController extends GetxController {
                 orderHeaderLine.orderType == 'SW' && !orderHeaderLine.isDTM,
           )
           .toList();
+
+  List<OrderDetailLine> getInvoicedLines(String itemNumber) {
+    return rxOrderDetailLines
+        .where(
+          (detailLine) =>
+              detailLine.item == itemNumber && detailLine.invoiceNumber > 0,
+        )
+        .toList();
+  }
 }
