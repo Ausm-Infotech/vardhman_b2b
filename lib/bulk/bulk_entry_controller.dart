@@ -568,6 +568,7 @@ class BulkEntryController extends GetxController {
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
           rxPoNumber.hashCode,
+          rxPoFileName.hashCode,
         ],
       );
     }
@@ -639,6 +640,7 @@ class BulkEntryController extends GetxController {
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
           rxPoNumber.hashCode,
+          rxPoFileName.hashCode,
         ],
       );
     }

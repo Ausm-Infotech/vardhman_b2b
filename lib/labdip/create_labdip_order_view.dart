@@ -298,6 +298,10 @@ class CreateLabdipOrderView extends StatelessWidget {
                                 ? null
                                 : () async {
                                     labdipEntryController.clearAllInputs();
+
+                                    labdipEntryController
+                                        .rxSelectedLabdipOrderLines
+                                        .clear();
                                   },
                           ),
                           Spacer(),

@@ -437,6 +437,9 @@ class CreateDtmOrderView extends StatelessWidget {
                                 ? null
                                 : () async {
                                     dtmEntryController.clearAllInputs();
+
+                                    dtmEntryController.rxSelectedDtmOrderLines
+                                        .clear();
                                   },
                           ),
                           Spacer(),

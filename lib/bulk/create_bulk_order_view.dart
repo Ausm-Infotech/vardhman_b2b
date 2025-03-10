@@ -460,6 +460,9 @@ class CreateBulkOrderView extends StatelessWidget {
                                 ? null
                                 : () async {
                                     bulkEntryController.clearAllInputs();
+
+                                    bulkEntryController.rxSelectedBulkOrderLines
+                                        .clear();
                                   },
                           ),
                           PrimaryButton(

@@ -557,6 +557,7 @@ class DtmEntryController extends GetxController {
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
           rxPoNumber.hashCode,
+          rxPoFileName.hashCode,
         ],
       );
     }
@@ -626,6 +627,7 @@ class DtmEntryController extends GetxController {
           rxEndUse.hashCode,
           rxRequestedDate.hashCode,
           rxPoNumber.hashCode,
+          rxPoFileName.hashCode,
         ],
       );
     }
