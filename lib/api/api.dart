@@ -901,8 +901,8 @@ class Api {
           "name": "X0010GetNextNumber",
           "isAsync": false,
           "inParams": [
-            {"id": 1, "value": "00"},
-            {"id": 2, "value": "01"}
+            {"id": 1, "value": "03B"},
+            {"id": 2, "value": "05"}
           ],
           "outputIds": [8]
         },
