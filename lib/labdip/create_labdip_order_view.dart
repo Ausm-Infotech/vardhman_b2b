@@ -492,6 +492,7 @@ class CreateLabdipOrderView extends StatelessWidget {
           ),
           Expanded(
             child: DataTable2(
+              minWidth: 1600,
               columnSpacing: 16,
               showBottomBorder: true,
               border: TableBorder.symmetric(
@@ -521,49 +522,74 @@ class CreateLabdipOrderView extends StatelessWidget {
               ),
               columns: const [
                 DataColumn2(
-                  label: Text('#'),
+                    label: Text('#'),
+                    fixedWidth: 50,
+                    headingRowAlignment: MainAxisAlignment.end),
+                DataColumn2(
+                  label: Text('Merchandiser'),
                   size: ColumnSize.S,
-                  fixedWidth: 30,
-                  numeric: true,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn2(label: Text('Buyer'), size: ColumnSize.M),
+                DataColumn2(
+                  label: Text('Buyer'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
                 DataColumn2(
                   label: Text('Article'),
                   size: ColumnSize.S,
-                  fixedWidth: 60,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('UOM'),
                   size: ColumnSize.M,
-                ),
-                DataColumn2(
-                  label: Text('Shade'),
-                  size: ColumnSize.S,
-                  fixedWidth: 60,
-                ),
-                DataColumn2(
-                  label: Text('Brand'),
-                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Ticket'),
-                  numeric: true,
                   size: ColumnSize.S,
-                  fixedWidth: 50,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Substrate'),
-                  size: ColumnSize.M,
+                  label: Text('Brand'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Tex'),
                   size: ColumnSize.S,
-                  numeric: true,
-                  fixedWidth: 40,
+                  headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn2(label: Text('Color'), size: ColumnSize.M),
-                DataColumn2(label: Text('LAB'), size: ColumnSize.S),
-                DataColumn2(label: Text('Remark'), size: ColumnSize.L),
+                DataColumn2(
+                  label: Text('Substrate'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Shade'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Color'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('LAB'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('QTX/XML File'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Remark'),
+                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
               ],
               empty: Center(child: const Text('No Order Lines')),
               rows: labdipEntryController.rxLabdipOrderLines.map(
@@ -577,7 +603,8 @@ class CreateLabdipOrderView extends StatelessWidget {
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
-                        : WidgetStatePropertyAll(VardhmanColors.dividerGrey),
+                        : WidgetStatePropertyAll(
+                            VardhmanColors.dividerGrey.withAlpha(128)),
                     selected: labdipEntryController.rxSelectedLabdipOrderLines
                         .contains(labdipOrderLine),
                     onSelectChanged: (_) {
@@ -585,18 +612,132 @@ class CreateLabdipOrderView extends StatelessWidget {
                           .selectLabdipOrderLine(labdipOrderLine);
                     },
                     cells: [
-                      DataCell(Text((index + 1).toString())),
-                      DataCell(Text(labdipOrderLine.buyer)),
-                      DataCell(Text(labdipOrderLine.article)),
-                      DataCell(Text("${labdipOrderLine.uom} - $uomDesc")),
-                      DataCell(Text(labdipOrderLine.shade)),
-                      DataCell(Text(labdipOrderLine.brand)),
-                      DataCell(Text(labdipOrderLine.ticket)),
-                      DataCell(Text(labdipOrderLine.substrate)),
-                      DataCell(Text(labdipOrderLine.tex)),
-                      DataCell(Text(labdipOrderLine.colorName)),
-                      DataCell(Text(labdipOrderLine.lab)),
-                      DataCell(Text(labdipOrderLine.remark)),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            (index + 1).toString(),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.merchandiser,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.buyer,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.article,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "${labdipOrderLine.uom} - $uomDesc",
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.ticket,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.brand,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.tex,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.substrate,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.shade,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.colorName,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.lab,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.qtxFileName,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            labdipOrderLine.remark,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 },

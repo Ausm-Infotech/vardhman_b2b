@@ -484,6 +484,7 @@ class CreateDtmOrderView extends StatelessWidget {
           ),
           Expanded(
             child: DataTable2(
+              minWidth: 1600,
               columnSpacing: 16,
               showBottomBorder: true,
               border: TableBorder.symmetric(
@@ -514,19 +515,32 @@ class CreateDtmOrderView extends StatelessWidget {
               columns: const [
                 DataColumn2(
                   label: Text('#'),
+                  fixedWidth: 50,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('PO Number'),
                   size: ColumnSize.S,
-                  fixedWidth: 30,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('PO Document'),
+                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Merchandiser'),
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Buyer'),
-                  size: ColumnSize.M,
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Article'),
                   size: ColumnSize.S,
-                  fixedWidth: 80,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -535,14 +549,33 @@ class CreateDtmOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Shade'),
+                  label: Text('Ticket'),
                   size: ColumnSize.S,
-                  fixedWidth: 80,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Color'),
-                  size: ColumnSize.M,
+                  label: Text('Brand'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Tex'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Substrate'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Shade'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Style/Part No.'),
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -551,13 +584,13 @@ class CreateDtmOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Remark'),
-                  size: ColumnSize.L,
+                  label: Text('Requested Date'),
+                  size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Req Date'),
-                  size: ColumnSize.S,
+                  label: Text('Remark'),
+                  size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
               ],
@@ -573,7 +606,8 @@ class CreateDtmOrderView extends StatelessWidget {
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
-                        : WidgetStatePropertyAll(VardhmanColors.dividerGrey),
+                        : WidgetStatePropertyAll(
+                            VardhmanColors.dividerGrey.withAlpha(128)),
                     selected: dtmEntryController.rxSelectedDtmOrderLines
                         .contains(dtmOrderLine),
                     onSelectChanged: (_) {
@@ -583,49 +617,127 @@ class CreateDtmOrderView extends StatelessWidget {
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text((index + 1).toString()),
+                          child: Text(
+                            (index + 1).toString(),
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.buyer),
+                          child: Text(
+                            dtmOrderLine.poNumber,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.article),
+                          child: Text(
+                            dtmOrderLine.poFileName,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text("${dtmOrderLine.uom} - $uomDesc"),
+                          child: Text(
+                            dtmOrderLine.merchandiser,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.shade),
+                          child: Text(
+                            dtmOrderLine.buyer,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.colorName),
+                          child: Text(
+                            dtmOrderLine.article,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.quantity.toString()),
+                          child: Text(
+                            "${dtmOrderLine.uom} - $uomDesc",
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(dtmOrderLine.remark),
+                          child: Text(
+                            dtmOrderLine.ticket,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.brand,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.tex,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.substrate,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.shade,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.colorName,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.quantity.toString(),
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
@@ -636,6 +748,16 @@ class CreateDtmOrderView extends StatelessWidget {
                                 ? ''
                                 : DateFormat('d MMM yyyy')
                                     .format(dtmOrderLine.requestedDate!),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            dtmOrderLine.remark,
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ),

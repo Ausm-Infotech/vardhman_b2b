@@ -523,6 +523,7 @@ class CreateBulkOrderView extends StatelessWidget {
           ),
           Expanded(
             child: DataTable2(
+              minWidth: 1600,
               columnSpacing: 16,
               showBottomBorder: true,
               border: TableBorder.symmetric(
@@ -553,13 +554,17 @@ class CreateBulkOrderView extends StatelessWidget {
               columns: const [
                 DataColumn2(
                   label: Text('#'),
-                  size: ColumnSize.S,
-                  fixedWidth: 30,
+                  fixedWidth: 50,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('PO Number'),
                   size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('PO Document'),
+                  size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -569,13 +574,12 @@ class CreateBulkOrderView extends StatelessWidget {
                 ),
                 DataColumn2(
                   label: Text('Buyer'),
-                  size: ColumnSize.M,
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Article'),
                   size: ColumnSize.S,
-                  fixedWidth: 80,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -584,18 +588,32 @@ class CreateBulkOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
+                  label: Text('Ticket'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Brand'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Tex'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Substrate'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
                   label: Text('Shade'),
                   size: ColumnSize.S,
-                  fixedWidth: 80,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: Text('Style/Part No.'),
-                  size: ColumnSize.M,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
-                  label: Text('Unit Price'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -605,13 +623,17 @@ class CreateBulkOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Total Pre-GST\nAmount in INR'),
-                  // size: ColumnSize.M,
-                  fixedWidth: 100,
+                  label: Text('Req Date'),
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Req Date'),
+                  label: Text('Unit Price'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: Text('Total Pre-GST\nAmount in INR'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -628,7 +650,8 @@ class CreateBulkOrderView extends StatelessWidget {
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
-                        : WidgetStatePropertyAll(VardhmanColors.dividerGrey),
+                        : WidgetStatePropertyAll(
+                            VardhmanColors.dividerGrey.withAlpha(128)),
                     selected: bulkEntryController.rxSelectedBulkOrderLines
                         .contains(bulkOrderLine),
                     onSelectChanged: (_) {
@@ -638,71 +661,126 @@ class CreateBulkOrderView extends StatelessWidget {
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text((index + 1).toString()),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.poNumber),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.merchandiser),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.buyer),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.article),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text("${bulkOrderLine.uom} - $uomDesc"),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.shade),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.colorName),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child:
-                              Text(bulkOrderLine.unitPrice?.toString() ?? ''),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(bulkOrderLine.quantity.toString()),
+                          child: Text(
+                            (index + 1).toString(),
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                       DataCell(
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            (bulkOrderLine.quantity *
-                                    (bulkOrderLine.unitPrice ?? 0))
-                                .toString(),
+                            bulkOrderLine.poNumber,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.poFileName,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.merchandiser,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.buyer,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.article,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "${bulkOrderLine.uom} - $uomDesc",
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.ticket,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.brand,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.tex,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.substrate,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.shade,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.colorName,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.quantity.toString(),
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ),
@@ -714,6 +792,27 @@ class CreateBulkOrderView extends StatelessWidget {
                                 ? ''
                                 : DateFormat('d MMM yyyy')
                                     .format(bulkOrderLine.requestedDate!),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            bulkOrderLine.unitPrice?.toString() ?? '',
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            (bulkOrderLine.quantity *
+                                    (bulkOrderLine.unitPrice ?? 0))
+                                .toString(),
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ),
