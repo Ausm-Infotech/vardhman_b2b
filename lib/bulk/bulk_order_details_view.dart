@@ -194,6 +194,10 @@ class BulkOrderDetailsView extends StatelessWidget {
                                   orderDetailLine.quantityShipped,
                             );
 
+                            if (invoicedLines.isNotEmpty) {
+                              status = 'Dispatched';
+                            }
+
                             return DataRow(
                               color: WidgetStatePropertyAll(
                                 index.isEven
