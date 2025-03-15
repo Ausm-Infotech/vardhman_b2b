@@ -1624,36 +1624,40 @@ class Api {
     required List<DraftTableData> bulkEntryLines,
   }) async {
     final payload = {
-      "Detail": bulkEntryLines
-          .map(
-            (bulkEntryLine) => {
-              "BatchNumber": b2bOrderNumber,
-              "Company": company,
-              "SoldTo": soldTo,
-              "ShipTo": shipTo,
-              "BranchPlant": branchPlant,
-              "ItemNumber": getItemNumber(
-                article: bulkEntryLine.article,
-                uom: bulkEntryLine.uom,
-                shade: bulkEntryLine.shade,
-              ),
-              "Quantity": bulkEntryLine.quantity,
-              "OrderTakenBy": orderTakenBy,
-              "LineNumber": (bulkEntryLines.indexOf(bulkEntryLine) + 1) + 1000,
-              "DocumentType": "BK",
-              "SourceFlag": "B",
-              "MerchandiserName": merchandiserName,
-              "LightSourceRemark":
-                  "${bulkEntryLine.firstLightSource} ${bulkEntryLine.secondLightSource}",
-              "ColorRemark": bulkEntryLine.colorRemark,
-              "EndUse": bulkEntryLine.buyerCode,
-              "BillingType": bulkEntryLine.billingType == "Branch" ? "B" : "D",
-              if (bulkEntryLine.requestedDate != null)
-                "RequestDate": DateFormat('MM/dd/yyyy')
-                    .format(bulkEntryLine.requestedDate!),
-            },
-          )
-          .toList(),
+      "Detail": bulkEntryLines.map(
+        (bulkEntryLine) {
+          final isOtherBuyer = bulkEntryLine.buyerCode.isEmpty;
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": getItemNumber(
+              article: bulkEntryLine.article,
+              uom: bulkEntryLine.uom,
+              shade: bulkEntryLine.shade,
+            ),
+            "Quantity": bulkEntryLine.quantity,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber": (bulkEntryLines.indexOf(bulkEntryLine) + 1) + 1000,
+            "DocumentType": "BK",
+            "SourceFlag": "B",
+            "MerchandiserName":
+                '$merchandiserName|$b2bOrderNumber-${bulkEntryLine.poNumber}',
+            "LightSourceRemark": bulkEntryLine.firstLightSource,
+            "ColorRemark": bulkEntryLine.colorRemark,
+            "BillingType": bulkEntryLine.billingType == "Branch" ? "B" : "D",
+            "EndUse": isOtherBuyer ? 'OTH' : bulkEntryLine.buyerCode,
+            "RelatedOrder":
+                "| | | |${bulkEntryLine.colorName}${isOtherBuyer ? '-OTH-${bulkEntryLine.buyer}' : ''}",
+            if (bulkEntryLine.requestedDate != null)
+              "RequestDate":
+                  DateFormat('MM/dd/yyyy').format(bulkEntryLine.requestedDate!),
+          };
+        },
+      ).toList(),
     };
 
     log(jsonEncode(payload));

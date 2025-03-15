@@ -558,16 +558,6 @@ class CreateBulkOrderView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('PO Number'),
-                  size: ColumnSize.S,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
-                  label: Text('PO Document'),
-                  size: ColumnSize.M,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
                   label: Text('Merchandiser'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
@@ -663,24 +653,6 @@ class CreateBulkOrderView extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: Text(
                             (index + 1).toString(),
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.poNumber,
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.poFileName,
                             textAlign: TextAlign.end,
                           ),
                         ),

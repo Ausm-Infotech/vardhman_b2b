@@ -452,7 +452,8 @@ class BulkEntryController extends GetxController {
       rxArticle.value.isNotEmpty;
 
   String get _colorRemark => [
-        if (rxColor.value.trim().isNotEmpty) rxColor.value,
+        if (rxSecondLightSource.value.trim().isNotEmpty)
+          rxSecondLightSource.value,
         if (rxRemark.value.trim().isNotEmpty) rxRemark.value,
         if (rxL.value.trim().isNotEmpty) rxL.value,
         if (rxRequestType.value.isNotEmpty) rxRequestType.value,
@@ -858,22 +859,43 @@ class BulkEntryController extends GetxController {
       .toList();
 
   Future<void> submitOrder() async {
-    for (var bulkOrderLine in rxBulkOrderLines) {
-      if (bulkOrderLine.poFileName.isNotEmpty &&
-          bulkOrderLine.poFileBytes != null) {
-        final lineNumber = (rxBulkOrderLines.indexOf(bulkOrderLine) + 1) + 1000;
+    final firstPoDocLine = rxBulkOrderLines.firstWhereOrNull(
+      (bulkOrderLine) => bulkOrderLine.poFileName.isNotEmpty,
+    );
 
-        await Api.uploadMediaAttachment(
-          fileBytes: bulkOrderLine.poFileBytes!,
-          fileName: bulkOrderLine.poFileName,
-          moKey:
-              'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
-          moStructure: 'GT00092',
-          version: 'VYTL0016',
-          formName: 'P00092_W00092D',
-        );
-      }
+    if (firstPoDocLine != null) {
+      await Api.uploadMediaAttachment(
+        fileBytes: firstPoDocLine.poFileBytes!,
+        fileName: firstPoDocLine.poFileName,
+        moKey:
+            'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
+        moStructure: 'GT00092',
+        version: 'VYTL0016',
+        formName: 'P00092_W00092D',
+      );
     }
+
+    await Api.supplementalDataEntry(
+      databaseCode: 'QTX',
+      dataType: 'QT',
+      orderNumber: orderNumber,
+      lineNumber: 1001,
+      b2bOrderNumber: b2bOrderNumber,
+      soldToNumber: _userController.rxUserDetail.value.soldToNumber,
+      userName: _userController.rxUserDetail.value.name,
+    );
+
+    await Api.supplementalDataWrapper(
+      databaseCode: 'QTX',
+      dataType: 'QT',
+      orderNumber: orderNumber,
+      lineNumber: 1001,
+      soldTo: _userController.rxUserDetail.value.soldToNumber,
+      emailAddresses: [
+        'arjun@ausminfotech.com',
+        'jdedist@ausminfotech.com',
+      ],
+    );
 
     final isSubmitted = await orderReviewController.submitBulkOrder(
       b2bOrderNumber: b2bOrderNumber,

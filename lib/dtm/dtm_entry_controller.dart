@@ -847,22 +847,20 @@ class DtmEntryController extends GetxController {
       .toList();
 
   Future<void> submitOrder() async {
-    for (var dtmOrderLine in rxDtmOrderLines) {
-      if (dtmOrderLine.poFileName.isNotEmpty &&
-          dtmOrderLine.poFileBytes != null) {
-        final lineNumber = 1001;
-        // final lineNumber = (rxDtmOrderLines.indexOf(dtmOrderLine) + 1) + 1000;
+    final firstPoDocLine = rxDtmOrderLines.firstWhereOrNull(
+      (dtmOrderLine) => dtmOrderLine.poFileName.isNotEmpty,
+    );
 
-        await Api.uploadMediaAttachment(
-          fileBytes: dtmOrderLine.poFileBytes!,
-          fileName: dtmOrderLine.poFileName,
-          moKey:
-              'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
-          moStructure: 'GT00092',
-          version: 'VYTL0016',
-          formName: 'P00092_W00092D',
-        );
-      }
+    if (firstPoDocLine != null) {
+      await Api.uploadMediaAttachment(
+        fileBytes: firstPoDocLine.poFileBytes!,
+        fileName: firstPoDocLine.poFileName,
+        moKey:
+            'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
+        moStructure: 'GT00092',
+        version: 'VYTL0016',
+        formName: 'P00092_W00092D',
+      );
     }
 
     await Api.supplementalDataEntry(
