@@ -19,8 +19,6 @@ class UserController extends GetxController {
 
   final rxDeliveryAddress = Rxn<UserAddress>();
 
-  final _database = Get.find<Database>();
-
   final rxDeliveryAddresses = RxList<UserAddress>();
 
   UserController({

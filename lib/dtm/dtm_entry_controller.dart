@@ -158,7 +158,7 @@ class DtmEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2B-DT-$orderNumber';
+  String get b2bOrderNumber => 'B2BD$orderNumber';
 
   DtmEntryController({required this.orderNumber}) {
     _database.managers.draftTable
@@ -848,12 +848,14 @@ class DtmEntryController extends GetxController {
     for (var dtmOrderLine in rxDtmOrderLines) {
       if (dtmOrderLine.poFileName.isNotEmpty &&
           dtmOrderLine.poFileBytes != null) {
-        final lineNumber = (rxDtmOrderLines.indexOf(dtmOrderLine) + 1) + 1000;
+        final lineNumber = 1001;
+        // final lineNumber = (rxDtmOrderLines.indexOf(dtmOrderLine) + 1) + 1000;
 
         await Api.uploadMediaAttachment(
           fileBytes: dtmOrderLine.poFileBytes!,
           fileName: dtmOrderLine.poFileName,
-          moKey: 'QTX|QT|||$lineNumber|0|DT|$b2bOrderNumber',
+          moKey:
+              'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
           moStructure: 'GT00092',
           version: 'VYTL0016',
           formName: 'P00092_W00092D',

@@ -41,9 +41,9 @@ class Api {
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept': '*/*',
       },
-      sendTimeout: const Duration(seconds: 60),
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
+      sendTimeout: const Duration(seconds: 180),
+      connectTimeout: const Duration(seconds: 180),
+      receiveTimeout: const Duration(seconds: 180),
       validateStatus: (status) => true,
       receiveDataWhenStatusError: true,
     ),
@@ -785,8 +785,8 @@ class Api {
 
       if (response.statusCode == 200) {
         for (var itemCatalogInfoData in response.data["GetItemCatalogInfo"]) {
-          itemCatalogInfos.add(
-            ItemCatalogInfo(
+          try {
+            final itemCatalogInfo = ItemCatalogInfo(
               article: itemCatalogInfoData['Article'],
               uom: itemCatalogInfoData['UOM'],
               category: itemCatalogInfoData['Category'],
@@ -802,8 +802,14 @@ class Api {
               ticket: itemCatalogInfoData['Value_3'],
               tex: itemCatalogInfoData['Value_4'],
               variant: itemCatalogInfoData['Value_5'],
-            ),
-          );
+            );
+
+            itemCatalogInfos.add(itemCatalogInfo);
+
+            log('fetchItemCatalogInfo - addItem - $itemCatalogInfo');
+          } catch (e) {
+            log('fetchItemCatalogInfo - addItem error - $e');
+          }
         }
       }
     } catch (e) {
@@ -811,6 +817,68 @@ class Api {
     }
 
     return itemCatalogInfos;
+  }
+
+  static Future<bool> supplementalDataEntry({
+    required String databaseCode,
+    required int orderNumber,
+    required int lineNumber,
+    required String dataType,
+    required String b2bOrderNumber,
+    required String soldToNumber,
+    required String userName,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH5500092_SupplementalDataEntry',
+        data: {
+          "szSupplementalDatabaseCode": databaseCode,
+          "cActionCode": "1",
+          "mnNumericKey1": orderNumber,
+          "szAlphaKey1": lineNumber,
+          "szDataType": dataType,
+          "jdEndingEffectiveDate":
+              DateFormat('MM/dd/yyyy').format(DateTime.now()),
+          "szRemark1": b2bOrderNumber,
+          "mnNumericKey2": soldToNumber,
+          "jdEffectiveDate": DateFormat('MM/dd/yyyy').format(DateTime.now()),
+          "szRemark2": userName,
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      log('supplementalDataEntry error - $e');
+      return false;
+    }
+  }
+
+  static Future<bool> supplementalDataWrapper({
+    required String databaseCode,
+    required String dataType,
+    required int orderNumber,
+    required int lineNumber,
+    required String soldTo,
+    required List<String> emailAddresses,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55_SupplementalDataWrapper',
+        data: {
+          "SDB Code 1": databaseCode,
+          "Ty Dt 1": dataType,
+          "LineNo": lineNumber.toString(),
+          "OrderNo": orderNumber.toString(),
+          "Customer": soldTo,
+          "EmailAddress": emailAddresses.join(';'),
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      log('supplementalDataWrapper error - $e');
+      return false;
+    }
   }
 
   static Future<bool> uploadMediaAttachment({
@@ -832,11 +900,7 @@ class Api {
                 'moKey': [moKey],
                 'formName': formName,
                 'version': version,
-                "file": {
-                  "fileName": fileName.endsWith('.qtx')
-                      ? fileName.replaceAll('.qtx', '.txt')
-                      : fileName
-                },
+                "file": {"fileName": fileName},
               },
             ),
             contentType: MediaType.parse('application/json'),
@@ -1362,11 +1426,12 @@ class Api {
                   (labdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000,
               "DocumentType": "LD",
               "SourceFlag": "B",
-              "MerchandiserName": merchandiserName,
-              "LightSourceRemark":
-                  "${labdipOrderLine.firstLightSource} ${labdipOrderLine.secondLightSource}",
+              "MerchandiserName": '$merchandiserName|',
+              "LightSourceRemark": labdipOrderLine.firstLightSource,
               "ColorRemark": labdipOrderLine.colorRemark,
               "EndUse": labdipOrderLine.buyerCode,
+              "RelatedOrder":
+                  "| | | |${labdipOrderLine.buyerCode.isEmpty ? 'OTH-${labdipOrderLine.buyer}' : ''}",
               "BillingType":
                   labdipOrderLine.billingType == "Branch" ? "B" : "D",
             },

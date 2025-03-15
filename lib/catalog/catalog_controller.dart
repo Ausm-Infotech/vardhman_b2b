@@ -32,7 +32,7 @@ class CatalogController extends GetxController
     if (items.isNotEmpty) {
       _items.clear();
       _items.addAll(items);
-      _filterItems();
+      // _filterItems();
     }
   }
 
@@ -69,9 +69,20 @@ class CatalogController extends GetxController
       brandEditingController.text.isNotEmpty ||
       articleTextEditingController.text.isNotEmpty;
 
-  List<ItemCatalogInfo> get industryItems =>
-      rxFilteredItems.where((element) => element.category == 'IND').toList();
+  // List<ItemCatalogInfo> get industryItems => _items;
+
+  List<ItemCatalogInfo> get industryItems {
+    List<ItemCatalogInfo> industryItems = [];
+
+    for (ItemCatalogInfo item in _items) {
+      if (item.category == 'IND') {
+        industryItems.add(item);
+      }
+    }
+
+    return industryItems;
+  }
 
   List<ItemCatalogInfo> get domesticItems =>
-      rxFilteredItems.where((element) => element.category == 'DOM').toList();
+      _items.where((element) => element.category == 'DOM').toList();
 }

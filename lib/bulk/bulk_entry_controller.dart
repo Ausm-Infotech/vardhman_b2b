@@ -164,7 +164,7 @@ class BulkEntryController extends GetxController {
 
   final UserController _userController = Get.find(tag: 'userController');
 
-  String get b2bOrderNumber => 'B2B-BK-$orderNumber';
+  String get b2bOrderNumber => 'B2BB$orderNumber';
 
   BulkEntryController({required this.orderNumber}) {
     _database.managers.draftTable
@@ -866,7 +866,8 @@ class BulkEntryController extends GetxController {
         await Api.uploadMediaAttachment(
           fileBytes: bulkOrderLine.poFileBytes!,
           fileName: bulkOrderLine.poFileName,
-          moKey: 'QTX|QT|||$lineNumber|0|BK|$b2bOrderNumber',
+          moKey:
+              'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
           moStructure: 'GT00092',
           version: 'VYTL0016',
           formName: 'P00092_W00092D',
