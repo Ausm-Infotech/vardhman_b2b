@@ -535,7 +535,7 @@ class CreateDtmOrderView extends StatelessWidget {
                 ),
                 DataColumn2(
                   label: Text('Buyer'),
-                  size: ColumnSize.S,
+                  size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(

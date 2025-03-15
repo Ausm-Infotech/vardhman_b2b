@@ -1556,37 +1556,40 @@ class Api {
     required List<DraftTableData> dtmEntryLines,
   }) async {
     final payload = {
-      "Detail": dtmEntryLines
-          .map(
-            (dtmEntryLine) => {
-              "BatchNumber": b2bOrderNumber,
-              "Company": company,
-              "SoldTo": soldTo,
-              "ShipTo": shipTo,
-              "BranchPlant": branchPlant,
-              "ItemNumber": getItemNumber(
-                article: dtmEntryLine.article,
-                uom: dtmEntryLine.uom,
-                shade: dtmEntryLine.shade,
-              ),
-              "Quantity": dtmEntryLine.quantity,
-              "OrderTakenBy": orderTakenBy,
-              "LineNumber": (dtmEntryLines.indexOf(dtmEntryLine) + 1) + 1000,
-              "DocumentType": "DT",
-              "SourceFlag": "B",
-              "MerchandiserName": '$merchandiserName|',
-              "LightSourceRemark": dtmEntryLine.firstLightSource,
-              "ColorRemark": dtmEntryLine.colorRemark,
-              "EndUse": dtmEntryLine.buyerCode,
-              "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
-              "RelatedOrder":
-                  "| | | |${dtmEntryLine.buyerCode.isEmpty ? 'OTH-${dtmEntryLine.buyer}' : ''}",
-              if (dtmEntryLine.requestedDate != null)
-                "RequestDate": DateFormat('MM/dd/yyyy')
-                    .format(dtmEntryLine.requestedDate!),
-            },
-          )
-          .toList(),
+      "Detail": dtmEntryLines.map(
+        (dtmEntryLine) {
+          final isOtherBuyer = dtmEntryLine.buyerCode.isEmpty;
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": getItemNumber(
+              article: dtmEntryLine.article,
+              uom: dtmEntryLine.uom,
+              shade: dtmEntryLine.shade,
+            ),
+            "Quantity": dtmEntryLine.quantity,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber": (dtmEntryLines.indexOf(dtmEntryLine) + 1) + 1000,
+            "DocumentType": "DT",
+            "SourceFlag": "B",
+            "MerchandiserName":
+                '$merchandiserName|$b2bOrderNumber-${dtmEntryLine.poNumber}',
+            "LightSourceRemark": dtmEntryLine.firstLightSource,
+            "ColorRemark": dtmEntryLine.colorRemark,
+            "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
+            "EndUse": isOtherBuyer ? 'OTH' : dtmEntryLine.buyerCode,
+            "RelatedOrder":
+                "| | | |${isOtherBuyer ? 'OTH-${dtmEntryLine.buyer}' : ''}",
+            if (dtmEntryLine.requestedDate != null)
+              "RequestDate":
+                  DateFormat('MM/dd/yyyy').format(dtmEntryLine.requestedDate!),
+          };
+        },
+      ).toList(),
     };
 
     log(jsonEncode(payload));
