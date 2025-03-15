@@ -438,6 +438,8 @@ class DtmEntryController extends GetxController {
       rxArticle.value.isNotEmpty;
 
   String get _colorRemark => [
+        if (rxSecondLightSource.value.trim().isNotEmpty)
+          rxSecondLightSource.value,
         if (rxColor.value.trim().isNotEmpty) rxColor.value,
         if (rxRemark.value.trim().isNotEmpty) rxRemark.value,
         if (rxL.value.trim().isNotEmpty) rxL.value,
@@ -862,6 +864,28 @@ class DtmEntryController extends GetxController {
         );
       }
     }
+
+    await Api.supplementalDataEntry(
+      databaseCode: 'QTX',
+      dataType: 'QT',
+      orderNumber: orderNumber,
+      lineNumber: 1001,
+      b2bOrderNumber: b2bOrderNumber,
+      soldToNumber: _userController.rxUserDetail.value.soldToNumber,
+      userName: _userController.rxUserDetail.value.name,
+    );
+
+    await Api.supplementalDataWrapper(
+      databaseCode: 'QTX',
+      dataType: 'QT',
+      orderNumber: orderNumber,
+      lineNumber: 1001,
+      soldTo: _userController.rxUserDetail.value.soldToNumber,
+      emailAddresses: [
+        'arjun@ausminfotech.com',
+        'jdedist@ausminfotech.com',
+      ],
+    );
 
     final isSubmitted = await orderReviewController.submitDtmOrder(
       b2bOrderNumber: b2bOrderNumber,

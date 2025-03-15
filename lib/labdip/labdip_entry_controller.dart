@@ -881,8 +881,8 @@ class LabdipEntryController extends GetxController {
     for (var labdipOrderLine in rxLabdipOrderLines) {
       if (labdipOrderLine.qtxFileName.isNotEmpty &&
           labdipOrderLine.qtxFileBytes != null) {
-        final lineNumber =
-            (rxLabdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000;
+        final lineNumber = 1001;
+        // final lineNumber = (rxDtmOrderLines.indexOf(dtmOrderLine) + 1) + 1000;
 
         await Api.uploadMediaAttachment(
           fileBytes: labdipOrderLine.qtxFileBytes!,

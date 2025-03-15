@@ -1407,36 +1407,37 @@ class Api {
     required List<DraftTableData> labdipOrderLines,
   }) async {
     final payload = {
-      "Detail": labdipOrderLines
-          .map(
-            (labdipOrderLine) => {
-              "BatchNumber": b2bOrderNumber,
-              "Company": company,
-              "SoldTo": soldTo,
-              "ShipTo": shipTo,
-              "BranchPlant": branchPlant,
-              "ItemNumber": getItemNumber(
-                article: labdipOrderLine.article,
-                uom: labdipOrderLine.uom,
-                shade: labdipOrderLine.shade,
-              ),
-              "Quantity": 1,
-              "OrderTakenBy": orderTakenBy,
-              "LineNumber":
-                  (labdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000,
-              "DocumentType": "LD",
-              "SourceFlag": "B",
-              "MerchandiserName": '$merchandiserName|',
-              "LightSourceRemark": labdipOrderLine.firstLightSource,
-              "ColorRemark": labdipOrderLine.colorRemark,
-              "EndUse": labdipOrderLine.buyerCode,
-              "RelatedOrder":
-                  "| | | |${labdipOrderLine.buyerCode.isEmpty ? 'OTH-${labdipOrderLine.buyer}' : ''}",
-              "BillingType":
-                  labdipOrderLine.billingType == "Branch" ? "B" : "D",
-            },
-          )
-          .toList(),
+      "Detail": labdipOrderLines.map(
+        (labdipOrderLine) {
+          final isOtherBuyer = labdipOrderLine.buyerCode.isEmpty;
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": getItemNumber(
+              article: labdipOrderLine.article,
+              uom: labdipOrderLine.uom,
+              shade: labdipOrderLine.shade,
+            ),
+            "Quantity": 1,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber":
+                (labdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000,
+            "DocumentType": "LD",
+            "SourceFlag": "B",
+            "MerchandiserName": '$merchandiserName|',
+            "LightSourceRemark": labdipOrderLine.firstLightSource,
+            "ColorRemark": labdipOrderLine.colorRemark,
+            "EndUse": isOtherBuyer ? 'OTH' : labdipOrderLine.buyerCode,
+            "RelatedOrder":
+                "| | | |${isOtherBuyer ? 'OTH-${labdipOrderLine.buyer}' : ''}",
+            "BillingType": labdipOrderLine.billingType == "Branch" ? "B" : "D",
+          };
+        },
+      ).toList(),
     };
 
     log(jsonEncode(payload));
@@ -1573,12 +1574,13 @@ class Api {
               "LineNumber": (dtmEntryLines.indexOf(dtmEntryLine) + 1) + 1000,
               "DocumentType": "DT",
               "SourceFlag": "B",
-              "MerchandiserName": merchandiserName,
-              "LightSourceRemark":
-                  "${dtmEntryLine.firstLightSource} ${dtmEntryLine.secondLightSource}",
+              "MerchandiserName": '$merchandiserName|',
+              "LightSourceRemark": dtmEntryLine.firstLightSource,
               "ColorRemark": dtmEntryLine.colorRemark,
               "EndUse": dtmEntryLine.buyerCode,
               "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
+              "RelatedOrder":
+                  "| | | |${dtmEntryLine.buyerCode.isEmpty ? 'OTH-${dtmEntryLine.buyer}' : ''}",
               if (dtmEntryLine.requestedDate != null)
                 "RequestDate": DateFormat('MM/dd/yyyy')
                     .format(dtmEntryLine.requestedDate!),
