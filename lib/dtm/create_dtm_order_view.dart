@@ -272,8 +272,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString: dtmEntryController.rxTicket,
-                                        searchList: dtmEntryController
-                                            .uniqueFilteredTickets,
+                                        searchList: [],
                                       ),
                                     ),
                                     SizedBox(
@@ -285,8 +284,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         inputFormatters: [capitalFormatter],
                                         labelText: 'Brand',
                                         rxString: dtmEntryController.rxBrand,
-                                        searchList: dtmEntryController
-                                            .uniqueFilteredBrands,
+                                        searchList: [],
                                         isEnabled: false,
                                       ),
                                     ),
@@ -301,8 +299,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         labelText: 'Tex',
                                         isEnabled: false,
                                         rxString: dtmEntryController.rxTex,
-                                        searchList: dtmEntryController
-                                            .uniqueFilteredTexs,
+                                        searchList: [],
                                       ),
                                     ),
                                     SizedBox(
@@ -316,8 +313,7 @@ class CreateDtmOrderView extends StatelessWidget {
                                         labelText: 'Substrate',
                                         rxString:
                                             dtmEntryController.rxSubstrate,
-                                        searchList: dtmEntryController
-                                            .uniqueFilteredSubstrates,
+                                        searchList: [],
                                       ),
                                     ),
                                   ],

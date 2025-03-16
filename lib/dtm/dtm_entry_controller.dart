@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
+import 'package:vardhman_b2b/api/item_catalog_info.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -203,10 +204,6 @@ class DtmEntryController extends GetxController {
       },
     );
 
-    rxBrand.listen((_) => selectIfOnlyOneOption(rxBrand.hashCode));
-    rxSubstrate.listen((_) => selectIfOnlyOneOption(rxSubstrate.hashCode));
-    rxTex.listen((_) => selectIfOnlyOneOption(rxTex.hashCode));
-
     rxBuyerName.listen(buyerNameListener);
 
     rxOtherBuyerName.listen(otherBuyerListener);
@@ -392,41 +389,46 @@ class DtmEntryController extends GetxController {
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTicket.value = '';
-    } else {
-      if (hashCode != rxArticle.hashCode &&
-          uniqueFilteredArticles.length == 1) {
-        rxArticle.value = uniqueFilteredArticles.first;
-      }
+    } else if (filteredItems.length == 1) {
+      final item = filteredItems.first;
 
-      if (hashCode != rxUom.hashCode && rxUom.isEmpty) {
-        if ((hashCode == rxArticle.hashCode && uniqueFilteredUoms.isNotEmpty) ||
-            uniqueFilteredUoms.length == 1) {
-          rxUom.value = uniqueFilteredUoms.first;
-
-          rxUomWithDesc.value =
-              '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
-        }
-      }
-
-      if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
-        rxBrand.value = uniqueFilteredBrands.first;
-      }
-
-      if (hashCode != rxSubstrate.hashCode &&
-          uniqueFilteredSubstrates.length == 1) {
-        rxSubstrate.value = uniqueFilteredSubstrates.first;
-      }
-
-      if (hashCode != rxTex.hashCode && uniqueFilteredTexs.length == 1) {
-        rxTex.value = uniqueFilteredTexs.first;
-      }
-
-      if (uniqueFilteredTickets.length == 1) {
-        rxTicket.value = uniqueFilteredTickets.first;
-      } else {
-        rxTicket.value = '';
-      }
+      rxArticle.value = item.article;
+      rxUom.value = item.uom;
+      rxUomWithDesc.value =
+          '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
+      rxBrand.value = item.brandDesc;
+      rxSubstrate.value = item.substrateDesc;
+      rxTex.value = item.tex;
+      rxTicket.value = item.ticket;
     }
+  }
+
+  List<ItemCatalogInfo> get filteredItems {
+    final filteredItems = catalogController.industryItems
+        .where(
+          (itemCatalogInfo) =>
+              (rxArticle.value.isNotEmpty
+                  ? itemCatalogInfo.article == (rxArticle.value)
+                  : true) &&
+              (rxUom.value.isNotEmpty
+                  ? itemCatalogInfo.uom == (rxUom.value)
+                  : true) &&
+              (rxBrand.value.isNotEmpty
+                  ? itemCatalogInfo.brandDesc == (rxBrand.value)
+                  : true) &&
+              (rxSubstrate.value.isNotEmpty
+                  ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
+                  : true) &&
+              (rxTex.value.isNotEmpty
+                  ? itemCatalogInfo.tex == (rxTex.value)
+                  : true) &&
+              (rxTicket.value.isNotEmpty
+                  ? itemCatalogInfo.ticket == (rxTicket.value)
+                  : true),
+        )
+        .toList();
+
+    return filteredItems;
   }
 
   bool get canAddOrderLine =>
@@ -725,19 +727,9 @@ class DtmEntryController extends GetxController {
 
   List<String> get uniqueFilteredArticles => catalogController.industryItems
       .where(
-        (itemCatalogInfo) =>
-            (rxUom.value.isNotEmpty
-                ? itemCatalogInfo.uom == (rxUom.value)
-                : true) &&
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
-            (rxSubstrate.value.isNotEmpty
-                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
-                : true) &&
-            (rxTex.value.isNotEmpty
-                ? itemCatalogInfo.tex == (rxTex.value)
-                : true),
+        (itemCatalogInfo) => (rxUom.value.isNotEmpty
+            ? itemCatalogInfo.uom == (rxUom.value)
+            : true),
       )
       .map((e) => e.article)
       .toSet()
@@ -745,104 +737,11 @@ class DtmEntryController extends GetxController {
 
   List<String> get uniqueFilteredUoms => catalogController.industryItems
       .where(
-        (itemCatalogInfo) =>
-            (rxArticle.value.isNotEmpty
-                ? itemCatalogInfo.article == (rxArticle.value)
-                : true) &&
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
-            (rxSubstrate.value.isNotEmpty
-                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
-                : true) &&
-            (rxTex.value.isNotEmpty
-                ? itemCatalogInfo.tex == (rxTex.value)
-                : true),
+        (itemCatalogInfo) => (rxArticle.value.isNotEmpty
+            ? itemCatalogInfo.article == (rxArticle.value)
+            : true),
       )
       .map((e) => e.uom)
-      .toSet()
-      .toList();
-
-  List<String> get uniqueFilteredBrands => catalogController.industryItems
-      .where(
-        (itemCatalogInfo) =>
-            (rxArticle.value.isNotEmpty
-                ? itemCatalogInfo.article == (rxArticle.value)
-                : true) &&
-            (rxUom.value.isNotEmpty
-                ? itemCatalogInfo.uom == (rxUom.value)
-                : true) &&
-            (rxSubstrate.value.isNotEmpty
-                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
-                : true) &&
-            (rxTex.value.isNotEmpty
-                ? itemCatalogInfo.tex == (rxTex.value)
-                : true),
-      )
-      .map((e) => e.brandDesc)
-      .toSet()
-      .toList();
-
-  List<String> get uniqueFilteredSubstrates => catalogController.industryItems
-      .where(
-        (itemCatalogInfo) =>
-            (rxArticle.value.isNotEmpty
-                ? itemCatalogInfo.article == (rxArticle.value)
-                : true) &&
-            (rxUom.value.isNotEmpty
-                ? itemCatalogInfo.uom == (rxUom.value)
-                : true) &&
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
-            (rxTex.value.isNotEmpty
-                ? itemCatalogInfo.tex == (rxTex.value)
-                : true),
-      )
-      .map((e) => e.substrateDesc)
-      .toSet()
-      .toList();
-
-  List<String> get uniqueFilteredTexs => catalogController.industryItems
-      .where(
-        (itemCatalogInfo) =>
-            (rxArticle.value.isNotEmpty
-                ? itemCatalogInfo.article == (rxArticle.value)
-                : true) &&
-            (rxUom.value.isNotEmpty
-                ? itemCatalogInfo.uom == (rxUom.value)
-                : true) &&
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
-            (rxSubstrate.value.isNotEmpty
-                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
-                : true),
-      )
-      .map((e) => e.tex)
-      .toSet()
-      .toList();
-
-  List<String> get uniqueFilteredTickets => catalogController.industryItems
-      .where(
-        (itemCatalogInfo) =>
-            (rxArticle.value.isNotEmpty
-                ? itemCatalogInfo.article == (rxArticle.value)
-                : true) &&
-            (rxUom.value.isNotEmpty
-                ? itemCatalogInfo.uom == (rxUom.value)
-                : true) &&
-            (rxBrand.value.isNotEmpty
-                ? itemCatalogInfo.brandDesc == (rxBrand.value)
-                : true) &&
-            (rxSubstrate.value.isNotEmpty
-                ? itemCatalogInfo.substrateDesc == (rxSubstrate.value)
-                : true) &&
-            (rxTex.value.isNotEmpty
-                ? itemCatalogInfo.tex == (rxTex.value)
-                : true),
-      )
-      .map((e) => e.ticket)
       .toSet()
       .toList();
 

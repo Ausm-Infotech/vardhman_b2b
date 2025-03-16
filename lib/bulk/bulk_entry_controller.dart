@@ -402,53 +402,17 @@ class BulkEntryController extends GetxController {
       rxBrand.value = '';
       rxSubstrate.value = '';
       rxTicket.value = '';
-    } else {
-      // if (hashCode != rxArticle.hashCode &&
-      //     uniqueFilteredArticles.length == 1) {
-      //   rxArticle.value = uniqueFilteredArticles.first;
-      // }
+    } else if (filteredItems.length == 1) {
+      final item = filteredItems.first;
 
-      // if (hashCode != rxUom.hashCode && rxUom.isEmpty) {
-      //   if ((hashCode == rxArticle.hashCode && uniqueFilteredUoms.isNotEmpty) ||
-      //       uniqueFilteredUoms.length == 1) {
-      //     rxUom.value = uniqueFilteredUoms.first;
-
-      //     rxUomWithDesc.value =
-      //         '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
-      //   }
-      // }
-
-      // if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
-      //   rxBrand.value = uniqueFilteredBrands.first;
-      // }
-
-      // if (hashCode != rxSubstrate.hashCode &&
-      //     uniqueFilteredSubstrates.length == 1) {
-      //   rxSubstrate.value = uniqueFilteredSubstrates.first;
-      // }
-
-      // if (hashCode != rxTex.hashCode && uniqueFilteredTexs.length == 1) {
-      //   rxTex.value = uniqueFilteredTexs.first;
-      // }
-
-      // if (uniqueFilteredTickets.length == 1) {
-      //   rxTicket.value = uniqueFilteredTickets.first;
-      // } else {
-      //   rxTicket.value = '';
-      // }
-
-      if (filteredItems.length == 1) {
-        final item = filteredItems.first;
-
-        rxArticle.value = item.article;
-        rxUom.value = item.uom;
-        rxUomWithDesc.value =
-            '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
-        rxBrand.value = item.brandDesc;
-        rxSubstrate.value = item.substrateDesc;
-        rxTex.value = item.tex;
-        rxTicket.value = item.ticket;
-      }
+      rxArticle.value = item.article;
+      rxUom.value = item.uom;
+      rxUomWithDesc.value =
+          '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
+      rxBrand.value = item.brandDesc;
+      rxSubstrate.value = item.substrateDesc;
+      rxTex.value = item.tex;
+      rxTicket.value = item.ticket;
     }
   }
 
