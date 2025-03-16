@@ -5,7 +5,7 @@ import 'package:vardhman_b2b/api/item_catalog_info.dart';
 
 class CatalogController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  final List<ItemCatalogInfo> _items = [];
+  final _items = <ItemCatalogInfo>[].obs;
 
   late final TabController tabController =
       TabController(length: 2, vsync: this);
@@ -15,7 +15,7 @@ class CatalogController extends GetxController
   final lengthEditingController = TextEditingController();
   final articleTextEditingController = TextEditingController();
 
-  final rxFilteredItems = RxList<ItemCatalogInfo>();
+  final _rxFilteredItems = RxList<ItemCatalogInfo>();
 
   CatalogController() {
     brandEditingController.addListener(_filterItems);
@@ -51,8 +51,8 @@ class CatalogController extends GetxController
       },
     ).toList();
 
-    rxFilteredItems.clear();
-    rxFilteredItems.addAll(filteredItems);
+    _rxFilteredItems.clear();
+    _rxFilteredItems.addAll(filteredItems);
   }
 
   Future<void> clearFilters() async {

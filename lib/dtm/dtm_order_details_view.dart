@@ -186,8 +186,7 @@ class DtmOrderDetailsView extends StatelessWidget {
                             final String uom = itemParts[1];
                             final String shade = itemParts[2];
 
-                            final catalogItem = catalogController
-                                .rxFilteredItems
+                            final catalogItem = catalogController.industryItems
                                 .firstWhereOrNull(
                               (itemCatalogInfo) =>
                                   itemCatalogInfo.article == article &&

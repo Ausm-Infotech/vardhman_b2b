@@ -38,7 +38,9 @@ class OrderReviewController extends GetxController {
   }
 
   String getUomDescription(String uom) {
-    return rxUomDescriptionMap[uom] ?? '';
+    return rxUomDescriptionMap.containsKey(uom)
+        ? rxUomDescriptionMap[uom]!
+        : '';
   }
 
   Future<bool> submitLabdipOrder({

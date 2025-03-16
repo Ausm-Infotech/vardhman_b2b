@@ -299,8 +299,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                         isEnabled: false,
                                         labelText: 'Ticket',
                                         rxString: bulkEntryController.rxTicket,
-                                        searchList: bulkEntryController
-                                            .uniqueFilteredTickets,
+                                        searchList: [],
                                       ),
                                     ),
                                     SizedBox(
@@ -312,8 +311,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                         inputFormatters: [capitalFormatter],
                                         labelText: 'Brand',
                                         rxString: bulkEntryController.rxBrand,
-                                        searchList: bulkEntryController
-                                            .uniqueFilteredBrands,
+                                        searchList: [],
                                         isEnabled: false,
                                       ),
                                     ),
@@ -328,8 +326,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                         labelText: 'Tex',
                                         isEnabled: false,
                                         rxString: bulkEntryController.rxTex,
-                                        searchList: bulkEntryController
-                                            .uniqueFilteredTexs,
+                                        searchList: [],
                                       ),
                                     ),
                                     SizedBox(
@@ -343,8 +340,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                         labelText: 'Substrate',
                                         rxString:
                                             bulkEntryController.rxSubstrate,
-                                        searchList: bulkEntryController
-                                            .uniqueFilteredSubstrates,
+                                        searchList: [],
                                       ),
                                     ),
                                   ],
@@ -367,7 +363,9 @@ class CreateBulkOrderView extends StatelessWidget {
                                         labelText: 'Shade',
                                         isRequired: true,
                                         isEnabled: bulkEntryController
-                                            .rxArticle.isNotEmpty,
+                                                .rxArticle.isNotEmpty &&
+                                            bulkEntryController
+                                                .rxUom.isNotEmpty,
                                         rxString: bulkEntryController.rxShade,
                                         searchList:
                                             bulkEntryController.rxShades,

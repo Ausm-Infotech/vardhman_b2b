@@ -14,7 +14,6 @@ import 'package:vardhman_b2b/dtm/dtm_controller.dart';
 import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
-import 'package:vardhman_b2b/orders/item_master_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -254,8 +253,6 @@ class LoginController extends GetxController {
       ),
       tag: 'userController',
     );
-
-    await resetController(() => ItemMasterController());
 
     await resetController(() => CatalogController());
 

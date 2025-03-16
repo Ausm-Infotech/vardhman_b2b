@@ -109,7 +109,7 @@ class DtmController extends GetxController {
         (orderDetailLine) {
           final itemParts = orderDetailLine.item.split(RegExp('\\s+'));
 
-          return itemParts.length == 3 && itemParts[2] == ('SWT');
+          return itemParts.length == 3 && itemParts[2].startsWith('SWT');
         },
       ).toList();
 
