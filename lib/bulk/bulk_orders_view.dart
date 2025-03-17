@@ -92,7 +92,7 @@ class BulkOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
-                      minWidth: 300,
+                      minWidth: 600,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -118,12 +118,22 @@ class BulkOrdersView extends StatelessWidget {
                         DataColumn2(
                           label: Text('Order No.'),
                           headingRowAlignment: MainAxisAlignment.start,
-                          size: ColumnSize.L,
+                          size: ColumnSize.M,
                         ),
                         DataColumn2(
                           label: Text('Date'),
-                          numeric: true,
                           size: ColumnSize.S,
+                          headingRowAlignment: MainAxisAlignment.end,
+                        ),
+                        DataColumn2(
+                          label: Text('PO Number'),
+                          size: ColumnSize.S,
+                          headingRowAlignment: MainAxisAlignment.end,
+                        ),
+                        DataColumn2(
+                          label: Text('Merchandiser'),
+                          size: ColumnSize.M,
+                          headingRowAlignment: MainAxisAlignment.end,
                         ),
                       ],
                       rows: [
@@ -162,23 +172,53 @@ class BulkOrdersView extends StatelessWidget {
                               },
                               cells: [
                                 DataCell(
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text('Draft'),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Text(draftTableData.orderNumber
-                                          .toString()),
-                                    ],
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Draft',
+                                          textAlign: TextAlign.end,
+                                        ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        Text(
+                                          draftTableData.orderNumber.toString(),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy HH:mm').format(
-                                      draftTableData.lastUpdated,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      DateFormat('d MMM yy HH:mm').format(
+                                        draftTableData.lastUpdated,
+                                      ),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      draftTableData.poNumber,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      draftTableData.merchandiser,
+                                      textAlign: TextAlign.end,
                                     ),
                                   ),
                                 ),
@@ -187,14 +227,14 @@ class BulkOrdersView extends StatelessWidget {
                           },
                         ),
                         ...bulkController.filteredBulkOrders.map(
-                          (bulkOrder) {
+                          (orderHeaderLine) {
                             final index = bulkController.filteredBulkOrders
-                                    .indexOf(bulkOrder) +
+                                    .indexOf(orderHeaderLine) +
                                 bulkController.rxDraftOrders.length;
 
                             final isSelected = bulkController
                                     .rxSelectedOrderHeaderLine.value ==
-                                bulkOrder;
+                                orderHeaderLine;
 
                             final textStyle = TextStyle(
                               fontSize: 13,
@@ -211,44 +251,78 @@ class BulkOrdersView extends StatelessWidget {
                                         ? Colors.white
                                         : VardhmanColors.dividerGrey,
                               ),
-                              selected: bulkOrder ==
+                              selected: orderHeaderLine ==
                                   bulkController
                                       .rxSelectedOrderHeaderLine.value,
                               onSelectChanged: (value) {
                                 if (value == true &&
                                     bulkController
                                             .rxSelectedOrderHeaderLine.value !=
-                                        bulkOrder) {
-                                  bulkController.selectOrder(bulkOrder);
+                                        orderHeaderLine) {
+                                  bulkController.selectOrder(orderHeaderLine);
                                 }
                               },
                               cells: [
                                 DataCell(
-                                  DefaultTextStyle(
-                                    style: textStyle,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(bulkOrder.orderNumber.toString()),
-                                        if (bulkOrder.orderReference
-                                            .trim()
-                                            .isNotEmpty) ...[
-                                          SizedBox(
-                                            width: 16,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: DefaultTextStyle(
+                                      style: textStyle,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            orderHeaderLine.orderNumber
+                                                .toString(),
+                                            textAlign: TextAlign.end,
                                           ),
-                                          Text(bulkOrder.orderReference),
+                                          if (orderHeaderLine.orderReference
+                                              .trim()
+                                              .isNotEmpty) ...[
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            Text(
+                                              orderHeaderLine.orderReference,
+                                              textAlign: TextAlign.end,
+                                            ),
+                                          ],
                                         ],
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy').format(
-                                      bulkOrder.orderDate,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      DateFormat('d MMM yy').format(
+                                        orderHeaderLine.orderDate,
+                                      ),
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
                                     ),
-                                    style: textStyle,
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderHeaderLine.poNumber,
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderHeaderLine.merchandiser,
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -262,99 +336,163 @@ class BulkOrdersView extends StatelessWidget {
           Container(
             color: Colors.white,
             padding: EdgeInsets.only(top: 16, right: 8, left: 8, bottom: 8),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: TextField(
-                    controller: TextEditingController.fromValue(
-                      TextEditingValue(
-                        text: ordersController.rxOrderNumberInput.value,
-                        selection: TextSelection.collapsed(
-                          offset:
-                              ordersController.rxOrderNumberInput.value.length,
+            child: Column(
+              children: [
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: TextField(
+                        controller: TextEditingController.fromValue(
+                          TextEditingValue(
+                            text: ordersController.rxOrderNumberInput.value,
+                            selection: TextSelection.collapsed(
+                              offset: ordersController
+                                  .rxOrderNumberInput.value.length,
+                            ),
+                          ),
+                        ),
+                        onChanged: (String orderNumber) {
+                          ordersController.rxOrderNumberInput.value =
+                              orderNumber;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          label: Text('Order No.'),
+                          labelStyle: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(),
                         ),
                       ),
                     ),
-                    onChanged: (String orderNumber) {
-                      ordersController.rxOrderNumberInput.value = orderNumber;
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      label: Text('Order No.'),
-                      labelStyle: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  child: DateTimeField(
-                    mode: DateTimeFieldPickerMode.date,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      labelText: 'From Date',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yy').format(
-                        ordersController.rxOrderFromDate.value,
-                      ),
-                      prefixStyle: TextStyle(
-                        color: ordersController.rxOrderFromDate.value
-                                .isAtSameMomentAs(oldestDateTime)
-                            ? Colors.white
-                            : VardhmanColors.darkGrey,
-                        fontSize: 13,
+                    SizedBox(width: 8),
+                    Flexible(
+                      child: DateTimeField(
+                        mode: DateTimeFieldPickerMode.date,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          labelText: 'From Date',
+                          border: OutlineInputBorder(),
+                          suffixIcon: Container(),
+                          prefixText: DateFormat('d MMM yy').format(
+                            ordersController.rxOrderFromDate.value,
+                          ),
+                          prefixStyle: TextStyle(
+                            color: ordersController.rxOrderFromDate.value
+                                    .isAtSameMomentAs(oldestDateTime)
+                                ? Colors.white
+                                : VardhmanColors.darkGrey,
+                            fontSize: 13,
+                          ),
+                        ),
+                        firstDate: ordersController.rxEarliestOrderDate.value,
+                        lastDate: ordersController.rxOrderToDate.value,
+                        value: ordersController.rxOrderFromDate.value,
+                        onChanged: (DateTime? date) {
+                          if (date != null) {
+                            ordersController.rxOrderFromDate.value = date;
+                          }
+                        },
                       ),
                     ),
-                    firstDate: ordersController.rxEarliestOrderDate.value,
-                    lastDate: ordersController.rxOrderToDate.value,
-                    value: ordersController.rxOrderFromDate.value,
-                    onChanged: (DateTime? date) {
-                      if (date != null) {
-                        ordersController.rxOrderFromDate.value = date;
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  child: DateTimeField(
-                    mode: DateTimeFieldPickerMode.date,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      labelText: 'To Date',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Container(),
-                      prefixText: DateFormat('d MMM yy').format(
-                        ordersController.rxOrderToDate.value,
-                      ),
-                      prefixStyle: TextStyle(
-                        color: VardhmanColors.darkGrey,
-                        fontSize: 13,
+                    SizedBox(width: 8),
+                    Flexible(
+                      child: DateTimeField(
+                        mode: DateTimeFieldPickerMode.date,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          labelText: 'To Date',
+                          border: OutlineInputBorder(),
+                          suffixIcon: Container(),
+                          prefixText: DateFormat('d MMM yy').format(
+                            ordersController.rxOrderToDate.value,
+                          ),
+                          prefixStyle: TextStyle(
+                            color: VardhmanColors.darkGrey,
+                            fontSize: 13,
+                          ),
+                        ),
+                        firstDate: ordersController.rxOrderFromDate.value,
+                        lastDate: DateTime.now(),
+                        value: ordersController.rxOrderToDate.value,
+                        onChanged: (DateTime? date) {
+                          if (date != null) {
+                            ordersController.rxOrderToDate.value = date;
+                          }
+                        },
                       ),
                     ),
-                    firstDate: ordersController.rxOrderFromDate.value,
-                    lastDate: DateTime.now(),
-                    value: ordersController.rxOrderToDate.value,
-                    onChanged: (DateTime? date) {
-                      if (date != null) {
-                        ordersController.rxOrderToDate.value = date;
-                      }
-                    },
-                  ),
+                    SizedBox(width: 8),
+                    SecondaryButton(
+                      wait: false,
+                      iconData: FontAwesomeIcons.arrowRotateLeft,
+                      text: '',
+                      onPressed: ordersController.hasDefaultValues
+                          ? null
+                          : ordersController.setDefaultValues,
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                SecondaryButton(
-                  wait: false,
-                  iconData: FontAwesomeIcons.arrowRotateLeft,
-                  text: '',
-                  onPressed: ordersController.hasDefaultValues
-                      ? null
-                      : ordersController.setDefaultValues,
+                SizedBox(height: 8),
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: TextField(
+                        controller: TextEditingController.fromValue(
+                          TextEditingValue(
+                            text: ordersController.rxPoNumberInput.value,
+                            selection: TextSelection.collapsed(
+                              offset:
+                                  ordersController.rxPoNumberInput.value.length,
+                            ),
+                          ),
+                        ),
+                        onChanged: (String poNumber) {
+                          ordersController.rxPoNumberInput.value = poNumber;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          label: Text('PO Number'),
+                          labelStyle: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Flexible(
+                      child: TextField(
+                        controller: TextEditingController.fromValue(
+                          TextEditingValue(
+                            text: ordersController.rxMerchandiserInput.value,
+                            selection: TextSelection.collapsed(
+                              offset: ordersController
+                                  .rxMerchandiserInput.value.length,
+                            ),
+                          ),
+                        ),
+                        onChanged: (String merchandiser) {
+                          ordersController.rxMerchandiserInput.value =
+                              merchandiser;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          label: Text('Merchandiser'),
+                          labelStyle: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
