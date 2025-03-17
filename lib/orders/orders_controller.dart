@@ -21,6 +21,10 @@ class OrdersController extends GetxController
 
   final rxOrderNumberInput = ''.obs;
 
+  final rxPoNumberInput = ''.obs;
+
+  final rxMerchandiserInput = ''.obs;
+
   final rxSelectedOrder = Rxn<OrderHeaderLine>();
 
   final rxSelectedOrderDetails = <OrderDetailLine>[].obs;
@@ -96,7 +100,9 @@ class OrdersController extends GetxController
               rxOrderToDate.value.add(
                 const Duration(days: 1),
               ),
-            ),
+            ) &&
+            orderHeaderLine.merchandiser.contains(rxMerchandiserInput.value) &&
+            orderHeaderLine.poNumber.contains(rxPoNumberInput.value),
       )
       .toList();
 
@@ -134,7 +140,9 @@ class OrdersController extends GetxController
         rxEarliestOrderDate.value,
       ) &&
       areDatesEqual(rxOrderToDate.value, DateTime.now()) &&
-      rxOrderNumberInput.value.isEmpty;
+      rxOrderNumberInput.value.isEmpty &&
+      rxPoNumberInput.value.isEmpty &&
+      rxMerchandiserInput.value.isEmpty;
 
   Future<void> setDefaultValues() async {
     rxOrderFromDate.value = rxEarliestOrderDate.value;
@@ -142,5 +150,9 @@ class OrdersController extends GetxController
     rxOrderToDate.value = DateTime.now();
 
     rxOrderNumberInput.value = '';
+
+    rxPoNumberInput.value = '';
+
+    rxMerchandiserInput.value = '';
   }
 }
