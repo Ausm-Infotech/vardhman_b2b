@@ -35,6 +35,8 @@ mixin _$OrderHeaderLine {
   int get quantityBackOrdered => throw _privateConstructorUsedError;
   bool get canIndent => throw _privateConstructorUsedError;
   bool get isDTM => throw _privateConstructorUsedError;
+  String get poNumber => throw _privateConstructorUsedError;
+  String get merchandiser => throw _privateConstructorUsedError;
 
   /// Serializes this OrderHeaderLine to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -67,7 +69,9 @@ abstract class $OrderHeaderLineCopyWith<$Res> {
       double orderAmount,
       int quantityBackOrdered,
       bool canIndent,
-      bool isDTM});
+      bool isDTM,
+      String poNumber,
+      String merchandiser});
 }
 
 /// @nodoc
@@ -100,6 +104,8 @@ class _$OrderHeaderLineCopyWithImpl<$Res, $Val extends OrderHeaderLine>
     Object? quantityBackOrdered = null,
     Object? canIndent = null,
     Object? isDTM = null,
+    Object? poNumber = null,
+    Object? merchandiser = null,
   }) {
     return _then(_value.copyWith(
       orderNumber: null == orderNumber
@@ -162,6 +168,14 @@ class _$OrderHeaderLineCopyWithImpl<$Res, $Val extends OrderHeaderLine>
           ? _value.isDTM
           : isDTM // ignore: cast_nullable_to_non_nullable
               as bool,
+      poNumber: null == poNumber
+          ? _value.poNumber
+          : poNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      merchandiser: null == merchandiser
+          ? _value.merchandiser
+          : merchandiser // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -189,7 +203,9 @@ abstract class _$$OrderHeaderLineImplCopyWith<$Res>
       double orderAmount,
       int quantityBackOrdered,
       bool canIndent,
-      bool isDTM});
+      bool isDTM,
+      String poNumber,
+      String merchandiser});
 }
 
 /// @nodoc
@@ -220,6 +236,8 @@ class __$$OrderHeaderLineImplCopyWithImpl<$Res>
     Object? quantityBackOrdered = null,
     Object? canIndent = null,
     Object? isDTM = null,
+    Object? poNumber = null,
+    Object? merchandiser = null,
   }) {
     return _then(_$OrderHeaderLineImpl(
       orderNumber: null == orderNumber
@@ -282,6 +300,14 @@ class __$$OrderHeaderLineImplCopyWithImpl<$Res>
           ? _value.isDTM
           : isDTM // ignore: cast_nullable_to_non_nullable
               as bool,
+      poNumber: null == poNumber
+          ? _value.poNumber
+          : poNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      merchandiser: null == merchandiser
+          ? _value.merchandiser
+          : merchandiser // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -304,7 +330,9 @@ class _$OrderHeaderLineImpl extends _OrderHeaderLine {
       required this.orderAmount,
       required this.quantityBackOrdered,
       required this.canIndent,
-      required this.isDTM})
+      required this.isDTM,
+      required this.poNumber,
+      required this.merchandiser})
       : super._();
 
   factory _$OrderHeaderLineImpl.fromJson(Map<String, dynamic> json) =>
@@ -340,10 +368,14 @@ class _$OrderHeaderLineImpl extends _OrderHeaderLine {
   final bool canIndent;
   @override
   final bool isDTM;
+  @override
+  final String poNumber;
+  @override
+  final String merchandiser;
 
   @override
   String toString() {
-    return 'OrderHeaderLine(orderNumber: $orderNumber, orderType: $orderType, orderCompany: $orderCompany, orderDate: $orderDate, orderReference: $orderReference, holdCode: $holdCode, shipTo: $shipTo, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, orderStatus: $orderStatus, orderAmount: $orderAmount, quantityBackOrdered: $quantityBackOrdered, canIndent: $canIndent, isDTM: $isDTM)';
+    return 'OrderHeaderLine(orderNumber: $orderNumber, orderType: $orderType, orderCompany: $orderCompany, orderDate: $orderDate, orderReference: $orderReference, holdCode: $holdCode, shipTo: $shipTo, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, orderStatus: $orderStatus, orderAmount: $orderAmount, quantityBackOrdered: $quantityBackOrdered, canIndent: $canIndent, isDTM: $isDTM, poNumber: $poNumber, merchandiser: $merchandiser)';
   }
 
   @override
@@ -378,7 +410,11 @@ class _$OrderHeaderLineImpl extends _OrderHeaderLine {
                 other.quantityBackOrdered == quantityBackOrdered) &&
             (identical(other.canIndent, canIndent) ||
                 other.canIndent == canIndent) &&
-            (identical(other.isDTM, isDTM) || other.isDTM == isDTM));
+            (identical(other.isDTM, isDTM) || other.isDTM == isDTM) &&
+            (identical(other.poNumber, poNumber) ||
+                other.poNumber == poNumber) &&
+            (identical(other.merchandiser, merchandiser) ||
+                other.merchandiser == merchandiser));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -399,7 +435,9 @@ class _$OrderHeaderLineImpl extends _OrderHeaderLine {
       orderAmount,
       quantityBackOrdered,
       canIndent,
-      isDTM);
+      isDTM,
+      poNumber,
+      merchandiser);
 
   /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.
@@ -434,7 +472,9 @@ abstract class _OrderHeaderLine extends OrderHeaderLine {
       required final double orderAmount,
       required final int quantityBackOrdered,
       required final bool canIndent,
-      required final bool isDTM}) = _$OrderHeaderLineImpl;
+      required final bool isDTM,
+      required final String poNumber,
+      required final String merchandiser}) = _$OrderHeaderLineImpl;
   const _OrderHeaderLine._() : super._();
 
   factory _OrderHeaderLine.fromJson(Map<String, dynamic> json) =
@@ -470,6 +510,10 @@ abstract class _OrderHeaderLine extends OrderHeaderLine {
   bool get canIndent;
   @override
   bool get isDTM;
+  @override
+  String get poNumber;
+  @override
+  String get merchandiser;
 
   /// Create a copy of OrderHeaderLine
   /// with the given fields replaced by the non-null parameter values.

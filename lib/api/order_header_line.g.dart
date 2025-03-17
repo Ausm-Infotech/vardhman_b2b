@@ -24,6 +24,8 @@ _$OrderHeaderLineImpl _$$OrderHeaderLineImplFromJson(
       quantityBackOrdered: (json['quantityBackOrdered'] as num).toInt(),
       canIndent: json['canIndent'] as bool,
       isDTM: json['isDTM'] as bool,
+      poNumber: json['poNumber'] as String,
+      merchandiser: json['merchandiser'] as String,
     );
 
 Map<String, dynamic> _$$OrderHeaderLineImplToJson(
@@ -44,4 +46,6 @@ Map<String, dynamic> _$$OrderHeaderLineImplToJson(
       'quantityBackOrdered': instance.quantityBackOrdered,
       'canIndent': instance.canIndent,
       'isDTM': instance.isDTM,
+      'poNumber': instance.poNumber,
+      'merchandiser': instance.merchandiser,
     };

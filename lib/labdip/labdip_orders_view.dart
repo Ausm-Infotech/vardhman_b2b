@@ -92,7 +92,7 @@ class LabdipOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
-                      minWidth: 300,
+                      minWidth: 600,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -118,12 +118,22 @@ class LabdipOrdersView extends StatelessWidget {
                         DataColumn2(
                           label: Text('Order No.'),
                           headingRowAlignment: MainAxisAlignment.start,
-                          size: ColumnSize.L,
+                          size: ColumnSize.M,
                         ),
                         DataColumn2(
                           label: Text('Date'),
-                          numeric: true,
                           size: ColumnSize.S,
+                          headingRowAlignment: MainAxisAlignment.end,
+                        ),
+                        DataColumn2(
+                          label: Text('PO Number'),
+                          size: ColumnSize.S,
+                          headingRowAlignment: MainAxisAlignment.end,
+                        ),
+                        DataColumn2(
+                          label: Text('Merchandiser'),
+                          size: ColumnSize.M,
+                          headingRowAlignment: MainAxisAlignment.end,
                         ),
                       ],
                       rows: [
@@ -162,23 +172,53 @@ class LabdipOrdersView extends StatelessWidget {
                               },
                               cells: [
                                 DataCell(
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text('Draft'),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Text(draftTableData.orderNumber
-                                          .toString()),
-                                    ],
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Draft',
+                                          textAlign: TextAlign.end,
+                                        ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        Text(
+                                          draftTableData.orderNumber.toString(),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy HH:mm').format(
-                                      draftTableData.lastUpdated,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      DateFormat('d MMM yy HH:mm').format(
+                                        draftTableData.lastUpdated,
+                                      ),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      draftTableData.poNumber,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      draftTableData.merchandiser,
+                                      textAlign: TextAlign.end,
                                     ),
                                   ),
                                 ),
@@ -233,32 +273,65 @@ class LabdipOrdersView extends StatelessWidget {
                               },
                               cells: [
                                 DataCell(
-                                  DefaultTextStyle(
-                                    style: textStyle,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(orderHeaderLine.orderNumber
-                                            .toString()),
-                                        if (orderHeaderLine.orderReference
-                                            .trim()
-                                            .isNotEmpty) ...[
-                                          SizedBox(
-                                            width: 16,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: DefaultTextStyle(
+                                      style: textStyle,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            orderHeaderLine.orderNumber
+                                                .toString(),
+                                            textAlign: TextAlign.end,
                                           ),
-                                          Text(orderHeaderLine.orderReference),
+                                          if (orderHeaderLine.orderReference
+                                              .trim()
+                                              .isNotEmpty) ...[
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            Text(
+                                              orderHeaderLine.orderReference,
+                                              textAlign: TextAlign.end,
+                                            ),
+                                          ],
                                         ],
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    DateFormat('d MMM yy').format(
-                                      orderHeaderLine.orderDate,
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      DateFormat('d MMM yy').format(
+                                        orderHeaderLine.orderDate,
+                                      ),
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
                                     ),
-                                    style: textStyle,
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderHeaderLine.poNumber,
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderHeaderLine.merchandiser,
+                                      style: textStyle,
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                               ],

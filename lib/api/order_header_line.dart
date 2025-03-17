@@ -21,6 +21,8 @@ class OrderHeaderLine with _$OrderHeaderLine {
     required int quantityBackOrdered,
     required bool canIndent,
     required bool isDTM,
+    required String poNumber,
+    required String merchandiser,
   }) = _OrderHeaderLine;
 
   const OrderHeaderLine._();

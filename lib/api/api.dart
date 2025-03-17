@@ -34,7 +34,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -580,6 +580,8 @@ class Api {
             isDTM: orderStatus['DTMOrderYN'].toString().trim() == 'Y',
             canIndent: orderStatus['InderntOrderYN'].toString().trim() == 'Y',
             quantityBackOrdered: orderStatus['QuantityBackOrder'],
+            poNumber: orderStatus['CustomerPO'],
+            merchandiser: orderStatus['MerchandiserName'],
           );
 
           orderHeaderLines.add(orderHeaderLine);
