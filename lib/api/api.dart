@@ -649,6 +649,12 @@ class Api {
               woStatus: orderDetailData['WOStatus'],
               workOrderType: orderDetailData['WorkOrderType'],
               buyerCode: orderDetailData['End Use'],
+              unitPrice:
+                  double.tryParse(orderDetailData['Unit Price'].toString()) ??
+                      0.0,
+              extendedPrice: double.tryParse(
+                      orderDetailData['Extended Price'].toString()) ??
+                  0.0,
             ),
           );
         }

@@ -38,6 +38,8 @@ _$OrderDetailLineImpl _$$OrderDetailLineImplFromJson(
       woStatus: json['woStatus'] as String,
       catalogName: json['catalogName'] as String,
       buyerCode: json['buyerCode'] as String,
+      unitPrice: (json['unitPrice'] as num).toDouble(),
+      extendedPrice: (json['extendedPrice'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$$OrderDetailLineImplToJson(
@@ -68,4 +70,6 @@ Map<String, dynamic> _$$OrderDetailLineImplToJson(
       'woStatus': instance.woStatus,
       'catalogName': instance.catalogName,
       'buyerCode': instance.buyerCode,
+      'unitPrice': instance.unitPrice,
+      'extendedPrice': instance.extendedPrice,
     };

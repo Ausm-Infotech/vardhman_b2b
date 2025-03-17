@@ -162,6 +162,16 @@ class DtmOrderDetailsView extends StatelessWidget {
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
+                            label: Text('Unit Price'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Total Price'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
                             label: Text('Status'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
@@ -207,6 +217,8 @@ class DtmOrderDetailsView extends StatelessWidget {
 
                             var quantityShipped = 0;
 
+                            double unitPrice = 0, extendedPrice = 0;
+
                             var invoicedLines = <OrderDetailLine>[];
 
                             if (permanentShadeLine != null) {
@@ -225,6 +237,16 @@ class DtmOrderDetailsView extends StatelessWidget {
                                 (previousValue, orderDetailLine) =>
                                     previousValue +
                                     orderDetailLine.quantityShipped,
+                              );
+
+                              unitPrice =
+                                  invoicedLines.firstOrNull?.unitPrice ?? 0;
+
+                              extendedPrice = invoicedLines.fold(
+                                extendedPrice,
+                                (previousValue, orderDetailLine) =>
+                                    previousValue +
+                                    orderDetailLine.extendedPrice,
                               );
 
                               if (invoicedLines.isNotEmpty) {
@@ -310,6 +332,18 @@ class DtmOrderDetailsView extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: Text(quantityShipped.toString()),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(unitPrice.toString()),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(extendedPrice.toString()),
                                   ),
                                 ),
                                 DataCell(

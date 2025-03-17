@@ -45,6 +45,8 @@ mixin _$OrderDetailLine {
   String get woStatus => throw _privateConstructorUsedError;
   String get catalogName => throw _privateConstructorUsedError;
   String get buyerCode => throw _privateConstructorUsedError;
+  double get unitPrice => throw _privateConstructorUsedError;
+  double get extendedPrice => throw _privateConstructorUsedError;
 
   /// Serializes this OrderDetailLine to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -87,7 +89,9 @@ abstract class $OrderDetailLineCopyWith<$Res> {
       String workOrderType,
       String woStatus,
       String catalogName,
-      String buyerCode});
+      String buyerCode,
+      double unitPrice,
+      double extendedPrice});
 }
 
 /// @nodoc
@@ -130,6 +134,8 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
     Object? woStatus = null,
     Object? catalogName = null,
     Object? buyerCode = null,
+    Object? unitPrice = null,
+    Object? extendedPrice = null,
   }) {
     return _then(_value.copyWith(
       company: null == company
@@ -232,6 +238,14 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
           ? _value.buyerCode
           : buyerCode // ignore: cast_nullable_to_non_nullable
               as String,
+      unitPrice: null == unitPrice
+          ? _value.unitPrice
+          : unitPrice // ignore: cast_nullable_to_non_nullable
+              as double,
+      extendedPrice: null == extendedPrice
+          ? _value.extendedPrice
+          : extendedPrice // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -269,7 +283,9 @@ abstract class _$$OrderDetailLineImplCopyWith<$Res>
       String workOrderType,
       String woStatus,
       String catalogName,
-      String buyerCode});
+      String buyerCode,
+      double unitPrice,
+      double extendedPrice});
 }
 
 /// @nodoc
@@ -310,6 +326,8 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
     Object? woStatus = null,
     Object? catalogName = null,
     Object? buyerCode = null,
+    Object? unitPrice = null,
+    Object? extendedPrice = null,
   }) {
     return _then(_$OrderDetailLineImpl(
       company: null == company
@@ -412,6 +430,14 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
           ? _value.buyerCode
           : buyerCode // ignore: cast_nullable_to_non_nullable
               as String,
+      unitPrice: null == unitPrice
+          ? _value.unitPrice
+          : unitPrice // ignore: cast_nullable_to_non_nullable
+              as double,
+      extendedPrice: null == extendedPrice
+          ? _value.extendedPrice
+          : extendedPrice // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -444,7 +470,9 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
       required this.workOrderType,
       required this.woStatus,
       required this.catalogName,
-      required this.buyerCode})
+      required this.buyerCode,
+      required this.unitPrice,
+      required this.extendedPrice})
       : super._();
 
   factory _$OrderDetailLineImpl.fromJson(Map<String, dynamic> json) =>
@@ -500,10 +528,14 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
   final String catalogName;
   @override
   final String buyerCode;
+  @override
+  final double unitPrice;
+  @override
+  final double extendedPrice;
 
   @override
   String toString() {
-    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, catalogName: $catalogName, buyerCode: $buyerCode)';
+    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, catalogName: $catalogName, buyerCode: $buyerCode, unitPrice: $unitPrice, extendedPrice: $extendedPrice)';
   }
 
   @override
@@ -558,7 +590,11 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
             (identical(other.catalogName, catalogName) ||
                 other.catalogName == catalogName) &&
             (identical(other.buyerCode, buyerCode) ||
-                other.buyerCode == buyerCode));
+                other.buyerCode == buyerCode) &&
+            (identical(other.unitPrice, unitPrice) ||
+                other.unitPrice == unitPrice) &&
+            (identical(other.extendedPrice, extendedPrice) ||
+                other.extendedPrice == extendedPrice));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -589,7 +625,9 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
         workOrderType,
         woStatus,
         catalogName,
-        buyerCode
+        buyerCode,
+        unitPrice,
+        extendedPrice
       ]);
 
   /// Create a copy of OrderDetailLine
@@ -635,7 +673,9 @@ abstract class _OrderDetailLine extends OrderDetailLine {
       required final String workOrderType,
       required final String woStatus,
       required final String catalogName,
-      required final String buyerCode}) = _$OrderDetailLineImpl;
+      required final String buyerCode,
+      required final double unitPrice,
+      required final double extendedPrice}) = _$OrderDetailLineImpl;
   _OrderDetailLine._() : super._();
 
   factory _OrderDetailLine.fromJson(Map<String, dynamic> json) =
@@ -691,6 +731,10 @@ abstract class _OrderDetailLine extends OrderDetailLine {
   String get catalogName;
   @override
   String get buyerCode;
+  @override
+  double get unitPrice;
+  @override
+  double get extendedPrice;
 
   /// Create a copy of OrderDetailLine
   /// with the given fields replaced by the non-null parameter values.
