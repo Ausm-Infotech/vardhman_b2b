@@ -9,6 +9,7 @@ import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/feedback_dialog.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
+import 'package:vardhman_b2b/orders/order_review_controller.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrderDetailsView extends StatelessWidget {
@@ -21,6 +22,8 @@ class LabdipOrderDetailsView extends StatelessWidget {
     final LabdipController labdipController = Get.find<LabdipController>();
 
     final CatalogController catalogController = Get.find<CatalogController>();
+
+    final orderReviewController = Get.find<OrderReviewController>();
 
     return Obx(
       () {
@@ -81,6 +84,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         child: Text('No Order Selected'),
                       )
                     : DataTable2(
+                        minWidth: 1600,
                         columnSpacing: 8,
                         showBottomBorder: true,
                         border: TableBorder.symmetric(
@@ -118,44 +122,65 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         columns: [
                           DataColumn2(
                             label: Text('#'),
-                            size: ColumnSize.S,
-                            fixedWidth: 30,
+                            fixedWidth: 50,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Article'),
-                            fixedWidth: 60,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('UOM'),
-                            fixedWidth: 60,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
-                          DataColumn2(label: Text('Brand'), size: ColumnSize.M),
                           DataColumn2(
                             label: Text('Ticket'),
-                            fixedWidth: 50,
-                            numeric: true,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Brand'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Tex'),
-                            numeric: true,
-                            fixedWidth: 40,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: Text('Substrate'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Shade'),
-                            fixedWidth: 60,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: Text('Final Shade'),
-                            fixedWidth: 80,
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                              label: Text('Remark'), size: ColumnSize.S),
+                            label: Text('Remark'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           DataColumn2(
-                              label: Text('Status'), size: ColumnSize.M),
+                            label: Text('Status'),
+                            size: ColumnSize.S,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
                           if (hasDispatchedLine)
                             DataColumn2(
-                                label: Text('Feedback'), size: ColumnSize.S),
+                              label: Text('Feedback'),
+                              size: ColumnSize.S,
+                              headingRowAlignment: MainAxisAlignment.end,
+                            ),
                         ],
                         rows: labdipController.rxOrderDetailLines.map(
                           (orderDetailLine) {
@@ -199,6 +224,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                     ? VardhmanColors.green
                                     : VardhmanColors.red;
 
+                            final uomDesc =
+                                orderReviewController.getUomDescription(uom);
+
                             return DataRow(
                               color: WidgetStatePropertyAll(
                                 index.isEven
@@ -207,111 +235,173 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               ),
                               cells: [
                                 DataCell(
-                                  Text(
-                                    orderDetailLine.lineNumber.toString(),
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderDetailLine.lineNumber.toString(),
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    article,
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      article,
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    catalogItem?.brandDesc ?? '',
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "$uom - $uomDesc",
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    catalogItem?.ticket ?? '',
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      catalogItem?.ticket ?? '',
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    catalogItem?.tex ?? '',
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      catalogItem?.brandDesc ?? '',
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    shade,
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      catalogItem?.tex ?? '',
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    labdipTableRow?.permanentShade == null
-                                        ? ''
-                                        : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}',
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      catalogItem?.substrateDesc ?? '',
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    orderDetailLine.userComment,
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      shade,
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    orderDetailLine.status,
-                                    style: TextStyle(color: textColor),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      labdipTableRow?.permanentShade == null
+                                          ? ''
+                                          : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}',
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderDetailLine.userComment,
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      orderDetailLine.status,
+                                      style: TextStyle(color: textColor),
+                                      textAlign: TextAlign.end,
+                                    ),
                                   ),
                                 ),
                                 if (hasDispatchedLine)
                                   DataCell(
-                                    !isDispatchedLine
-                                        ? SizedBox()
-                                        : feedback != null
-                                            ? Text(
-                                                feedback.reason,
-                                                style: TextStyle(
-                                                  color: textColor,
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: !isDispatchedLine
+                                          ? SizedBox()
+                                          : feedback != null
+                                              ? Text(
+                                                  feedback.reason,
+                                                  style: TextStyle(
+                                                    color: textColor,
+                                                  ),
+                                                  textAlign: TextAlign.end,
+                                                )
+                                              : Checkbox(
+                                                  fillColor:
+                                                      WidgetStatePropertyAll(
+                                                    Colors.white,
+                                                  ),
+                                                  checkColor:
+                                                      VardhmanColors.red,
+                                                  side: BorderSide(
+                                                    color:
+                                                        VardhmanColors.darkGrey,
+                                                    width: 0.5,
+                                                  ),
+                                                  value: labdipController
+                                                      .rxOrderDetailFeedbackMap
+                                                      .keys
+                                                      .contains(
+                                                          orderDetailLine),
+                                                  onChanged: (bool? value) {
+                                                    if (value == true) {
+                                                      labdipController
+                                                                  .rxOrderDetailFeedbackMap[
+                                                              orderDetailLine] =
+                                                          LabdipFeedback(
+                                                        orderNumber:
+                                                            orderDetailLine
+                                                                .orderNumber,
+                                                        lineNumber:
+                                                            orderDetailLine
+                                                                .lineNumber,
+                                                        reason: '',
+                                                        isPositive: false,
+                                                        shouldRematch: false,
+                                                      );
+                                                    } else {
+                                                      labdipController
+                                                          .rxOrderDetailFeedbackMap
+                                                          .remove(
+                                                              orderDetailLine);
+                                                    }
+                                                  },
                                                 ),
-                                              )
-                                            : Checkbox(
-                                                fillColor:
-                                                    WidgetStatePropertyAll(
-                                                  Colors.white,
-                                                ),
-                                                checkColor: VardhmanColors.red,
-                                                side: BorderSide(
-                                                  color:
-                                                      VardhmanColors.darkGrey,
-                                                  width: 0.5,
-                                                ),
-                                                value: labdipController
-                                                    .rxOrderDetailFeedbackMap
-                                                    .keys
-                                                    .contains(orderDetailLine),
-                                                onChanged: (bool? value) {
-                                                  if (value == true) {
-                                                    labdipController
-                                                                .rxOrderDetailFeedbackMap[
-                                                            orderDetailLine] =
-                                                        LabdipFeedback(
-                                                      orderNumber:
-                                                          orderDetailLine
-                                                              .orderNumber,
-                                                      lineNumber:
-                                                          orderDetailLine
-                                                              .lineNumber,
-                                                      reason: '',
-                                                      isPositive: false,
-                                                      shouldRematch: false,
-                                                    );
-                                                  } else {
-                                                    labdipController
-                                                        .rxOrderDetailFeedbackMap
-                                                        .remove(
-                                                            orderDetailLine);
-                                                  }
-                                                },
-                                              ),
+                                    ),
                                   ),
                               ],
                             );
@@ -319,32 +409,6 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         ).toList(),
                       ),
               ),
-              // if (labdipController.rxOrderDetailFeedbackMap.isNotEmpty)
-              //   Container(
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       border: Border(
-              //         top: BorderSide(
-              //           color: VardhmanColors.darkGrey,
-              //           width: 0.2,
-              //         ),
-              //       ),
-              //     ),
-              //     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Text(
-              //             '${labdipController.rxOrderDetailFeedbackMap.length} line${labdipController.rxOrderDetailFeedbackMap.length > 1 ? 's' : ''} selected for feedback'),
-              //         PrimaryButton(
-              //           text: 'Submit Feedback',
-              //           onPressed: () async {
-              //             Get.dialog(FeedbackDialog());
-              //           },
-              //         ),
-              //       ],
-              //     ),
-              //   )
             ],
           ),
         );
