@@ -75,15 +75,19 @@ class LabdipController extends GetxController {
   Future<void> selectOrder(OrderHeaderLine orderHeaderLine) async {
     rxSelectedOrderHeaderLine.value = orderHeaderLine;
 
-    refreshSelectedOrderDetails();
+    await refreshSelectedOrderDetails();
 
-    _refreshLabdipTableRows(orderHeaderLine.orderNumber);
+    _refreshLabdipTableRows();
   }
 
-  Future<void> _refreshLabdipTableRows(int orderNumber) async {
-    final labdipTableRows = await Api.fetchLabdipTableRows(orderNumber);
-
+  Future<void> _refreshLabdipTableRows() async {
     rxLabdipTableRows.clear();
+
+    final labdipTableRows = await Api.fetchLabdipTableRows(
+      workOrderNumbers: rxOrderDetailLines
+          .map((orderDetailLine) => orderDetailLine.workOrderNumber)
+          .toList(),
+    );
 
     rxLabdipTableRows.addAll(labdipTableRows);
   }
@@ -191,10 +195,12 @@ class LabdipController extends GetxController {
     Get.back();
   }
 
-  LabdipTableRow? getLabdipTableRow(int workOrderNumber) {
-    return rxLabdipTableRows.firstWhereOrNull(
-      (labdipTableRow) => labdipTableRow.workOrderNumber == workOrderNumber,
-    );
+  List<LabdipTableRow> getLabdipTableRows(int workOrderNumber) {
+    return rxLabdipTableRows
+        .where(
+          (labdipTableRow) => labdipTableRow.workOrderNumber == workOrderNumber,
+        )
+        .toList();
   }
 
   List<OrderHeaderLine> get filteredLabdipOrders =>

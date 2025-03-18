@@ -111,7 +111,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         horizontalMargin: 0,
                         showCheckboxColumn: false,
                         headingRowHeight: 40,
-                        dataRowHeight: 40,
+                        dataRowHeight: 60,
                         headingRowColor:
                             WidgetStatePropertyAll(VardhmanColors.darkGrey),
                         headingTextStyle: TextStyle(
@@ -198,8 +198,8 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   itemCatalogInfo.uom == uom,
                             );
 
-                            final labdipTableRow =
-                                labdipController.getLabdipTableRow(
+                            final labdipTableRows =
+                                labdipController.getLabdipTableRows(
                                     orderDetailLine.workOrderNumber);
 
                             final index = labdipController.rxOrderDetailLines
@@ -318,9 +318,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: Text(
-                                      labdipTableRow?.permanentShade == null
-                                          ? ''
-                                          : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}',
+                                      labdipTableRows.map((labdipTableRow) {
+                                        return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
+                                      }).join(', '),
                                       style: TextStyle(color: textColor),
                                       textAlign: TextAlign.end,
                                     ),

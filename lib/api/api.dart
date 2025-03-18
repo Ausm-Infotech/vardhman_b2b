@@ -736,7 +736,7 @@ class Api {
   }
 
   static Future<List<LabdipTableRow>> fetchLabdipTableRows(
-      int orderNumber) async {
+      {required List<int> workOrderNumbers}) async {
     final labdipTableRows = <LabdipTableRow>[];
 
     try {
@@ -752,11 +752,16 @@ class Api {
             "autoFind": true,
             "condition": [
               {
-                "controlId": "F5630111.QSMP",
-                "operator": "EQUAL",
-                "value": [
-                  {"specialValueId": "LITERAL", "content": orderNumber}
-                ]
+                "controlId": "F5630111.DOCO",
+                "operator": "LIST",
+                "value": workOrderNumbers
+                    .map(
+                      (workOrderNumber) => {
+                        "specialValueId": "LITERAL",
+                        "content": workOrderNumber
+                      },
+                    )
+                    .toList()
               }
             ]
           }

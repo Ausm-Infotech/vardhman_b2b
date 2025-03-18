@@ -140,8 +140,8 @@ class FeedbackDialog extends StatelessWidget {
                       final String uom = itemParts[1];
                       final String shade = itemParts[2];
 
-                      final labdipTableRow = labdipController
-                          .getLabdipTableRow(orderDetailLine.workOrderNumber);
+                      final labdipTableRows = labdipController
+                          .getLabdipTableRows(orderDetailLine.workOrderNumber);
 
                       final feedback = mapEntry.value;
 
@@ -159,9 +159,9 @@ class FeedbackDialog extends StatelessWidget {
                           DataCell(Text(article)),
                           DataCell(Text(shade)),
                           DataCell(
-                            Text(labdipTableRow?.permanentShade == null
-                                ? ''
-                                : '${labdipTableRow?.permanentShade} ${labdipTableRow?.reference}'),
+                            Text(labdipTableRows.map((labdipTableRow) {
+                              return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
+                            }).join(', ')),
                           ),
                           DataCell(
                             Row(
