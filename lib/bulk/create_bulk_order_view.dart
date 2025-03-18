@@ -369,6 +369,7 @@ class CreateBulkOrderView extends StatelessWidget {
                                         rxString: bulkEntryController.rxShade,
                                         searchList:
                                             bulkEntryController.rxShades,
+                                        shouldEnforceList: false,
                                       ),
                                     ),
                                     SizedBox(

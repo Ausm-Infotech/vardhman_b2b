@@ -420,14 +420,11 @@ class LabdipEntryController extends GetxController {
         rxArticle.value = uniqueFilteredArticles.first;
       }
 
-      if (hashCode != rxUom.hashCode && rxUom.isEmpty) {
-        if ((hashCode == rxArticle.hashCode && uniqueFilteredUoms.isNotEmpty) ||
-            uniqueFilteredUoms.length == 1) {
-          rxUom.value = uniqueFilteredUoms.first;
+      if (hashCode != rxUom.hashCode && uniqueFilteredUoms.length == 1) {
+        rxUom.value = uniqueFilteredUoms.first;
 
-          rxUomWithDesc.value =
-              '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
-        }
+        rxUomWithDesc.value =
+            '${rxUom.value} - ${orderReviewController.getUomDescription(rxUom.value)}';
       }
 
       if (hashCode != rxBrand.hashCode && uniqueFilteredBrands.length == 1) {
@@ -878,6 +875,8 @@ class LabdipEntryController extends GetxController {
       .toList();
 
   Future<void> submitOrder() async {
+    String? fileType;
+
     for (var labdipOrderLine in rxLabdipOrderLines) {
       if (labdipOrderLine.qtxFileName.isNotEmpty &&
           labdipOrderLine.qtxFileBytes != null) {
@@ -893,30 +892,35 @@ class LabdipEntryController extends GetxController {
           version: 'VYTL0016',
           formName: 'P00092_W00092D',
         );
+
+        fileType = labdipOrderLine.qtxFileName.split('.').lastOrNull;
       }
     }
 
-    await Api.supplementalDataEntry(
-      databaseCode: 'QTX',
-      dataType: 'QT',
-      orderNumber: orderNumber,
-      lineNumber: 1001,
-      b2bOrderNumber: b2bOrderNumber,
-      soldToNumber: _userController.rxUserDetail.value.soldToNumber,
-      userName: _userController.rxUserDetail.value.name,
-    );
+    if (fileType != null) {
+      await Api.supplementalDataEntry(
+        databaseCode: 'QTX',
+        dataType: 'QT',
+        orderNumber: orderNumber,
+        lineNumber: 1001,
+        b2bOrderNumber: b2bOrderNumber,
+        soldToNumber: _userController.rxUserDetail.value.soldToNumber,
+        userName: _userController.rxUserDetail.value.name,
+      );
 
-    await Api.supplementalDataWrapper(
-      databaseCode: 'QTX',
-      dataType: 'QT',
-      orderNumber: orderNumber,
-      lineNumber: 1001,
-      soldTo: _userController.rxUserDetail.value.soldToNumber,
-      emailAddresses: [
-        'arjun@ausminfotech.com',
-        'jdedist@ausminfotech.com',
-      ],
-    );
+      await Api.supplementalDataWrapper(
+        databaseCode: 'QTX',
+        dataType: 'QT',
+        fileType: 'QTX/XML File',
+        orderNumber: orderNumber,
+        lineNumber: 1001,
+        soldTo: _userController.rxUserDetail.value.soldToNumber,
+        emailAddresses: [
+          'arjun@ausminfotech.com',
+          'jdedist@ausminfotech.com',
+        ],
+      );
+    }
 
     final isSubmitted = await orderReviewController.submitLabdipOrder(
       b2bOrderNumber: b2bOrderNumber,

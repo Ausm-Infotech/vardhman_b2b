@@ -336,7 +336,8 @@ class CreateDtmOrderView extends StatelessWidget {
                                         labelText: 'Shade',
                                         isRequired: true,
                                         isEnabled: dtmEntryController
-                                            .rxArticle.isNotEmpty,
+                                                .rxArticle.isNotEmpty &&
+                                            dtmEntryController.rxUom.isNotEmpty,
                                         rxString: dtmEntryController.rxShade,
                                         searchList: dtmEntryController.rxShades,
                                       ),

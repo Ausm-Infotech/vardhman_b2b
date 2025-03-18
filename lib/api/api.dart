@@ -816,7 +816,7 @@ class Api {
 
             itemCatalogInfos.add(itemCatalogInfo);
 
-            log('fetchItemCatalogInfo - addItem - $itemCatalogInfo');
+            // log('fetchItemCatalogInfo - addItem - $itemCatalogInfo');
           } catch (e) {
             log('fetchItemCatalogInfo - addItem error - $e');
           }
@@ -869,6 +869,7 @@ class Api {
     required int orderNumber,
     required int lineNumber,
     required String soldTo,
+    required String fileType,
     required List<String> emailAddresses,
   }) async {
     try {
@@ -881,6 +882,7 @@ class Api {
           "OrderNo": orderNumber.toString(),
           "Customer": soldTo,
           "EmailAddress": emailAddresses.join(';'),
+          "filetype": fileType,
         },
       );
 

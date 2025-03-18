@@ -66,6 +66,7 @@ class BulkOrderDetailsView extends StatelessWidget {
                         child: Text('No Order Selected'),
                       )
                     : DataTable2(
+                        minWidth: 1600,
                         columnSpacing: 8,
                         showBottomBorder: true,
                         border: TableBorder.symmetric(

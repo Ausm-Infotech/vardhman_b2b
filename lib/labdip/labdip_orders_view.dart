@@ -92,7 +92,7 @@ class LabdipOrdersView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DataTable2(
-                      minWidth: 600,
+                      minWidth: 450,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -122,11 +122,6 @@ class LabdipOrdersView extends StatelessWidget {
                         ),
                         DataColumn2(
                           label: Text('Date'),
-                          size: ColumnSize.S,
-                          headingRowAlignment: MainAxisAlignment.end,
-                        ),
-                        DataColumn2(
-                          label: Text('PO Number'),
                           size: ColumnSize.S,
                           headingRowAlignment: MainAxisAlignment.end,
                         ),
@@ -200,15 +195,6 @@ class LabdipOrdersView extends StatelessWidget {
                                       DateFormat('d MMM yy HH:mm').format(
                                         draftTableData.lastUpdated,
                                       ),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
-                                ),
-                                DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      draftTableData.poNumber,
                                       textAlign: TextAlign.end,
                                     ),
                                   ),
@@ -309,16 +295,6 @@ class LabdipOrdersView extends StatelessWidget {
                                       DateFormat('d MMM yy').format(
                                         orderHeaderLine.orderDate,
                                       ),
-                                      style: textStyle,
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
-                                ),
-                                DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      orderHeaderLine.poNumber,
                                       style: textStyle,
                                       textAlign: TextAlign.end,
                                     ),
@@ -447,33 +423,6 @@ class LabdipOrdersView extends StatelessWidget {
                 SizedBox(height: 8),
                 Row(
                   children: <Widget>[
-                    Flexible(
-                      child: TextField(
-                        controller: TextEditingController.fromValue(
-                          TextEditingValue(
-                            text: ordersController.rxPoNumberInput.value,
-                            selection: TextSelection.collapsed(
-                              offset:
-                                  ordersController.rxPoNumberInput.value.length,
-                            ),
-                          ),
-                        ),
-                        onChanged: (String poNumber) {
-                          ordersController.rxPoNumberInput.value = poNumber;
-                        },
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          label: Text('PO Number'),
-                          labelStyle: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
                     Flexible(
                       child: TextField(
                         controller: TextEditingController.fromValue(

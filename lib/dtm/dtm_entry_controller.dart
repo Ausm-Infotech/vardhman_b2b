@@ -760,29 +760,30 @@ class DtmEntryController extends GetxController {
         version: 'VYTL0016',
         formName: 'P00092_W00092D',
       );
+
+      await Api.supplementalDataEntry(
+        databaseCode: 'QTX',
+        dataType: 'QT',
+        orderNumber: orderNumber,
+        lineNumber: 1001,
+        b2bOrderNumber: b2bOrderNumber,
+        soldToNumber: _userController.rxUserDetail.value.soldToNumber,
+        userName: _userController.rxUserDetail.value.name,
+      );
+
+      await Api.supplementalDataWrapper(
+        databaseCode: 'QTX',
+        dataType: 'QT',
+        orderNumber: orderNumber,
+        lineNumber: 1001,
+        soldTo: _userController.rxUserDetail.value.soldToNumber,
+        emailAddresses: [
+          'arjun@ausminfotech.com',
+          'jdedist@ausminfotech.com',
+        ],
+        fileType: 'PO Document',
+      );
     }
-
-    await Api.supplementalDataEntry(
-      databaseCode: 'QTX',
-      dataType: 'QT',
-      orderNumber: orderNumber,
-      lineNumber: 1001,
-      b2bOrderNumber: b2bOrderNumber,
-      soldToNumber: _userController.rxUserDetail.value.soldToNumber,
-      userName: _userController.rxUserDetail.value.name,
-    );
-
-    await Api.supplementalDataWrapper(
-      databaseCode: 'QTX',
-      dataType: 'QT',
-      orderNumber: orderNumber,
-      lineNumber: 1001,
-      soldTo: _userController.rxUserDetail.value.soldToNumber,
-      emailAddresses: [
-        'arjun@ausminfotech.com',
-        'jdedist@ausminfotech.com',
-      ],
-    );
 
     final isSubmitted = await orderReviewController.submitDtmOrder(
       b2bOrderNumber: b2bOrderNumber,

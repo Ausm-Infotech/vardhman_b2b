@@ -356,9 +356,11 @@ class CreateLabdipOrderView extends StatelessWidget {
                               labelText: 'Shade',
                               isRequired: true,
                               isEnabled:
-                                  labdipEntryController.rxArticle.isNotEmpty,
+                                  labdipEntryController.rxArticle.isNotEmpty &&
+                                      labdipEntryController.rxUom.isNotEmpty,
                               rxString: labdipEntryController.rxShade,
                               searchList: labdipEntryController.rxShades,
+                              shouldEnforceList: false,
                             ),
                           ),
                           SizedBox(
