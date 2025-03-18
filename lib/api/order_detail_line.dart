@@ -37,6 +37,8 @@ class OrderDetailLine with _$OrderDetailLine {
     required String buyerCode,
     required double unitPrice,
     required double extendedPrice,
+    required String lightSource1,
+    required String shipToAttention,
   }) = _OrderDetailLine;
 
   OrderDetailLine._();

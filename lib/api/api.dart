@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:get/get.dart' as getx;
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +17,7 @@ import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
+import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'dart:developer';
 import 'package:vardhman_b2b/sample_data.dart';
 
@@ -655,6 +657,8 @@ class Api {
               extendedPrice: double.tryParse(
                       orderDetailData['Extended Price'].toString()) ??
                   0.0,
+              lightSource1: orderDetailData['Print Message'],
+              shipToAttention: orderDetailData['ShipToAttention'],
             ),
           );
         }
@@ -1491,7 +1495,7 @@ class Api {
         "szAlphaKey1": labdipFeedback.isPositive ? 'A' : 'N',
         "szAlphaKey2": "${orderDetailLine.lineNumber}",
         "szDataType": "LD",
-        "szRemark1": labdipFeedback.reason
+        "szRemark1": labdipFeedback.reason,
       },
     ).then((response) {
       return response.statusCode == 200;
@@ -1513,32 +1517,42 @@ class Api {
   }) async {
     final orderDetailLines = orderDetailLinesReasonMap.keys.toList();
 
+    final LabdipController labdipController = getx.Get.find();
+
     final payload = {
-      "Detail": orderDetailLines
-          .map(
-            (orderDetailLine) => {
-              "BatchNumber": b2bOrderNumber,
-              "Company": company,
-              "SoldTo": soldTo,
-              "ShipTo": shipTo,
-              "BranchPlant": branchPlant,
-              "ItemNumber": orderDetailLine.item,
-              "Quantity": 1,
-              "OrderTakenBy": orderTakenBy,
-              "LineNumber":
-                  (orderDetailLines.indexOf(orderDetailLine) + 1) + 1000,
-              "DocumentType": "LD",
-              "SourceFlag": "B",
-              "MerchandiserName": merchandiserName,
-              "LightSourceRemark": "",
-              "ColorRemark": orderDetailLinesReasonMap[orderDetailLine],
-              "EndUse": orderDetailLine.buyerCode,
-              "BillingType": "B",
-              "RelatedOrder":
-                  "${orderDetailLine.orderNumber}|${orderDetailLine.orderType}|${orderDetailLine.company}|${orderDetailLine.lineNumber}"
-            },
-          )
-          .toList(),
+      "Detail": orderDetailLines.map(
+        (orderDetailLine) {
+          final labdipTableRows = labdipController
+              .getLabdipTableRows(orderDetailLine.workOrderNumber);
+
+          final finalShades = labdipTableRows.map((labdipTableRow) {
+            return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
+          }).join(', ');
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": orderDetailLine.item,
+            "Quantity": 1,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber":
+                (orderDetailLines.indexOf(orderDetailLine) + 1) + 1000,
+            "DocumentType": "LD",
+            "SourceFlag": "B",
+            "MerchandiserName": merchandiserName,
+            "LightSourceRemark": orderDetailLine.lightSource1,
+            "ColorRemark":
+                '$finalShades - ${orderDetailLinesReasonMap[orderDetailLine]!}',
+            "EndUse": orderDetailLine.buyerCode,
+            "BillingType": "B",
+            "RelatedOrder":
+                "${orderDetailLine.orderNumber}|${orderDetailLine.orderType}|${orderDetailLine.company}|${orderDetailLine.lineNumber}|${orderDetailLine.shipToAttention}",
+          };
+        },
+      ).toList(),
     };
 
     log(jsonEncode(payload));

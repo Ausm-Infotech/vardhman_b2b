@@ -40,6 +40,8 @@ _$OrderDetailLineImpl _$$OrderDetailLineImplFromJson(
       buyerCode: json['buyerCode'] as String,
       unitPrice: (json['unitPrice'] as num).toDouble(),
       extendedPrice: (json['extendedPrice'] as num).toDouble(),
+      lightSource1: json['lightSource1'] as String,
+      shipToAttention: json['shipToAttention'] as String,
     );
 
 Map<String, dynamic> _$$OrderDetailLineImplToJson(
@@ -72,4 +74,6 @@ Map<String, dynamic> _$$OrderDetailLineImplToJson(
       'buyerCode': instance.buyerCode,
       'unitPrice': instance.unitPrice,
       'extendedPrice': instance.extendedPrice,
+      'lightSource1': instance.lightSource1,
+      'shipToAttention': instance.shipToAttention,
     };
