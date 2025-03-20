@@ -99,7 +99,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                   ),
                   if (_isHoveringOnName) // Only show on LabdipView
                     Positioned(
-                      top: 50,
+                      top: 36,
                       right: 0,
                       child: MouseRegion(
                         onEnter: (_) {
@@ -118,10 +118,10 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                         child: _isHoveringOnName
                             ? Container(
                                 width: 280,
-                                padding: EdgeInsets.all(16),
+                                padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(24)),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(24)),
                                   color: VardhmanColors.darkGrey,
                                 ),
                                 child: Row(
