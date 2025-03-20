@@ -15,6 +15,7 @@ class NewOrderDateField extends StatelessWidget {
     this.minLines,
     this.isRequired = false,
     this.hasError = false,
+    this.firstDate,
   });
 
   final String labelText;
@@ -24,6 +25,7 @@ class NewOrderDateField extends StatelessWidget {
   final int? minLines;
   final bool isRequired;
   final bool hasError;
+  final DateTime? firstDate;
 
   final noneBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -108,6 +110,7 @@ class NewOrderDateField extends StatelessWidget {
                             top: 0,
                           ),
                         ),
+                        firstDate: firstDate,
                         value: rxDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {

@@ -41,6 +41,7 @@ dependencies:
   universal_io: ^2.2.2
   video_player: ^2.9.3
   http_parser: ^4.1.2
+  hover_menu: ^1.1.2
   # web: ^1.1.0
 
 dev_dependencies:
