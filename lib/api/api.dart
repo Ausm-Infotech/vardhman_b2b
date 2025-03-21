@@ -580,7 +580,7 @@ class Api {
         data: {
           "SoldTo": soldToNumber,
           "FromOrderDate": DateFormat('MM/dd/yyyy')
-              .format(DateTime.now().subtract(Duration(days: 180))),
+              .format(DateTime.now().subtract(Duration(days: 1080))),
           "ToOrderDate": DateFormat('MM/dd/yyyy').format(DateTime.now()),
         },
       );
