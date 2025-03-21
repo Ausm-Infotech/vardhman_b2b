@@ -36,7 +36,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -218,6 +218,28 @@ class Api {
       log(response.data.toString());
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  static Future<bool> submitStatusReport({
+    required String email,
+    required DateTime fromDate,
+    required String soldToNumber,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55_EmailOrderDetailsWrapper',
+        data: {
+          "Customer": soldToNumber,
+          "OrderDate": DateFormat('MM/dd/yyyy').format(fromDate),
+          "EmailID": email,
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      log('submitStatusReport error - $e');
+      return false;
     }
   }
 

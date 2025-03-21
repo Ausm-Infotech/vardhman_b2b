@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
+import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/new_order_date_field.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
@@ -182,7 +184,33 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                                                   )
                                                               ? null
                                                               : () async {
+                                                                  Api.submitStatusReport(
+                                                                    email: homeController
+                                                                        .rxEmail
+                                                                        .value,
+                                                                    fromDate: homeController
+                                                                        .rxFromDate
+                                                                        .value!,
+                                                                    soldToNumber: userController
+                                                                        .rxUserDetail
+                                                                        .value
+                                                                        .soldToNumber,
+                                                                  );
+
                                                                   Get.back();
+
+                                                                  toastification
+                                                                      .show(
+                                                                    autoCloseDuration:
+                                                                        Duration(
+                                                                            seconds:
+                                                                                5),
+                                                                    primaryColor:
+                                                                        VardhmanColors
+                                                                            .green,
+                                                                    title: Text(
+                                                                        'Request Submitted!'),
+                                                                  );
                                                                 },
                                                         ),
                                                       ),
