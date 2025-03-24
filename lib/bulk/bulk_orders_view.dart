@@ -93,6 +93,8 @@ class BulkOrdersView extends StatelessWidget {
                     ),
                     child: DataTable2(
                       minWidth: 600,
+                      isHorizontalScrollBarVisible: true,
+                      isVerticalScrollBarVisible: true,
                       columnSpacing: 16,
                       horizontalMargin: 16,
                       headingRowHeight: 40,
@@ -118,7 +120,7 @@ class BulkOrdersView extends StatelessWidget {
                         DataColumn2(
                           label: Text('Order No.'),
                           headingRowAlignment: MainAxisAlignment.start,
-                          size: ColumnSize.M,
+                          size: ColumnSize.L,
                         ),
                         DataColumn2(
                           label: Text('Date'),
