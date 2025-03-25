@@ -148,7 +148,7 @@ class BulkOrdersView extends StatelessWidget {
                               color: WidgetStatePropertyAll(
                                 index.isEven
                                     ? Colors.white
-                                    : VardhmanColors.dividerGrey,
+                                    : VardhmanColors.dividerGrey.withAlpha(128),
                               ),
                               onSelectChanged: (value) {
                                 if (Get.isRegistered<BulkEntryController>()) {
@@ -251,7 +251,8 @@ class BulkOrdersView extends StatelessWidget {
                                     ? VardhmanColors.red
                                     : index.isEven
                                         ? Colors.white
-                                        : VardhmanColors.dividerGrey,
+                                        : VardhmanColors.dividerGrey
+                                            .withAlpha(128),
                               ),
                               selected: orderHeaderLine ==
                                   bulkController

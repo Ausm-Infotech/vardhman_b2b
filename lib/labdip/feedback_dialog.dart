@@ -153,7 +153,7 @@ class FeedbackDialog extends StatelessWidget {
                         color: index.isEven
                             ? WidgetStatePropertyAll(Colors.white)
                             : WidgetStatePropertyAll(
-                                VardhmanColors.dividerGrey),
+                                VardhmanColors.dividerGrey.withAlpha(128)),
                         cells: [
                           DataCell(Text((index + 1).toString())),
                           DataCell(Text(article)),

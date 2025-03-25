@@ -148,7 +148,7 @@ class DtmOrdersView extends StatelessWidget {
                               color: WidgetStatePropertyAll(
                                 index.isEven
                                     ? Colors.white
-                                    : VardhmanColors.dividerGrey,
+                                    : VardhmanColors.dividerGrey.withAlpha(128),
                               ),
                               onSelectChanged: (value) {
                                 if (Get.isRegistered<DtmEntryController>()) {
@@ -251,7 +251,8 @@ class DtmOrdersView extends StatelessWidget {
                                     ? VardhmanColors.red
                                     : index.isEven
                                         ? Colors.white
-                                        : VardhmanColors.dividerGrey,
+                                        : VardhmanColors.dividerGrey
+                                            .withAlpha(128),
                               ),
                               selected: orderHeaderLine ==
                                   dtmController.rxSelectedOrderHeaderLine.value,

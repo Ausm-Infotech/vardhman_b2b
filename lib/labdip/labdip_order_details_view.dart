@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
+import 'package:vardhman_b2b/common/order_detail_cell.dart';
+import 'package:vardhman_b2b/common/order_detail_column_label.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/feedback_dialog.dart';
@@ -84,9 +86,11 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         child: Text('No Order Selected'),
                       )
                     : DataTable2(
-                        minWidth: 1600,
-                        columnSpacing: 8,
+                        minWidth: 1200,
+                        columnSpacing: 0,
                         showBottomBorder: true,
+                        isHorizontalScrollBarVisible: true,
+                        isVerticalScrollBarVisible: true,
                         border: TableBorder.symmetric(
                           inside: BorderSide(
                               color: VardhmanColors.darkGrey, width: 0.2),
@@ -110,7 +114,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         checkboxHorizontalMargin: 0,
                         horizontalMargin: 0,
                         showCheckboxColumn: false,
-                        headingRowHeight: 40,
+                        headingRowHeight: 60,
                         dataRowHeight: 60,
                         headingRowColor:
                             WidgetStatePropertyAll(VardhmanColors.darkGrey),
@@ -121,63 +125,66 @@ class LabdipOrderDetailsView extends StatelessWidget {
                         ),
                         columns: [
                           DataColumn2(
-                            label: Text('#'),
-                            fixedWidth: 50,
+                            label: OrderDetailColumnLabel(labelText: '#'),
+                            fixedWidth: 70,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('Article'),
+                            label: OrderDetailColumnLabel(labelText: 'Article'),
+                            fixedWidth: 70,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(labelText: 'UOM'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('UOM'),
+                            label: OrderDetailColumnLabel(labelText: 'Ticket'),
+                            fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(labelText: 'Brand'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('Ticket'),
+                            label: OrderDetailColumnLabel(labelText: 'Tex'),
+                            fixedWidth: 60,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label:
+                                OrderDetailColumnLabel(labelText: 'Substrate'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('Brand'),
+                            label: OrderDetailColumnLabel(labelText: 'Shade'),
+                            fixedWidth: 70,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(
+                                labelText: 'Final Shade'),
+                            fixedWidth: 70,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(labelText: 'Status'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label: Text('Tex'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
-                            label: Text('Substrate'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
-                            label: Text('Shade'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
-                            label: Text('Final Shade'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
-                            label: Text('Remark'),
-                            size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
-                          ),
-                          DataColumn2(
-                            label: Text('Status'),
+                            label: OrderDetailColumnLabel(labelText: 'Remark'),
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           if (hasDispatchedLine)
                             DataColumn2(
-                              label: Text('Feedback'),
+                              label:
+                                  OrderDetailColumnLabel(labelText: 'Feedback'),
                               size: ColumnSize.S,
                               headingRowAlignment: MainAxisAlignment.end,
                             ),
@@ -231,119 +238,77 @@ class LabdipOrderDetailsView extends StatelessWidget {
                               color: WidgetStatePropertyAll(
                                 index.isEven
                                     ? Colors.white
-                                    : VardhmanColors.dividerGrey,
+                                    : VardhmanColors.dividerGrey.withAlpha(128),
                               ),
                               cells: [
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      orderDetailLine.lineNumber.toString(),
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText:
+                                        orderDetailLine.lineNumber.toString(),
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      article,
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: article,
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      "$uom - $uomDesc",
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: "$uom - $uomDesc",
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      catalogItem?.ticket ?? '',
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: catalogItem?.ticket ?? '',
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      catalogItem?.brandDesc ?? '',
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: catalogItem?.brandDesc ?? '',
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      catalogItem?.tex ?? '',
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: catalogItem?.tex ?? '',
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      catalogItem?.substrateDesc ?? '',
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: catalogItem?.substrateDesc ?? '',
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      shade,
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: shade,
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      labdipTableRows.map((labdipTableRow) {
-                                        return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
-                                      }).join(', '),
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText:
+                                        labdipTableRows.map((labdipTableRow) {
+                                      return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
+                                    }).join(', '),
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      orderDetailLine.userComment,
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: orderDetailLine.status,
+                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      orderDetailLine.status,
-                                      style: TextStyle(color: textColor),
-                                      textAlign: TextAlign.end,
-                                    ),
+                                  OrderDetailCell(
+                                    cellText: orderDetailLine.userComment,
+                                    textColor: textColor,
                                   ),
                                 ),
                                 if (hasDispatchedLine)
@@ -353,12 +318,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                       child: !isDispatchedLine
                                           ? SizedBox()
                                           : feedback != null
-                                              ? Text(
-                                                  feedback.reason,
-                                                  style: TextStyle(
-                                                    color: textColor,
-                                                  ),
-                                                  textAlign: TextAlign.end,
+                                              ? OrderDetailCell(
+                                                  cellText: feedback.reason,
+                                                  textColor: textColor,
                                                 )
                                               : Checkbox(
                                                   fillColor:

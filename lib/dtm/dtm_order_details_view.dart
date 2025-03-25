@@ -112,12 +112,12 @@ class DtmOrderDetailsView extends StatelessWidget {
                         columns: [
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: '#'),
-                            fixedWidth: 60,
+                            fixedWidth: 70,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Article'),
-                            fixedWidth: 60,
+                            fixedWidth: 70,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
@@ -188,7 +188,7 @@ class DtmOrderDetailsView extends StatelessWidget {
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Invoice'),
-                            size: ColumnSize.S,
+                            fixedWidth: 100,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
@@ -328,12 +328,12 @@ class DtmOrderDetailsView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: unitPrice.toString(),
+                                    cellText: unitPrice.toStringAsFixed(2),
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: extendedPrice.toString(),
+                                    cellText: extendedPrice.toStringAsFixed(2),
                                   ),
                                 ),
                                 DataCell(

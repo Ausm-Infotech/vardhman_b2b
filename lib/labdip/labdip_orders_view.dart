@@ -143,7 +143,7 @@ class LabdipOrdersView extends StatelessWidget {
                               color: WidgetStatePropertyAll(
                                 index.isEven
                                     ? Colors.white
-                                    : VardhmanColors.dividerGrey,
+                                    : VardhmanColors.dividerGrey.withAlpha(128),
                               ),
                               onSelectChanged: (value) {
                                 if (Get.isRegistered<LabdipEntryController>()) {
@@ -246,7 +246,8 @@ class LabdipOrdersView extends StatelessWidget {
                                     ? VardhmanColors.red
                                     : index.isEven
                                         ? Colors.white
-                                        : VardhmanColors.dividerGrey,
+                                        : VardhmanColors.dividerGrey
+                                            .withAlpha(128),
                               ),
                               selected: orderHeaderLine ==
                                   labdipController
