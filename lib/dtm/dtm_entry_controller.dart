@@ -571,53 +571,62 @@ class DtmEntryController extends GetxController {
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
   void updateDtmOrderLine() {
+    final selectedDtmOrderLine = rxSelectedDtmOrderLines.first;
+
     if (!validateInputs()) {
       // toastification.show(
       //   autoCloseDuration: Duration(seconds: 5),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
+    } else if (rxDtmOrderLines.any(
+      (dtmOrderLine) =>
+          dtmOrderLine != selectedDtmOrderLine &&
+          dtmOrderLine.article == rxArticle.value &&
+          dtmOrderLine.shade == rxShade.value,
+    )) {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
+        primaryColor: VardhmanColors.red,
+        title: Text('Duplicate Article and Shade combination'),
+      );
     } else {
-      final selectedDtmOrderLine = rxSelectedDtmOrderLines.firstOrNull;
-
-      if (selectedDtmOrderLine != null) {
-        _database.managers.draftTable
-            .filter((f) => f.orderNumber.equals(orderNumber))
-            .filter((f) => f.lineNumber.equals(selectedDtmOrderLine.lineNumber))
-            .update(
-              (o) => o(
-                article: drift.Value(rxArticle.value),
-                billingType: drift.Value(rxBillingType.value),
-                brand: drift.Value(rxBrand.value),
-                buyer: drift.Value(buyerOrOtherName),
-                buyerCode: drift.Value(_rxBuyerCode.value),
-                colorName: drift.Value(rxColor.value),
-                remark: drift.Value(rxRemark.value),
-                endUse: drift.Value(rxEndUse.value),
-                firstLightSource: drift.Value(rxFirstLightSource.value),
-                lineNumber: drift.Value(selectedDtmOrderLine.lineNumber),
-                orderNumber: drift.Value(selectedDtmOrderLine.orderNumber),
-                orderType: drift.Value(selectedDtmOrderLine.orderType),
-                quantity: drift.Value(int.tryParse(rxQuantity.value) ?? 1),
-                requestType: drift.Value(rxRequestType.value),
-                secondLightSource: drift.Value(rxSecondLightSource.value),
-                shade: drift.Value(rxShade.value),
-                soldTo: drift.Value(
-                    _userController.rxUserDetail.value.soldToNumber),
-                substrate: drift.Value(rxSubstrate.value),
-                tex: drift.Value(rxTex.value),
-                ticket: drift.Value(rxTicket.value),
-                uom: drift.Value(rxUom.value),
-                colorRemark: drift.Value(_colorRemark),
-                lastUpdated: drift.Value(DateTime.now()),
-                merchandiser: drift.Value(rxMerchandiser.value),
-                requestedDate: drift.Value(rxRequestedDate.value),
-                poNumber: drift.Value(rxPoNumber.value),
-                poFileName: drift.Value(rxPoFileName.value),
-                poFileBytes: drift.Value(rxPoFileBytes.value),
-              ),
-            );
-      }
+      _database.managers.draftTable
+          .filter((f) => f.orderNumber.equals(orderNumber))
+          .filter((f) => f.lineNumber.equals(selectedDtmOrderLine.lineNumber))
+          .update(
+            (o) => o(
+              article: drift.Value(rxArticle.value),
+              billingType: drift.Value(rxBillingType.value),
+              brand: drift.Value(rxBrand.value),
+              buyer: drift.Value(buyerOrOtherName),
+              buyerCode: drift.Value(_rxBuyerCode.value),
+              colorName: drift.Value(rxColor.value),
+              remark: drift.Value(rxRemark.value),
+              endUse: drift.Value(rxEndUse.value),
+              firstLightSource: drift.Value(rxFirstLightSource.value),
+              lineNumber: drift.Value(selectedDtmOrderLine.lineNumber),
+              orderNumber: drift.Value(selectedDtmOrderLine.orderNumber),
+              orderType: drift.Value(selectedDtmOrderLine.orderType),
+              quantity: drift.Value(int.tryParse(rxQuantity.value) ?? 1),
+              requestType: drift.Value(rxRequestType.value),
+              secondLightSource: drift.Value(rxSecondLightSource.value),
+              shade: drift.Value(rxShade.value),
+              soldTo:
+                  drift.Value(_userController.rxUserDetail.value.soldToNumber),
+              substrate: drift.Value(rxSubstrate.value),
+              tex: drift.Value(rxTex.value),
+              ticket: drift.Value(rxTicket.value),
+              uom: drift.Value(rxUom.value),
+              colorRemark: drift.Value(_colorRemark),
+              lastUpdated: drift.Value(DateTime.now()),
+              merchandiser: drift.Value(rxMerchandiser.value),
+              requestedDate: drift.Value(rxRequestedDate.value),
+              poNumber: drift.Value(rxPoNumber.value),
+              poFileName: drift.Value(rxPoFileName.value),
+              poFileBytes: drift.Value(rxPoFileBytes.value),
+            ),
+          );
 
       rxSelectedDtmOrderLines.clear();
 
@@ -808,12 +817,12 @@ class DtmEntryController extends GetxController {
       rxSelectedDtmOrderLines.remove(dtmOrderLine);
     } else {
       rxSelectedDtmOrderLines.add(dtmOrderLine);
+    }
 
-      if (rxSelectedDtmOrderLines.length == 1) {
-        clearAllInputs();
+    if (rxSelectedDtmOrderLines.isNotEmpty) {
+      clearAllInputs();
 
-        _populateInputs(dtmOrderLine: rxSelectedDtmOrderLines.first);
-      }
+      _populateInputs(dtmOrderLine: rxSelectedDtmOrderLines.last);
     }
   }
 

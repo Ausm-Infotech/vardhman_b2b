@@ -1471,7 +1471,7 @@ class Api {
                 (labdipOrderLines.indexOf(labdipOrderLine) + 1) + 1000,
             "DocumentType": "LD",
             "SourceFlag": "B",
-            "MerchandiserName": '$merchandiserName|',
+            "MerchandiserName": '$merchandiserName|$b2bOrderNumber',
             "LightSourceRemark": labdipOrderLine.firstLightSource,
             "ColorRemark": labdipOrderLine.colorRemark,
             "EndUse": isOtherBuyer ? 'OTH' : labdipOrderLine.buyerCode,
@@ -1564,7 +1564,7 @@ class Api {
                 (orderDetailLines.indexOf(orderDetailLine) + 1) + 1000,
             "DocumentType": "LD",
             "SourceFlag": "B",
-            "MerchandiserName": merchandiserName,
+            "MerchandiserName": '$merchandiserName|$b2bOrderNumber',
             "LightSourceRemark": orderDetailLine.lightSource1,
             "ColorRemark":
                 '$finalShades - ${orderDetailLinesReasonMap[orderDetailLine]!}',

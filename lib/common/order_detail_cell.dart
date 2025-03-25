@@ -17,7 +17,10 @@ class OrderDetailCell extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Text(
         cellText,
-        style: TextStyle(color: textColor),
+        textAlign: TextAlign.end,
+        style: TextStyle(
+          color: textColor,
+        ),
       ),
     );
   }

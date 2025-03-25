@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/new_order_date_field.dart';
+import 'package:vardhman_b2b/common/order_detail_cell.dart';
+import 'package:vardhman_b2b/common/order_detail_column_label.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/common/catalog_search_field.dart';
@@ -523,7 +525,7 @@ class CreateBulkOrderView extends StatelessWidget {
           Expanded(
             child: DataTable2(
               minWidth: 1600,
-              columnSpacing: 16,
+              columnSpacing: 0,
               showBottomBorder: true,
               border: TableBorder.symmetric(
                 inside: BorderSide(color: VardhmanColors.darkGrey, width: 0.2),
@@ -542,8 +544,9 @@ class CreateBulkOrderView extends StatelessWidget {
                 fontSize: 13,
               ),
               checkboxHorizontalMargin: 0,
-              headingRowHeight: 40,
-              dataRowHeight: 40,
+              horizontalMargin: 16,
+              headingRowHeight: 60,
+              dataRowHeight: 60,
               headingRowColor: WidgetStatePropertyAll(VardhmanColors.darkGrey),
               headingTextStyle: TextStyle(
                 color: Colors.white,
@@ -552,77 +555,78 @@ class CreateBulkOrderView extends StatelessWidget {
               ),
               columns: const [
                 DataColumn2(
-                  label: Text('#'),
+                  label: OrderDetailColumnLabel(labelText: '#'),
                   fixedWidth: 50,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Merchandiser'),
+                  label: OrderDetailColumnLabel(labelText: 'Merchandiser'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Buyer'),
+                  label: OrderDetailColumnLabel(labelText: 'Buyer'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Article'),
+                  label: OrderDetailColumnLabel(labelText: 'Article'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('UOM'),
+                  label: OrderDetailColumnLabel(labelText: 'UOM'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Ticket'),
+                  label: OrderDetailColumnLabel(labelText: 'Ticket'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Brand'),
+                  label: OrderDetailColumnLabel(labelText: 'Brand'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Tex'),
+                  label: OrderDetailColumnLabel(labelText: 'Tex'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Substrate'),
+                  label: OrderDetailColumnLabel(labelText: 'Substrate'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Shade'),
+                  label: OrderDetailColumnLabel(labelText: 'Shade'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Style/Part No.'),
+                  label: OrderDetailColumnLabel(labelText: 'Style/Part No.'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Quantity'),
+                  label: OrderDetailColumnLabel(labelText: 'Quantity'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Req Date'),
+                  label: OrderDetailColumnLabel(labelText: 'Requested Date'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Unit Price'),
+                  label: OrderDetailColumnLabel(labelText: 'Unit Price'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Total Pre-GST\nAmount in INR'),
+                  label: OrderDetailColumnLabel(
+                      labelText: 'Total Pre-GST\nAmount in INR'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -636,6 +640,9 @@ class CreateBulkOrderView extends StatelessWidget {
                   final uomDesc = orderReviewController
                       .getUomDescription(bulkOrderLine.uom);
 
+                  final totalPrice =
+                      bulkOrderLine.quantity * (bulkOrderLine.unitPrice ?? 0);
+
                   return DataRow(
                     color: index.isEven
                         ? WidgetStatePropertyAll(Colors.white)
@@ -648,143 +655,84 @@ class CreateBulkOrderView extends StatelessWidget {
                     },
                     cells: [
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            (index + 1).toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: (index + 1).toString(),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.merchandiser,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.merchandiser,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.buyer,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.buyer,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.article,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.article,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "${bulkOrderLine.uom} - $uomDesc",
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: "${bulkOrderLine.uom} - $uomDesc",
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.ticket,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.ticket,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.brand,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.brand,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.tex,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.tex,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.substrate,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.substrate,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.shade,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.shade,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.colorName,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.colorName,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.quantity.toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.quantity.toString(),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.requestedDate == null
-                                ? ''
-                                : DateFormat('d MMM yyyy')
-                                    .format(bulkOrderLine.requestedDate!),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: bulkOrderLine.requestedDate == null
+                              ? ''
+                              : DateFormat('d MMM yyyy')
+                                  .format(bulkOrderLine.requestedDate!),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            bulkOrderLine.unitPrice?.toString() ?? '',
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText:
+                              bulkOrderLine.unitPrice?.toStringAsFixed(2) ?? '',
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            (bulkOrderLine.quantity *
-                                    (bulkOrderLine.unitPrice ?? 0))
-                                .toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: totalPrice > 0
+                              ? totalPrice.toStringAsFixed(2)
+                              : '',
                         ),
                       ),
                     ],

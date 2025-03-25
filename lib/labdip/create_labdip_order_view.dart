@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
+import 'package:vardhman_b2b/common/order_detail_cell.dart';
+import 'package:vardhman_b2b/common/order_detail_column_label.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/common/catalog_search_field.dart';
@@ -361,6 +363,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                               rxString: labdipEntryController.rxShade,
                               searchList: labdipEntryController.rxShades,
                               shouldEnforceList: false,
+                              invalidList: labdipEntryController.skipShades,
                             ),
                           ),
                           SizedBox(
@@ -495,7 +498,7 @@ class CreateLabdipOrderView extends StatelessWidget {
           Expanded(
             child: DataTable2(
               minWidth: 1600,
-              columnSpacing: 16,
+              columnSpacing: 0,
               showBottomBorder: true,
               border: TableBorder.symmetric(
                 inside: BorderSide(color: VardhmanColors.darkGrey, width: 0.2),
@@ -514,8 +517,9 @@ class CreateLabdipOrderView extends StatelessWidget {
                 fontSize: 13,
               ),
               checkboxHorizontalMargin: 0,
-              headingRowHeight: 40,
-              dataRowHeight: 40,
+              horizontalMargin: 16,
+              headingRowHeight: 60,
+              dataRowHeight: 60,
               headingRowColor: WidgetStatePropertyAll(VardhmanColors.darkGrey),
               headingTextStyle: TextStyle(
                 color: Colors.white,
@@ -524,71 +528,71 @@ class CreateLabdipOrderView extends StatelessWidget {
               ),
               columns: const [
                 DataColumn2(
-                    label: Text('#'),
+                    label: OrderDetailColumnLabel(labelText: '#'),
                     fixedWidth: 50,
                     headingRowAlignment: MainAxisAlignment.end),
                 DataColumn2(
-                  label: Text('Merchandiser'),
+                  label: OrderDetailColumnLabel(labelText: 'Merchandiser'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Buyer'),
-                  size: ColumnSize.S,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
-                  label: Text('Article'),
-                  size: ColumnSize.S,
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
-                DataColumn2(
-                  label: Text('UOM'),
+                  label: OrderDetailColumnLabel(labelText: 'Buyer'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Ticket'),
+                  label: OrderDetailColumnLabel(labelText: 'Article'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Brand'),
+                  label: OrderDetailColumnLabel(labelText: 'UOM'),
+                  size: ColumnSize.M,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: OrderDetailColumnLabel(labelText: 'Ticket'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Tex'),
+                  label: OrderDetailColumnLabel(labelText: 'Brand'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Substrate'),
+                  label: OrderDetailColumnLabel(labelText: 'Tex'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Shade'),
+                  label: OrderDetailColumnLabel(labelText: 'Substrate'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Color'),
+                  label: OrderDetailColumnLabel(labelText: 'Shade'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('LAB'),
+                  label: OrderDetailColumnLabel(labelText: 'Color'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('QTX/XML File'),
+                  label: OrderDetailColumnLabel(labelText: 'LAB'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Remark'),
+                  label: OrderDetailColumnLabel(labelText: 'QTX/XML File'),
+                  size: ColumnSize.S,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
+                  label: OrderDetailColumnLabel(labelText: 'Remark'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -615,129 +619,73 @@ class CreateLabdipOrderView extends StatelessWidget {
                     },
                     cells: [
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            (index + 1).toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: (index + 1).toString(),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.merchandiser,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.merchandiser,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.buyer,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.buyer,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.article,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.article,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "${labdipOrderLine.uom} - $uomDesc",
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: "${labdipOrderLine.uom} - $uomDesc",
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.ticket,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.ticket,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.brand,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.brand,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.tex,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.tex,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.substrate,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.substrate,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.shade,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.shade,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.colorName,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.colorName,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.lab,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.lab,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.qtxFileName,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.qtxFileName,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            labdipOrderLine.remark,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: labdipOrderLine.remark,
                         ),
                       ),
                     ],

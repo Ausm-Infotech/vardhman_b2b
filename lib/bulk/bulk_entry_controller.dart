@@ -580,55 +580,63 @@ class BulkEntryController extends GetxController {
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
   void updateBulkOrderLine() {
+    final selectedBulkOrderLine = rxSelectedBulkOrderLines.first;
+
     if (!validateInputs()) {
       // toastification.show(
       //   autoCloseDuration: Duration(seconds: 5),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
+    } else if (rxBulkOrderLines.any(
+      (bulkOrderLine) =>
+          bulkOrderLine != selectedBulkOrderLine &&
+          bulkOrderLine.article == rxArticle.value &&
+          bulkOrderLine.shade == rxShade.value,
+    )) {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
+        primaryColor: VardhmanColors.red,
+        title: Text('Duplicate Article and Shade combination'),
+      );
     } else {
-      final selectedBulkOrderLine = rxSelectedBulkOrderLines.firstOrNull;
-
-      if (selectedBulkOrderLine != null) {
-        _database.managers.draftTable
-            .filter((f) => f.orderNumber.equals(orderNumber))
-            .filter(
-                (f) => f.lineNumber.equals(selectedBulkOrderLine.lineNumber))
-            .update(
-              (o) => o(
-                article: drift.Value(rxArticle.value),
-                billingType: drift.Value(rxBillingType.value),
-                brand: drift.Value(rxBrand.value),
-                buyer: drift.Value(buyerOrOtherName),
-                buyerCode: drift.Value(_rxBuyerCode.value),
-                colorName: drift.Value(rxColor.value),
-                remark: drift.Value(rxRemark.value),
-                endUse: drift.Value(rxEndUse.value),
-                firstLightSource: drift.Value(rxFirstLightSource.value),
-                lineNumber: drift.Value(selectedBulkOrderLine.lineNumber),
-                orderNumber: drift.Value(selectedBulkOrderLine.orderNumber),
-                orderType: drift.Value(selectedBulkOrderLine.orderType),
-                quantity: drift.Value(int.tryParse(rxQuantity.value) ?? 1),
-                requestType: drift.Value(rxRequestType.value),
-                secondLightSource: drift.Value(rxSecondLightSource.value),
-                shade: drift.Value(rxShade.value),
-                soldTo: drift.Value(
-                    _userController.rxUserDetail.value.soldToNumber),
-                substrate: drift.Value(rxSubstrate.value),
-                tex: drift.Value(rxTex.value),
-                ticket: drift.Value(rxTicket.value),
-                uom: drift.Value(rxUom.value),
-                colorRemark: drift.Value(_colorRemark),
-                lastUpdated: drift.Value(DateTime.now()),
-                merchandiser: drift.Value(rxMerchandiser.value),
-                requestedDate: drift.Value(rxRequestedDate.value),
-                poNumber: drift.Value(rxPoNumber.value),
-                poFileName: drift.Value(rxPoFileName.value),
-                poFileBytes: drift.Value(rxPoFileBytes.value),
-                unitPrice: drift.Value(double.tryParse(rxUnitPrice.value)),
-              ),
-            );
-      }
+      _database.managers.draftTable
+          .filter((f) => f.orderNumber.equals(orderNumber))
+          .filter((f) => f.lineNumber.equals(selectedBulkOrderLine.lineNumber))
+          .update(
+            (o) => o(
+              article: drift.Value(rxArticle.value),
+              billingType: drift.Value(rxBillingType.value),
+              brand: drift.Value(rxBrand.value),
+              buyer: drift.Value(buyerOrOtherName),
+              buyerCode: drift.Value(_rxBuyerCode.value),
+              colorName: drift.Value(rxColor.value),
+              remark: drift.Value(rxRemark.value),
+              endUse: drift.Value(rxEndUse.value),
+              firstLightSource: drift.Value(rxFirstLightSource.value),
+              lineNumber: drift.Value(selectedBulkOrderLine.lineNumber),
+              orderNumber: drift.Value(selectedBulkOrderLine.orderNumber),
+              orderType: drift.Value(selectedBulkOrderLine.orderType),
+              quantity: drift.Value(int.tryParse(rxQuantity.value) ?? 1),
+              requestType: drift.Value(rxRequestType.value),
+              secondLightSource: drift.Value(rxSecondLightSource.value),
+              shade: drift.Value(rxShade.value),
+              soldTo:
+                  drift.Value(_userController.rxUserDetail.value.soldToNumber),
+              substrate: drift.Value(rxSubstrate.value),
+              tex: drift.Value(rxTex.value),
+              ticket: drift.Value(rxTicket.value),
+              uom: drift.Value(rxUom.value),
+              colorRemark: drift.Value(_colorRemark),
+              lastUpdated: drift.Value(DateTime.now()),
+              merchandiser: drift.Value(rxMerchandiser.value),
+              requestedDate: drift.Value(rxRequestedDate.value),
+              poNumber: drift.Value(rxPoNumber.value),
+              poFileName: drift.Value(rxPoFileName.value),
+              poFileBytes: drift.Value(rxPoFileBytes.value),
+              unitPrice: drift.Value(double.tryParse(rxUnitPrice.value)),
+            ),
+          );
 
       rxSelectedBulkOrderLines.clear();
 

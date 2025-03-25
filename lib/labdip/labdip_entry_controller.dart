@@ -142,7 +142,7 @@ class LabdipEntryController extends GetxController {
     "Wire & Cable",
   ];
 
-  final _skipShades = [
+  final skipShades = [
     'W32002',
     'W32001',
     'W32109',
@@ -259,7 +259,7 @@ class LabdipEntryController extends GetxController {
         (shades) {
           final validShades = shades
               .where(
-                (shade) => !_skipShades.contains(shade),
+                (shade) => !skipShades.contains(shade),
               )
               .toList()
             ..sort(
@@ -586,53 +586,62 @@ class LabdipEntryController extends GetxController {
       isOtherBuyer ? rxOtherBuyerName.value : rxBuyerName.value;
 
   void updateLapdipOrderLine() {
+    final selectedLabdipOrderLine = rxSelectedLabdipOrderLines.first;
+
     if (!validateInputs()) {
       // toastification.show(
       //   autoCloseDuration: Duration(seconds: 5),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
+    } else if (rxLabdipOrderLines.any(
+      (labdipOrderLine) =>
+          labdipOrderLine != selectedLabdipOrderLine &&
+          labdipOrderLine.article == rxArticle.value &&
+          labdipOrderLine.shade == rxShade.value,
+    )) {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 5),
+        primaryColor: VardhmanColors.red,
+        title: Text('Duplicate Article and Shade combination'),
+      );
     } else {
-      final selectedLabdipOrderLine = rxSelectedLabdipOrderLines.firstOrNull;
-
-      if (selectedLabdipOrderLine != null) {
-        _database.managers.draftTable
-            .filter((f) => f.orderNumber.equals(orderNumber))
-            .filter(
-                (f) => f.lineNumber.equals(selectedLabdipOrderLine.lineNumber))
-            .update(
-              (o) => o(
-                article: drift.Value(rxArticle.value),
-                billingType: drift.Value(rxBillingType.value),
-                brand: drift.Value(rxBrand.value),
-                buyer: drift.Value(buyerOrOtherName),
-                buyerCode: drift.Value(_rxBuyerCode.value),
-                colorName: drift.Value(rxColor.value),
-                remark: drift.Value(rxRemark.value),
-                endUse: drift.Value(rxEndUse.value),
-                firstLightSource: drift.Value(rxFirstLightSource.value),
-                lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
-                lineNumber: drift.Value(selectedLabdipOrderLine.lineNumber),
-                orderNumber: drift.Value(selectedLabdipOrderLine.orderNumber),
-                orderType: drift.Value(selectedLabdipOrderLine.orderType),
-                quantity: drift.Value(selectedLabdipOrderLine.quantity),
-                requestType: drift.Value(rxRequestType.value),
-                secondLightSource: drift.Value(rxSecondLightSource.value),
-                shade: drift.Value(rxShade.value),
-                soldTo: drift.Value(
-                    _userController.rxUserDetail.value.soldToNumber),
-                substrate: drift.Value(rxSubstrate.value),
-                tex: drift.Value(rxTex.value),
-                ticket: drift.Value(rxTicket.value),
-                uom: drift.Value(rxUom.value),
-                colorRemark: drift.Value(_colorRemark),
-                lastUpdated: drift.Value(DateTime.now()),
-                merchandiser: drift.Value(rxMerchandiser.value),
-                qtxFileName: drift.Value(rxFileName.value),
-                qtxFileBytes: drift.Value(rxFileBytes.value),
-              ),
-            );
-      }
+      _database.managers.draftTable
+          .filter((f) => f.orderNumber.equals(orderNumber))
+          .filter(
+              (f) => f.lineNumber.equals(selectedLabdipOrderLine.lineNumber))
+          .update(
+            (o) => o(
+              article: drift.Value(rxArticle.value),
+              billingType: drift.Value(rxBillingType.value),
+              brand: drift.Value(rxBrand.value),
+              buyer: drift.Value(buyerOrOtherName),
+              buyerCode: drift.Value(_rxBuyerCode.value),
+              colorName: drift.Value(rxColor.value),
+              remark: drift.Value(rxRemark.value),
+              endUse: drift.Value(rxEndUse.value),
+              firstLightSource: drift.Value(rxFirstLightSource.value),
+              lab: drift.Value('${rxL.value},${rxA.value},${rxB.value}'),
+              lineNumber: drift.Value(selectedLabdipOrderLine.lineNumber),
+              orderNumber: drift.Value(selectedLabdipOrderLine.orderNumber),
+              orderType: drift.Value(selectedLabdipOrderLine.orderType),
+              quantity: drift.Value(selectedLabdipOrderLine.quantity),
+              requestType: drift.Value(rxRequestType.value),
+              secondLightSource: drift.Value(rxSecondLightSource.value),
+              shade: drift.Value(rxShade.value),
+              soldTo:
+                  drift.Value(_userController.rxUserDetail.value.soldToNumber),
+              substrate: drift.Value(rxSubstrate.value),
+              tex: drift.Value(rxTex.value),
+              ticket: drift.Value(rxTicket.value),
+              uom: drift.Value(rxUom.value),
+              colorRemark: drift.Value(_colorRemark),
+              lastUpdated: drift.Value(DateTime.now()),
+              merchandiser: drift.Value(rxMerchandiser.value),
+              qtxFileName: drift.Value(rxFileName.value),
+              qtxFileBytes: drift.Value(rxFileBytes.value),
+            ),
+          );
 
       rxSelectedLabdipOrderLines.clear();
 
@@ -945,12 +954,12 @@ class LabdipEntryController extends GetxController {
       rxSelectedLabdipOrderLines.remove(labdipOrderLine);
     } else {
       rxSelectedLabdipOrderLines.add(labdipOrderLine);
+    }
 
-      if (rxSelectedLabdipOrderLines.length == 1) {
-        clearAllInputs();
+    if (rxSelectedLabdipOrderLines.isNotEmpty) {
+      clearAllInputs();
 
-        _populateInputs(labdipOrderLine: rxSelectedLabdipOrderLines.first);
-      }
+      _populateInputs(labdipOrderLine: rxSelectedLabdipOrderLines.last);
     }
   }
 

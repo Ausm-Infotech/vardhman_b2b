@@ -17,12 +17,14 @@ class CatalogSearchField extends StatelessWidget {
     this.hasError = false,
     this.isSearchboxEnabled = true,
     this.inputFormatters = const [],
+    this.invalidList = const [],
   });
 
   final bool isSearchboxEnabled;
   final String labelText;
   final RxString rxString;
   final List<String> searchList;
+  final List<String> invalidList;
   final bool isEnabled;
   final bool isRequired;
   final bool shouldEnforceList;
@@ -136,11 +138,12 @@ class CatalogSearchField extends StatelessWidget {
                         ),
                       ),
                       items: (searchText, cs) async {
-                        if (shouldEnforceList) {
+                        final trimmedSearchText = searchText.trim();
+
+                        if (shouldEnforceList ||
+                            invalidList.contains(trimmedSearchText)) {
                           return searchList;
                         } else {
-                          final trimmedSearchText = searchText.trim();
-
                           return [
                             if (trimmedSearchText.isNotEmpty &&
                                 !searchList.contains(trimmedSearchText))

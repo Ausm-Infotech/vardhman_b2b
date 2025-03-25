@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/new_order_date_field.dart';
+import 'package:vardhman_b2b/common/order_detail_cell.dart';
+import 'package:vardhman_b2b/common/order_detail_column_label.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/common/catalog_search_field.dart';
@@ -482,7 +484,7 @@ class CreateDtmOrderView extends StatelessWidget {
           Expanded(
             child: DataTable2(
               minWidth: 1600,
-              columnSpacing: 16,
+              columnSpacing: 0,
               showBottomBorder: true,
               border: TableBorder.symmetric(
                 inside: BorderSide(color: VardhmanColors.darkGrey, width: 0.2),
@@ -501,8 +503,9 @@ class CreateDtmOrderView extends StatelessWidget {
                 fontSize: 13,
               ),
               checkboxHorizontalMargin: 0,
-              headingRowHeight: 40,
-              dataRowHeight: 40,
+              horizontalMargin: 16,
+              headingRowHeight: 60,
+              dataRowHeight: 60,
               headingRowColor: WidgetStatePropertyAll(VardhmanColors.darkGrey),
               headingTextStyle: TextStyle(
                 color: Colors.white,
@@ -511,72 +514,72 @@ class CreateDtmOrderView extends StatelessWidget {
               ),
               columns: const [
                 DataColumn2(
-                  label: Text('#'),
+                  label: OrderDetailColumnLabel(labelText: '#'),
                   fixedWidth: 50,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Merchandiser'),
+                  label: OrderDetailColumnLabel(labelText: 'Merchandiser'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Buyer'),
+                  label: OrderDetailColumnLabel(labelText: 'Buyer'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Article'),
+                  label: OrderDetailColumnLabel(labelText: 'Article'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('UOM'),
+                  label: OrderDetailColumnLabel(labelText: 'UOM'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Ticket'),
+                  label: OrderDetailColumnLabel(labelText: 'Ticket'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Brand'),
+                  label: OrderDetailColumnLabel(labelText: 'Brand'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Tex'),
+                  label: OrderDetailColumnLabel(labelText: 'Tex'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Substrate'),
+                  label: OrderDetailColumnLabel(labelText: 'Substrate'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Shade'),
+                  label: OrderDetailColumnLabel(labelText: 'Shade'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Style/Part No.'),
+                  label: OrderDetailColumnLabel(labelText: 'Style/Part No.'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Quantity'),
+                  label: OrderDetailColumnLabel(labelText: 'Quantity'),
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Requested Date'),
-                  size: ColumnSize.M,
+                  label: OrderDetailColumnLabel(labelText: 'Requested Date'),
+                  size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
-                  label: Text('Remark'),
+                  label: OrderDetailColumnLabel(labelText: 'Remark'),
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -602,132 +605,76 @@ class CreateDtmOrderView extends StatelessWidget {
                     },
                     cells: [
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            (index + 1).toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: (index + 1).toString(),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.merchandiser,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.merchandiser,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.buyer,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.buyer,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.article,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.article,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "${dtmOrderLine.uom} - $uomDesc",
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: "${dtmOrderLine.uom} - $uomDesc",
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.ticket,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.ticket,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.brand,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.brand,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.tex,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.tex,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.substrate,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.substrate,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.shade,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.shade,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.colorName,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.colorName,
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.quantity.toString(),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.quantity.toString(),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.requestedDate == null
-                                ? ''
-                                : DateFormat('d MMM yyyy')
-                                    .format(dtmOrderLine.requestedDate!),
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.requestedDate == null
+                              ? ''
+                              : DateFormat('d MMM yyyy')
+                                  .format(dtmOrderLine.requestedDate!),
                         ),
                       ),
                       DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            dtmOrderLine.remark,
-                            textAlign: TextAlign.end,
-                          ),
+                        OrderDetailCell(
+                          cellText: dtmOrderLine.remark,
                         ),
                       ),
                     ],
