@@ -183,7 +183,7 @@ class FeedbackDialog extends StatelessWidget {
 
                                           toastification.show(
                                             autoCloseDuration:
-                                                Duration(seconds: 2),
+                                                Duration(seconds: 3),
                                             primaryColor: VardhmanColors.green,
                                             title: Text('Accepted'),
                                           );
@@ -210,7 +210,7 @@ class FeedbackDialog extends StatelessWidget {
 
                                           toastification.show(
                                             autoCloseDuration:
-                                                Duration(seconds: 2),
+                                                Duration(seconds: 3),
                                             primaryColor: VardhmanColors.red,
                                             title: Text('Rejected'),
                                           );

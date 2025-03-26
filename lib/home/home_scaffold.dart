@@ -204,7 +204,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                                                     autoCloseDuration:
                                                                         Duration(
                                                                             seconds:
-                                                                                5),
+                                                                                3),
                                                                     primaryColor:
                                                                         VardhmanColors
                                                                             .green,
