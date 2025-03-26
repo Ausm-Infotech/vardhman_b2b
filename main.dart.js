@@ -34141,7 +34141,7 @@ s=p}while(true)switch(s){case 0:p=4
 k=$.dQ()
 j=t.N
 s=7
-return A.q(k.dg("/v2/tokenrequest",A.V(["username","DEV14","password","Secure@3","deviceName",a],j,j),t.z),$async$aj0)
+return A.q(k.dg("/v2/tokenrequest",A.V(["username","JDEMAPP","password","AppSecure#2","deviceName",a],j,j),t.z),$async$aj0)
 case 7:n=c
 if(n.c===200){m=J.E(J.E(n.a,"userInfo"),"token")
 j=k.tx$
@@ -121824,7 +121824,7 @@ J.bH(r,s)
 p.k2$.aX(p.gi(0))}return p.gq(0)===0},
 aFB(){var s,r,q,p=this,o=null
 if(p.qL()){s=p.xr
-if(s.d7(s,new A.akG(p)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
+if(s.d7(s,new A.akG(p)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
 else{s=p.ak
 A.hQ(s,s.giu()).AF(0,new A.akH(p),B.f7)
 s=p.fr.k4$
@@ -121857,7 +121857,7 @@ q.push(J.A(s))
 p.m4(q)}}},
 aT1(){var s,r,q=this,p=null,o=q.W,n=o.gO(o)
 if(q.qL()){s=q.xr
-if(s.d7(s,new A.alg(q,n)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
+if(s.d7(s,new A.alg(q,n)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
 else{s=q.ak
 A.hQ(s,s.giu()).eV(0,new A.alh(q)).eV(0,new A.ali(n)).cI(0,new A.alj(q,n))
 o.sq(0,0)
@@ -122071,8 +122071,8 @@ else{a7=a7.b
 a7=a7==null?null:B.c.bm(a7.k(0))}a7=A.f2(a7==null?"":a7,null)
 h=new A.tQ(b1,b0,b4,b5,b6,b2,b7,a7==null?0:a7,b3)
 a7=h
-if(a7.a.length===0||a7.b.length===0||a7.e.length===0||a7.w<1||a7.c.length===0||a7.d.length===0||a7.f.length===0||a7.x.length===0)$.de().dh(0,new A.aP(5e6),B.B,new A.c0("Required fields missing in row "+A.u(j),null,null,null,null,null,null,null,null,null,null,null))
-else if(J.bto(k,new A.akX(h))||a6.d7(a6,new A.akY(h)))$.de().dh(0,new A.aP(5e6),B.B,new A.c0("Duplicate item number in row "+A.u(j),null,null,null,null,null,null,null,null,null,null,null))
+if(a7.a.length===0||a7.b.length===0||a7.e.length===0||a7.w<1||a7.c.length===0||a7.d.length===0||a7.f.length===0||a7.x.length===0)$.de().dh(0,new A.aP(3e6),B.B,new A.c0("Required fields missing in row "+A.u(j),null,null,null,null,null,null,null,null,null,null,null))
+else if(J.bto(k,new A.akX(h))||a6.d7(a6,new A.akY(h)))$.de().dh(0,new A.aP(3e6),B.B,new A.c0("Duplicate item number in row "+A.u(j),null,null,null,null,null,null,null,null,null,null,null))
 else J.bH(k,h);++j}a4=k
 a5=A.S(a4).h("W<1,c>")
 g=A.a_(new A.W(a4,new A.akZ(),a5),!0,a5.h("ax.E"))
@@ -122086,7 +122086,7 @@ a4=k
 a5=A.S(a4).h("af<1>")
 d=A.a_(new A.af(a4,new A.al0(f),a5),!0,a5.h("w.E"))
 if(J.a6(d)!==0){a4=d
-$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Invalid item numbers: "+new A.W(a4,new A.al1(),A.S(a4).h("W<1,c>")).br(0,", "),null,null,null,null,null,null,null,null,null))}a4=e,a5=a4.length,a6=o.ak,a7=o.aj,a8=a7.CW,b0=o.y1,b1=o.y2,b8=0
+$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Invalid item numbers: "+new A.W(a4,new A.al1(),A.S(a4).h("W<1,c>")).br(0,", "),null,null,null,null,null,null,null,null,null))}a4=e,a5=a4.length,a6=o.ak,a7=o.aj,a8=a7.CW,b0=o.y1,b1=o.y2,b8=0
 case 10:if(!(b8<a4.length)){s=12
 break}b2={}
 c=a4[b8]
@@ -122503,7 +122503,7 @@ o=$.ac
 if(o==null)o=$.ac=B.y
 if($.eD.S(0,o.hK(0,A.bx(p),null)))A.u5(q,!1,null,p)
 A.qw(q,A.bgz(n),!1,null,p)
-A.oi(q,B.tb,t.z)}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
+A.oi(q,B.tb,t.z)}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -124916,7 +124916,7 @@ J.bH(r,s)
 p.k2$.aX(p.gi(0))}return p.gq(0)===0},
 aFG(){var s,r,q,p=this,o=null
 if(p.qL()){s=p.xr
-if(s.d7(s,new A.aqT(p)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
+if(s.d7(s,new A.aqT(p)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
 else{s=p.W
 A.hQ(s,s.giu()).AF(0,new A.aqU(p),B.f7)
 s=p.fr.k4$
@@ -124949,7 +124949,7 @@ q.push(J.A(s))
 p.m4(q)}}},
 aT4(){var s,r,q=this,p=null,o=q.N,n=o.gO(o)
 if(q.qL()){s=q.xr
-if(s.d7(s,new A.arj(q,n)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
+if(s.d7(s,new A.arj(q,n)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
 else{s=q.W
 A.hQ(s,s.giu()).eV(0,new A.ark(q)).eV(0,new A.arl(n)).cI(0,new A.arm(q,n))
 o.sq(0,0)
@@ -125416,7 +125416,7 @@ o=$.ac
 if(o==null)o=$.ac=B.y
 if($.eD.S(0,o.hK(0,A.bx(p),null)))A.u5(q,!1,null,p)
 A.qw(q,A.bhB(n),!1,null,p)
-A.oi(q,B.tc,t.z)}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
+A.oi(q,B.tc,t.z)}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -126157,9 +126157,9 @@ case 5:if(b){l=e.k4$
 l===$&&A.a()
 J.wh(l)
 e.k2$.aX(e.gi(0))
-$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag("Rematch order "+n+" placed successfully!",null,null,null,null,null,null,null,null,null))
+$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag("Rematch order "+n+" placed successfully!",null,null,null,null,null,null,null,null,null))
 if(j.gi(0).d)A.AT(j.gi(0).c,n)
-if(j.gi(0).f)A.AU(j.gi(0).c,n)}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
+if(j.gi(0).f)A.AU(j.gi(0).c,n)}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
 case 4:s=6
 return A.q(q.ax.Cv(),$async$v3)
 case 6:A.js(f)
@@ -126408,7 +126408,7 @@ J.bH(r,s)
 p.k2$.aX(p.gi(0))}}}return p.gq(0)===0},
 aFK(){var s,r,q,p=this,o=null
 if(p.qL()){s=p.to
-if(s.d7(s,new A.ayD(p)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
+if(s.d7(s,new A.ayD(p)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",o,o,o,o,o,o,o,o,o))
 else{s=p.D
 A.hQ(s,s.giu()).AF(0,new A.ayE(p),B.f7)
 s=p.cy.k4$
@@ -126432,7 +126432,7 @@ q.push(J.A(s))
 p.m4(q)}}},
 aT6(){var s,r,q=this,p=null,o=q.aQ,n=o.gO(o)
 if(q.qL()){s=q.to
-if(s.d7(s,new A.az8(q,n)))$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
+if(s.d7(s,new A.az8(q,n)))$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Duplicate Article and Shade combination",p,p,p,p,p,p,p,p,p))
 else{s=q.D
 A.hQ(s,s.giu()).eV(0,new A.az9(q)).eV(0,new A.aza(n)).cI(0,new A.azb(q,n))
 o.sq(0,0)
@@ -126990,7 +126990,7 @@ o=$.ac
 if(o==null)o=$.ac=B.y
 if($.eD.S(0,o.hK(0,A.bx(p),null)))A.u5(q,!1,null,p)
 A.qw(q,A.biG(n),!1,null,p)
-A.oi(q,B.ta,t.z)}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
+A.oi(q,B.ta,t.z)}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Failed to fetch new order number!",null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -127147,7 +127147,7 @@ case 5:s=4
 return A.q(o.aj0(c+"_"+a),$async$uk)
 case 4:if(c){q=!0
 s=1
-break}else{$.de().r7(0,B.bx,A.bf(0,0,0,0,2),B.B,B.aie)
+break}else{$.de().r7(0,B.bx,A.bf(0,0,0,0,3),B.B,B.aie)
 q=!1
 s=1
 break}case 1:return A.m(q,r)}})
@@ -127167,7 +127167,7 @@ o=b.b
 n=o==null
 if(!(n?b.$ti.c.a(o):o)){q.dy="1234"
 m=$.de()
-l=A.bf(0,0,0,0,2)
+l=A.bf(0,0,0,0,3)
 k=p.c
 j=k.b
 i=j==null
@@ -127208,13 +127208,13 @@ d=p.as
 c=d.b
 d=c==null?d.$ti.c.a(c):c
 q.db.si(0,new A.dj(m,b,o,n,l,k,j,i,h,g,f,e,d))
-q.dx.si(0,B.ns)}else $.de().r7(0,B.bx,A.bf(0,0,0,0,2),B.B,B.aiO)}else $.de().r7(0,B.bx,A.bf(0,0,0,0,2),B.B,B.aiI)
+q.dx.si(0,B.ns)}else $.de().r7(0,B.bx,A.bf(0,0,0,0,3),B.B,B.aiO)}else $.de().r7(0,B.bx,A.bf(0,0,0,0,3),B.B,B.aiI)
 case 3:return A.m(null,r)}})
 return A.n($async$D0,r)},
 V8(){var s=0,r=A.o(t.H),q=this
 var $async$V8=A.p(function(a,b){if(a===1)return A.l(b,r)
 while(true)switch(s){case 0:if(J.e(q.CW.gi(0),q.dy))q.dx.si(0,B.nt)
-else $.de().r7(0,B.bx,A.bf(0,0,0,0,2),B.B,B.aiP)
+else $.de().r7(0,B.bx,A.bf(0,0,0,0,3),B.B,B.aiP)
 return A.m(null,r)}})
 return A.n($async$V8,r)},
 K0(){var s=0,r=A.o(t.H),q=this,p
@@ -127227,7 +127227,7 @@ s=5
 return A.q(q.jr(p),$async$K0)
 case 5:s=3
 break
-case 4:$.de().r7(0,B.bx,A.bf(0,0,0,0,2),B.B,B.aiZ)
+case 4:$.de().r7(0,B.bx,A.bf(0,0,0,0,3),B.B,B.aiZ)
 case 3:return A.m(null,r)}})
 return A.n($async$K0,r)},
 yt(){var s=0,r=A.o(t.H),q=this,p
@@ -127266,7 +127266,7 @@ case 10:p=q.ax
 s=11
 return A.q(A.beU(p,p.gV6()).AF(0,new A.aAb(q),B.f7),$async$jr)
 case 11:q.dx.si(0,B.zR)
-$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag("Logged in as "+a.w,null,null,null,null,null,null,null,null,null))
+$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag("Logged in as "+a.w,null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$jr,r)},
 CB(a,b,c){return this.aS5(a,b,c)},
@@ -127491,10 +127491,10 @@ else{n=n.appendChild(k)
 n.toString}t.eq.a(n).submit()}n=$.bc()
 A.js(n)
 A.js(n)
-$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag(u.a,null,null,null,null,null,null,null,null,null))
+$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag(u.a,null,null,null,null,null,null,null,null,null))
 s=1
 break
-case 7:case 5:$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag(u.q,null,null,null,null,null,null,null,null,null))
+case 7:case 5:$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag(u.q,null,null,null,null,null,null,null,null,null))
 case 1:return A.m(q,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -127559,10 +127559,10 @@ else{n=n.appendChild(j)
 n.toString}t.eq.a(n).submit()}case 10:n=$.bc()
 A.js(n)
 A.js(n)
-$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag(u.a,null,null,null,null,null,null,null,null,null))
+$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag(u.a,null,null,null,null,null,null,null,null,null))
 s=1
 break
-case 7:case 5:$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag(u.q,null,null,null,null,null,null,null,null,null))
+case 7:case 5:$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag(u.q,null,null,null,null,null,null,null,null,null))
 case 1:return A.m(q,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -127595,11 +127595,11 @@ while(true)switch(s){case 0:n=p.a
 m=B.b.ei(n.gTE(),new A.axr(n))
 if(!B.b.ei(n.gTW(),new A.axs(n))){o=n.fr
 o=o.d7(o,new A.axt())}else o=!1
-if(o){$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Please select all overdue invoices to proceed.",null,null,null,null,null,null,null,null,null))
+if(o){$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Please select all overdue invoices to proceed.",null,null,null,null,null,null,null,null,null))
 s=1
 break}else{if(!m){n=n.fr
 n=n.d7(n,new A.axu())}else n=!1
-if(n){$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Please select all not due invoices to proceed.",null,null,null,null,null,null,null,null,null))
+if(n){$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Please select all not due invoices to proceed.",null,null,null,null,null,null,null,null,null))
 s=1
 break}}A.oi($.bc(),B.X7,t.z)
 case 1:return A.m(q,r)}})
@@ -127668,7 +127668,7 @@ s=2
 return A.q(A.aiR(n,o),$async$$0)
 case 2:p=b
 if(p!=null)new A.Ze().aeg(new Uint8Array(A.h8(p)),""+n+"_"+o+".pdf")
-else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Invoice not found",null,null,null,null,null,null,null,null,null))
+else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Invoice not found",null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -127760,10 +127760,10 @@ s=3
 return A.q(A.aja(a,m,l.gi(0).x,b,c,n.CW.gi(0).z,j,k),$async$DS)
 case 3:o=e
 p.ch.si(0,!1)
-if(o){$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
+if(o){$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
 if(l.gi(0).d)A.AT(l.gi(0).c,a)
 if(l.gi(0).f)A.AU(l.gi(0).c,a)
-p.HI()}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
+p.HI()}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
 q=o
 s=1
 break
@@ -127785,10 +127785,10 @@ s=3
 return A.q(A.aj5(a,m,l.gi(0).x,b,c,n.CW.gi(0).z,j,k),$async$DQ)
 case 3:o=e
 p.ch.si(0,!1)
-if(o){$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
+if(o){$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
 if(l.gi(0).d)A.AT(l.gi(0).c,a)
 if(l.gi(0).f)A.AU(l.gi(0).c,a)
-p.HI()}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
+p.HI()}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
 q=o
 s=1
 break
@@ -127810,10 +127810,10 @@ s=3
 return A.q(A.aj3(a,m,b,l.gi(0).x,c,n.CW.gi(0).z,j,k),$async$DP)
 case 3:o=e
 p.ch.si(0,!1)
-if(o){$.de().dh(0,A.bf(0,0,0,0,5),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
+if(o){$.de().dh(0,A.bf(0,0,0,0,3),B.bR,A.ag("Order "+a+" placed successfully!",null,null,null,null,null,null,null,null,null))
 if(l.gi(0).d)A.AT(l.gi(0).c,a)
 if(l.gi(0).f)A.AU(l.gi(0).c,a)
-p.HI()}else $.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
+p.HI()}else $.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Some error placing the order!",null,null,null,null,null,null,null,null,null))
 q=o
 s=1
 break
@@ -127920,7 +127920,7 @@ var $async$$0=A.p(function(a,b){if(a===1)return A.l(b,r)
 while(true)switch(s){case 0:p=q.a
 s=2
 return A.q(A.aiQ(p.x,p.w),$async$$0)
-case 2:if(b==null)$.de().dh(0,A.bf(0,0,0,0,5),B.B,A.ag("Invoice not found",null,null,null,null,null,null,null,null,null))
+case 2:if(b==null)$.de().dh(0,A.bf(0,0,0,0,3),B.B,A.ag("Invoice not found",null,null,null,null,null,null,null,null,null))
 return A.m(null,r)}})
 return A.n($async$$0,r)},
 $S:2}
@@ -139278,7 +139278,7 @@ return p})
 s($,"bKX","bpj",()=>A.bjK())
 s($,"bKI","beW",()=>{var q=null
 return A.bh6(A.WB("https://b2b.amefird.in:8081",q,A.V(["Authorization","Basic dnl0bDpPQUlJSkRvaWpmQCM="],t.N,t.z),q,q,q,B.dN,q,q))})
-s($,"bKH","dQ",()=>{var q=null,p=A.bh6(A.WB("https://erpdev.vardhmanthreads.in/jderest",B.mj,A.V(["Content-Type","application/json","Connection","keep-alive","Accept-Encoding","gzip, deflate, br","Accept","*/*"],t.N,t.z),q,!0,B.mj,B.dN,B.mj,new A.aiN())),o=p.a8E$
+s($,"bKH","dQ",()=>{var q=null,p=A.bh6(A.WB("https://erptest.vardhmanthreads.in/jderest",B.mj,A.V(["Content-Type","application/json","Connection","keep-alive","Accept-Encoding","gzip, deflate, br","Accept","*/*"],t.N,t.z),q,!0,B.mj,B.dN,B.mj,new A.aiN())),o=p.a8E$
 o.t(o,new A.a_j(new A.aiO(),q,q,q))
 return p})
 s($,"bQt","bso",()=>A.ai(u.u))
