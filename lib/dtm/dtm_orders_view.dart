@@ -72,7 +72,7 @@ class DtmOrdersView extends StatelessWidget {
                   );
                 } else {
                   toastification.show(
-                    autoCloseDuration: Duration(seconds: 5),
+                    autoCloseDuration: Duration(seconds: 3),
                     primaryColor: VardhmanColors.red,
                     title: Text('Failed to fetch new order number!'),
                   );

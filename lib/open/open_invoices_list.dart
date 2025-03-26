@@ -147,7 +147,7 @@ class OpenInvoicesList extends StatelessWidget {
                               );
                             } else {
                               toastification.show(
-                                autoCloseDuration: Duration(seconds: 5),
+                                autoCloseDuration: Duration(seconds: 3),
                                 primaryColor: VardhmanColors.red,
                                 title: Text(
                                   'Invoice not found',
@@ -164,7 +164,7 @@ class OpenInvoicesList extends StatelessWidget {
                               log('Invoice downloaded: $file');
                             } else {
                               toastification.show(
-                                autoCloseDuration: Duration(seconds: 5),
+                                autoCloseDuration: Duration(seconds: 3),
                                 primaryColor: VardhmanColors.red,
                                 title: Text(
                                   'Invoice not found',

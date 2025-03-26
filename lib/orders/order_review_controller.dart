@@ -69,7 +69,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.green,
         title: Text(
           'Order $b2bOrderNumber placed successfully!',
@@ -93,7 +93,7 @@ class OrderReviewController extends GetxController {
       fetchOrderNumber();
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text(
           'Some error placing the order!',
@@ -130,7 +130,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-          autoCloseDuration: Duration(seconds: 5),
+          autoCloseDuration: Duration(seconds: 3),
           primaryColor: VardhmanColors.green,
           title: Text('Order $b2bOrderNumber placed successfully!'));
 
@@ -151,7 +151,7 @@ class OrderReviewController extends GetxController {
       fetchOrderNumber();
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Some error placing the order!'),
       );
@@ -186,7 +186,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.green,
         title: Text('Order $b2bOrderNumber placed successfully!'),
       );
@@ -208,7 +208,7 @@ class OrderReviewController extends GetxController {
       fetchOrderNumber();
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Some error placing the order!'),
       );

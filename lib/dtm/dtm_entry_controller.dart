@@ -500,7 +500,7 @@ class DtmEntryController extends GetxController {
   void addDtmOrderLine() {
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -510,7 +510,7 @@ class DtmEntryController extends GetxController {
           dtmOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );
@@ -575,7 +575,7 @@ class DtmEntryController extends GetxController {
 
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -586,7 +586,7 @@ class DtmEntryController extends GetxController {
           dtmOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );

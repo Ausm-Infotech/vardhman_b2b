@@ -74,7 +74,7 @@ class InvoiceReviewView extends StatelessWidget {
                                       invoiceInfo.status ==
                                           InvoiceStatus.discounted)) {
                             toastification.show(
-                              autoCloseDuration: Duration(seconds: 5),
+                              autoCloseDuration: Duration(seconds: 3),
                               primaryColor: VardhmanColors.red,
                               title: Text(
                                 'Please select all overdue invoices to proceed.',
@@ -89,7 +89,7 @@ class InvoiceReviewView extends StatelessWidget {
                                     InvoiceStatus.discounted,
                               )) {
                             toastification.show(
-                              autoCloseDuration: Duration(seconds: 5),
+                              autoCloseDuration: Duration(seconds: 3),
                               primaryColor: VardhmanColors.red,
                               title: Text(
                                 'Please select all not due invoices to proceed.',

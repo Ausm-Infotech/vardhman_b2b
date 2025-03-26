@@ -519,7 +519,7 @@ class LabdipEntryController extends GetxController {
   void addLapdipOrderLine() {
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -529,7 +529,7 @@ class LabdipEntryController extends GetxController {
           labdipOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );
@@ -590,7 +590,7 @@ class LabdipEntryController extends GetxController {
 
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -601,7 +601,7 @@ class LabdipEntryController extends GetxController {
           labdipOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );

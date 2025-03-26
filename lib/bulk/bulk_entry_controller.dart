@@ -508,7 +508,7 @@ class BulkEntryController extends GetxController {
   void addBulkOrderLine() {
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -518,7 +518,7 @@ class BulkEntryController extends GetxController {
           bulkOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );
@@ -584,7 +584,7 @@ class BulkEntryController extends GetxController {
 
     if (!validateInputs()) {
       // toastification.show(
-      //   autoCloseDuration: Duration(seconds: 5),
+      //   autoCloseDuration: Duration(seconds: 3),
       //   primaryColor: VardhmanColors.red,
       //   title: Text('Please fill all the required fields'),
       // );
@@ -595,7 +595,7 @@ class BulkEntryController extends GetxController {
           bulkOrderLine.shade == rxShade.value,
     )) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: Text('Duplicate Article and Shade combination'),
       );
@@ -863,7 +863,7 @@ class BulkEntryController extends GetxController {
 
           if (excelLine.hasError) {
             toastification.show(
-              autoCloseDuration: Duration(seconds: 5),
+              autoCloseDuration: Duration(seconds: 3),
               primaryColor: VardhmanColors.red,
               title: Text('Required fields missing in row $i'),
             );
@@ -876,7 +876,7 @@ class BulkEntryController extends GetxController {
                     orderLine.shade == excelLine.shade,
               )) {
             toastification.show(
-              autoCloseDuration: Duration(seconds: 5),
+              autoCloseDuration: Duration(seconds: 3),
               primaryColor: VardhmanColors.red,
               title: Text('Duplicate item number in row $i'),
             );
@@ -903,7 +903,7 @@ class BulkEntryController extends GetxController {
 
         if (invalidExcelLines.isNotEmpty) {
           toastification.show(
-            autoCloseDuration: Duration(seconds: 5),
+            autoCloseDuration: Duration(seconds: 3),
             primaryColor: VardhmanColors.red,
             title: Text(
                 'Invalid item numbers: ${invalidExcelLines.map((e) => e.itemNumber).join(', ')}'),

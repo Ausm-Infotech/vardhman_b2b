@@ -138,7 +138,7 @@ class LoginController extends GetxController {
       return true;
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 2),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: const Text('Connection error!'),
         alignment: Alignment.bottomCenter,
@@ -162,7 +162,7 @@ class LoginController extends GetxController {
           _otp = "1234";
 
           toastification.show(
-            autoCloseDuration: Duration(seconds: 2),
+            autoCloseDuration: Duration(seconds: 3),
             primaryColor: VardhmanColors.green,
             alignment: Alignment.bottomCenter,
             title: Text(
@@ -189,7 +189,7 @@ class LoginController extends GetxController {
           rxLoginState.value = LoginState.otp;
         } else {
           toastification.show(
-            autoCloseDuration: Duration(seconds: 2),
+            autoCloseDuration: Duration(seconds: 3),
             primaryColor: VardhmanColors.red,
             title: const Text('User is not a B2B Portal user!'),
             alignment: Alignment.bottomCenter,
@@ -197,7 +197,7 @@ class LoginController extends GetxController {
         }
       } else {
         toastification.show(
-          autoCloseDuration: Duration(seconds: 2),
+          autoCloseDuration: Duration(seconds: 3),
           primaryColor: VardhmanColors.red,
           title: const Text('User not found!'),
           alignment: Alignment.bottomCenter,
@@ -211,7 +211,7 @@ class LoginController extends GetxController {
       rxLoginState.value = LoginState.setPassword;
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 2),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: const Text('Incorrect OTP!'),
         alignment: Alignment.bottomCenter,
@@ -226,7 +226,7 @@ class LoginController extends GetxController {
       );
     } else {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 2),
+        autoCloseDuration: Duration(seconds: 3),
         primaryColor: VardhmanColors.red,
         title: const Text('Incorrect password!'),
         alignment: Alignment.bottomCenter,
@@ -292,7 +292,7 @@ class LoginController extends GetxController {
     rxLoginState.value = LoginState.loggedIn;
 
     toastification.show(
-      autoCloseDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(seconds: 3),
       primaryColor: VardhmanColors.green,
       title: Text('Logged in as ${userDetail.name}'),
     );

@@ -36,7 +36,7 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erpdev.vardhmanthreads.in/jderest',
+      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -68,7 +68,7 @@ class Api {
             //   userController.logOut();
 
             //   toastification.show(
-            //     autoCloseDuration: Duration(seconds: 5),
+            //     autoCloseDuration: Duration(seconds: 3),
             //     primaryColor: VardhmanColors.red,
             //     title: Text('Session Expired'),
             //   );
@@ -85,10 +85,10 @@ class Api {
       final response = await _dio.post(
         '/v2/tokenrequest',
         data: {
-          "username": "DEV14",
-          "password": "Secure@3",
-          // "username": "JDEMAPP",
-          // "password": "AppSecure#2",
+          // "username": "DEV14",
+          // "password": "Secure@3",
+          "username": "JDEMAPP",
+          "password": "AppSecure#2",
           "deviceName": deviceName,
         },
       );
