@@ -35344,7 +35344,7 @@ var $async$W7=A.p(function(b,c){if(b===1){o.push(c)
 s=p}while(true)switch(s){case 0:p=4
 l=t.N
 s=7
-return A.q($.dQ().dg("/orchestrator/ORCH55_ICICIEncrypt",A.V(["plainText",a],l,l),t.z),$async$W7)
+return A.q($.dQ().dg("/orchestrator/ORCH55_ICICIEncryptProd",A.V(["plainText",a],l,l),t.z),$async$W7)
 case 7:n=c
 if(n.c===200){l=J.E(n.a,"encryptedText")
 q=l
@@ -127473,12 +127473,12 @@ if(l!=null){n=document
 k=n.createElement("form")
 k.setAttribute("id","paymentForm")
 k.setAttribute("method","POST")
-k.setAttribute("action","https://demo.b2biz.co.in/ws/payment")
+k.setAttribute("action","https://b2biz.co.in/ws/payment")
 k.setAttribute("target","_self")
 j=n.createElement("input")
 j.setAttribute("type","text")
 j.setAttribute("name","walletClientCode")
-j.setAttribute("value","WT-1474")
+j.setAttribute("value","WT-1573")
 k.appendChild(j).toString
 i=n.createElement("input")
 i.setAttribute("type","text")
@@ -127541,12 +127541,12 @@ if(k!=null){n=document
 j=n.createElement("form")
 j.setAttribute("id","paymentForm")
 j.setAttribute("method","POST")
-j.setAttribute("action","https://demo.b2biz.co.in/ws/payment")
+j.setAttribute("action","https://b2biz.co.in/ws/payment")
 j.setAttribute("target","_self")
 i=n.createElement("input")
 i.setAttribute("type","text")
 i.setAttribute("name","walletClientCode")
-i.setAttribute("value","WT-1474")
+i.setAttribute("value","WT-1573")
 j.appendChild(i).toString
 h=n.createElement("input")
 h.setAttribute("type","text")
