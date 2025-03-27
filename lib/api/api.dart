@@ -1885,7 +1885,7 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        '/orchestrator/ORCH55_ICICIEncrypt',
+        '/orchestrator/ORCH55_ICICIEncryptProd',
         data: {
           "plainText": plainText,
         },

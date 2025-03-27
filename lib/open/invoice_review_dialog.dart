@@ -112,19 +112,19 @@ class InvoiceReviewDialog extends StatelessWidget {
                           log('Encrypted String: $encryptedString');
 
                           if (encryptedString != null) {
-                            final paymentFormElement =
-                                html.document.createElement('form')
-                                  ..setAttribute('id', 'paymentForm')
-                                  ..setAttribute('method', "POST")
-                                  ..setAttribute('action',
-                                      "https://demo.b2biz.co.in/ws/payment")
-                                  ..setAttribute('target', '_self');
+                            final paymentFormElement = html.document
+                                .createElement('form')
+                              ..setAttribute('id', 'paymentForm')
+                              ..setAttribute('method', "POST")
+                              ..setAttribute(
+                                  'action', "https://b2biz.co.in/ws/payment")
+                              ..setAttribute('target', '_self');
 
                             final walletClientCodeInput =
                                 html.document.createElement('input')
                                   ..setAttribute('type', 'text')
                                   ..setAttribute('name', 'walletClientCode')
-                                  ..setAttribute('value', 'WT-1474');
+                                  ..setAttribute('value', 'WT-1573');
 
                             paymentFormElement.append(walletClientCodeInput);
 
