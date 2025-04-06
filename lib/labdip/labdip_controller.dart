@@ -14,6 +14,16 @@ import 'package:vardhman_b2b/user/user_controller.dart';
 class LabdipController extends GetxController {
   final OrdersController ordersController = Get.find<OrdersController>();
 
+  final rxEarliestOrderDate = oldestDateTime.obs;
+
+  final rxOrderFromDate = oldestDateTime.obs;
+
+  final rxOrderToDate = DateTime.now().obs;
+
+  final rxOrderNumberInput = ''.obs;
+
+  final rxMerchandiserInput = ''.obs;
+
   final rejectionReasons = [
     'Late Delivery',
     'Tonel Difference',
@@ -35,6 +45,8 @@ class LabdipController extends GetxController {
   final rxOrderDetailLines = <OrderDetailLine>[].obs;
 
   final rxOrderDetailFeedbackMap = <OrderDetailLine, LabdipFeedback>{}.obs;
+
+  final rxLabdipFeedbacks = <LabdipFeedback>[].obs;
 
   final Database _database = Get.find<Database>();
 
@@ -70,6 +82,22 @@ class LabdipController extends GetxController {
         }
       },
     );
+
+    ordersController.rxOrderHeaderLines.listen(
+      (orderHeaderLines) {
+        rxEarliestOrderDate.value =
+            labdipOrders.lastOrNull?.orderDate ?? oldestDateTime;
+
+        rxOrderFromDate.value =
+            labdipOrders.lastOrNull?.orderDate ?? oldestDateTime;
+      },
+    );
+  }
+
+  Future<void> refreshOrders() async {
+    await ordersController.refreshOrders();
+
+    await refreshLabdipFeedbacks();
   }
 
   Future<void> selectOrder(OrderHeaderLine orderHeaderLine) async {
@@ -108,6 +136,18 @@ class LabdipController extends GetxController {
 
       rxOrderDetailLines.addAll(orderDetailLines);
     }
+  }
+
+  Future<void> refreshLabdipFeedbacks() async {
+    final labdipFeedbacks = await Api.fetchLabdipFeedback(
+      labdipOrders
+          .map((orderHeaderLine) => orderHeaderLine.orderNumber)
+          .toList(),
+    );
+
+    rxLabdipFeedbacks.clear();
+
+    rxLabdipFeedbacks.addAll(labdipFeedbacks);
   }
 
   Future<void> submitFeedback() async {
@@ -190,7 +230,7 @@ class LabdipController extends GetxController {
       }
     }
 
-    await ordersController.refreshLabdipFeedbacks();
+    await refreshLabdipFeedbacks();
 
     Get.back();
   }
@@ -203,10 +243,49 @@ class LabdipController extends GetxController {
         .toList();
   }
 
-  List<OrderHeaderLine> get filteredLabdipOrders =>
-      ordersController.filteredOrderHeaderLines
-          .where(
-            (orderHeaderLine) => orderHeaderLine.orderType == 'LD',
-          )
-          .toList();
+  List<OrderHeaderLine> get labdipOrders => ordersController.rxOrderHeaderLines
+      .where((orderHeaderLine) => orderHeaderLine.orderType == 'LD')
+      .toList();
+
+  List<OrderHeaderLine> get filteredLabdipOrders => labdipOrders
+      .where(
+        (orderHeaderLine) =>
+            (orderHeaderLine.orderReference
+                    .trim()
+                    .contains(rxOrderNumberInput.value) ||
+                orderHeaderLine.orderNumber
+                    .toString()
+                    .contains(rxOrderNumberInput.value)) &&
+            orderHeaderLine.orderDate.isAfter(
+              rxOrderFromDate.value.subtract(
+                const Duration(days: 1),
+              ),
+            ) &&
+            orderHeaderLine.orderDate.isBefore(
+              rxOrderToDate.value.add(
+                const Duration(days: 1),
+              ),
+            ) &&
+            orderHeaderLine.merchandiser.contains(rxMerchandiserInput.value),
+      )
+      .toList();
+
+  bool get hasDefaultValues =>
+      areDatesEqual(
+        rxOrderFromDate.value,
+        rxEarliestOrderDate.value,
+      ) &&
+      areDatesEqual(rxOrderToDate.value, DateTime.now()) &&
+      rxOrderNumberInput.value.isEmpty &&
+      rxMerchandiserInput.value.isEmpty;
+
+  Future<void> setDefaultValues() async {
+    rxOrderFromDate.value = rxEarliestOrderDate.value;
+
+    rxOrderToDate.value = DateTime.now();
+
+    rxOrderNumberInput.value = '';
+
+    rxMerchandiserInput.value = '';
+  }
 }

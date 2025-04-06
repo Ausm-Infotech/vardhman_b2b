@@ -598,7 +598,7 @@ class CreateDtmOrderView extends StatelessWidget {
                         ? WidgetStatePropertyAll(Colors.white)
                         : WidgetStatePropertyAll(
                             VardhmanColors.dividerGrey.withAlpha(128)),
-                    selected: dtmEntryController.rxSelectedDtmOrderLines
+                    selected: dtmEntryController.dtmOrderLinesDescending
                         .contains(dtmOrderLine),
                     onSelectChanged: (_) {
                       dtmEntryController.selectDtmOrderLine(dtmOrderLine);

@@ -834,23 +834,17 @@ class DtmEntryController extends GetxController {
     _rxBuyerCode.value = dtmOrderLine.buyerCode;
     rxFirstLightSource.value = dtmOrderLine.firstLightSource;
     rxSecondLightSource.value = dtmOrderLine.secondLightSource;
-    rxSubstrate.value = dtmOrderLine.substrate;
-    rxTicket.value = dtmOrderLine.ticket;
-    rxTex.value = dtmOrderLine.tex;
     rxArticle.value = dtmOrderLine.article;
-    rxBrand.value = dtmOrderLine.brand;
-    rxRemark.value = dtmOrderLine.remark;
-    rxRequestType.value = dtmOrderLine.requestType;
-    rxEndUse.value = dtmOrderLine.endUse;
+    rxUomWithDesc.value =
+        '${dtmOrderLine.uom} - ${orderReviewController.getUomDescription(dtmOrderLine.uom)}';
     rxShade.value = dtmOrderLine.shade;
     rxColor.value = dtmOrderLine.colorName;
     rxQuantity.value = dtmOrderLine.quantity.toString();
-    rxUomWithDesc.value =
-        '${dtmOrderLine.uom} - ${orderReviewController.getUomDescription(dtmOrderLine.uom)}';
     rxRequestedDate.value = dtmOrderLine.requestedDate;
     rxPoFileName.value = dtmOrderLine.poFileName;
     rxPoNumber.value = dtmOrderLine.poNumber;
     rxPoFileBytes.value = dtmOrderLine.poFileBytes;
+    rxRemark.value = dtmOrderLine.remark;
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);
@@ -873,4 +867,9 @@ class DtmEntryController extends GetxController {
   bool get quantityHasError => inputsInError.contains(rxQuantity);
 
   bool get poNumberHasError => inputsInError.contains(rxPoNumber);
+
+  List<DraftTableData> get dtmOrderLinesDescending => rxDtmOrderLines.toList()
+    ..sort(
+      (a, b) => b.lineNumber.compareTo(a.lineNumber),
+    );
 }

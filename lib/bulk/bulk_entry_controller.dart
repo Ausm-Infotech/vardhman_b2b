@@ -1003,7 +1003,6 @@ class BulkEntryController extends GetxController {
     rxArticle.value = bulkOrderLine.article;
     rxUomWithDesc.value =
         '${bulkOrderLine.uom} - ${orderReviewController.getUomDescription(bulkOrderLine.uom)}';
-    rxUnitPrice.value = bulkOrderLine.unitPrice?.toString() ?? '';
     rxShade.value = bulkOrderLine.shade;
     rxColor.value = bulkOrderLine.colorName;
     rxQuantity.value = bulkOrderLine.quantity.toString();
@@ -1011,6 +1010,7 @@ class BulkEntryController extends GetxController {
     rxPoFileName.value = bulkOrderLine.poFileName;
     rxPoNumber.value = bulkOrderLine.poNumber;
     rxPoFileBytes.value = bulkOrderLine.poFileBytes;
+    rxUnitPrice.value = bulkOrderLine.unitPrice?.toString() ?? '';
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);

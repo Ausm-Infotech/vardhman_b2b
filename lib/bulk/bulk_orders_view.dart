@@ -13,7 +13,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/bulk/create_bulk_order_view.dart';
 import 'package:vardhman_b2b/bulk/bulk_controller.dart';
 import 'package:vardhman_b2b/bulk/bulk_entry_controller.dart';
-import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class BulkOrdersView extends StatelessWidget {
   const BulkOrdersView({
@@ -22,8 +21,6 @@ class BulkOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrdersController ordersController = Get.find<OrdersController>();
-
     final BulkController bulkController = Get.find<BulkController>();
 
     return Obx(
@@ -33,7 +30,7 @@ class BulkOrdersView extends StatelessWidget {
             leading: SecondaryButton(
               iconData: Icons.refresh,
               text: '',
-              onPressed: ordersController.refreshOrders,
+              onPressed: bulkController.refreshOrders,
             ),
             title: const Text(
               'Bulk Orders',
@@ -347,16 +344,15 @@ class BulkOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxOrderNumberInput.value,
+                            text: bulkController.rxOrderNumberInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
+                              offset: bulkController
                                   .rxOrderNumberInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String orderNumber) {
-                          ordersController.rxOrderNumberInput.value =
-                              orderNumber;
+                          bulkController.rxOrderNumberInput.value = orderNumber;
                         },
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -380,22 +376,22 @@ class BulkOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderFromDate.value,
+                            bulkController.rxOrderFromDate.value,
                           ),
                           prefixStyle: TextStyle(
-                            color: ordersController.rxOrderFromDate.value
+                            color: bulkController.rxOrderFromDate.value
                                     .isAtSameMomentAs(oldestDateTime)
                                 ? Colors.white
                                 : VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxEarliestOrderDate.value,
-                        lastDate: ordersController.rxOrderToDate.value,
-                        value: ordersController.rxOrderFromDate.value,
+                        firstDate: bulkController.rxEarliestOrderDate.value,
+                        lastDate: bulkController.rxOrderToDate.value,
+                        value: bulkController.rxOrderFromDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderFromDate.value = date;
+                            bulkController.rxOrderFromDate.value = date;
                           }
                         },
                       ),
@@ -410,19 +406,19 @@ class BulkOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderToDate.value,
+                            bulkController.rxOrderToDate.value,
                           ),
                           prefixStyle: TextStyle(
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxOrderFromDate.value,
+                        firstDate: bulkController.rxOrderFromDate.value,
                         lastDate: DateTime.now(),
-                        value: ordersController.rxOrderToDate.value,
+                        value: bulkController.rxOrderToDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderToDate.value = date;
+                            bulkController.rxOrderToDate.value = date;
                           }
                         },
                       ),
@@ -432,9 +428,9 @@ class BulkOrdersView extends StatelessWidget {
                       wait: false,
                       iconData: FontAwesomeIcons.arrowRotateLeft,
                       text: '',
-                      onPressed: ordersController.hasDefaultValues
+                      onPressed: bulkController.hasDefaultValues
                           ? null
-                          : ordersController.setDefaultValues,
+                          : bulkController.setDefaultValues,
                     ),
                   ],
                 ),
@@ -445,17 +441,18 @@ class BulkOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxPoNumberInput.value,
+                            text: bulkController.rxPoNumberInput.value,
                             selection: TextSelection.collapsed(
                               offset:
-                                  ordersController.rxPoNumberInput.value.length,
+                                  bulkController.rxPoNumberInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String poNumber) {
-                          ordersController.rxPoNumberInput.value = poNumber;
+                          bulkController.rxPoNumberInput.value = poNumber;
                         },
                         keyboardType: TextInputType.number,
+                        inputFormatters: [capitalFormatter],
                         decoration: InputDecoration(
                           isDense: true,
                           label: Text('PO Number'),
@@ -472,18 +469,19 @@ class BulkOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxMerchandiserInput.value,
+                            text: bulkController.rxMerchandiserInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
+                              offset: bulkController
                                   .rxMerchandiserInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String merchandiser) {
-                          ordersController.rxMerchandiserInput.value =
+                          bulkController.rxMerchandiserInput.value =
                               merchandiser;
                         },
                         keyboardType: TextInputType.number,
+                        inputFormatters: [capitalFormatter],
                         decoration: InputDecoration(
                           isDense: true,
                           label: Text('Merchandiser'),

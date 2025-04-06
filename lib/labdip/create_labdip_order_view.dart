@@ -598,7 +598,7 @@ class CreateLabdipOrderView extends StatelessWidget {
                 ),
               ],
               empty: Center(child: const Text('No Order Lines')),
-              rows: labdipEntryController.rxLabdipOrderLines.map(
+              rows: labdipEntryController.labdipOrderLinesDescending.map(
                 (labdipOrderLine) {
                   final index = labdipEntryController.rxLabdipOrderLines
                       .indexOf(labdipOrderLine);

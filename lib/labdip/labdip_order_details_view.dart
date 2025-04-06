@@ -12,7 +12,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/feedback_dialog.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/orders/order_review_controller.dart';
-import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrderDetailsView extends StatelessWidget {
   const LabdipOrderDetailsView({
@@ -30,7 +29,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
     return Obx(
       () {
         final hasDispatchedLine = labdipController.rxOrderDetailLines.any(
-          (element) => element.status == 'Dispatched',
+          (element) => element.status == 'Dispatched By Plant',
         );
 
         return Container(
@@ -213,12 +212,9 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 .indexOf(orderDetailLine);
 
                             final isDispatchedLine =
-                                orderDetailLine.status == 'Dispatched';
+                                orderDetailLine.status == 'Dispatched By Plant';
 
-                            final OrdersController ordersController =
-                                Get.find<OrdersController>();
-
-                            final feedback = ordersController.rxLabdipFeedbacks
+                            final feedback = labdipController.rxLabdipFeedbacks
                                 .firstWhereOrNull((labdipFeedback) =>
                                     labdipFeedback.orderNumber ==
                                         orderDetailLine.orderNumber &&

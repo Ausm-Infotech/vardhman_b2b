@@ -264,6 +264,7 @@ class FeedbackDialog extends StatelessWidget {
                                             ),
                                             popupProps: PopupProps.menu(
                                               searchFieldProps: TextFieldProps(
+                                                maxLength: 15,
                                                 autocorrect: false,
                                                 style: TextStyle(
                                                   color:

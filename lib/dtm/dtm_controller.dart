@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
+import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/orders/orders_controller.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
@@ -20,6 +21,18 @@ class DtmController extends GetxController {
     'Duller',
     'Order Cancel by Buyer',
   ];
+
+  final rxEarliestOrderDate = oldestDateTime.obs;
+
+  final rxOrderFromDate = oldestDateTime.obs;
+
+  final rxOrderToDate = DateTime.now().obs;
+
+  final rxOrderNumberInput = ''.obs;
+
+  final rxPoNumberInput = ''.obs;
+
+  final rxMerchandiserInput = ''.obs;
 
   final rxDraftOrders = <DraftTableData>[].obs;
 
@@ -63,6 +76,20 @@ class DtmController extends GetxController {
         }
       },
     );
+
+    ordersController.rxOrderHeaderLines.listen(
+      (orderHeaderLines) {
+        rxEarliestOrderDate.value =
+            dtmOrders.lastOrNull?.orderDate ?? oldestDateTime;
+
+        rxOrderFromDate.value =
+            dtmOrders.lastOrNull?.orderDate ?? oldestDateTime;
+      },
+    );
+  }
+
+  Future<void> refreshOrders() async {
+    await ordersController.refreshOrders();
   }
 
   void selectOrderDetailLine(OrderDetailLine orderDetailLine) {
@@ -97,13 +124,34 @@ class DtmController extends GetxController {
     }
   }
 
-  List<OrderHeaderLine> get filteredDtmOrders =>
-      ordersController.filteredOrderHeaderLines
-          .where(
-            (orderHeaderLine) =>
-                orderHeaderLine.orderType == 'SW' && orderHeaderLine.isDTM,
-          )
-          .toList();
+  List<OrderHeaderLine> get dtmOrders => ordersController.rxOrderHeaderLines
+      .where(
+        (orderHeaderLine) =>
+            orderHeaderLine.orderType == 'SW' && orderHeaderLine.isDTM,
+      )
+      .toList();
+
+  List<OrderHeaderLine> get filteredDtmOrders => dtmOrders
+      .where((orderHeaderLine) =>
+          (orderHeaderLine.orderReference
+                  .trim()
+                  .contains(rxOrderNumberInput.value) ||
+              orderHeaderLine.orderNumber
+                  .toString()
+                  .contains(rxOrderNumberInput.value)) &&
+          orderHeaderLine.orderDate.isAfter(
+            rxOrderFromDate.value.subtract(
+              const Duration(days: 1),
+            ),
+          ) &&
+          orderHeaderLine.orderDate.isBefore(
+            rxOrderToDate.value.add(
+              const Duration(days: 1),
+            ),
+          ) &&
+          orderHeaderLine.merchandiser.contains(rxMerchandiserInput.value) &&
+          orderHeaderLine.poNumber.contains(rxPoNumberInput.value))
+      .toList();
 
   List<OrderDetailLine> get primaryOrderDetailLines => rxOrderDetailLines.where(
         (orderDetailLine) {
@@ -127,5 +175,27 @@ class DtmController extends GetxController {
               detailLine.item == itemNumber && detailLine.invoiceNumber > 0,
         )
         .toList();
+  }
+
+  bool get hasDefaultValues =>
+      areDatesEqual(
+        rxOrderFromDate.value,
+        rxEarliestOrderDate.value,
+      ) &&
+      areDatesEqual(rxOrderToDate.value, DateTime.now()) &&
+      rxOrderNumberInput.value.isEmpty &&
+      rxPoNumberInput.value.isEmpty &&
+      rxMerchandiserInput.value.isEmpty;
+
+  Future<void> setDefaultValues() async {
+    rxOrderFromDate.value = rxEarliestOrderDate.value;
+
+    rxOrderToDate.value = DateTime.now();
+
+    rxOrderNumberInput.value = '';
+
+    rxPoNumberInput.value = '';
+
+    rxMerchandiserInput.value = '';
   }
 }

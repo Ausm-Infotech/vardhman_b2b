@@ -13,7 +13,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/labdip/create_labdip_order_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'package:vardhman_b2b/labdip/labdip_entry_controller.dart';
-import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class LabdipOrdersView extends StatelessWidget {
   const LabdipOrdersView({
@@ -22,8 +21,6 @@ class LabdipOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrdersController ordersController = Get.find<OrdersController>();
-
     final LabdipController labdipController = Get.find<LabdipController>();
 
     return Obx(
@@ -33,7 +30,7 @@ class LabdipOrdersView extends StatelessWidget {
             leading: SecondaryButton(
               iconData: Icons.refresh,
               text: '',
-              onPressed: ordersController.refreshOrders,
+              onPressed: labdipController.refreshOrders,
             ),
             title: const Text(
               'Labdip Orders',
@@ -225,7 +222,7 @@ class LabdipOrdersView extends StatelessWidget {
                                 orderHeaderLine;
 
                             final hasFeedback =
-                                ordersController.rxLabdipFeedbacks.any(
+                                labdipController.rxLabdipFeedbacks.any(
                               (labdipFeedback) =>
                                   labdipFeedback.orderNumber ==
                                   orderHeaderLine.orderNumber,
@@ -332,15 +329,15 @@ class LabdipOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxOrderNumberInput.value,
+                            text: labdipController.rxOrderNumberInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
+                              offset: labdipController
                                   .rxOrderNumberInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String orderNumber) {
-                          ordersController.rxOrderNumberInput.value =
+                          labdipController.rxOrderNumberInput.value =
                               orderNumber;
                         },
                         keyboardType: TextInputType.number,
@@ -365,22 +362,22 @@ class LabdipOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderFromDate.value,
+                            labdipController.rxOrderFromDate.value,
                           ),
                           prefixStyle: TextStyle(
-                            color: ordersController.rxOrderFromDate.value
+                            color: labdipController.rxOrderFromDate.value
                                     .isAtSameMomentAs(oldestDateTime)
                                 ? Colors.white
                                 : VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxEarliestOrderDate.value,
-                        lastDate: ordersController.rxOrderToDate.value,
-                        value: ordersController.rxOrderFromDate.value,
+                        firstDate: labdipController.rxEarliestOrderDate.value,
+                        lastDate: labdipController.rxOrderToDate.value,
+                        value: labdipController.rxOrderFromDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderFromDate.value = date;
+                            labdipController.rxOrderFromDate.value = date;
                           }
                         },
                       ),
@@ -395,19 +392,19 @@ class LabdipOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderToDate.value,
+                            labdipController.rxOrderToDate.value,
                           ),
                           prefixStyle: TextStyle(
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxOrderFromDate.value,
+                        firstDate: labdipController.rxOrderFromDate.value,
                         lastDate: DateTime.now(),
-                        value: ordersController.rxOrderToDate.value,
+                        value: labdipController.rxOrderToDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderToDate.value = date;
+                            labdipController.rxOrderToDate.value = date;
                           }
                         },
                       ),
@@ -417,9 +414,9 @@ class LabdipOrdersView extends StatelessWidget {
                       wait: false,
                       iconData: FontAwesomeIcons.arrowRotateLeft,
                       text: '',
-                      onPressed: ordersController.hasDefaultValues
+                      onPressed: labdipController.hasDefaultValues
                           ? null
-                          : ordersController.setDefaultValues,
+                          : labdipController.setDefaultValues,
                     ),
                   ],
                 ),
@@ -430,18 +427,19 @@ class LabdipOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxMerchandiserInput.value,
+                            text: labdipController.rxMerchandiserInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
+                              offset: labdipController
                                   .rxMerchandiserInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String merchandiser) {
-                          ordersController.rxMerchandiserInput.value =
+                          labdipController.rxMerchandiserInput.value =
                               merchandiser;
                         },
                         keyboardType: TextInputType.number,
+                        inputFormatters: [capitalFormatter],
                         decoration: InputDecoration(
                           isDense: true,
                           label: Text('Merchandiser'),

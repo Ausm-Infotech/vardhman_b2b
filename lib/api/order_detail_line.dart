@@ -48,12 +48,12 @@ class OrderDetailLine with _$OrderDetailLine {
     if (orderType == 'LD' && workOrderType == 'W6') {
       switch (woStatus) {
         case '10':
-        case '15':
           return 'Order Received By Branch';
+        case '15':
         case '20':
           return 'Order Received By Plant';
         case '41':
-          return 'Dispatched';
+          return 'Dispatched By Plant';
         default:
           return 'In Progress';
       }
@@ -63,8 +63,8 @@ class OrderDetailLine with _$OrderDetailLine {
     if (orderType == 'SW' && workOrderType == 'W4') {
       switch (woStatus) {
         case '10':
-        case '15':
           return 'Order Received By Branch';
+        case '15':
         case '20':
           return 'Order Received By Plant';
         default:

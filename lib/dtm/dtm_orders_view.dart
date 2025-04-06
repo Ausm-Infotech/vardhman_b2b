@@ -13,7 +13,6 @@ import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/dtm/create_dtm_order_view.dart';
 import 'package:vardhman_b2b/dtm/dtm_controller.dart';
 import 'package:vardhman_b2b/dtm/dtm_entry_controller.dart';
-import 'package:vardhman_b2b/orders/orders_controller.dart';
 
 class DtmOrdersView extends StatelessWidget {
   const DtmOrdersView({
@@ -22,8 +21,6 @@ class DtmOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrdersController ordersController = Get.find<OrdersController>();
-
     final DtmController dtmController = Get.find<DtmController>();
 
     return Obx(
@@ -33,7 +30,7 @@ class DtmOrdersView extends StatelessWidget {
             leading: SecondaryButton(
               iconData: Icons.refresh,
               text: '',
-              onPressed: ordersController.refreshOrders,
+              onPressed: dtmController.refreshOrders,
             ),
             title: const Text(
               'DTM Orders',
@@ -346,16 +343,15 @@ class DtmOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxOrderNumberInput.value,
+                            text: dtmController.rxOrderNumberInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
-                                  .rxOrderNumberInput.value.length,
+                              offset:
+                                  dtmController.rxOrderNumberInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String orderNumber) {
-                          ordersController.rxOrderNumberInput.value =
-                              orderNumber;
+                          dtmController.rxOrderNumberInput.value = orderNumber;
                         },
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -379,22 +375,22 @@ class DtmOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderFromDate.value,
+                            dtmController.rxOrderFromDate.value,
                           ),
                           prefixStyle: TextStyle(
-                            color: ordersController.rxOrderFromDate.value
+                            color: dtmController.rxOrderFromDate.value
                                     .isAtSameMomentAs(oldestDateTime)
                                 ? Colors.white
                                 : VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxEarliestOrderDate.value,
-                        lastDate: ordersController.rxOrderToDate.value,
-                        value: ordersController.rxOrderFromDate.value,
+                        firstDate: dtmController.rxEarliestOrderDate.value,
+                        lastDate: dtmController.rxOrderToDate.value,
+                        value: dtmController.rxOrderFromDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderFromDate.value = date;
+                            dtmController.rxOrderFromDate.value = date;
                           }
                         },
                       ),
@@ -409,19 +405,19 @@ class DtmOrdersView extends StatelessWidget {
                           border: OutlineInputBorder(),
                           suffixIcon: Container(),
                           prefixText: DateFormat('d MMM yy').format(
-                            ordersController.rxOrderToDate.value,
+                            dtmController.rxOrderToDate.value,
                           ),
                           prefixStyle: TextStyle(
                             color: VardhmanColors.darkGrey,
                             fontSize: 13,
                           ),
                         ),
-                        firstDate: ordersController.rxOrderFromDate.value,
+                        firstDate: dtmController.rxOrderFromDate.value,
                         lastDate: DateTime.now(),
-                        value: ordersController.rxOrderToDate.value,
+                        value: dtmController.rxOrderToDate.value,
                         onChanged: (DateTime? date) {
                           if (date != null) {
-                            ordersController.rxOrderToDate.value = date;
+                            dtmController.rxOrderToDate.value = date;
                           }
                         },
                       ),
@@ -431,9 +427,9 @@ class DtmOrdersView extends StatelessWidget {
                       wait: false,
                       iconData: FontAwesomeIcons.arrowRotateLeft,
                       text: '',
-                      onPressed: ordersController.hasDefaultValues
+                      onPressed: dtmController.hasDefaultValues
                           ? null
-                          : ordersController.setDefaultValues,
+                          : dtmController.setDefaultValues,
                     ),
                   ],
                 ),
@@ -444,17 +440,18 @@ class DtmOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxPoNumberInput.value,
+                            text: dtmController.rxPoNumberInput.value,
                             selection: TextSelection.collapsed(
                               offset:
-                                  ordersController.rxPoNumberInput.value.length,
+                                  dtmController.rxPoNumberInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String poNumber) {
-                          ordersController.rxPoNumberInput.value = poNumber;
+                          dtmController.rxPoNumberInput.value = poNumber;
                         },
                         keyboardType: TextInputType.number,
+                        inputFormatters: [capitalFormatter],
                         decoration: InputDecoration(
                           isDense: true,
                           label: Text('PO Number'),
@@ -471,18 +468,19 @@ class DtmOrdersView extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController.fromValue(
                           TextEditingValue(
-                            text: ordersController.rxMerchandiserInput.value,
+                            text: dtmController.rxMerchandiserInput.value,
                             selection: TextSelection.collapsed(
-                              offset: ordersController
+                              offset: dtmController
                                   .rxMerchandiserInput.value.length,
                             ),
                           ),
                         ),
                         onChanged: (String merchandiser) {
-                          ordersController.rxMerchandiserInput.value =
+                          dtmController.rxMerchandiserInput.value =
                               merchandiser;
                         },
                         keyboardType: TextInputType.number,
+                        inputFormatters: [capitalFormatter],
                         decoration: InputDecoration(
                           isDense: true,
                           label: Text('Merchandiser'),

@@ -457,6 +457,7 @@ class LabdipEntryController extends GetxController {
       rxArticle.value.isNotEmpty;
 
   String get _colorRemark => [
+        if (rxFileName.value.trim().isNotEmpty) 'QTX/XML',
         if (rxSecondLightSource.value.trim().isNotEmpty)
           rxSecondLightSource.value,
         if (rxColor.value.trim().isNotEmpty) rxColor.value,
@@ -972,23 +973,19 @@ class LabdipEntryController extends GetxController {
     _rxBuyerCode.value = labdipOrderLine.buyerCode;
     rxFirstLightSource.value = labdipOrderLine.firstLightSource;
     rxSecondLightSource.value = labdipOrderLine.secondLightSource;
-    rxSubstrate.value = labdipOrderLine.substrate;
-    rxTicket.value = labdipOrderLine.ticket;
-    rxTex.value = labdipOrderLine.tex;
     rxArticle.value = labdipOrderLine.article;
     rxUomWithDesc.value =
         '${labdipOrderLine.uom} - ${orderReviewController.getUomDescription(labdipOrderLine.uom)}';
-    rxBrand.value = labdipOrderLine.brand;
+    rxShade.value = labdipOrderLine.shade;
+    rxColor.value = labdipOrderLine.colorName;
     rxL.value = labParts[0];
     rxA.value = labParts[1];
     rxB.value = labParts[2];
-    rxRemark.value = labdipOrderLine.remark;
     rxRequestType.value = labdipOrderLine.requestType;
     rxEndUse.value = labdipOrderLine.endUse;
-    rxShade.value = labdipOrderLine.shade;
-    rxColor.value = labdipOrderLine.colorName;
     rxFileName.value = labdipOrderLine.qtxFileName;
     rxFileBytes.value = labdipOrderLine.qtxFileBytes;
+    rxRemark.value = labdipOrderLine.remark;
   }
 
   bool get merchandiserHasError => inputsInError.contains(rxMerchandiser);
@@ -1011,4 +1008,10 @@ class LabdipEntryController extends GetxController {
   bool get rxAHasError => inputsInError.contains(rxA);
 
   bool get rxBHasError => inputsInError.contains(rxB);
+
+  List<DraftTableData> get labdipOrderLinesDescending =>
+      rxLabdipOrderLines.toList()
+        ..sort(
+          (a, b) => b.lineNumber.compareTo(a.lineNumber),
+        );
 }

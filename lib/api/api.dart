@@ -1548,8 +1548,8 @@ class Api {
               .getLabdipTableRows(orderDetailLine.workOrderNumber);
 
           final finalShades = labdipTableRows.map((labdipTableRow) {
-            return '${labdipTableRow.permanentShade} ${labdipTableRow.reference}';
-          }).join(', ');
+            return '${labdipTableRow.permanentShade}-${labdipTableRow.reference}';
+          }).join(',');
 
           return {
             "BatchNumber": b2bOrderNumber,
@@ -1567,7 +1567,7 @@ class Api {
             "MerchandiserName": '$merchandiserName|$b2bOrderNumber',
             "LightSourceRemark": orderDetailLine.lightSource1,
             "ColorRemark":
-                '$finalShades - ${orderDetailLinesReasonMap[orderDetailLine]!}',
+                '${orderDetailLine.orderNumber}-$finalShades-${orderDetailLinesReasonMap[orderDetailLine]!}',
             "EndUse": orderDetailLine.buyerCode,
             "BillingType": "B",
             "RelatedOrder":
