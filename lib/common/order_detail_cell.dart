@@ -14,10 +14,10 @@ class OrderDetailCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       child: Text(
         cellText,
-        textAlign: TextAlign.end,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: textColor,
         ),

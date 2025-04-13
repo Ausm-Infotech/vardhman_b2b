@@ -83,21 +83,21 @@ class LabdipController extends GetxController {
       },
     );
 
-    ordersController.rxOrderHeaderLines.listen(
+    ordersController.rxOrderHeaderLines.listenAndPump(
       (orderHeaderLines) {
         rxEarliestOrderDate.value =
             labdipOrders.lastOrNull?.orderDate ?? oldestDateTime;
 
         rxOrderFromDate.value =
             labdipOrders.lastOrNull?.orderDate ?? oldestDateTime;
+
+        refreshLabdipFeedbacks();
       },
     );
   }
 
   Future<void> refreshOrders() async {
     await ordersController.refreshOrders();
-
-    await refreshLabdipFeedbacks();
   }
 
   Future<void> selectOrder(OrderHeaderLine orderHeaderLine) async {

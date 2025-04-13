@@ -126,66 +126,66 @@ class LabdipOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: '#'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Article'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'UOM'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Ticket'),
                             fixedWidth: 60,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Brand'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Tex'),
                             fixedWidth: 60,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label:
                                 OrderDetailColumnLabel(labelText: 'Substrate'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Shade'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(
                                 labelText: 'Final Shade'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Status'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Remark'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.end,
+                            headingRowAlignment: MainAxisAlignment.center,
                           ),
                           if (hasDispatchedLine)
                             DataColumn2(
                               label:
                                   OrderDetailColumnLabel(labelText: 'Feedback'),
                               size: ColumnSize.S,
-                              headingRowAlignment: MainAxisAlignment.end,
+                              headingRowAlignment: MainAxisAlignment.center,
                             ),
                         ],
                         rows: labdipController.rxOrderDetailLines.map(

@@ -16,10 +16,10 @@ class OrderDetailColumnLabel extends StatelessWidget {
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
           border: Border(right: BorderSide(color: Colors.white, width: 0.2))),
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       child: Text(
         labelText,
-        textAlign: TextAlign.end,
+        textAlign: TextAlign.center,
         softWrap: true,
       ),
     );
