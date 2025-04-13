@@ -122,17 +122,17 @@ class BulkOrdersView extends StatelessWidget {
                         DataColumn2(
                           label: Text('Date'),
                           size: ColumnSize.S,
-                          headingRowAlignment: MainAxisAlignment.end,
+                          headingRowAlignment: MainAxisAlignment.center,
                         ),
                         DataColumn2(
                           label: Text('PO Number'),
                           size: ColumnSize.S,
-                          headingRowAlignment: MainAxisAlignment.end,
+                          headingRowAlignment: MainAxisAlignment.center,
                         ),
                         DataColumn2(
                           label: Text('Merchandiser'),
                           size: ColumnSize.M,
-                          headingRowAlignment: MainAxisAlignment.end,
+                          headingRowAlignment: MainAxisAlignment.center,
                         ),
                       ],
                       rows: [
@@ -194,30 +194,30 @@ class BulkOrdersView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       DateFormat('d MMM yy HH:mm').format(
                                         draftTableData.lastUpdated,
                                       ),
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       draftTableData.poNumber,
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       draftTableData.merchandiser,
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
@@ -295,33 +295,33 @@ class BulkOrdersView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       DateFormat('d MMM yy').format(
                                         orderHeaderLine.orderDate,
                                       ),
                                       style: textStyle,
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       orderHeaderLine.poNumber,
                                       style: textStyle,
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
                                 DataCell(
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: Text(
                                       orderHeaderLine.merchandiser,
                                       style: textStyle,
-                                      textAlign: TextAlign.end,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),

@@ -113,7 +113,9 @@ class FeedbackDialog extends StatelessWidget {
                       fixedWidth: 120,
                     ),
                     DataColumn2(
-                        label: Text('Feedback Reason'), size: ColumnSize.L),
+                        headingRowAlignment: MainAxisAlignment.center,
+                        label: Text('Feedback Reason'),
+                        size: ColumnSize.L),
                     DataColumn2(
                       label: Text('Need Revised Sample'),
                       size: ColumnSize.S,
