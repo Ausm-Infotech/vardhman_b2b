@@ -332,55 +332,59 @@ class FeedbackDialog extends StatelessWidget {
                             ),
                           ),
                           DataCell(
-                            Checkbox(
-                              tristate: false,
-                              fillColor: WidgetStatePropertyAll(
-                                Colors.white,
+                            Center(
+                              child: Checkbox(
+                                tristate: false,
+                                fillColor: WidgetStatePropertyAll(
+                                  Colors.white,
+                                ),
+                                checkColor: VardhmanColors.red,
+                                side: BorderSide(
+                                  color: VardhmanColors.darkGrey,
+                                  width: 0.5,
+                                ),
+                                value: feedback.shouldRematch,
+                                onChanged: feedback.isPositive
+                                    ? null
+                                    : (bool? value) {
+                                        if (value == true) {
+                                          labdipController
+                                                      .rxOrderDetailFeedbackMap[
+                                                  orderDetailLine] =
+                                              feedback.copyWith(
+                                            shouldRematch: true,
+                                          );
+                                        }
+                                      },
                               ),
-                              checkColor: VardhmanColors.red,
-                              side: BorderSide(
-                                color: VardhmanColors.darkGrey,
-                                width: 0.5,
-                              ),
-                              value: feedback.shouldRematch,
-                              onChanged: feedback.isPositive
-                                  ? null
-                                  : (bool? value) {
-                                      if (value == true) {
-                                        labdipController
-                                                    .rxOrderDetailFeedbackMap[
-                                                orderDetailLine] =
-                                            feedback.copyWith(
-                                          shouldRematch: true,
-                                        );
-                                      }
-                                    },
                             ),
                           ),
                           DataCell(
-                            Checkbox(
-                              tristate: false,
-                              fillColor: WidgetStatePropertyAll(
-                                Colors.white,
+                            Center(
+                              child: Checkbox(
+                                tristate: false,
+                                fillColor: WidgetStatePropertyAll(
+                                  Colors.white,
+                                ),
+                                checkColor: VardhmanColors.red,
+                                side: BorderSide(
+                                  color: VardhmanColors.darkGrey,
+                                  width: 0.5,
+                                ),
+                                value: !feedback.shouldRematch,
+                                onChanged: feedback.isPositive
+                                    ? null
+                                    : (bool? value) {
+                                        if (value == true) {
+                                          labdipController
+                                                      .rxOrderDetailFeedbackMap[
+                                                  orderDetailLine] =
+                                              feedback.copyWith(
+                                            shouldRematch: false,
+                                          );
+                                        }
+                                      },
                               ),
-                              checkColor: VardhmanColors.red,
-                              side: BorderSide(
-                                color: VardhmanColors.darkGrey,
-                                width: 0.5,
-                              ),
-                              value: !feedback.shouldRematch,
-                              onChanged: feedback.isPositive
-                                  ? null
-                                  : (bool? value) {
-                                      if (value == true) {
-                                        labdipController
-                                                    .rxOrderDetailFeedbackMap[
-                                                orderDetailLine] =
-                                            feedback.copyWith(
-                                          shouldRematch: false,
-                                        );
-                                      }
-                                    },
                             ),
                           ),
                         ],
