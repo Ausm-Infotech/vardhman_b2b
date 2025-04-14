@@ -57080,7 +57080,7 @@ p=p==null?j:p.gcg()
 p=Math.max(q*(p==null?B.U:p).a,24)}else p=j
 o=k.a
 n=o.c
-m=A.l7(A.df(A.aD(n!=null?A.af(o.cy.co(n),j,j,j,j,j,j,j,j,j):B.aio,p,j),j,j,B.a1,!0,r,j,j,B.O),s)
+m=A.l7(A.df(A.aD(n!=null?A.af(o.cy.co(n),j,j,j,j,j,j,j,j,j):B.aip,p,j),j,j,B.a1,!0,r,j,j,B.O),s)
 s=A.aJ(t.C)
 if(!k.gzb())s.t(0,B.S)
 l=A.cE(B.HY,s,t.Pb)
@@ -125710,7 +125710,7 @@ s=A.amB(A.el(100),A.bc2("assets/vytl_icon_white.png",60,60))
 r=A.tz(B.v,1.5)
 q=A.el(24)
 p=t.p
-q=A.at(n,A.bd(A.b([B.ain,A.bbq(B.v,8,0.2),new A.cT(1,B.ak,A.bji(B.h,B.a_1,0,B.B,B.Ai,new A.aFy(m),B.mM,k,B.GC,B.u2,B.GF,!0),n)],p),B.m,B.l,B.n),B.i,n,n,new A.c6(B.h,n,r,q,n,n,n,B.N),n,255,n,new A.aw(12,12,12,12),n,n,n)
+q=A.at(n,A.bd(A.b([B.aio,A.bbq(B.v,8,0.2),new A.cT(1,B.ak,A.bji(B.h,B.a_1,0,B.B,B.Ai,new A.aFy(m),B.mM,k,B.GC,B.u2,B.GF,!0),n)],p),B.m,B.l,B.n),B.i,n,n,new A.c6(B.h,n,r,q,n,n,n,B.N),n,255,n,new A.aw(12,12,12,12),n,n,n)
 r=A.tz(B.v,1.5)
 o=A.el(24)
 return A.df(A.at(n,A.no(A.at(n,A.bd(A.b([s,B.kq,q,B.kq,A.at(n,A.bd(A.b([B.aiW,A.bbq(B.v,8,0.2),new A.cT(1,B.ak,A.bji(B.h,B.Zh,0,B.B,B.Ai,new A.aFz(m),B.mM,j,B.GC,B.u2,B.GF,!0),n)],p),B.m,B.l,B.n),B.i,n,n,new A.c6(B.h,n,r,o,n,n,n,B.N),n,190,n,new A.aw(12,12,12,12),n,n,n)],p),B.m,B.l,B.n),B.i,n,n,n,n,n,n,B.cN,n,n,120),B.E,n,B.R,B.av,B.bM,n,n,n,n,!1,B.aR),B.i,B.v,n,n,n,n,n,n,n,n,n),n,n,B.a1,!0,l,n,n,B.O)},
@@ -127587,9 +127587,9 @@ if(o.gi(0)===B.nu){n=A.aD(k,k,32)
 m.push(A.aT(A.b([new A.d7(j.gaLx(),"Change User/Password",k,!1,k),n,A.eF(B.jA,J.a5(j.cx.gi(0))===0?k:j.gaTi(),"Login")],i),B.m,B.ar,B.n,k))}if(o.gi(0)===B.ns){n=A.aD(k,k,32)
 m.push(A.aT(A.b([new A.d7(new A.aAn(j),"Cancel",k,!1,k),n,A.eF(B.jA,J.a5(j.CW.gi(0))===0?k:j.gaTh(),"Verify OTP")],i),B.m,B.ar,B.n,k))}if(o.gi(0)===B.nt){o=A.aD(k,k,32)
 n=j.cx
-m.push(A.aT(A.b([new A.d7(new A.aAo(j),"Cancel",k,!1,k),o,A.eF(B.jA,J.cb(n.gi(0)).length===0||!J.e(j.cy.gi(0),n.gi(0))?k:j.gafi(),"Set Password")],i),B.m,B.ar,B.n,k))}j=A.at(k,A.bd(A.b([B.ey,B.ais,B.ey,new A.ba(B.bU,B.aiB,k),B.ey,A.at(k,A.bd(m,B.m,B.l,B.n),B.i,k,k,new A.c6(B.h,k,k,new A.dw(B.L,B.L,p,p),k,k,k,B.N),k,k,k,new A.aw(32,32,32,32),k,k,1/0)],i),B.m,B.ar,B.a6),B.i,k,B.qw,new A.c6(B.M0,k,k,q,B.Z6,k,k,B.N),k,k,k,k,k,k,k)
+m.push(A.aT(A.b([new A.d7(new A.aAo(j),"Cancel",k,!1,k),o,A.eF(B.jA,J.cb(n.gi(0)).length===0||!J.e(j.cy.gi(0),n.gi(0))?k:j.gafi(),"Set Password")],i),B.m,B.ar,B.n,k))}j=A.at(k,A.bd(A.b([B.ey,B.aig,B.ey,new A.ba(B.bU,B.aiB,k),B.ey,A.at(k,A.bd(m,B.m,B.l,B.n),B.i,k,k,new A.c6(B.h,k,k,new A.dw(B.L,B.L,p,p),k,k,k,B.N),k,k,k,new A.aw(32,32,32,32),k,k,1/0)],i),B.m,B.ar,B.a6),B.i,k,B.qw,new A.c6(B.M0,k,k,q,B.Z6,k,k,B.N),k,k,k,k,k,k,k)
 q=A.bk(k,k,B.h,k,k,k,k,k,k,k,k,k,k,k,k,k,k,!0,k,k,k,k,k,k,k,k)
-return A.yW(!0,A.ea(B.bn,A.b([s,new A.c5(B.fY,k,k,r,k),new A.c5(B.T,k,k,j,k),new A.c5(B.bx,k,k,A.at(k,A.df(A.aT(A.b([A.aH(A.aT(A.b([A.hZ(B.VP,B.B,k,k),A.aD(k,k,8),A.aH(B.aiG,1)],i),B.m,B.l,B.n,k),1),A.aH(A.aT(A.b([A.hZ(B.VR,B.B,k,k),A.aD(k,k,8),B.ail],i),B.m,B.ar,B.n,k),1),A.aH(A.aT(A.b([A.hZ(B.VJ,B.B,k,k),A.aD(k,k,8),B.aiU],i),B.m,B.ar,B.n,k),1)],i),B.m,B.l,B.n,k),k,k,B.a1,!0,q,k,k,B.O),B.i,B.t,k,k,k,k,k,new A.aw(16,16,16,16),k,k,k),k)],i),B.E,B.G0),!0,B.ac,!0,!0)},
+return A.yW(!0,A.ea(B.bn,A.b([s,new A.c5(B.fY,k,k,r,k),new A.c5(B.T,k,k,j,k),new A.c5(B.bx,k,k,A.at(k,A.df(A.aT(A.b([A.aH(A.aT(A.b([A.hZ(B.VP,B.B,k,k),A.aD(k,k,8),A.aH(B.aiG,1)],i),B.m,B.l,B.n,k),1),A.aH(A.aT(A.b([A.hZ(B.VR,B.B,k,k),A.aD(k,k,8),B.aim],i),B.m,B.ar,B.n,k),1),A.aH(A.aT(A.b([A.hZ(B.VJ,B.B,k,k),A.aD(k,k,8),B.aiU],i),B.m,B.ar,B.n,k),1)],i),B.m,B.l,B.n,k),k,k,B.a1,!0,q,k,k,B.O),B.i,B.t,k,k,k,k,k,new A.aw(16,16,16,16),k,k,k),k)],i),B.E,B.G0),!0,B.ac,!0,!0)},
 $S:861}
 A.aAn.prototype={
 $0(){var s=0,r=A.o(t.H),q=this,p
@@ -127687,7 +127687,7 @@ if(s==null)s=$.ae=B.z
 return A.BO(q,q,new A.eE(new A.axx(r,s.bl(0,"userController",t.p_)),q),q,q,q,q,q,q)}}
 A.axx.prototype={
 $0(){var s=null,r=A.el(16),q=this.a
-return A.at(s,A.bd(A.b([B.GI,B.fC,new A.v_("",q.guW(),0,17,15,s),B.fC,new A.c5(B.a3,s,s,A.eF(B.u1,new A.axw(q,this.b),"Proceed"),s),B.kq,B.aim],t.p),B.au,B.l,B.a6),B.i,s,B.qw,new A.c6(B.h,s,s,r,s,s,s,B.N),s,s,s,B.jg,s,s,s)},
+return A.at(s,A.bd(A.b([B.GI,B.fC,new A.v_("",q.guW(),0,17,15,s),B.fC,new A.c5(B.a3,s,s,A.eF(B.u1,new A.axw(q,this.b),"Proceed"),s),B.kq,B.ain],t.p),B.au,B.l,B.a6),B.i,s,B.qw,new A.c6(B.h,s,s,r,s,s,s,B.N),s,s,s,B.jg,s,s,s)},
 $S:105}
 A.axw.prototype={
 $0(){var s=0,r=A.o(t.H),q,p=this,o,n,m,l,k,j,i,h,g
@@ -128041,7 +128041,7 @@ A.a1g.prototype={
 H(a){return new A.n4(new A.aGC(this),null)}}
 A.aGC.prototype={
 $2(a,b){var s=null,r=b.b,q=r*0.16,p=this.a.d,o=A.S(p).h("T<1,dW>")
-return A.bh1(A.bkL(B.J,0.5),s,B.i,0,A.b([new A.hA(A.aD(B.air,s,r*0.04),s,!1,s,s),new A.hA(A.aD(B.GH,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiw,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiN,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiQ,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aj_,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.GG,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s)],t.UR),s,40,40,B.GE,B.cK,s,s,40,s,0,s,s,A.Z(new A.T(p,new A.aGB(b),o),!0,o.h("ax.E")),!1,!1,!0,s)},
+return A.bh1(A.bkL(B.J,0.5),s,B.i,0,A.b([new A.hA(A.aD(B.ais,s,r*0.04),s,!1,s,s),new A.hA(A.aD(B.GH,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiw,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiN,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aiQ,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.aj_,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s),new A.hA(A.at(s,B.GG,B.i,s,s,s,s,s,s,B.bH,s,s,q),s,!1,s,s)],t.UR),s,40,40,B.GE,B.cK,s,s,40,s,0,s,s,A.Z(new A.T(p,new A.aGB(b),o),!0,o.h("ax.E")),!1,!1,!0,s)},
 $S:320}
 A.aGB.prototype={
 $1(a){var s=null,r="d MMM yyyy",q=this.a.b,p=q*0.16
@@ -134461,10 +134461,10 @@ B.r9=new A.wF(null,null,null,null,null,null,null,null)
 B.KC=new A.kO(B.T,null,null,B.r9,null)
 B.aiV=new A.c0("No Labdip Orders",null,null,null,null,null,null,null,null,null,null,null)
 B.KD=new A.kO(B.T,null,null,B.aiV,null)
-B.aig=new A.c0("No Order Selected",null,null,null,null,null,null,null,null,null,null,null)
-B.lx=new A.kO(B.T,null,null,B.aig,null)
-B.aiq=new A.c0("No DTM Orders",null,null,null,null,null,null,null,null,null,null,null)
-B.KE=new A.kO(B.T,null,null,B.aiq,null)
+B.aih=new A.c0("No Order Selected",null,null,null,null,null,null,null,null,null,null,null)
+B.lx=new A.kO(B.T,null,null,B.aih,null)
+B.air=new A.c0("No DTM Orders",null,null,null,null,null,null,null,null,null,null,null)
+B.KE=new A.kO(B.T,null,null,B.air,null)
 B.aiC=new A.c0("No Bulk Orders",null,null,null,null,null,null,null,null,null,null,null)
 B.KF=new A.kO(B.T,null,null,B.aiC,null)
 B.KG=new A.fY(null,null,null,null,null,null,null,null,null)
@@ -134582,9 +134582,9 @@ B.n=new A.a04(1,"max")
 B.m=new A.wQ(2,"center")
 B.cr=new A.aQ5(1,"down")
 B.dW=new A.P(!0,B.v,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.aik=new A.c0("No Paid Invoices",null,B.dW,null,null,null,null,null,null,null,null,null)
+B.ail=new A.c0("No Paid Invoices",null,B.dW,null,null,null,null,null,null,null,null,null)
 B.ey=new A.e3(null,16,null,null)
-B.Zf=A.b(s([B.aik,B.ey]),t.p)
+B.Zf=A.b(s([B.ail,B.ey]),t.p)
 B.Og=new A.pQ(B.aR,B.ar,B.n,B.m,null,B.cr,null,0,B.Zf,null)
 B.rR=new A.Bv(0,"none")
 B.Oh=new A.Bv(1,"waiting")
@@ -135826,8 +135826,8 @@ B.aiD=new A.c0("Open",null,null,null,null,null,null,null,null,null,null,null)
 B.a4u=new A.us(B.ud,B.ud,B.aiD)
 B.VW=new A.cj(60117,"MaterialIcons",null,!1)
 B.u7=new A.eM(B.VW,null,null,null,null)
-B.aih=new A.c0("Paid",null,null,null,null,null,null,null,null,null,null,null)
-B.a4s=new A.us(B.u7,B.u7,B.aih)
+B.aii=new A.c0("Paid",null,null,null,null,null,null,null,null,null,null,null)
+B.a4s=new A.us(B.u7,B.u7,B.aii)
 B.Zh=A.b(s([B.a4u,B.a4s]),t.Uh)
 B.eF=new A.pk(0,"hour")
 B.iq=new A.pk(1,"minute")
@@ -135887,12 +135887,12 @@ B.Vp=new A.lN(7)
 B.tU=new A.lN(8)
 B.uS=A.b(s([B.Vm,B.Vn,B.Vo,B.a4,B.an,B.tT,B.bJ,B.Vp,B.tU]),A.ad("C<lN>"))
 B.n4=A.b(s(["S","M","T","W","T","F","S"]),t.s)
-B.aii=new A.c0("#",null,null,null,null,null,null,null,null,null,null,null)
-B.OY=new A.dp(B.af,30,B.aii,null,!0,null,null)
+B.aij=new A.c0("#",null,null,null,null,null,null,null,null,null,null,null)
+B.OY=new A.dp(B.af,30,B.aij,null,!0,null,null)
 B.aiK=new A.c0("Article",null,null,null,null,null,null,null,null,null,null,null)
 B.OV=new A.dp(B.af,60,B.aiK,null,!1,null,null)
-B.aij=new A.c0("Shade",null,null,null,null,null,null,null,null,null,null,null)
-B.P1=new A.dp(B.af,60,B.aij,null,!1,null,null)
+B.aik=new A.c0("Shade",null,null,null,null,null,null,null,null,null,null,null)
+B.P1=new A.dp(B.af,60,B.aik,null,!1,null,null)
 B.aiz=new A.c0("Final Shade",null,null,null,null,null,null,null,null,null,null,null)
 B.P0=new A.dp(B.af,120,B.aiz,null,!1,null,null)
 B.aiL=new A.c0("Feedback Reason",null,null,null,null,null,null,null,null,null,null,null)
@@ -135922,8 +135922,8 @@ B.ZX=A.b(s([B.J2]),t.sq)
 B.ZY=A.b(s([B.GP,B.GQ,B.GR,B.GS,B.GT,B.GU,B.GV,B.GW,B.GX,B.GY,B.GN,B.GO]),t.JN)
 B.ZZ=A.b(s([0,1996959894,3993919788,2567524794,124634137,1886057615,3915621685,2657392035,249268274,2044508324,3772115230,2547177864,162941995,2125561021,3887607047,2428444049,498536548,1789927666,4089016648,2227061214,450548861,1843258603,4107580753,2211677639,325883990,1684777152,4251122042,2321926636,335633487,1661365465,4195302755,2366115317,997073096,1281953886,3579855332,2724688242,1006888145,1258607687,3524101629,2768942443,901097722,1119000684,3686517206,2898065728,853044451,1172266101,3705015759,2882616665,651767980,1373503546,3369554304,3218104598,565507253,1454621731,3485111705,3099436303,671266974,1594198024,3322730930,2970347812,795835527,1483230225,3244367275,3060149565,1994146192,31158534,2563907772,4023717930,1907459465,112637215,2680153253,3904427059,2013776290,251722036,2517215374,3775830040,2137656763,141376813,2439277719,3865271297,1802195444,476864866,2238001368,4066508878,1812370925,453092731,2181625025,4111451223,1706088902,314042704,2344532202,4240017532,1658658271,366619977,2362670323,4224994405,1303535960,984961486,2747007092,3569037538,1256170817,1037604311,2765210733,3554079995,1131014506,879679996,2909243462,3663771856,1141124467,855842277,2852801631,3708648649,1342533948,654459306,3188396048,3373015174,1466479909,544179635,3110523913,3462522015,1591671054,702138776,2966460450,3352799412,1504918807,783551873,3082640443,3233442989,3988292384,2596254646,62317068,1957810842,3939845945,2647816111,81470997,1943803523,3814918930,2489596804,225274430,2053790376,3826175755,2466906013,167816743,2097651377,4027552580,2265490386,503444072,1762050814,4150417245,2154129355,426522225,1852507879,4275313526,2312317920,282753626,1742555852,4189708143,2394877945,397917763,1622183637,3604390888,2714866558,953729732,1340076626,3518719985,2797360999,1068828381,1219638859,3624741850,2936675148,906185462,1090812512,3747672003,2825379669,829329135,1181335161,3412177804,3160834842,628085408,1382605366,3423369109,3138078467,570562233,1426400815,3317316542,2998733608,733239954,1555261956,3268935591,3050360625,752459403,1541320221,2607071920,3965973030,1969922972,40735498,2617837225,3943577151,1913087877,83908371,2512341634,3803740692,2075208622,213261112,2463272603,3855990285,2094854071,198958881,2262029012,4057260610,1759359992,534414190,2176718541,4139329115,1873836001,414664567,2282248934,4279200368,1711684554,285281116,2405801727,4167216745,1634467795,376229701,2685067896,3608007406,1308918612,956543938,2808555105,3495958263,1231636301,1047427035,2932959818,3654703836,1088359270,936918e3,2847714899,3736837829,1202900863,817233897,3183342108,3401237130,1404277552,615818150,3134207493,3453421203,1423857449,601450431,3009837614,3294710456,1567103746,711928724,3020668471,3272380065,1510334235,755167117]),t.t)
 B.tO=new A.Z8(null)
-B.aip=new A.c0("Labdip",null,null,null,null,null,null,null,null,null,null,null)
-B.a4v=new A.us(B.tO,B.tO,B.aip)
+B.aiq=new A.c0("Labdip",null,null,null,null,null,null,null,null,null,null,null)
+B.a4v=new A.us(B.tO,B.tO,B.aiq)
 B.W4=new A.cj(984317,"MaterialIcons",null,!1)
 B.uc=new A.eM(B.W4,null,null,null,null)
 B.aif=new A.c0("DTM",null,null,null,null,null,null,null,null,null,null,null)
@@ -138133,15 +138133,15 @@ B.aib=new A.i9(B.agm,B.afz,B.agn,B.agP,B.afe,B.afm,B.afQ,B.agH,B.ag_,B.ahe,B.aeQ
 B.aic=new A.a4N(0,"WrapText")
 B.aid=new A.a4N(1,"Clip")
 B.aie=new A.c0("Connection error!",null,null,null,null,null,null,null,null,null,null,null)
+B.aha=new A.P(!0,B.h,null,null,null,null,20,B.bJ,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
+B.aig=new A.c0("DIGITAL WORLD",null,B.aha,null,null,null,null,null,null,null,null,null)
 B.GG=new A.c0("Amount",null,null,B.a7,null,null,null,null,null,null,null,null)
 B.GH=new A.c0("Invoice No.",null,null,B.aH,null,null,null,null,null,null,null,null)
-B.ail=new A.c0("+91 124-4981600 , +91 124-4981601",null,null,null,null,null,null,null,null,null,null,null)
-B.aim=new A.c0("Payment confirmation will be sent via E-mail/SMS in some time.",null,null,null,null,null,null,null,null,null,null,null)
-B.ain=new A.c0("ORDERS",null,null,null,null,null,null,null,null,null,null,null)
-B.aio=new A.c0("",null,null,null,null,null,null,null,null,null,null,null)
-B.air=new A.c0(" Download ",null,null,null,null,null,null,null,null,null,null,null)
-B.aha=new A.P(!0,B.h,null,null,null,null,20,B.bJ,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.ais=new A.c0("A&E DIGITAL WORLD",null,B.aha,null,null,null,null,null,null,null,null,null)
+B.aim=new A.c0("+91 124-4981600 , +91 124-4981601",null,null,null,null,null,null,null,null,null,null,null)
+B.ain=new A.c0("Payment confirmation will be sent via E-mail/SMS in some time.",null,null,null,null,null,null,null,null,null,null,null)
+B.aio=new A.c0("ORDERS",null,null,null,null,null,null,null,null,null,null,null)
+B.aip=new A.c0("",null,null,null,null,null,null,null,null,null,null,null)
+B.ais=new A.c0(" Download ",null,null,null,null,null,null,null,null,null,null,null)
 B.aiw=new A.c0("Invoice Date",null,null,B.a7,null,null,null,null,null,null,null,null)
 B.aiy=new A.c0("Created",null,null,B.a7,null,null,null,null,null,null,null,null)
 B.aiA=new A.c0("DTM Orders",null,B.fF,B.aH,null,null,null,null,null,null,null,null)
