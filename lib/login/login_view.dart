@@ -90,7 +90,7 @@ class LoginView extends StatelessWidget {
                         height: 16,
                       ),
                       const Text(
-                        'A&E DIGITAL WORLD',
+                        'DIGITAL WORLD',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
