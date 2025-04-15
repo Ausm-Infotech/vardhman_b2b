@@ -307,9 +307,10 @@ class BulkOrderDetailsView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: invoicedLines.firstOrNull != null
-                                        ? "${invoicedLines.first.invoiceNumber} ${invoicedLines.first.invoiceType}"
-                                        : '',
+                                    cellText:
+                                        invoicedLines.map((labdipTableRow) {
+                                      return '${labdipTableRow.invoiceNumber} ${labdipTableRow.invoiceType}';
+                                    }).join(', '),
                                   ),
                                 )
                               ],

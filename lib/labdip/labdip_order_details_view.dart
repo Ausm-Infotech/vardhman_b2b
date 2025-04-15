@@ -310,7 +310,7 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                 if (hasDispatchedLine)
                                   DataCell(
                                     Align(
-                                      alignment: Alignment.centerRight,
+                                      alignment: Alignment.center,
                                       child: !isDispatchedLine
                                           ? SizedBox()
                                           : feedback != null
