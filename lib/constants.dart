@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:pure_ftp/pure_ftp.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/drift/database.dart';
 
@@ -125,16 +124,6 @@ String getItemNumber(
     {required String article, required String uom, required String shade}) {
   return '${article.padRight(7)}${uom.padRight(5)}$shade';
 }
-
-const ftpAuthOptions = FtpAuthOptions(
-  username: 'vytl',
-  password: 'Nov#2021',
-);
-
-const ftpSocketInitOptions = FtpSocketInitOptions(
-  host: '172.33.3.45',
-  port: 21,
-);
 
 final capitalFormatter = TextInputFormatter.withFunction(
   (oldValue, newValue) {
