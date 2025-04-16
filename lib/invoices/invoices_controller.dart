@@ -36,7 +36,7 @@ class InvoicesController extends GetxController
   );
 
   late final tabController = TabController(
-    length: 2,
+    length: 3,
     vsync: this,
   );
 
@@ -89,6 +89,12 @@ class InvoicesController extends GetxController
 
       _rxInvoiceInfos.clear();
 
+      processedInvoiceInfos.sort(
+        (a, b) => a.date.compareTo(b.date) == 0
+            ? a.invoiceNumber.compareTo(b.invoiceNumber)
+            : a.date.compareTo(b.date),
+      );
+
       _rxInvoiceInfos.addAll(processedInvoiceInfos);
 
       rxEarliestInvoiceDate.value =
@@ -123,6 +129,12 @@ class InvoicesController extends GetxController
       )
       .toList();
 
+  List<InvoiceInfo> get dueInvoices => [
+        ...notDueInvoices,
+        ...discountedInvoices,
+        ...heldInvoices,
+      ];
+
   List<InvoiceInfo> get discountedInvoices => filteredOpenInvoices
       .where(
         (invoiceInfo) => invoiceInfo.status == InvoiceStatus.discounted,
@@ -146,7 +158,9 @@ class InvoicesController extends GetxController
       rxSelectedInvoiceInfos.add(invoiceInfo);
 
       rxSelectedInvoiceInfos.sort(
-        (a, b) => a.discountDueDate.compareTo(b.discountDueDate),
+        (a, b) => a.discountDueDate.compareTo(b.discountDueDate) == 0
+            ? a.invoiceNumber.compareTo(b.invoiceNumber)
+            : a.discountDueDate.compareTo(b.discountDueDate),
       );
     }
   }
@@ -182,14 +196,13 @@ class InvoicesController extends GetxController
 
   List<InvoiceInfo> get openInvoices => _rxInvoiceInfos
       .where((invoiceInfo) => invoiceInfo.status != InvoiceStatus.paid)
-      .toList()
-    ..sort(
-      (a, b) => a.date.compareTo(b.date),
-    );
+      .toList();
 
   double get totalOpenAmount => openInvoices
       .where(
-        (invoiceInfo) => invoiceInfo.status != InvoiceStatus.processing,
+        (invoiceInfo) =>
+            invoiceInfo.status != InvoiceStatus.processing &&
+            invoiceInfo.status != InvoiceStatus.creditNote,
       )
       .fold(
         0.0,
@@ -251,7 +264,9 @@ class InvoicesController extends GetxController
       .where((invoiceInfo) => invoiceInfo.status == InvoiceStatus.paid)
       .toList()
     ..sort(
-      (a, b) => b.receiptDate.compareTo(a.receiptDate),
+      (a, b) => b.receiptDate.compareTo(a.receiptDate) == 0
+          ? a.invoiceNumber.compareTo(b.invoiceNumber)
+          : b.receiptDate.compareTo(a.receiptDate),
     );
 
   List<InvoiceInfo> get filteredPaidInvoices {
@@ -295,4 +310,7 @@ class InvoicesController extends GetxController
             ),
       )
       .toList();
+
+  int get daysBetweenNowAndToDate =>
+      DateTime.now().difference(rxInvoiceToDate.value).inDays;
 }

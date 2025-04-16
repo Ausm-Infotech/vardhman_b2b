@@ -1,18 +1,19 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
-import 'package:vardhman_b2b/common/label_row.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/rupee_text.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/open/advance_payment_dialog.dart';
 import 'package:vardhman_b2b/invoices/invoices_controller.dart';
-import 'package:vardhman_b2b/open/open_invoices_list.dart';
+import 'package:vardhman_b2b/open/advance_payment_dialog.dart';
+import 'package:vardhman_b2b/open/due_invoices_view.dart';
+import 'package:vardhman_b2b/open/overdue_invoices_view.dart';
+import 'package:vardhman_b2b/open/processing_invoices_view.dart';
 
 class OpenInvoicesView extends StatelessWidget {
   const OpenInvoicesView({super.key});
@@ -36,15 +37,46 @@ class OpenInvoicesView extends StatelessWidget {
                   text: 'Refresh',
                   onPressed: invoicesController.refreshInvoices,
                 ),
-                title: RupeeText(
-                  label: 'Net Outstanding',
-                  amount: invoicesController.totalOpenAmount,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RupeeText(
+                      label: 'Net Overdue',
+                      amount: invoicesController.totalOverdueAmount,
+                    ),
+                    RupeeText(
+                      label: 'Net Outstanding',
+                      amount: invoicesController.totalOpenAmount,
+                    ),
+                  ],
                 ),
                 trailing: Text(
                   '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
                   textAlign: TextAlign.center,
                 ),
               ),
+              invoicesController.openInvoices.isEmpty
+                  ? Container()
+                  : Material(
+                      elevation: 4,
+                      child: Container(
+                        color: Colors.white,
+                        child: TabBar(
+                          controller: invoicesController.tabController,
+                          tabs: [
+                            Tab(
+                              text: 'Overdue',
+                            ),
+                            Tab(
+                              text: 'Due',
+                            ),
+                            Tab(
+                              text: 'Payment Processing',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -74,125 +106,50 @@ class OpenInvoicesView extends StatelessWidget {
                             ),
                           ],
                         )
-                      : Column(
+                      : TabBarView(
+                          controller: invoicesController.tabController,
                           children: [
-                            const OpenInvoicesList(
-                              invoicesDetails: [],
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    if (invoicesController
-                                        .processingInvoices.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Processing Payment',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.processing,
-                                        ),
-                                        trailing:
-                                            '₹${invoicesController.totalProcessingAmount.toStringAsFixed(2)}',
+                            invoicesController.overdueInvoices.isNotEmpty
+                                ? OverdueInvoicesView()
+                                : Center(
+                                    child: Text(
+                                      'No overdue invoices',
+                                      style: const TextStyle(
+                                        color: VardhmanColors.darkGrey,
                                       ),
-                                      OpenInvoicesList(
-                                        canSelect: false,
-                                        showHeader: false,
-                                        invoicesDetails: invoicesController
-                                            .processingInvoices,
+                                    ),
+                                  ),
+                            invoicesController.dueInvoices.isNotEmpty
+                                ? DueInvoicesView()
+                                : Center(
+                                    child: Text(
+                                      'No due invoices',
+                                      style: const TextStyle(
+                                        color: VardhmanColors.darkGrey,
                                       ),
-                                    ],
-                                    if (invoicesController
-                                        .creditNotes.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Credit Notes',
-                                        trailing:
-                                            '₹${invoicesController.totalCreditNoteAmount.toStringAsFixed(2)}',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.creditNote,
-                                        ),
+                                    ),
+                                  ),
+                            invoicesController.processingInvoices.isNotEmpty
+                                ? ProcessingInvoicesView()
+                                : Center(
+                                    child: Text(
+                                      'No invoices in processing',
+                                      style: const TextStyle(
+                                        color: VardhmanColors.darkGrey,
                                       ),
-                                      OpenInvoicesList(
-                                        showHeader: false,
-                                        invoicesDetails:
-                                            invoicesController.creditNotes,
-                                      ),
-                                    ],
-                                    if (invoicesController
-                                        .overdueInvoices.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Overdue Invoices',
-                                        trailing:
-                                            '₹${invoicesController.totalOverdueAmount.toStringAsFixed(2)}',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.overdue,
-                                        ),
-                                      ),
-                                      OpenInvoicesList(
-                                        showHeader: false,
-                                        invoicesDetails:
-                                            invoicesController.overdueInvoices,
-                                      ),
-                                    ],
-                                    if (invoicesController
-                                        .notDueInvoices.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Not Due Invoices',
-                                        trailing:
-                                            '₹${invoicesController.totalNotDueAmount.toStringAsFixed(2)}',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.notDue,
-                                        ),
-                                      ),
-                                      OpenInvoicesList(
-                                        showHeader: false,
-                                        invoicesDetails:
-                                            invoicesController.notDueInvoices,
-                                      ),
-                                    ],
-                                    if (invoicesController
-                                        .discountedInvoices.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Discounted Invoices',
-                                        trailing:
-                                            '₹${invoicesController.totalDiscountedAmount.toStringAsFixed(2)}',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.discounted,
-                                        ),
-                                      ),
-                                      OpenInvoicesList(
-                                        showHeader: false,
-                                        invoicesDetails: invoicesController
-                                            .discountedInvoices,
-                                      ),
-                                    ],
-                                    if (invoicesController
-                                        .heldInvoices.isNotEmpty) ...[
-                                      LabelRow(
-                                        title: 'Other Invoices',
-                                        trailing:
-                                            '₹${invoicesController.totalHeldAmount.toStringAsFixed(2)}',
-                                        color: getInvoiceStatusColor(
-                                          InvoiceStatus.onHold,
-                                        ),
-                                      ),
-                                      OpenInvoicesList(
-                                        showHeader: false,
-                                        invoicesDetails:
-                                            invoicesController.heldInvoices,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
+                                    ),
+                                  ),
                           ],
                         ),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.only(
-                    top: 16, right: 8, left: 8, bottom: 8),
+                  top: 16,
+                  right: 8,
+                  left: 8,
+                  bottom: 8,
+                ),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
@@ -280,6 +237,37 @@ class OpenInvoicesView extends StatelessWidget {
                             invoicesController.rxInvoiceToDate.value = date;
                           }
                         },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Flexible(
+                      child: TextField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (String numberOfDays) {
+                          final int? days = int.tryParse(numberOfDays);
+
+                          if (days != null) {
+                            invoicesController.rxInvoiceToDate.value =
+                                DateTime.now().subtract(Duration(days: days));
+                          } else {
+                            invoicesController.rxInvoiceToDate.value =
+                                DateTime.now();
+                          }
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          label: Text('Invoices Older Than (days)'),
+                          labelStyle: TextStyle(
+                            color: VardhmanColors.darkGrey,
+                            fontSize: 14,
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
                     const SizedBox(

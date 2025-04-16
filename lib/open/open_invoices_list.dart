@@ -20,9 +20,15 @@ class OpenInvoicesList extends StatelessWidget {
     required this.invoicesDetails,
     this.showHeader = true,
     this.canSelect = true,
+    this.selectAllValue,
+    this.onSelectAllChanged,
   });
 
   final bool showHeader, canSelect;
+
+  final bool? selectAllValue;
+
+  final void Function(bool?)? onSelectAllChanged;
 
   final List<InvoiceInfo> invoicesDetails;
 
@@ -32,6 +38,8 @@ class OpenInvoicesList extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        final tableWidth = constraints.maxWidth - 50;
+
         return DataTable(
           showCheckboxColumn: false,
           headingRowHeight: showHeader ? 40 : 0,
@@ -53,12 +61,29 @@ class OpenInvoicesList extends StatelessWidget {
           columns: [
             DataColumn(
               label: SizedBox(
-                width: constraints.maxWidth * .11,
+                width: 50,
+                child: !showHeader || onSelectAllChanged == null
+                    ? null
+                    : Checkbox(
+                        tristate: true,
+                        value: selectAllValue,
+                        onChanged: onSelectAllChanged,
+                        checkColor: VardhmanColors.darkGrey,
+                        fillColor: WidgetStatePropertyAll(
+                          Colors.white,
+                        ),
+                        side: WidgetStateBorderSide.resolveWith(
+                          (states) => BorderSide(
+                            color: VardhmanColors.darkGrey,
+                            width: 1,
+                          ),
+                        ),
+                      ),
               ),
             ),
             DataColumn(
               label: SizedBox(
-                width: constraints.maxWidth * .22,
+                width: tableWidth * .25,
                 child: const Text(
                   'Invoice No.',
                   textAlign: TextAlign.center,
@@ -68,7 +93,7 @@ class OpenInvoicesList extends StatelessWidget {
             DataColumn(
               label: Container(
                 padding: const EdgeInsets.only(right: 4),
-                width: constraints.maxWidth * .17,
+                width: tableWidth * .2,
                 child: const Text(
                   'Created',
                   textAlign: TextAlign.end,
@@ -78,7 +103,7 @@ class OpenInvoicesList extends StatelessWidget {
             DataColumn(
               label: Container(
                 padding: const EdgeInsets.only(right: 4),
-                width: constraints.maxWidth * .17,
+                width: tableWidth * .2,
                 child: const Text(
                   'Due Date',
                   textAlign: TextAlign.end,
@@ -87,7 +112,7 @@ class OpenInvoicesList extends StatelessWidget {
             ),
             DataColumn(
               label: Container(
-                width: constraints.maxWidth * .33,
+                width: tableWidth * .35,
                 padding: const EdgeInsets.only(right: 4),
                 child: const Text(
                   'Amount',
@@ -128,7 +153,7 @@ class OpenInvoicesList extends StatelessWidget {
                 cells: [
                   DataCell(
                     SizedBox(
-                      width: constraints.maxWidth * .11,
+                      width: 50,
                       child: SecondaryButton(
                         text: '',
                         iconData: FontAwesomeIcons.filePdf,
@@ -178,7 +203,7 @@ class OpenInvoicesList extends StatelessWidget {
                   ),
                   DataCell(
                     SizedBox(
-                      width: constraints.maxWidth * .22,
+                      width: tableWidth * .25,
                       child: Text(
                         "${invoiceInfo.invoiceNumber} ${invoiceInfo.docType}",
                         textAlign: TextAlign.center,
@@ -189,7 +214,7 @@ class OpenInvoicesList extends StatelessWidget {
                   DataCell(
                     Container(
                       padding: const EdgeInsets.only(right: 4),
-                      width: constraints.maxWidth * .17,
+                      width: tableWidth * .2,
                       // color: Colors.deepOrange,
                       child: Text(
                         DateFormat('d MMM yy').format(invoiceInfo.date),
@@ -203,7 +228,7 @@ class OpenInvoicesList extends StatelessWidget {
                   DataCell(
                     Container(
                       padding: const EdgeInsets.only(right: 4),
-                      width: constraints.maxWidth * .17,
+                      width: tableWidth * .2,
                       child: invoiceInfo.status == InvoiceStatus.creditNote
                           ? null
                           : Text(
@@ -221,7 +246,7 @@ class OpenInvoicesList extends StatelessWidget {
                   ),
                   DataCell(
                     Container(
-                      width: constraints.maxWidth * .33,
+                      width: tableWidth * .35,
                       padding: const EdgeInsets.only(right: 4),
                       child: Align(
                         alignment: Alignment.centerRight,
