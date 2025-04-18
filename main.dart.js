@@ -34763,13 +34763,13 @@ case 1:return A.m(q,r)
 case 2:return A.l(o.at(-1),r)}})
 return A.n($async$ajp,r)},
 Hw(a,b,c){return A.bv8(a,b,c)},
-bv8(c0,c1,c2){var s=0,r=A.o(t.SY),q,p=2,o=[],n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9
-var $async$Hw=A.p(function(c3,c4){if(c3===1){o.push(c4)
-s=p}while(true)switch(s){case 0:b8=A.b([],t.ht)
+bv8(c1,c2,c3){var s=0,r=A.o(t.SY),q,p=2,o=[],n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,c0
+var $async$Hw=A.p(function(c4,c5){if(c4===1){o.push(c5)
+s=p}while(true)switch(s){case 0:b9=A.b([],t.ht)
 p=4
 s=7
-return A.q($.dS().di("/orchestrator/ORCH5542002_GetOrderDetail",A.X(["Order Number",c1,"OrderType",c2,"OrderCompany",c0],t.N,t.K),t.z),$async$Hw)
-case 7:n=c4
+return A.q($.dS().di("/orchestrator/ORCH5542002_GetOrderDetail",A.X(["Order Number",c2,"OrderType",c3,"OrderCompany",c1],t.N,t.K),t.z),$async$Hw)
+case 7:n=c5
 if(n.c===200)for(k=J.aK(J.F(n.a,"OrderDetail"));k.v();){m=k.gJ(k)
 j=J.F(m,"Company")
 i=J.F(m,"Order")
@@ -34795,24 +34795,25 @@ b0=A.eQ(J.F(m,"WorkOrder"),null)
 if(b0==null)b0=0
 b1=J.F(m,"Catalog Name")
 b2=J.F(m,"WOStatus")
-b3=J.F(m,"WorkOrderType")
-b4=J.F(m,"End Use")
-b5=A.jH(J.bH(J.F(m,"Unit Price")))
-if(b5==null)b5=0
-b6=A.jH(J.bH(J.F(m,"Extended Price")))
+b3=J.F(m,"OrderLineReference")
+b4=J.F(m,"WorkOrderType")
+b5=J.F(m,"End Use")
+b6=A.jH(J.bH(J.F(m,"Unit Price")))
 if(b6==null)b6=0
-J.bG(b8,new A.Ph(j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b3,b2,b1,b4,b5,b6,J.F(m,"Print Message"),J.F(m,"ShipToAttention")))}p=2
+b7=A.jH(J.bH(J.F(m,"Extended Price")))
+if(b7==null)b7=0
+J.bG(b9,new A.Ph(j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b4,b2,b3,b1,b5,b6,b7,J.F(m,"Print Message"),J.F(m,"ShipToAttention")))}p=2
 s=6
 break
 case 4:p=3
-b9=o.pop()
-l=A.a9(b9)
+c0=o.pop()
+l=A.a9(c0)
 A.u(l)
 s=6
 break
 case 3:s=2
 break
-case 6:q=b8
+case 6:q=b9
 s=1
 break
 case 1:return A.m(q,r)
@@ -35732,7 +35733,7 @@ this.b=b
 this.c=c},
 dN:function dN(){},
 aTy:function aTy(){},
-Ph:function Ph(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9){var _=this
+Ph:function Ph(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0){var _=this
 _.a=a
 _.b=b
 _.c=c
@@ -35761,7 +35762,8 @@ _.fx=a5
 _.fy=a6
 _.go=a7
 _.id=a8
-_.k1=a9},
+_.k1=a9
+_.k2=b0},
 abi:function abi(){},
 abj:function abj(){},
 hr:function hr(){},
@@ -35863,7 +35865,7 @@ al1:function al1(){},
 al2:function al2(a){this.a=a},
 akY:function akY(a){this.a=a},
 al3:function al3(a){this.a=a},
-al6:function al6(){},
+al6:function al6(a){this.a=a},
 akZ:function akZ(){},
 al4:function al4(a){this.a=a},
 al5:function al5(a){this.a=a},
@@ -122241,7 +122243,7 @@ $S:296}
 A.ajE.prototype={
 $1(a){var s=this,r=s.a.KV(a.db),q=new A.U(r,new A.ajD(),A.S(r).h("U<1,c>")).bq(0,","),p=s.b,o=B.b.d0(s.w,a),n=""+a.b,m=s.y.j(0,a)
 m.toString
-return A.X(["BatchNumber",p,"Company",s.c,"SoldTo",s.d,"ShipTo",s.e,"BranchPlant",s.f,"ItemNumber",a.r,"Quantity",1,"OrderTakenBy",s.r,"LineNumber",o+1+1000,"DocumentType","LD","SourceFlag","B","MerchandiserName",s.x+"|"+p,"LightSourceRemark",a.id,"ColorRemark",n+"-"+q+"-"+m,"EndUse",a.fx,"BillingType","B","RelatedOrder",n+"|"+a.c+"|"+a.a+"|"+A.u(a.d)+"|"+a.k1],t.N,t.K)},
+return A.X(["BatchNumber",p,"Company",s.c,"SoldTo",s.d,"ShipTo",s.e,"BranchPlant",s.f,"ItemNumber",a.r,"Quantity",1,"OrderTakenBy",s.r,"LineNumber",o+1+1000,"DocumentType","LD","SourceFlag","B","MerchandiserName",s.x+"|"+p,"LightSourceRemark",a.k1,"ColorRemark",n+"-"+q+"-"+m,"EndUse",a.fy,"BillingType","B","RelatedOrder",n+"|"+a.c+"|"+a.a+"|"+A.u(a.d)+"|"+a.k2],t.N,t.K)},
 $S:787}
 A.ajD.prototype={
 $1(a){return a.b+"-"+a.c},
@@ -122471,7 +122473,7 @@ A.aTy.prototype={
 dF(){return A.Z($.btk())}}
 A.Ph.prototype={
 k(a){var s=this
-return"OrderDetailLine(company: "+s.a+", orderNumber: "+s.b+", orderType: "+s.c+", lineNumber: "+A.u(s.d)+", dateShipped: "+A.u(s.e)+", dateInvoiced: "+A.u(s.f)+", item: "+s.r+", itemDescription: "+s.w+", userComment: "+s.x+", nextStatus: "+s.y+", nextStatusDescription: "+s.z+", lastStatus: "+s.Q+", lastStatusDescription: "+s.as+", quantityOrdered: "+s.at+", quantityShipped: "+s.ax+", quantityCancelled: "+s.ay+", quantityBackordered: "+s.ch+", invoiceNumber: "+s.CW+", invoiceType: "+s.cx+", invoiceCompany: "+s.cy+", workOrderNumber: "+s.db+", workOrderType: "+s.dx+", woStatus: "+s.dy+", catalogName: "+s.fr+", buyerCode: "+s.fx+", unitPrice: "+A.u(s.fy)+", extendedPrice: "+A.u(s.go)+", lightSource1: "+s.id+", shipToAttention: "+s.k1+")"},
+return"OrderDetailLine(company: "+s.a+", orderNumber: "+s.b+", orderType: "+s.c+", lineNumber: "+A.u(s.d)+", dateShipped: "+A.u(s.e)+", dateInvoiced: "+A.u(s.f)+", item: "+s.r+", itemDescription: "+s.w+", userComment: "+s.x+", nextStatus: "+s.y+", nextStatusDescription: "+s.z+", lastStatus: "+s.Q+", lastStatusDescription: "+s.as+", quantityOrdered: "+s.at+", quantityShipped: "+s.ax+", quantityCancelled: "+s.ay+", quantityBackordered: "+s.ch+", invoiceNumber: "+s.CW+", invoiceType: "+s.cx+", invoiceCompany: "+s.cy+", workOrderNumber: "+s.db+", workOrderType: "+s.dx+", woStatus: "+s.dy+", orderLineReference: "+s.fr+", catalogName: "+s.fx+", buyerCode: "+s.fy+", unitPrice: "+A.u(s.go)+", extendedPrice: "+A.u(s.id)+", lightSource1: "+s.k1+", shipToAttention: "+s.k2+")"},
 l(a,b){var s,r,q,p=this
 if(b==null)return!1
 if(p!==b){s=!1
@@ -122505,16 +122507,17 @@ if(r||r){r=b.fx===p.fx
 if(r||r){r=b.fy===p.fy
 if(r||r){r=b.go===p.go
 if(r||r){r=b.id===p.id
-if(r||r){s=b.k1===p.k1
-s=s||s}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}else s=!0
+if(r||r){r=b.k1===p.k1
+if(r||r){s=b.k2===p.k2
+s=s||s}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}else s=!0
 return s},
 gA(a){var s=this
-return A.d1([A.G(s),s.a,s.b,s.c,s.d,s.e,s.f,s.r,s.w,s.x,s.y,s.z,s.Q,s.as,s.at,s.ax,s.ay,s.ch,s.CW,s.cx,s.cy,s.db,s.dx,s.dy,s.fr,s.fx,s.fy,s.go,s.id,s.k1])},
+return A.d1([A.G(s),s.a,s.b,s.c,s.d,s.e,s.f,s.r,s.w,s.x,s.y,s.z,s.Q,s.as,s.at,s.ax,s.ay,s.ch,s.CW,s.cx,s.cy,s.db,s.dx,s.dy,s.fr,s.fx,s.fy,s.go,s.id,s.k1,s.k2])},
 dF(){var s,r=this,q=r.e
 q=q==null?null:q.qM()
 s=r.f
 s=s==null?null:s.qM()
-return A.X(["company",r.a,"orderNumber",r.b,"orderType",r.c,"lineNumber",r.d,"dateShipped",q,"dateInvoiced",s,"item",r.r,"itemDescription",r.w,"userComment",r.x,"nextStatus",r.y,"nextStatusDescription",r.z,"lastStatus",r.Q,"lastStatusDescription",r.as,"quantityOrdered",r.at,"quantityShipped",r.ax,"quantityCancelled",r.ay,"quantityBackordered",r.ch,"invoiceNumber",r.CW,"invoiceType",r.cx,"invoiceCompany",r.cy,"workOrderNumber",r.db,"workOrderType",r.dx,"woStatus",r.dy,"catalogName",r.fr,"buyerCode",r.fx,"unitPrice",r.fy,"extendedPrice",r.go,"lightSource1",r.id,"shipToAttention",r.k1],t.N,t.z)}}
+return A.X(["company",r.a,"orderNumber",r.b,"orderType",r.c,"lineNumber",r.d,"dateShipped",q,"dateInvoiced",s,"item",r.r,"itemDescription",r.w,"userComment",r.x,"nextStatus",r.y,"nextStatusDescription",r.z,"lastStatus",r.Q,"lastStatusDescription",r.as,"quantityOrdered",r.at,"quantityShipped",r.ax,"quantityCancelled",r.ay,"quantityBackordered",r.ch,"invoiceNumber",r.CW,"invoiceType",r.cx,"invoiceCompany",r.cy,"workOrderNumber",r.db,"workOrderType",r.dx,"woStatus",r.dy,"orderLineReference",r.fr,"catalogName",r.fx,"buyerCode",r.fy,"unitPrice",r.go,"extendedPrice",r.id,"lightSource1",r.k1,"shipToAttention",r.k2],t.N,t.z)}}
 A.abi.prototype={}
 A.abj.prototype={}
 A.hr.prototype={}
@@ -122632,7 +122635,7 @@ J.eZ(n,m)
 l.k2$.aT(l.gi(0))
 case 3:return A.m(null,r)}})
 return A.n($async$jZ,r)},
-gUN(){var s=J.iM(this.fx.gi(0),new A.al6())
+gUN(){var s=J.iM(this.fx.gi(0),new A.al6(this))
 return A.Y(s,!0,s.$ti.h("w.E"))},
 gQL(){var s=J.iM(this.ax.ay.gi(0),new A.akZ())
 return A.Y(s,!0,s.$ti.h("w.E"))},
@@ -122683,7 +122686,7 @@ if(r==null)r=$.fc()
 s.CW.si(0,r)},
 $S:162}
 A.al6.prototype={
-$1(a){return a.db>0&&a.dx.length!==0},
+$1(a){return a.db>0&&a.dx.length!==0&&this.a.fr.gi(0).e===a.fr},
 $S:84}
 A.akZ.prototype={
 $1(a){return a.b==="SW"&&!a.ax},
@@ -123479,7 +123482,7 @@ $S:96}
 A.alQ.prototype={
 $1(a2){var s,r,q,p,o,n,m,l,k=null,j=a2.r,i=B.c.kf(j,A.bl("\\s+",!0,!1,!1,!1)),h=i[0],g=i[1],f=i[2],e=A.ju(this.a.giE(),new A.alM(h,g)),d=this.b,c=d.fx,b=c.d0(c,a2),a=a2.gbf(0),a0=d.KU(j),a1=B.b.f_(a0,0,new A.alN())
 j=A.a_D(a0)
-s=j==null?k:j.fy
+s=j==null?k:j.go
 if(s==null)s=0
 r=B.b.f_(a0,0,new A.alO())
 if(a0.length!==0)a="Dispatched"
@@ -123505,7 +123508,7 @@ A.alN.prototype={
 $2(a,b){return a+b.ax},
 $S:318}
 A.alO.prototype={
-$2(a,b){return a+b.go},
+$2(a,b){return a+b.id},
 $S:319}
 A.alP.prototype={
 $1(a){return""+a.CW+" "+a.cx},
@@ -125827,7 +125830,7 @@ $1(a){var s=B.c.kf(a.r,A.bl("\\s+",!0,!1,!1,!1))
 return s.length===3&&B.c.be(s[2],"SWT")},
 $S:84}
 A.arl.prototype={
-$1(a){return B.c.ky(a.fr,B.e.k(this.a))},
+$1(a){return B.c.ky(a.fx,B.e.k(this.a))},
 $S:84}
 A.ark.prototype={
 $1(a){return a.r===this.a&&a.CW>0},
@@ -126427,7 +126430,7 @@ r=s.length===3?s[2]:""
 b1=a6.KU(a7)
 q=B.b.f_(b1,0,new A.arU())
 a6=A.a_D(b1)
-p=a6==null?a0:a6.fy
+p=a6==null?a0:a6.go
 if(p==null)p=0
 o=B.b.f_(b1,0,new A.arV())
 b0=b1.length!==0?"Dispatched":a9.gbf(0)}else{r=""
@@ -126463,7 +126466,7 @@ A.arU.prototype={
 $2(a,b){return a+b.ax},
 $S:318}
 A.arV.prototype={
-$2(a,b){return a+b.go},
+$2(a,b){return a+b.id},
 $S:319}
 A.Z9.prototype={
 H(a){var s
