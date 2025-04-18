@@ -574,6 +574,7 @@ class LabdipEntryController extends GetxController {
         skipHashCodes: [
           rxMerchandiser.hashCode,
           rxBuyerName.hashCode,
+          _rxBuyerCode.hashCode,
           if (isOtherBuyer) rxOtherBuyerName.hashCode,
           rxFirstLightSource.hashCode,
           rxSecondLightSource.hashCode,
