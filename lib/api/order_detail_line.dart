@@ -33,6 +33,7 @@ class OrderDetailLine with _$OrderDetailLine {
     required int workOrderNumber,
     required String workOrderType,
     required String woStatus,
+    required String orderLineReference,
     required String catalogName,
     required String buyerCode,
     required double unitPrice,
