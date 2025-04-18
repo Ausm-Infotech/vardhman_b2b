@@ -127,7 +127,9 @@ class BulkController extends GetxController {
   List<OrderDetailLine> get primaryOrderDetailLines => rxOrderDetailLines.where(
         (orderDetailLine) {
           return orderDetailLine.workOrderNumber > 0 &&
-              orderDetailLine.workOrderType.isNotEmpty;
+              orderDetailLine.workOrderType.isNotEmpty &&
+              rxSelectedOrderHeaderLine.value!.orderReference ==
+                  orderDetailLine.orderLineReference;
         },
       ).toList();
 

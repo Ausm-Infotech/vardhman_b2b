@@ -43,6 +43,7 @@ mixin _$OrderDetailLine {
   int get workOrderNumber => throw _privateConstructorUsedError;
   String get workOrderType => throw _privateConstructorUsedError;
   String get woStatus => throw _privateConstructorUsedError;
+  String get orderLineReference => throw _privateConstructorUsedError;
   String get catalogName => throw _privateConstructorUsedError;
   String get buyerCode => throw _privateConstructorUsedError;
   double get unitPrice => throw _privateConstructorUsedError;
@@ -90,6 +91,7 @@ abstract class $OrderDetailLineCopyWith<$Res> {
       int workOrderNumber,
       String workOrderType,
       String woStatus,
+      String orderLineReference,
       String catalogName,
       String buyerCode,
       double unitPrice,
@@ -136,6 +138,7 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
     Object? workOrderNumber = null,
     Object? workOrderType = null,
     Object? woStatus = null,
+    Object? orderLineReference = null,
     Object? catalogName = null,
     Object? buyerCode = null,
     Object? unitPrice = null,
@@ -236,6 +239,10 @@ class _$OrderDetailLineCopyWithImpl<$Res, $Val extends OrderDetailLine>
           ? _value.woStatus
           : woStatus // ignore: cast_nullable_to_non_nullable
               as String,
+      orderLineReference: null == orderLineReference
+          ? _value.orderLineReference
+          : orderLineReference // ignore: cast_nullable_to_non_nullable
+              as String,
       catalogName: null == catalogName
           ? _value.catalogName
           : catalogName // ignore: cast_nullable_to_non_nullable
@@ -296,6 +303,7 @@ abstract class _$$OrderDetailLineImplCopyWith<$Res>
       int workOrderNumber,
       String workOrderType,
       String woStatus,
+      String orderLineReference,
       String catalogName,
       String buyerCode,
       double unitPrice,
@@ -340,6 +348,7 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
     Object? workOrderNumber = null,
     Object? workOrderType = null,
     Object? woStatus = null,
+    Object? orderLineReference = null,
     Object? catalogName = null,
     Object? buyerCode = null,
     Object? unitPrice = null,
@@ -440,6 +449,10 @@ class __$$OrderDetailLineImplCopyWithImpl<$Res>
           ? _value.woStatus
           : woStatus // ignore: cast_nullable_to_non_nullable
               as String,
+      orderLineReference: null == orderLineReference
+          ? _value.orderLineReference
+          : orderLineReference // ignore: cast_nullable_to_non_nullable
+              as String,
       catalogName: null == catalogName
           ? _value.catalogName
           : catalogName // ignore: cast_nullable_to_non_nullable
@@ -495,6 +508,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
       required this.workOrderNumber,
       required this.workOrderType,
       required this.woStatus,
+      required this.orderLineReference,
       required this.catalogName,
       required this.buyerCode,
       required this.unitPrice,
@@ -553,6 +567,8 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
   @override
   final String woStatus;
   @override
+  final String orderLineReference;
+  @override
   final String catalogName;
   @override
   final String buyerCode;
@@ -567,7 +583,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
 
   @override
   String toString() {
-    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, catalogName: $catalogName, buyerCode: $buyerCode, unitPrice: $unitPrice, extendedPrice: $extendedPrice, lightSource1: $lightSource1, shipToAttention: $shipToAttention)';
+    return 'OrderDetailLine(company: $company, orderNumber: $orderNumber, orderType: $orderType, lineNumber: $lineNumber, dateShipped: $dateShipped, dateInvoiced: $dateInvoiced, item: $item, itemDescription: $itemDescription, userComment: $userComment, nextStatus: $nextStatus, nextStatusDescription: $nextStatusDescription, lastStatus: $lastStatus, lastStatusDescription: $lastStatusDescription, quantityOrdered: $quantityOrdered, quantityShipped: $quantityShipped, quantityCancelled: $quantityCancelled, quantityBackordered: $quantityBackordered, invoiceNumber: $invoiceNumber, invoiceType: $invoiceType, invoiceCompany: $invoiceCompany, workOrderNumber: $workOrderNumber, workOrderType: $workOrderType, woStatus: $woStatus, orderLineReference: $orderLineReference, catalogName: $catalogName, buyerCode: $buyerCode, unitPrice: $unitPrice, extendedPrice: $extendedPrice, lightSource1: $lightSource1, shipToAttention: $shipToAttention)';
   }
 
   @override
@@ -619,6 +635,8 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
                 other.workOrderType == workOrderType) &&
             (identical(other.woStatus, woStatus) ||
                 other.woStatus == woStatus) &&
+            (identical(other.orderLineReference, orderLineReference) ||
+                other.orderLineReference == orderLineReference) &&
             (identical(other.catalogName, catalogName) ||
                 other.catalogName == catalogName) &&
             (identical(other.buyerCode, buyerCode) ||
@@ -660,6 +678,7 @@ class _$OrderDetailLineImpl extends _OrderDetailLine {
         workOrderNumber,
         workOrderType,
         woStatus,
+        orderLineReference,
         catalogName,
         buyerCode,
         unitPrice,
@@ -710,6 +729,7 @@ abstract class _OrderDetailLine extends OrderDetailLine {
       required final int workOrderNumber,
       required final String workOrderType,
       required final String woStatus,
+      required final String orderLineReference,
       required final String catalogName,
       required final String buyerCode,
       required final double unitPrice,
@@ -767,6 +787,8 @@ abstract class _OrderDetailLine extends OrderDetailLine {
   String get workOrderType;
   @override
   String get woStatus;
+  @override
+  String get orderLineReference;
   @override
   String get catalogName;
   @override

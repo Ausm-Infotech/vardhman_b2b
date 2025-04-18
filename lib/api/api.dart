@@ -671,6 +671,7 @@ class Api {
               workOrderNumber: int.tryParse(orderDetailData['WorkOrder']) ?? 0,
               catalogName: orderDetailData['Catalog Name'],
               woStatus: orderDetailData['WOStatus'],
+              orderLineReference: orderDetailData['OrderLineReference'],
               workOrderType: orderDetailData['WorkOrderType'],
               buyerCode: orderDetailData['End Use'],
               unitPrice:
