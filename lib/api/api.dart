@@ -389,7 +389,9 @@ class Api {
         final userData = response.data['Get_User_Data'][0];
 
         return UserDetailsCompanion(
-          soldToNumber: Value(userData['User']),
+          soldToNumber: (userData['UserRole'] == 'CUSTOMER')
+              ? Value(userData['User'])
+              : Value(userData['UserName']),
           isMobileUser: Value(userData['MobileOrPortalFlag'] == 'M'),
           mobileNumber: Value(userData['MobileNumber']),
           canSendSMS: Value(userData['SendSMSYN'] == 'Y'),

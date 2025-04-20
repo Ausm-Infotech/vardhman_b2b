@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:vardhman_b2b/common/new_order_text_field.dart';
 import 'package:vardhman_b2b/common/primary_button.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
+import 'package:vardhman_b2b/common/upper_case_text_formatter.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/login/login_controller.dart';
 import 'package:video_player/video_player.dart';
@@ -141,6 +142,7 @@ class LoginView extends StatelessWidget {
                                 SizedBox(
                                   width: 150,
                                   child: NewOrderTextField(
+                                    inputFormatters: [UpperCaseTextFormatter()],
                                     isEnabled:
                                         loginController.rxLoginState.value ==
                                             LoginState.loggedOut,
