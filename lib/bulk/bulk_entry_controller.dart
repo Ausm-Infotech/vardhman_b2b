@@ -833,12 +833,12 @@ class BulkEntryController extends GetxController {
       rxSelectedBulkOrderLines.remove(bulkOrderLine);
     } else {
       rxSelectedBulkOrderLines.add(bulkOrderLine);
+    }
 
-      if (rxSelectedBulkOrderLines.length == 1) {
-        clearAllInputs();
+    if (rxSelectedBulkOrderLines.isNotEmpty) {
+      clearAllInputs();
 
-        _populateInputs(bulkOrderLine: rxSelectedBulkOrderLines.first);
-      }
+      _populateInputs(bulkOrderLine: rxSelectedBulkOrderLines.last);
     }
   }
 
@@ -1033,4 +1033,9 @@ class BulkEntryController extends GetxController {
   bool get quantityHasError => inputsInError.contains(rxQuantity);
 
   bool get poNumberHasError => inputsInError.contains(rxPoNumber);
+
+  List<DraftTableData> get bulkOrderLinesDescending => rxBulkOrderLines.toList()
+    ..sort(
+      (a, b) => b.lineNumber.compareTo(a.lineNumber),
+    );
 }

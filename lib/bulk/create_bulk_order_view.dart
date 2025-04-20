@@ -632,7 +632,7 @@ class CreateBulkOrderView extends StatelessWidget {
                 ),
               ],
               empty: Center(child: const Text('No Order Lines')),
-              rows: bulkEntryController.rxBulkOrderLines.map(
+              rows: bulkEntryController.bulkOrderLinesDescending.map(
                 (bulkOrderLine) {
                   final index = bulkEntryController.rxBulkOrderLines
                       .indexOf(bulkOrderLine);

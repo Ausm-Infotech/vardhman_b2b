@@ -585,7 +585,7 @@ class CreateDtmOrderView extends StatelessWidget {
                 ),
               ],
               empty: Center(child: const Text('No Order Lines')),
-              rows: dtmEntryController.rxDtmOrderLines.map(
+              rows: dtmEntryController.dtmOrderLinesDescending.map(
                 (dtmOrderLine) {
                   final index =
                       dtmEntryController.rxDtmOrderLines.indexOf(dtmOrderLine);
@@ -598,7 +598,7 @@ class CreateDtmOrderView extends StatelessWidget {
                         ? WidgetStatePropertyAll(Colors.white)
                         : WidgetStatePropertyAll(
                             VardhmanColors.dividerGrey.withAlpha(128)),
-                    selected: dtmEntryController.dtmOrderLinesDescending
+                    selected: dtmEntryController.rxSelectedDtmOrderLines
                         .contains(dtmOrderLine),
                     onSelectChanged: (_) {
                       dtmEntryController.selectDtmOrderLine(dtmOrderLine);
