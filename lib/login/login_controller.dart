@@ -89,7 +89,7 @@ class LoginController extends GetxController {
     rxLoginState.value = LoginState.loggedOut;
 
     if (rxUserDetail.value != null) {
-      rxUserId.value = rxUserDetail.value!.soldToNumber;
+      // rxUserId.value = rxUserDetail.value!.soldToNumber;
 
       await refreshToken(rxUserDetail.value!.soldToNumber);
 
