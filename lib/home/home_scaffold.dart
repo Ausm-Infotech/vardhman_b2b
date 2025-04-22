@@ -14,6 +14,7 @@ import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/home/nav_rail.dart';
 import 'package:vardhman_b2b/bulk/bulk_view.dart';
 import 'package:vardhman_b2b/dtm/dtm_view.dart';
+import 'package:vardhman_b2b/home/order_summary_controller.dart';
 import 'package:vardhman_b2b/home/order_summary_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_view.dart';
 import 'package:vardhman_b2b/open/open_view.dart';
@@ -135,6 +136,14 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                     SecondaryButton(
                                       text: 'Order Summary',
                                       onPressed: () async {
+                                        if (Get.isRegistered<
+                                            OrderSummaryController>()) {
+                                          Get.delete<OrderSummaryController>();
+                                        }
+
+                                        Get.put(
+                                          OrderSummaryController(),
+                                        );
                                         Get.dialog(
                                           const Dialog(
                                             insetPadding: EdgeInsets.symmetric(

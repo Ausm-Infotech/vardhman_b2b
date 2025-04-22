@@ -1,24 +1,21 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
 import 'package:vardhman_b2b/common/new_order_date_field.dart';
+import 'package:vardhman_b2b/common/order_detail_cell.dart';
 import 'package:vardhman_b2b/common/order_detail_column_label.dart';
 import 'package:vardhman_b2b/common/secondary_button.dart';
 import 'package:vardhman_b2b/constants.dart';
-import 'package:vardhman_b2b/home/home_controller.dart';
+import 'package:vardhman_b2b/home/order_summary_controller.dart';
 
 class OrderSummaryView extends StatelessWidget {
   const OrderSummaryView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final labdipEntryController = Get.find<LabdipEntryController>();
-    final HomeController homeController = Get.find();
-
-    // final OrderReviewController orderReviewController =
-    //     Get.find<OrderReviewController>();
+    final OrderSummaryController orderSummaryController = Get.find();
 
     return Obx(
       () => Column(
@@ -41,17 +38,6 @@ class OrderSummaryView extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            // trailing: DefaultTextStyle(
-            //   style: const TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            //   child: PrimaryButton(
-            //     text: 'Submit Order',
-            //     onPressed: labdipEntryController.rxLabdipOrderLines.isEmpty
-            //         ? null
-            //         : labdipEntryController.submitOrder,
-            //   ),
-            // ),
           ),
           Container(
             color: VardhmanColors.dividerGrey.withAlpha(128),
@@ -75,10 +61,12 @@ class OrderSummaryView extends StatelessWidget {
                             SizedBox(
                               width: 300,
                               child: NewOrderDateField(
-                                labelText: 'From',
-                                rxDate: homeController.rxFromDate,
-                                firstDate:
-                                    homeController.rxFromDate.value?.subtract(
+                                labelText: 'Date',
+                                rxDate:
+                                    orderSummaryController.rxOrderSummaryDate,
+                                firstDate: orderSummaryController
+                                    .rxOrderSummaryDate.value
+                                    ?.subtract(
                                   Duration(days: 60),
                                 ),
                               ),
@@ -97,6 +85,7 @@ class OrderSummaryView extends StatelessWidget {
           ),
           Expanded(
             child: DataTable2(
+              showCheckboxColumn: false,
               minWidth: 600,
               columnSpacing: 0,
               showBottomBorder: true,
@@ -116,7 +105,6 @@ class OrderSummaryView extends StatelessWidget {
                 color: VardhmanColors.darkGrey,
                 fontSize: 13,
               ),
-              checkboxHorizontalMargin: 0,
               horizontalMargin: 16,
               headingRowHeight: 60,
               dataRowHeight: 60,
@@ -128,8 +116,13 @@ class OrderSummaryView extends StatelessWidget {
               ),
               columns: const [
                 DataColumn2(
+                  label: OrderDetailColumnLabel(labelText: '#'),
+                  fixedWidth: 50,
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn2(
                     label: OrderDetailColumnLabel(labelText: 'Customer Code'),
-                    // fixedWidth: 50,
+                    fixedWidth: 120,
                     size: ColumnSize.M,
                     headingRowAlignment: MainAxisAlignment.end),
                 DataColumn2(
@@ -163,102 +156,64 @@ class OrderSummaryView extends StatelessWidget {
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
               ],
-              empty: Center(child: const Text('No Order Lines')), rows: [],
-              // rows: <DraftTableData>[]
-              // labdipEntryController.labdipOrderLinesDescending.map(
-              //   (labdipOrderLine) {
-              //     final index = labdipEntryController.rxLabdipOrderLines
-              //         .indexOf(labdipOrderLine);
+              empty: Center(child: const Text('No Order Lines')),
+              rows: orderSummaryController.rxOrderSummaryLines.map(
+                (orderSummaryLine) {
+                  final index = orderSummaryController.rxOrderSummaryLines
+                      .indexOf(orderSummaryLine);
 
-              //     final uomDesc = orderReviewController
-              //         .getUomDescription(labdipOrderLine.uom);
-
-              //     return DataRow(
-              //       color: index.isEven
-              //           ? WidgetStatePropertyAll(Colors.white)
-              //           : WidgetStatePropertyAll(
-              //               VardhmanColors.dividerGrey.withAlpha(128)),
-              //       selected: labdipEntryController.rxSelectedLabdipOrderLines
-              //           .contains(labdipOrderLine),
-              //       onSelectChanged: (_) {
-              //         labdipEntryController
-              //             .selectLabdipOrderLine(labdipOrderLine);
-              //       },
-              //       cells: [
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: (index + 1).toString(),
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.merchandiser,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.buyer,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.article,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: "${labdipOrderLine.uom} - $uomDesc",
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.ticket,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.brand,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.tex,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.substrate,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.shade,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.colorName,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.lab,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.qtxFileName,
-              //           ),
-              //         ),
-              //         DataCell(
-              //           OrderDetailCell(
-              //             cellText: labdipOrderLine.remark,
-              //           ),
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ).toList(),
+                  return DataRow(
+                    color: index.isEven
+                        ? WidgetStatePropertyAll(Colors.white)
+                        : WidgetStatePropertyAll(
+                            VardhmanColors.dividerGrey.withAlpha(128)),
+                    cells: [
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: (index + 1).toString(),
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.customerCode,
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.customerName,
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.portalOrder,
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.jdeOrder,
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.orderType,
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: DateFormat('d MMM yyyy').format(
+                            DateTime.parse(orderSummaryLine.orderDate),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        OrderDetailCell(
+                          cellText: orderSummaryLine.orderRemark,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ).toList(),
             ),
           ),
         ],
