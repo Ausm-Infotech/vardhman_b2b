@@ -84,12 +84,13 @@ class LoginController extends GetxController {
   }
 
   Future<void> _checkUser() async {
-    rxUserDetail.value = await _database.managers.userDetails.getSingleOrNull();
+    var a = await _database.managers.userDetails.get();
+    rxUserDetail.value = a.first;
 
     rxLoginState.value = LoginState.loggedOut;
 
     if (rxUserDetail.value != null) {
-      // rxUserId.value = rxUserDetail.value!.soldToNumber;
+      rxUserId.value = rxUserDetail.value!.soldToNumber;
 
       await refreshToken(rxUserDetail.value!.soldToNumber);
 
@@ -270,9 +271,13 @@ class LoginController extends GetxController {
 
     await resetController(() => HomeController());
 
+    await _database.managers.userDetails.delete();
+
     await _database.managers.userDetails.create(
       (o) => UserDetailsCompanion.insert(
-        soldToNumber: rxUserDetail.value!.soldToNumber,
+        soldToNumber: (rxUserDetail.value!.role == 'CUSTOMER')
+            ? rxUserDetail.value!.soldToNumber
+            : rxUserId.value,
         isMobileUser: rxUserDetail.value!.isMobileUser,
         mobileNumber: rxUserDetail.value!.mobileNumber,
         canSendSMS: rxUserDetail.value!.canSendSMS,
