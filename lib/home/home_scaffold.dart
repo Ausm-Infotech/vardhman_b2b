@@ -121,7 +121,10 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                         },
                         child: _isHoveringOnName
                             ? Container(
-                                width: 380,
+                                width: userController.rxUserDetail.value.role !=
+                                        'CUSTOMER'
+                                    ? 380
+                                    : 280,
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -133,29 +136,34 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SecondaryButton(
-                                      text: 'Order Summary',
-                                      onPressed: () async {
-                                        if (Get.isRegistered<
-                                            OrderSummaryController>()) {
-                                          Get.delete<OrderSummaryController>();
-                                        }
+                                    userController.rxUserDetail.value.role !=
+                                            'CUSTOMER'
+                                        ? SecondaryButton(
+                                            text: 'Order Summary',
+                                            onPressed: () async {
+                                              if (Get.isRegistered<
+                                                  OrderSummaryController>()) {
+                                                Get.delete<
+                                                    OrderSummaryController>();
+                                              }
 
-                                        Get.put(
-                                          OrderSummaryController(),
-                                        );
-                                        Get.dialog(
-                                          const Dialog(
-                                            insetPadding: EdgeInsets.symmetric(
-                                              horizontal: 40,
-                                              vertical: 24,
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                            child: OrderSummaryView(),
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                              Get.put(
+                                                OrderSummaryController(),
+                                              );
+                                              Get.dialog(
+                                                const Dialog(
+                                                  insetPadding:
+                                                      EdgeInsets.symmetric(
+                                                    horizontal: 40,
+                                                    vertical: 24,
+                                                  ),
+                                                  clipBehavior: Clip.hardEdge,
+                                                  child: OrderSummaryView(),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : SizedBox(),
                                     SecondaryButton(
                                       text: 'Status Report',
                                       onPressed: () async {

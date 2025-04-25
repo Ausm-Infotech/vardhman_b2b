@@ -127,31 +127,37 @@ class OrderSummaryView extends StatelessWidget {
                     headingRowAlignment: MainAxisAlignment.end),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Customer Name'),
+                  fixedWidth: 400,
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Portal Order'),
+                  fixedWidth: 120,
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'JDE Order'),
+                  fixedWidth: 120,
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Order Type'),
+                  fixedWidth: 240,
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Order Date'),
+                  fixedWidth: 120,
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Remark'),
+                  fixedWidth: 120,
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),

@@ -100,6 +100,12 @@ enum OrderStatus {
   cancelled,
 }
 
+Map<String, String> orderTypeConstants = {
+  'LD': 'Lab Dip Order',
+  'BK': 'Bulk Order',
+  'DT': 'DTM Order'
+};
+
 OrderStatus getOrderDetailLineStatus(OrderDetailLine orderDetailLine) {
   if (orderDetailLine.dateShipped != null) {
     return OrderStatus.shipped;

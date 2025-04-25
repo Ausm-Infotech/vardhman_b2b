@@ -2113,13 +2113,13 @@ class Api {
         }
       }
 
-      final response = await _dio.get(
+      final responseSalsemanCustomerList = await _dio.get(
         '/v2/dataservice/table/F03012?\$field=F03012.AN8&\$field=F03012.CO&\$field=F03012.AC02&\$filter=F03012.AC02%20EQ%20$salsemanCode&\$filter=F03012.CO%20EQ%2010901',
       );
 
-      if (response.statusCode == 200) {
-        final rowset = response.data['fs_DATABROWSE_F03012']['data']['gridData']
-            ['rowset'] as List;
+      if (responseSalsemanCustomerList.statusCode == 200) {
+        final rowset = responseSalsemanCustomerList.data['fs_DATABROWSE_F03012']
+            ['data']['gridData']['rowset'] as List;
 
         for (var row in rowset) {
           final customerCode = row['F03012_AN8'].toString();
@@ -2133,8 +2133,56 @@ class Api {
     return salsemanCustomerList;
   }
 
+  static Future<Map<String, String>> fetchCustomersName({
+    required List<String> salsemanCustomerList,
+  }) async {
+    final salsemanCustomerNameMap = <String, String>{};
+
+    try {
+      final responseSalsemanCustomerNameList = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F0101",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F0101.AN8|F0101.ALPH",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F47011.AN8",
+                "operator": "LIST",
+                "value": salsemanCustomerList
+                    .map((customerCode) =>
+                        {"content": customerCode, "specialValueId": "LITERAL"})
+                    .toList()
+              }
+            ]
+          }
+        },
+      );
+
+      if (responseSalsemanCustomerNameList.statusCode == 200) {
+        final rowset = responseSalsemanCustomerNameList
+            .data['fs_DATABROWSE_F0101']['data']['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          final customerCode = row['F0101_AN8'].toString();
+          final customerName = row['F0101_ALPH'].toString();
+
+          salsemanCustomerNameMap[customerCode] = customerName;
+        }
+      }
+    } catch (e) {
+      log('fetchAllOrdersByDate error - $e');
+    }
+
+    return salsemanCustomerNameMap;
+  }
+
   static Future<List<OrderSummary>> fetchOrderCustomersByDate({
     required List<String> salsemanCustomerList,
+    required Map<String, String> orderCustomersNameMap,
     required DateTime date,
   }) async {
     var orderSummaryList = <OrderSummary>[];
@@ -2189,7 +2237,7 @@ class Api {
 
         for (var row in rowset) {
           final customerCode = row['F47011_AN8'].toString();
-          final customerName = row['F47011_AN8'].toString();
+          final customerName = orderCustomersNameMap[customerCode].toString();
           final portalOrder = row['F47011_EDBT'].toString();
           final jdeOrder = row['F47011_DOCO'].toString();
           final orderType = row['F47011_EDCT'].toString();
@@ -2201,7 +2249,7 @@ class Api {
             customerName: customerName,
             portalOrder: portalOrder,
             jdeOrder: jdeOrder,
-            orderType: orderType,
+            orderType: orderTypeConstants[orderType].toString(),
             orderDate: orderDate,
             orderRemark: orderRemark,
           );
