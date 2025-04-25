@@ -96,7 +96,7 @@ class OpenInvoicesList extends StatelessWidget {
                 width: tableWidth * .2,
                 child: const Text(
                   'Created',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -106,7 +106,7 @@ class OpenInvoicesList extends StatelessWidget {
                 width: tableWidth * .2,
                 child: const Text(
                   'Due Date',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -116,7 +116,7 @@ class OpenInvoicesList extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 4),
                 child: const Text(
                   'Amount',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -218,7 +218,7 @@ class OpenInvoicesList extends StatelessWidget {
                       // color: Colors.deepOrange,
                       child: Text(
                         DateFormat('d MMM yy').format(invoiceInfo.date),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: VardhmanColors.darkGrey,
                         ),
@@ -234,7 +234,7 @@ class OpenInvoicesList extends StatelessWidget {
                           : Text(
                               DateFormat('d MMM yy')
                                   .format(invoiceInfo.discountDueDate),
-                              textAlign: TextAlign.end,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color:
                                     invoiceInfo.status == InvoiceStatus.overdue
@@ -249,7 +249,7 @@ class OpenInvoicesList extends StatelessWidget {
                       width: tableWidth * .35,
                       padding: const EdgeInsets.only(right: 4),
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.center,
                         child: RupeeText(
                           iconSize: 0,
                           fontSize: 13,

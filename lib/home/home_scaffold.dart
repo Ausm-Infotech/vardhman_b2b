@@ -14,6 +14,8 @@ import 'package:vardhman_b2b/home/home_controller.dart';
 import 'package:vardhman_b2b/home/nav_rail.dart';
 import 'package:vardhman_b2b/bulk/bulk_view.dart';
 import 'package:vardhman_b2b/dtm/dtm_view.dart';
+import 'package:vardhman_b2b/home/order_summary_controller.dart';
+import 'package:vardhman_b2b/home/order_summary_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_view.dart';
 import 'package:vardhman_b2b/open/open_view.dart';
 import 'package:vardhman_b2b/paid/paid_view.dart';
@@ -119,7 +121,10 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                         },
                         child: _isHoveringOnName
                             ? Container(
-                                width: 280,
+                                width: userController.rxUserDetail.value.role !=
+                                        'CUSTOMER'
+                                    ? 380
+                                    : 280,
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -131,6 +136,34 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    userController.rxUserDetail.value.role !=
+                                            'CUSTOMER'
+                                        ? SecondaryButton(
+                                            text: 'Order Summary',
+                                            onPressed: () async {
+                                              if (Get.isRegistered<
+                                                  OrderSummaryController>()) {
+                                                Get.delete<
+                                                    OrderSummaryController>();
+                                              }
+
+                                              Get.put(
+                                                OrderSummaryController(),
+                                              );
+                                              Get.dialog(
+                                                const Dialog(
+                                                  insetPadding:
+                                                      EdgeInsets.symmetric(
+                                                    horizontal: 40,
+                                                    vertical: 24,
+                                                  ),
+                                                  clipBehavior: Clip.hardEdge,
+                                                  child: OrderSummaryView(),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : SizedBox(),
                                     SecondaryButton(
                                       text: 'Status Report',
                                       onPressed: () async {
@@ -254,7 +287,6 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                         );
                                       },
                                     ),
-                                    const SizedBox(width: 16),
                                     PrimaryButton(
                                       text: 'Logout',
                                       onPressed: () async {

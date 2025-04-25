@@ -29,6 +29,8 @@ class InvoicesController extends GetxController
 
   final invoiceNumberTextEditingController = TextEditingController();
 
+  final invoicesOlderThanTextEditingController = TextEditingController();
+
   final rxAdvancePaymentAmount = 0.0.obs;
 
   final advancePaymentInputController = TextEditingController(
@@ -248,6 +250,7 @@ class InvoicesController extends GetxController
     rxInvoiceNumberInput.value = '';
 
     invoiceNumberTextEditingController.clear();
+    invoicesOlderThanTextEditingController.clear();
   }
 
   void clearPaidFilters() {

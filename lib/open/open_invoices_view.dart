@@ -42,16 +42,18 @@ class OpenInvoicesView extends StatelessWidget {
                   children: <Widget>[
                     RupeeText(
                       label: 'Net Overdue',
-                      amount: invoicesController.totalOverdueAmount,
+                      amount: invoicesController.totalOverdueAmount / 100000,
+                      suffixLabel: ' Lac',
                     ),
                     RupeeText(
-                      label: 'Net Outstanding',
-                      amount: invoicesController.totalOpenAmount,
+                      label: 'Total Due',
+                      amount: invoicesController.totalOpenAmount / 100000,
+                      suffixLabel: ' Lac',
                     ),
                   ],
                 ),
                 trailing: Text(
-                  '${invoicesController.rxSelectedInvoiceInfos.length} invoice${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
+                  '${invoicesController.rxSelectedInvoiceInfos.length} inv${invoicesController.rxSelectedInvoiceInfos.length > 1 ? 's' : ''} selected',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -244,6 +246,8 @@ class OpenInvoicesView extends StatelessWidget {
                     ),
                     Flexible(
                       child: TextField(
+                        controller: invoicesController
+                            .invoicesOlderThanTextEditingController,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],

@@ -14,6 +14,7 @@ import 'package:vardhman_b2b/api/labdip_feedback.dart';
 import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
+import 'package:vardhman_b2b/api/order_summary.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -2090,5 +2091,175 @@ class Api {
     }
 
     return itemMasterCompanions;
+  }
+
+  static Future<List<String>> fetchSalsemanCode({
+    required String soldToNumber,
+  }) async {
+    final salsemanCustomerList = <String>[];
+    var salsemanCode = '';
+
+    try {
+      final responseSalsemanCode = await _dio.get(
+        '/v2/dataservice/table/F03012?\$field=F03012.AN8&\$field=F03012.CO&\$field=F03012.AC02&\$filter=F03012.AN8%20EQ%20$soldToNumber&\$filter=F03012.CO%20EQ%2010901',
+      );
+
+      if (responseSalsemanCode.statusCode == 200) {
+        final rowset = responseSalsemanCode.data['fs_DATABROWSE_F03012']['data']
+            ['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          salsemanCode = row['F03012_AC02'].toString();
+        }
+      }
+
+      final responseSalsemanCustomerList = await _dio.get(
+        '/v2/dataservice/table/F03012?\$field=F03012.AN8&\$field=F03012.CO&\$field=F03012.AC02&\$filter=F03012.AC02%20EQ%20$salsemanCode&\$filter=F03012.CO%20EQ%2010901',
+      );
+
+      if (responseSalsemanCustomerList.statusCode == 200) {
+        final rowset = responseSalsemanCustomerList.data['fs_DATABROWSE_F03012']
+            ['data']['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          final customerCode = row['F03012_AN8'].toString();
+          salsemanCustomerList.add(customerCode);
+        }
+      }
+    } catch (e) {
+      log('fetchAllOrdersByDate error - $e');
+    }
+
+    return salsemanCustomerList;
+  }
+
+  static Future<Map<String, String>> fetchCustomersName({
+    required List<String> salsemanCustomerList,
+  }) async {
+    final salsemanCustomerNameMap = <String, String>{};
+
+    try {
+      final responseSalsemanCustomerNameList = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F0101",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F0101.AN8|F0101.ALPH",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F47011.AN8",
+                "operator": "LIST",
+                "value": salsemanCustomerList
+                    .map((customerCode) =>
+                        {"content": customerCode, "specialValueId": "LITERAL"})
+                    .toList()
+              }
+            ]
+          }
+        },
+      );
+
+      if (responseSalsemanCustomerNameList.statusCode == 200) {
+        final rowset = responseSalsemanCustomerNameList
+            .data['fs_DATABROWSE_F0101']['data']['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          final customerCode = row['F0101_AN8'].toString();
+          final customerName = row['F0101_ALPH'].toString();
+
+          salsemanCustomerNameMap[customerCode] = customerName;
+        }
+      }
+    } catch (e) {
+      log('fetchAllOrdersByDate error - $e');
+    }
+
+    return salsemanCustomerNameMap;
+  }
+
+  static Future<List<OrderSummary>> fetchOrderCustomersByDate({
+    required List<String> salsemanCustomerList,
+    required Map<String, String> orderCustomersNameMap,
+    required DateTime date,
+  }) async {
+    var orderSummaryList = <OrderSummary>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F47011",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs":
+              "F47011.AN8|F47011.EDBT|F47011.DOCO|F47011.EDCT|F47011.PNID|F47011.EDDT",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F47011.EDDT",
+                "operator": "EQUAL",
+                "value": [
+                  {
+                    "content": DateFormat('MM/dd/yyyy').format(date),
+                    "specialValueId": "LITERAL"
+                  }
+                ]
+              },
+              {
+                "controlId": "F47011.EDCT",
+                "operator": "LIST",
+                "value": [
+                  {"content": "LD", "specialValueId": "LITERAL"},
+                  {"content": "DT", "specialValueId": "LITERAL"},
+                  {"content": "BK", "specialValueId": "LITERAL"}
+                ]
+              },
+              {
+                "controlId": "F47011.AN8",
+                "operator": "LIST",
+                "value": salsemanCustomerList
+                    .map((customerCode) =>
+                        {"content": customerCode, "specialValueId": "LITERAL"})
+                    .toList()
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F47011']['data']['gridData']
+            ['rowset'] as List;
+
+        for (var row in rowset) {
+          final customerCode = row['F47011_AN8'].toString();
+          final customerName = orderCustomersNameMap[customerCode].toString();
+          final portalOrder = row['F47011_EDBT'].toString();
+          final jdeOrder = row['F47011_DOCO'].toString();
+          final orderType = row['F47011_EDCT'].toString();
+          final orderDate = row['F47011_EDDT'].toString();
+          final orderRemark = row['F47011_PNID'].toString();
+
+          var orderSummaryItem = OrderSummary(
+            customerCode: customerCode,
+            customerName: customerName,
+            portalOrder: portalOrder,
+            jdeOrder: jdeOrder,
+            orderType: orderTypeConstants[orderType].toString(),
+            orderDate: orderDate,
+            orderRemark: orderRemark,
+          );
+          orderSummaryList.add(orderSummaryItem);
+        }
+      }
+    } catch (e) {
+      log('fetchAllOrdersByDate error - $e');
+    }
+
+    return orderSummaryList;
   }
 }
