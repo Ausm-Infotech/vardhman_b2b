@@ -46,7 +46,7 @@ class PaidInvoicesList extends StatelessWidget {
           columns: [
             DataColumn(
               label: SizedBox(
-                width: constraints.maxWidth * .04,
+                width: constraints.maxWidth * .06,
                 child: const Text(' Download '),
               ),
             ),
@@ -65,7 +65,7 @@ class PaidInvoicesList extends StatelessWidget {
                 width: constraints.maxWidth * .16,
                 child: const Text(
                   'Invoice Date',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -75,7 +75,7 @@ class PaidInvoicesList extends StatelessWidget {
                 width: constraints.maxWidth * .16,
                 child: const Text(
                   'Receipt No.',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -85,7 +85,7 @@ class PaidInvoicesList extends StatelessWidget {
                 width: constraints.maxWidth * .16,
                 child: const Text(
                   'Receipt Date',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -95,7 +95,7 @@ class PaidInvoicesList extends StatelessWidget {
                 width: constraints.maxWidth * .16,
                 child: const Text(
                   'Sales Order No.',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -105,7 +105,7 @@ class PaidInvoicesList extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 4),
                 child: const Text(
                   'Amount',
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -116,27 +116,31 @@ class PaidInvoicesList extends StatelessWidget {
                 color: const WidgetStatePropertyAll(Colors.white),
                 cells: [
                   DataCell(
-                    SizedBox(
-                      width: constraints.maxWidth * .04,
-                      child: SecondaryButton(
-                        text: '',
-                        iconData: FontAwesomeIcons.filePdf,
-                        onPressed: () async {
-                          final file = await Api.downloadInvoice(
-                            invoiceNumber: invoiceInfo.invoiceNumber,
-                            invoiceType: invoiceInfo.docType,
-                          );
+                    Align(
+                      child: SizedBox(
+                        width: constraints.maxWidth * .04,
+                        child: Align(
+                          child: SecondaryButton(
+                            text: '',
+                            iconData: FontAwesomeIcons.filePdf,
+                            onPressed: () async {
+                              final file = await Api.downloadInvoice(
+                                invoiceNumber: invoiceInfo.invoiceNumber,
+                                invoiceType: invoiceInfo.docType,
+                              );
 
-                          if (file != null) {
-                            log('File downloaded!');
-                          } else {
-                            toastification.show(
-                              autoCloseDuration: Duration(seconds: 3),
-                              primaryColor: VardhmanColors.red,
-                              title: Text('Invoice not found'),
-                            );
-                          }
-                        },
+                              if (file != null) {
+                                log('File downloaded!');
+                              } else {
+                                toastification.show(
+                                  autoCloseDuration: Duration(seconds: 3),
+                                  primaryColor: VardhmanColors.red,
+                                  title: Text('Invoice not found'),
+                                );
+                              }
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -160,7 +164,7 @@ class PaidInvoicesList extends StatelessWidget {
                       // color: Colors.deepOrange,
                       child: Text(
                         DateFormat('d MMM yyyy').format(invoiceInfo.date),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: VardhmanColors.darkGrey,
                         ),
@@ -174,7 +178,7 @@ class PaidInvoicesList extends StatelessWidget {
                       // color: Colors.amber,
                       child: Text(
                         invoiceInfo.receiptNumber,
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -186,7 +190,7 @@ class PaidInvoicesList extends StatelessWidget {
                       child: Text(
                         DateFormat('d MMM yyyy')
                             .format(invoiceInfo.receiptDate),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: VardhmanColors.darkGrey,
                         ),
@@ -198,10 +202,10 @@ class PaidInvoicesList extends StatelessWidget {
                       width: constraints.maxWidth * .16,
                       padding: const EdgeInsets.only(right: 4),
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.center,
                         child: Text(
                           '${invoiceInfo.salesOrderNumber} ${invoiceInfo.salesOrderType}',
-                          textAlign: TextAlign.end,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -211,7 +215,7 @@ class PaidInvoicesList extends StatelessWidget {
                       width: constraints.maxWidth * .16,
                       padding: const EdgeInsets.only(right: 4),
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.center,
                         child: RupeeText(
                           iconSize: 0,
                           fontSize: 13,

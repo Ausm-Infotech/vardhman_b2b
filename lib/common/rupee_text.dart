@@ -5,11 +5,13 @@ import 'package:vardhman_b2b/constants.dart';
 class RupeeText extends StatelessWidget {
   final String label;
   final double amount;
+  final String suffixLabel;
   final double discountAmount, iconSize, fontSize;
 
   const RupeeText({
     super.key,
     this.label = '',
+    this.suffixLabel = '',
     required this.amount,
     this.discountAmount = 0,
     this.iconSize = 17,
@@ -35,7 +37,7 @@ class RupeeText extends StatelessWidget {
         ),
         Flexible(
           child: Text(
-            amount.toStringAsFixed(2),
+            '${amount.toStringAsFixed(2)}$suffixLabel',
             style: TextStyle(
               decoration: discountAmount.isGreaterThan(0)
                   ? TextDecoration.lineThrough
