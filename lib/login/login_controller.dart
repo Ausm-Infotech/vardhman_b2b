@@ -84,8 +84,7 @@ class LoginController extends GetxController {
   }
 
   Future<void> _checkUser() async {
-    var a = await _database.managers.userDetails.get();
-    rxUserDetail.value = a.first;
+    rxUserDetail.value = await _database.managers.userDetails.getSingleOrNull();
 
     rxLoginState.value = LoginState.loggedOut;
 
@@ -270,8 +269,6 @@ class LoginController extends GetxController {
     await resetController(() => InvoicesController());
 
     await resetController(() => HomeController());
-
-    await _database.managers.userDetails.delete();
 
     await _database.managers.userDetails.create(
       (o) => UserDetailsCompanion.insert(
