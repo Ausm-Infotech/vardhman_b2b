@@ -118,7 +118,7 @@ OrderStatus getOrderDetailLineStatus(OrderDetailLine orderDetailLine) {
 
 String getAmountInLakhs(double amount) {
   if (amount > 100000) {
-    return '₹${(amount / 100000).toStringAsFixed(2)} lac';
+    return '₹${(amount / 100000).toStringAsFixed(2)} lacs';
   }
 
   return '₹${amount.toStringAsFixed(0)}';
