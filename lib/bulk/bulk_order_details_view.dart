@@ -223,8 +223,8 @@ class BulkOrderDetailsView extends StatelessWidget {
                                   orderDetailLine.quantityShipped,
                             );
 
-                            unitPrice =
-                                invoicedLines.firstOrNull?.unitPrice ?? 0;
+                            unitPrice = invoicedLines.firstOrNull?.unitPrice ??
+                                orderDetail.unitPrice;
 
                             extendedPrice = invoicedLines.fold(
                               extendedPrice,
