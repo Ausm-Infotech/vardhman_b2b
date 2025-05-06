@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,87 +87,97 @@ class CatalogSearchField extends StatelessWidget {
                   width: 1.5,
                 ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
                 children: [
-                  Expanded(
-                    child: DropdownSearch<String>(
-                      enabled: isEnabled,
-                      suffixProps: DropdownSuffixProps(
-                        dropdownButtonProps: DropdownButtonProps(
-                          isVisible: isEnabled && rxString.value.isEmpty,
-                        ),
-                      ),
-                      decoratorProps: DropDownDecoratorProps(
-                        baseStyle: TextStyle(
-                          color: VardhmanColors.darkGrey,
-                          fontSize: 13,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: isEnabled ? 'select' : null,
-                          hintStyle: TextStyle(
-                            color: VardhmanColors.darkGrey,
-                            fontSize: 13,
-                          ),
-                          contentPadding: EdgeInsets.only(left: 8),
-                          border: noneBorder,
-                          enabledBorder: noneBorder,
-                          focusedBorder: noneBorder,
-                          disabledBorder: noneBorder,
-                        ),
-                      ),
-                      popupProps: PopupProps.menu(
-                        searchFieldProps: TextFieldProps(
-                          inputFormatters: inputFormatters,
-                          autocorrect: false,
-                          style: TextStyle(
-                            color: VardhmanColors.darkGrey,
-                            fontSize: 13,
-                          ),
-                        ),
-                        showSearchBox: isSearchboxEnabled,
-                        fit: FlexFit.loose,
-                        searchDelay: Duration(milliseconds: 0),
-                        itemBuilder: (context, item, isDisabled, isSelected) =>
-                            ListTile(
-                          title: Text(
-                            item,
-                            style: TextStyle(
-                              color: VardhmanColors.darkGrey,
-                              fontSize: 13,
+                  Align(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: DropdownSearch<String>(
+                            enabled: isEnabled,
+                            suffixProps: DropdownSuffixProps(
+                              dropdownButtonProps: DropdownButtonProps(
+                                isVisible: isEnabled && rxString.value.isEmpty,
+                              ),
                             ),
+                            decoratorProps: DropDownDecoratorProps(
+                              baseStyle: TextStyle(
+                                color: VardhmanColors.darkGrey,
+                                fontSize: 13,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: isEnabled ? 'select' : null,
+                                hintStyle: TextStyle(
+                                  color: VardhmanColors.darkGrey,
+                                  fontSize: 13,
+                                ),
+                                contentPadding: EdgeInsets.only(left: 8),
+                                border: noneBorder,
+                                enabledBorder: noneBorder,
+                                focusedBorder: noneBorder,
+                                disabledBorder: noneBorder,
+                              ),
+                            ),
+                            popupProps: PopupProps.menu(
+                              searchFieldProps: TextFieldProps(
+                                inputFormatters: inputFormatters,
+                                autocorrect: false,
+                                style: TextStyle(
+                                  color: VardhmanColors.darkGrey,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              showSearchBox: isSearchboxEnabled,
+                              fit: FlexFit.loose,
+                              searchDelay: Duration(milliseconds: 0),
+                              itemBuilder:
+                                  (context, item, isDisabled, isSelected) =>
+                                      ListTile(
+                                title: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: VardhmanColors.darkGrey,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            items: (searchText, cs) async {
+                              final trimmedSearchText = searchText.trim();
+
+                              if (shouldEnforceList ||
+                                  invalidList.contains(trimmedSearchText)) {
+                                return searchList;
+                              } else {
+                                return [
+                                  if (trimmedSearchText.isNotEmpty &&
+                                      !searchList.contains(trimmedSearchText))
+                                    trimmedSearchText,
+                                  ...searchList
+                                ];
+                              }
+                            },
+                            autoValidateMode: AutovalidateMode.disabled,
+                            onChanged: (value) => rxString.value = value ?? '',
+                            selectedItem:
+                                rxString.value.isEmpty ? null : rxString.value,
                           ),
                         ),
-                      ),
-                      items: (searchText, cs) async {
-                        final trimmedSearchText = searchText.trim();
-
-                        if (shouldEnforceList ||
-                            invalidList.contains(trimmedSearchText)) {
-                          return searchList;
-                        } else {
-                          return [
-                            if (trimmedSearchText.isNotEmpty &&
-                                !searchList.contains(trimmedSearchText))
-                              trimmedSearchText,
-                            ...searchList
-                          ];
-                        }
-                      },
-                      autoValidateMode: AutovalidateMode.disabled,
-                      onChanged: (value) => rxString.value = value ?? '',
-                      selectedItem:
-                          rxString.value.isEmpty ? null : rxString.value,
+                      ],
                     ),
                   ),
                   if (isEnabled && rxString.value.isNotEmpty)
-                    SecondaryButton(
-                      wait: false,
-                      iconData: Icons.clear,
-                      text: '',
-                      onPressed: () async {
-                        rxString.value = '';
-                      },
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SecondaryButton(
+                        wait: false,
+                        iconData: Icons.clear,
+                        text: '',
+                        onPressed: () async {
+                          rxString.value = '';
+                        },
+                      ),
                     ),
                 ],
               ),
