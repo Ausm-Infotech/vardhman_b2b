@@ -250,7 +250,8 @@ class DtmOrderDetailsView extends StatelessWidget {
                               );
 
                               unitPrice =
-                                  invoicedLines.firstOrNull?.unitPrice ?? 0;
+                                  invoicedLines.firstOrNull?.unitPrice ??
+                                      orderDetail.unitPrice;
 
                               extendedPrice = invoicedLines.fold(
                                 extendedPrice,
@@ -264,6 +265,8 @@ class DtmOrderDetailsView extends StatelessWidget {
                               } else {
                                 status = permanentShadeLine.status;
                               }
+                            } else {
+                              unitPrice = orderDetail.unitPrice;
                             }
 
                             final uomDesc =
