@@ -572,6 +572,69 @@ class Api {
     return labdipFeedbacks;
   }
 
+  static Future<List<LabdipFeedback>> fetchLabdipRejectionCount(
+      String b2bOrderReference) async {
+    final labdipRejections = <LabdipFeedback>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.RMK2",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "LDF", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LD", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": b2bOrderReference, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.RMK2",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          labdipRejections.add(
+            LabdipFeedback(
+              reason: row['F00092_RMK2'],
+              orderNumber: 0,
+              lineNumber: 0,
+              isPositive: false,
+              shouldRematch: false,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchLabdipRejectionCount error - $e');
+    }
+
+    return labdipRejections;
+  }
+
   static Future<List<OrderHeaderLine>> fetchOrders({
     required String soldToNumber,
   }) async {
@@ -1522,6 +1585,7 @@ class Api {
         "szAlphaKey2": "${orderDetailLine.lineNumber}",
         "szDataType": "LD",
         "szRemark1": labdipFeedback.reason,
+        "szRemark2": orderDetailLine.orderLineReference,
       },
     ).then((response) {
       return response.statusCode == 200;

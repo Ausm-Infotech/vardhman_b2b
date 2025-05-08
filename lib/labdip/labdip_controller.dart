@@ -154,9 +154,13 @@ class LabdipController extends GetxController {
     final UserController userController =
         Get.find<UserController>(tag: 'userController');
 
-    final nextOrderNumber = await Api.fetchOrderNumber();
+    var orderReferenceNumber = rxSelectedOrderHeaderLine.value!.orderReference;
 
-    final b2bOrderNumber = 'B2BR$nextOrderNumber';
+    final nextOrderNumber =
+        await Api.fetchLabdipRejectionCount(orderReferenceNumber);
+
+    var b2bRejectionOrderNumber =
+        '$orderReferenceNumber-R${nextOrderNumber.length + 1}';
 
     rxOrderDetailFeedbackMap.forEach(
       (orderDetailLine, labdipFeedback) async {
@@ -181,15 +185,16 @@ class LabdipController extends GetxController {
 
       final isSubmitted = await Api.submitRematchOrder(
         merchandiserName: rxSelectedOrderHeaderLine.value!.merchandiser,
-        b2bOrderNumber: b2bOrderNumber,
+        b2bOrderNumber: b2bRejectionOrderNumber,
         branchPlant: userController.branchPlant,
         soldTo: userController.rxCustomerDetail.value.soldToNumber,
-        shipTo:
-            (userController.rxDeliveryAddress.value?.deliveryAddressNumber == 0
-                    ? userController.rxCustomerDetail.value.soldToNumber
-                    : userController
-                        .rxDeliveryAddress.value?.deliveryAddressNumber)
-                .toString(),
+        // shipTo:
+        //     (userController.rxDeliveryAddress.value?.deliveryAddressNumber == 0
+        //             ? userController.rxCustomerDetail.value.soldToNumber
+        //             : userController
+        //                 .rxDeliveryAddress.value?.deliveryAddressNumber)
+        //         .toString(),
+        shipTo: userController.rxCustomerDetail.value.soldToNumber,
         company: userController.rxCustomerDetail.value.companyCode,
         orderTakenBy: userController.rxUserDetail.value.role,
         orderDetailLinesReasonMap: orderDetailLinesReasonMap,
@@ -202,20 +207,20 @@ class LabdipController extends GetxController {
           autoCloseDuration: Duration(seconds: 3),
           primaryColor: VardhmanColors.green,
           title: Text(
-            'Rematch order $b2bOrderNumber placed successfully!',
+            'Rematch order $b2bRejectionOrderNumber placed successfully!',
           ),
         );
 
         if (userController.rxCustomerDetail.value.canSendSMS) {
           Api.sendOrderEntrySMS(
-            orderNumber: b2bOrderNumber,
+            orderNumber: b2bRejectionOrderNumber,
             mobileNumber: userController.rxCustomerDetail.value.mobileNumber,
           );
         }
 
         if (userController.rxCustomerDetail.value.canSendWhatsApp) {
           Api.sendOrderEntryWhatsApp(
-            orderNumber: b2bOrderNumber,
+            orderNumber: b2bRejectionOrderNumber,
             mobileNumber: userController.rxCustomerDetail.value.mobileNumber,
           );
         }

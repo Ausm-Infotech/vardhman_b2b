@@ -180,7 +180,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.center,
                           ),
-                          if (hasDispatchedLine)
+                          if (hasDispatchedLine &&
+                              labdipController.rxSelectedOrderHeaderLine.value
+                                      ?.orderReference !=
+                                  null &&
+                              labdipController.rxSelectedOrderHeaderLine.value!
+                                  .orderReference
+                                  .trim()
+                                  .isNotEmpty)
                             DataColumn2(
                               label:
                                   OrderDetailColumnLabel(labelText: 'Feedback'),
@@ -307,7 +314,14 @@ class LabdipOrderDetailsView extends StatelessWidget {
                                     textColor: textColor,
                                   ),
                                 ),
-                                if (hasDispatchedLine)
+                                if (hasDispatchedLine &&
+                                    labdipController.rxSelectedOrderHeaderLine
+                                            .value?.orderReference !=
+                                        null &&
+                                    labdipController.rxSelectedOrderHeaderLine
+                                        .value!.orderReference
+                                        .trim()
+                                        .isNotEmpty)
                                   DataCell(
                                     Align(
                                       alignment: Alignment.center,
