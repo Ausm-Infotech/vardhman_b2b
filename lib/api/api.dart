@@ -1574,6 +1574,7 @@ class Api {
   static Future<bool> submitLabdipFeedback({
     required OrderDetailLine orderDetailLine,
     required LabdipFeedback labdipFeedback,
+    required String orderReferenceNumber,
   }) async {
     return await _dio.post(
       '/orchestrator/ORCH5500092_SupplementalDataEntry',
@@ -1585,7 +1586,7 @@ class Api {
         "szAlphaKey2": "${orderDetailLine.lineNumber}",
         "szDataType": "LD",
         "szRemark1": labdipFeedback.reason,
-        "szRemark2": orderDetailLine.orderLineReference,
+        "szRemark2": orderReferenceNumber,
       },
     ).then((response) {
       return response.statusCode == 200;
@@ -1666,6 +1667,65 @@ class Api {
     return false;
   }
 
+  static Future<List<dynamic>> getBillingType(String soldTo) async {
+    final billingTypes = <dynamic>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.UKID",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "BT", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "BT", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "D", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SBA2",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": soldTo, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.KY",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        return rowset;
+      }
+    } catch (e) {
+      log('listFiles error - $e');
+    }
+
+    return billingTypes;
+  }
+
   static Future<bool> submitDtmOrder({
     required String merchandiserName,
     required String b2bOrderNumber,
@@ -1676,6 +1736,13 @@ class Api {
     required String orderTakenBy,
     required List<DraftTableData> dtmEntryLines,
   }) async {
+    var billingType = 'B';
+
+    var billingTypeResponse = await getBillingType(soldTo);
+    if (billingTypeResponse.isNotEmpty) {
+      billingType = 'D';
+    }
+
     final payload = {
       "Detail": dtmEntryLines.map(
         (dtmEntryLine) {
@@ -1701,7 +1768,7 @@ class Api {
                 '$merchandiserName|$b2bOrderNumber-${dtmEntryLine.poNumber}',
             "LightSourceRemark": dtmEntryLine.firstLightSource,
             "ColorRemark": dtmEntryLine.colorRemark,
-            "BillingType": dtmEntryLine.billingType == "Branch" ? "B" : "D",
+            "BillingType": billingType,
             "EndUse": isOtherBuyer ? 'OTH' : dtmEntryLine.buyerCode,
             "RelatedOrder":
                 "| | | |${isOtherBuyer ? 'OTH-${dtmEntryLine.buyer}' : ''}",
@@ -1744,6 +1811,12 @@ class Api {
     required String orderTakenBy,
     required List<DraftTableData> bulkEntryLines,
   }) async {
+    var billingType = 'B';
+
+    var billingTypeResponse = await getBillingType(soldTo);
+    if (billingTypeResponse.isNotEmpty) {
+      billingType = 'D';
+    }
     final payload = {
       "Detail": bulkEntryLines.map(
         (bulkEntryLine) {
@@ -1769,7 +1842,7 @@ class Api {
                 '$merchandiserName|$b2bOrderNumber-${bulkEntryLine.poNumber}',
             "LightSourceRemark": bulkEntryLine.firstLightSource,
             "ColorRemark": bulkEntryLine.colorRemark,
-            "BillingType": bulkEntryLine.billingType == "Branch" ? "B" : "D",
+            "BillingType": billingType,
             "EndUse": isOtherBuyer ? 'OTH' : bulkEntryLine.buyerCode,
             "RelatedOrder":
                 "| | | |${bulkEntryLine.colorName}${isOtherBuyer ? '-OTH-${bulkEntryLine.buyer}' : ''}",
