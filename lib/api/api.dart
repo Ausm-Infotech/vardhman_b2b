@@ -1574,6 +1574,7 @@ class Api {
   static Future<bool> submitLabdipFeedback({
     required OrderDetailLine orderDetailLine,
     required LabdipFeedback labdipFeedback,
+    required String orderReferenceNumber,
   }) async {
     return await _dio.post(
       '/orchestrator/ORCH5500092_SupplementalDataEntry',
@@ -1585,7 +1586,7 @@ class Api {
         "szAlphaKey2": "${orderDetailLine.lineNumber}",
         "szDataType": "LD",
         "szRemark1": labdipFeedback.reason,
-        "szRemark2": orderDetailLine.orderLineReference,
+        "szRemark2": orderReferenceNumber,
       },
     ).then((response) {
       return response.statusCode == 200;

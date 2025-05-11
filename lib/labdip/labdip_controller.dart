@@ -154,7 +154,10 @@ class LabdipController extends GetxController {
     final UserController userController =
         Get.find<UserController>(tag: 'userController');
 
-    var orderReferenceNumber = rxSelectedOrderHeaderLine.value!.orderReference;
+    var orderReferenceNumberOriginal =
+        rxSelectedOrderHeaderLine.value!.orderReference;
+
+    var orderReferenceNumber = orderReferenceNumberOriginal.split('-').first;
 
     final nextOrderNumber =
         await Api.fetchLabdipRejectionCount(orderReferenceNumber);
@@ -167,6 +170,7 @@ class LabdipController extends GetxController {
         await Api.submitLabdipFeedback(
           orderDetailLine: orderDetailLine,
           labdipFeedback: labdipFeedback,
+          orderReferenceNumber: orderReferenceNumber,
         );
       },
     );
