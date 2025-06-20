@@ -134,7 +134,7 @@ class InvoiceReviewDialog extends StatelessWidget {
                                   ..setAttribute('id', 'paymentForm')
                                   ..setAttribute('method', "POST")
                                   ..setAttribute('action',
-                                      "ttps://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
+                                      "https://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
                                   ..setAttribute('target', '_self');
 
                             final walletClientCodeInput =
