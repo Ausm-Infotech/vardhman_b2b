@@ -112,19 +112,37 @@ class InvoiceReviewDialog extends StatelessWidget {
                           log('Encrypted String: $encryptedString');
 
                           if (encryptedString != null) {
-                            final paymentFormElement = html.document
-                                .createElement('form')
-                              ..setAttribute('id', 'paymentForm')
-                              ..setAttribute('method', "POST")
-                              ..setAttribute(
-                                  'action', "https://b2biz.co.in/ws/payment")
-                              ..setAttribute('target', '_self');
+                            // for PD
+                            // final paymentFormElement = html.document
+                            //     .createElement('form')
+                            //   ..setAttribute('id', 'paymentForm')
+                            //   ..setAttribute('method', "POST")
+                            //   ..setAttribute(
+                            //       'action', "https://b2biz.co.in/ws/payment")
+                            //   ..setAttribute('target', '_self');
+
+                            // final walletClientCodeInput =
+                            //     html.document.createElement('input')
+                            //       ..setAttribute('type', 'text')
+                            //       ..setAttribute('name', 'walletClientCode')
+                            //       ..setAttribute('value', 'WT-1573');
+                            // for PD
+
+                            // for PY
+                            final paymentFormElement =
+                                html.document.createElement('form')
+                                  ..setAttribute('id', 'paymentForm')
+                                  ..setAttribute('method', "POST")
+                                  ..setAttribute('action',
+                                      "ttps://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
+                                  ..setAttribute('target', '_self');
 
                             final walletClientCodeInput =
                                 html.document.createElement('input')
                                   ..setAttribute('type', 'text')
                                   ..setAttribute('name', 'walletClientCode')
-                                  ..setAttribute('value', 'WT-1573');
+                                  ..setAttribute('value', 'WT-1474');
+                            // for PY
 
                             paymentFormElement.append(walletClientCodeInput);
 

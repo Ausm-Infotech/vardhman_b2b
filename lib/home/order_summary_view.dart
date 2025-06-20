@@ -117,7 +117,7 @@ class OrderSummaryView extends StatelessWidget {
               columns: const [
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: '#'),
-                  fixedWidth: 50,
+                  fixedWidth: 20,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(
@@ -127,7 +127,7 @@ class OrderSummaryView extends StatelessWidget {
                     headingRowAlignment: MainAxisAlignment.end),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Customer Name'),
-                  fixedWidth: 400,
+                  fixedWidth: 200,
                   size: ColumnSize.S,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -145,7 +145,7 @@ class OrderSummaryView extends StatelessWidget {
                 ),
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: 'Order Type'),
-                  fixedWidth: 240,
+                  fixedWidth: 140,
                   size: ColumnSize.M,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
@@ -213,7 +213,9 @@ class OrderSummaryView extends StatelessWidget {
                       ),
                       DataCell(
                         OrderDetailCell(
-                          cellText: orderSummaryLine.orderRemark,
+                          cellText: (orderSummaryLine.jdeOrder.length < 2)
+                              ? orderSummaryLine.orderRemark
+                              : '',
                         ),
                       ),
                     ],

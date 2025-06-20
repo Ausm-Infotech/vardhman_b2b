@@ -37,7 +37,8 @@ class Api {
 
   static final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://erptest.vardhmanthreads.in/jderest',
+      baseUrl:
+          'https://erptest.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -2026,7 +2027,8 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        '/orchestrator/ORCH55_ICICIEncryptProd',
+        '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
+        // '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
         data: {
           "plainText": plainText,
         },
