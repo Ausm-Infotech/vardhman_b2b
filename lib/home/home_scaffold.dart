@@ -158,7 +158,10 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                                     vertical: 24,
                                                   ),
                                                   clipBehavior: Clip.hardEdge,
-                                                  child: OrderSummaryView(),
+                                                  child: SizedBox(
+                                                    width: 1000,
+                                                    child: OrderSummaryView(),
+                                                  ),
                                                 ),
                                               );
                                             },
