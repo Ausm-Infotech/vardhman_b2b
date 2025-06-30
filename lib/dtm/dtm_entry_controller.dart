@@ -760,6 +760,7 @@ class DtmEntryController extends GetxController {
     );
 
     if (firstPoDocLine != null) {
+      String emails = await Api.fetchBulkDtmEmailAddresses();
       await Api.uploadMediaAttachment(
         fileBytes: firstPoDocLine.poFileBytes!,
         fileName: firstPoDocLine.poFileName,
@@ -786,10 +787,7 @@ class DtmEntryController extends GetxController {
         orderNumber: orderNumber,
         lineNumber: 1001,
         soldTo: _userController.rxUserDetail.value.soldToNumber,
-        emailAddresses: [
-          'arjun@ausminfotech.com',
-          'jdedist@ausminfotech.com',
-        ],
+        emailAddresses: emails,
         fileType: 'PO Document',
       );
     }
