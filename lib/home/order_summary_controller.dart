@@ -9,12 +9,15 @@ class OrderSummaryController extends GetxController {
   final soldToNumber = RxString;
   final rxOrderCustomersNameMap = RxMap<String, String>();
 
-  final Rxn<DateTime> rxOrderSummaryDate = Rxn<DateTime>(DateTime.now());
+  final Rxn<DateTime> rxOrderSummaryFromDate =
+      Rxn<DateTime>(DateTime.now().subtract(Duration(days: 7)));
+  final Rxn<DateTime> rxOrderSummaryThroughDate = Rxn<DateTime>(DateTime.now());
 
   final rxOrderSummaryLines = <OrderSummary>[].obs;
 
   OrderSummaryController() {
-    rxOrderSummaryDate.listenAndPump(orderSummaryDateListener);
+    rxOrderSummaryFromDate.listenAndPump(orderSummaryDateListener);
+    rxOrderSummaryThroughDate.listenAndPump(orderSummaryDateListener);
   }
 
   Future<void> fetchSalsemanCode() async {
@@ -33,9 +36,9 @@ class OrderSummaryController extends GetxController {
     await fetchSalsemanCode();
     await fetchCustomersName();
     rxOrderSummaryLines.value = await Api.fetchOrderCustomersByDate(
-      salsemanCustomerList: rxOrderCustomersList,
-      orderCustomersNameMap: rxOrderCustomersNameMap,
-      date: rxOrderSummaryDate.value!,
-    );
+        salsemanCustomerList: rxOrderCustomersList,
+        orderCustomersNameMap: rxOrderCustomersNameMap,
+        fromDate: rxOrderSummaryFromDate.value!,
+        throughDate: rxOrderSummaryThroughDate.value!);
   }
 }

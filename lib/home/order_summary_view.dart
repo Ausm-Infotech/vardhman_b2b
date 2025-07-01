@@ -61,11 +61,28 @@ class OrderSummaryView extends StatelessWidget {
                             SizedBox(
                               width: 300,
                               child: NewOrderDateField(
-                                labelText: 'Date',
-                                rxDate:
-                                    orderSummaryController.rxOrderSummaryDate,
+                                labelText: 'From Date',
+                                rxDate: orderSummaryController
+                                    .rxOrderSummaryFromDate,
                                 firstDate: orderSummaryController
-                                    .rxOrderSummaryDate.value
+                                    .rxOrderSummaryFromDate.value
+                                    ?.subtract(
+                                  Duration(days: 60),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 300,
+                              child: NewOrderDateField(
+                                labelText: 'Through Date',
+                                rxDate: orderSummaryController
+                                    .rxOrderSummaryThroughDate,
+                                firstDate: orderSummaryController
+                                    .rxOrderSummaryThroughDate.value
                                     ?.subtract(
                                   Duration(days: 60),
                                 ),
@@ -105,7 +122,7 @@ class OrderSummaryView extends StatelessWidget {
                 color: VardhmanColors.darkGrey,
                 fontSize: 13,
               ),
-              horizontalMargin: 16,
+              horizontalMargin: 0,
               headingRowHeight: 60,
               dataRowHeight: 60,
               headingRowColor: WidgetStatePropertyAll(VardhmanColors.darkGrey),
@@ -117,7 +134,7 @@ class OrderSummaryView extends StatelessWidget {
               columns: const [
                 DataColumn2(
                   label: OrderDetailColumnLabel(labelText: '#'),
-                  fixedWidth: 20,
+                  fixedWidth: 50,
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn2(

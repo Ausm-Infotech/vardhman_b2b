@@ -909,6 +909,8 @@ class LabdipEntryController extends GetxController {
     }
 
     if (fileType != null) {
+      String emails = await Api.fetchLabdipEmailAddresses();
+
       await Api.supplementalDataEntry(
         databaseCode: 'QTX',
         dataType: 'QT',
@@ -926,10 +928,7 @@ class LabdipEntryController extends GetxController {
         orderNumber: orderNumber,
         lineNumber: 1001,
         soldTo: _userController.rxUserDetail.value.soldToNumber,
-        emailAddresses: [
-          'arjun@ausminfotech.com',
-          'jdedist@ausminfotech.com',
-        ],
+        emailAddresses: emails,
       );
     }
 

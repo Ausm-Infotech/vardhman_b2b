@@ -7,6 +7,7 @@ import 'package:get/get.dart' as getx;
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vardhman_b2b/api/buyer_info.dart';
 import 'package:vardhman_b2b/api/invoice_info.dart';
 import 'package:vardhman_b2b/api/item_catalog_info.dart';
@@ -116,10 +117,11 @@ class Api {
         '/v2/tokenrequest/logout',
         data: {},
       );
-
+      final sharedPrefs = getx.Get.find<SharedPreferences>();
       if (response.statusCode == 200) {
         _dio.options.headers.remove('JDE-AIS-Auth');
         _dio.options.headers.remove('JDE-AIS-Auth-Device');
+        sharedPrefs.clear();
 
         return true;
       }
@@ -416,9 +418,196 @@ class Api {
     return null;
   }
 
+  static Future<String> fetchLabdipEmailAddresses() async {
+    String emails = '';
+    final sharedPrefs = getx.Get.find<SharedPreferences>();
+    var ac01 = sharedPrefs.getString('rxZoneAC01');
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F5501002",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F5501002.EMAL",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "P", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.FLAG",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LAB", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.DL011",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "BRANCH", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.A100",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": ac01, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.AA10",
+                "operator": "EQUAL"
+              },
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F5501002']['data']
+            ['gridData']['rowset'] as List;
+        emails = rowset.map((row) => row['F5501002_EMAL']).join(',');
+        return emails;
+      }
+    } catch (e) {
+      log('fetchEmailAddresses error - $e');
+    }
+
+    return '';
+  }
+
+  static Future<String> fetchBulkDtmEmailAddresses() async {
+    String emails = '';
+    final sharedPrefs = getx.Get.find<SharedPreferences>();
+    var ac01 = sharedPrefs.getString('rxZoneAC01');
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F5501002",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F5501002.EMAL",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "P", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.FLAG",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "PODOC", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.DL011",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "BRANCH", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.A100",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": ac01, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.AA10",
+                "operator": "EQUAL"
+              },
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F5501002']['data']
+            ['gridData']['rowset'] as List;
+        emails = rowset.map((row) => row['F5501002_EMAL']).join(',');
+        return emails;
+      }
+    } catch (e) {
+      log('fetchEmailAddresses error - $e');
+    }
+
+    return '';
+  }
+
+  static Future<String> fetchReportEmailAddress(String userID) async {
+    String email = '';
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F01151",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F01151.EMAL",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "E", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.ETP",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": 1, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.RCK7",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": 0, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.IDLN",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": userID, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.AN8",
+                "operator": "EQUAL"
+              },
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F01151']['data']['gridData']
+            ['rowset'] as List;
+
+        if (rowset.isNotEmpty) {
+          email = rowset[0]['F01151_EMAL'];
+        }
+        // email = rowset.map((row) => row['F01151_EMAL']);
+        return email;
+      }
+    } catch (e) {
+      log('fetchEmailAddresses error - $e');
+    }
+
+    return '';
+  }
+
   static Future<UserAddress?> fetchBillingAddress(
     String addressNumber,
   ) async {
+    final sharedPrefs = getx.Get.find<SharedPreferences>();
     try {
       final response = await _dio.post(
         '/orchestrator/ORCH550116_Get_SoldTo_Address ',
@@ -430,6 +619,8 @@ class Api {
       if (response.statusCode == 200) {
         final ac01 = response.data['ORCH550005_GetUDC_Repeating'][0]
             ['ORCH550005_GetUDC']['AC01'];
+
+        sharedPrefs.setString('rxZoneAC01', ac01);
 
         final branchUserDetailsCompanion = await fetchUserData(ac01);
 
@@ -969,7 +1160,7 @@ class Api {
     required int lineNumber,
     required String soldTo,
     required String fileType,
-    required List<String> emailAddresses,
+    required String emailAddresses,
   }) async {
     try {
       final response = await _dio.post(
@@ -980,7 +1171,7 @@ class Api {
           "LineNo": lineNumber.toString(),
           "OrderNo": orderNumber.toString(),
           "Customer": soldTo,
-          "EmailAddress": emailAddresses.join(';'),
+          "EmailAddress": emailAddresses,
           "filetype": fileType,
         },
       );
@@ -2010,7 +2201,7 @@ class Api {
   }) async {
     return await _downloadFileWeb(
       folderName: 'Invoices',
-      fileName: '${invoiceNumber}_$invoiceType.pdf',
+      fileName: '${invoiceNumber}_${invoiceType}.pdf',
     );
   }
 
@@ -2322,7 +2513,8 @@ class Api {
   static Future<List<OrderSummary>> fetchOrderCustomersByDate({
     required List<String> salsemanCustomerList,
     required Map<String, String> orderCustomersNameMap,
-    required DateTime date,
+    required DateTime fromDate,
+    required DateTime throughDate,
   }) async {
     var orderSummaryList = <OrderSummary>[];
 
@@ -2340,10 +2532,20 @@ class Api {
             "condition": [
               {
                 "controlId": "F47011.EDDT",
-                "operator": "EQUAL",
+                "operator": "GREATER_EQUAL",
                 "value": [
                   {
-                    "content": DateFormat('MM/dd/yyyy').format(date),
+                    "content": DateFormat('MM/dd/yyyy').format(fromDate),
+                    "specialValueId": "LITERAL"
+                  }
+                ]
+              },
+              {
+                "controlId": "F47011.EDDT",
+                "operator": "LESS_EQUAL",
+                "value": [
+                  {
+                    "content": DateFormat('MM/dd/yyyy').format(throughDate),
                     "specialValueId": "LITERAL"
                   }
                 ]

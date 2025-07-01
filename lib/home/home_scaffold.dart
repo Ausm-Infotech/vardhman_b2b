@@ -170,12 +170,17 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                     SecondaryButton(
                                       text: 'Status Report',
                                       onPressed: () async {
+                                        var email =
+                                            await Api.fetchReportEmailAddress(
+                                                userController.rxUserDetail
+                                                    .value.soldToNumber);
+                                        homeController.rxEmail.value = email;
                                         Get.dialog(
                                           Dialog(
                                             insetPadding: EdgeInsets.all(80),
                                             clipBehavior: Clip.antiAlias,
                                             child: SizedBox(
-                                              width: 500,
+                                              width: 560,
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
