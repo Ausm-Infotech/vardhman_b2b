@@ -887,6 +887,7 @@ class LabdipEntryController extends GetxController {
 
   Future<void> submitOrder() async {
     String? fileType;
+    final submitLabdipOrderNumber = await Api.fetchLabdipOrderNumber();
 
     for (var labdipOrderLine in rxLabdipOrderLines) {
       if (labdipOrderLine.qtxFileName.isNotEmpty &&
@@ -898,7 +899,7 @@ class LabdipEntryController extends GetxController {
           fileBytes: labdipOrderLine.qtxFileBytes!,
           fileName: labdipOrderLine.qtxFileName,
           moKey:
-              'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
+              'QTX|QT|||$submitLabdipOrderNumber|${_userController.rxUserDetail.value.soldToNumber}|$lineNumber|',
           moStructure: 'GT00092',
           version: 'VYTL0016',
           formName: 'P00092_W00092D',
@@ -914,7 +915,7 @@ class LabdipEntryController extends GetxController {
       await Api.supplementalDataEntry(
         databaseCode: 'QTX',
         dataType: 'QT',
-        orderNumber: orderNumber,
+        orderNumber: submitLabdipOrderNumber!,
         lineNumber: 1001,
         b2bOrderNumber: b2bOrderNumber,
         soldToNumber: _userController.rxUserDetail.value.soldToNumber,
@@ -925,7 +926,7 @@ class LabdipEntryController extends GetxController {
         databaseCode: 'QTX',
         dataType: 'QT',
         fileType: 'QTX/XML File',
-        orderNumber: orderNumber,
+        orderNumber: submitLabdipOrderNumber,
         lineNumber: 1001,
         soldTo: _userController.rxUserDetail.value.soldToNumber,
         emailAddresses: emails,
@@ -933,7 +934,7 @@ class LabdipEntryController extends GetxController {
     }
 
     final isSubmitted = await orderReviewController.submitLabdipOrder(
-      b2bOrderNumber: b2bOrderNumber,
+      b2bOrderNumber: 'B2BL$submitLabdipOrderNumber',
       merchandiserName: rxMerchandiser.value,
       labdipOrderLines: rxLabdipOrderLines,
     );

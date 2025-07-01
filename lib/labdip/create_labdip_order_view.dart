@@ -38,7 +38,7 @@ class CreateLabdipOrderView extends StatelessWidget {
               },
             ),
             title: Text(
-              'New Labdip Order : ${labdipEntryController.b2bOrderNumber}',
+              'New Labdip Order',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

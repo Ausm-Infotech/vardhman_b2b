@@ -40,7 +40,7 @@ class CreateDtmOrderView extends StatelessWidget {
               },
             ),
             title: Text(
-              'New DTM Order : ${dtmEntryController.b2bOrderNumber}',
+              'New DTM Order',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

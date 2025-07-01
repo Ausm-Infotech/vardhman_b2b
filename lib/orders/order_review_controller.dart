@@ -16,7 +16,7 @@ class OrderReviewController extends GetxController {
   final rxUomDescriptionMap = <String, String>{}.obs;
 
   OrderReviewController() {
-    fetchOrderNumber();
+    fetchDraftOrderNumber();
 
     Api.fetchUoMDescriptions().then(
       (uomDescMap) {
@@ -27,8 +27,8 @@ class OrderReviewController extends GetxController {
     );
   }
 
-  void fetchOrderNumber() {
-    Api.fetchOrderNumber().then(
+  void fetchDraftOrderNumber() {
+    Api.fetchDraftOrderNumber().then(
       (newOrderNumber) {
         if (newOrderNumber != null) {
           rxOrderNumber.value = newOrderNumber;
@@ -90,7 +90,7 @@ class OrderReviewController extends GetxController {
         );
       }
 
-      fetchOrderNumber();
+      fetchDraftOrderNumber();
     } else {
       toastification.show(
         autoCloseDuration: Duration(seconds: 3),
@@ -148,7 +148,7 @@ class OrderReviewController extends GetxController {
         );
       }
 
-      fetchOrderNumber();
+      fetchDraftOrderNumber();
     } else {
       toastification.show(
         autoCloseDuration: Duration(seconds: 3),
@@ -205,7 +205,7 @@ class OrderReviewController extends GetxController {
         );
       }
 
-      fetchOrderNumber();
+      fetchDraftOrderNumber();
     } else {
       toastification.show(
         autoCloseDuration: Duration(seconds: 3),

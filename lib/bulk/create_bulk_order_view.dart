@@ -41,7 +41,7 @@ class CreateBulkOrderView extends StatelessWidget {
               },
             ),
             title: Text(
-              'New Bulk Order : ${bulkEntryController.b2bOrderNumber}',
+              'New Bulk Order',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

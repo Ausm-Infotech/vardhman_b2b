@@ -774,6 +774,7 @@ class BulkEntryController extends GetxController {
     final firstPoDocLine = rxBulkOrderLines.firstWhereOrNull(
       (bulkOrderLine) => bulkOrderLine.poFileName.isNotEmpty,
     );
+    final submitBulkOrderNumber = await Api.fetchBulkOrderNumber();
 
     if (firstPoDocLine != null) {
       String emails = await Api.fetchBulkDtmEmailAddresses();
@@ -781,7 +782,7 @@ class BulkEntryController extends GetxController {
         fileBytes: firstPoDocLine.poFileBytes!,
         fileName: firstPoDocLine.poFileName,
         moKey:
-            'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
+            'QTX|QT|||$submitBulkOrderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
         moStructure: 'GT00092',
         version: 'VYTL0016',
         formName: 'P00092_W00092D',
@@ -790,9 +791,9 @@ class BulkEntryController extends GetxController {
       await Api.supplementalDataEntry(
         databaseCode: 'QTX',
         dataType: 'QT',
-        orderNumber: orderNumber,
+        orderNumber: submitBulkOrderNumber!,
         lineNumber: 1001,
-        b2bOrderNumber: b2bOrderNumber,
+        b2bOrderNumber: 'B2BB$submitBulkOrderNumber',
         soldToNumber: _userController.rxUserDetail.value.soldToNumber,
         userName: _userController.rxUserDetail.value.name,
       );
@@ -800,7 +801,7 @@ class BulkEntryController extends GetxController {
       await Api.supplementalDataWrapper(
         databaseCode: 'QTX',
         dataType: 'QT',
-        orderNumber: orderNumber,
+        orderNumber: submitBulkOrderNumber,
         lineNumber: 1001,
         soldTo: _userController.rxUserDetail.value.soldToNumber,
         emailAddresses: emails,
@@ -809,7 +810,7 @@ class BulkEntryController extends GetxController {
     }
 
     final isSubmitted = await orderReviewController.submitBulkOrder(
-      b2bOrderNumber: b2bOrderNumber,
+      b2bOrderNumber: 'B2BB$submitBulkOrderNumber',
       merchandiserName: rxMerchandiser.value,
       bulkEntryLines: rxBulkOrderLines,
     );

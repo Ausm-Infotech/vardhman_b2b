@@ -1230,7 +1230,7 @@ class Api {
     return false;
   }
 
-  static Future<int?> fetchOrderNumber() async {
+  static Future<int?> fetchLabdipOrderNumber() async {
     int? nextNumber;
 
     try {
@@ -1241,6 +1241,87 @@ class Api {
           "isAsync": false,
           "inParams": [
             {"id": 1, "value": "47"},
+            {"id": 2, "value": "9"}
+          ],
+          "outputIds": [8]
+        },
+      );
+
+      if (response.statusCode == 200) {
+        nextNumber = response.data["result"]["output"][0]["value"];
+      }
+    } catch (e) {
+      log('fetchLabdipOrderNumber error - $e');
+    }
+
+    return nextNumber;
+  }
+
+  static Future<int?> fetchDtmOrderNumber() async {
+    int? nextNumber;
+
+    try {
+      final response = await _dio.post(
+        '/v2/bsfnservice',
+        data: {
+          "name": "X0010GetNextNumber",
+          "isAsync": false,
+          "inParams": [
+            {"id": 1, "value": "47"},
+            {"id": 2, "value": "8"}
+          ],
+          "outputIds": [8]
+        },
+      );
+
+      if (response.statusCode == 200) {
+        nextNumber = response.data["result"]["output"][0]["value"];
+      }
+    } catch (e) {
+      log('fetchDtmOrderNumber error - $e');
+    }
+
+    return nextNumber;
+  }
+
+  static Future<int?> fetchBulkOrderNumber() async {
+    int? nextNumber;
+
+    try {
+      final response = await _dio.post(
+        '/v2/bsfnservice',
+        data: {
+          "name": "X0010GetNextNumber",
+          "isAsync": false,
+          "inParams": [
+            {"id": 1, "value": "47"},
+            {"id": 2, "value": "7"}
+          ],
+          "outputIds": [8]
+        },
+      );
+
+      if (response.statusCode == 200) {
+        nextNumber = response.data["result"]["output"][0]["value"];
+      }
+    } catch (e) {
+      log('fetchBulkOrderNumber error - $e');
+    }
+
+    return nextNumber;
+  }
+
+  static Future<int?> fetchDraftOrderNumber() async {
+    int? nextNumber;
+
+    try {
+      final response = await _dio.post(
+        '/v2/bsfnservice',
+        data: {
+          "name": "X0010GetNextNumber",
+          "isAsync": false,
+          "inParams": [
+            {"id": 1, "value": "55"},
             {"id": 2, "value": "10"}
           ],
           "outputIds": [8]
@@ -1251,7 +1332,7 @@ class Api {
         nextNumber = response.data["result"]["output"][0]["value"];
       }
     } catch (e) {
-      log('fetchOrderNumber error - $e');
+      log('fetchDraftOrderNumber error - $e');
     }
 
     return nextNumber;
