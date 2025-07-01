@@ -758,6 +758,7 @@ class DtmEntryController extends GetxController {
     final firstPoDocLine = rxDtmOrderLines.firstWhereOrNull(
       (dtmOrderLine) => dtmOrderLine.poFileName.isNotEmpty,
     );
+    final submitDtmOrderNumber = await Api.fetchDtmOrderNumber();
 
     if (firstPoDocLine != null) {
       String emails = await Api.fetchBulkDtmEmailAddresses();
@@ -765,7 +766,7 @@ class DtmEntryController extends GetxController {
         fileBytes: firstPoDocLine.poFileBytes!,
         fileName: firstPoDocLine.poFileName,
         moKey:
-            'QTX|QT|||$orderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
+            'QTX|QT|||$submitDtmOrderNumber|${_userController.rxUserDetail.value.soldToNumber}|1001|',
         moStructure: 'GT00092',
         version: 'VYTL0016',
         formName: 'P00092_W00092D',
@@ -774,9 +775,9 @@ class DtmEntryController extends GetxController {
       await Api.supplementalDataEntry(
         databaseCode: 'QTX',
         dataType: 'QT',
-        orderNumber: orderNumber,
+        orderNumber: submitDtmOrderNumber!,
         lineNumber: 1001,
-        b2bOrderNumber: b2bOrderNumber,
+        b2bOrderNumber: 'B2BD$submitDtmOrderNumber',
         soldToNumber: _userController.rxUserDetail.value.soldToNumber,
         userName: _userController.rxUserDetail.value.name,
       );
@@ -784,7 +785,7 @@ class DtmEntryController extends GetxController {
       await Api.supplementalDataWrapper(
         databaseCode: 'QTX',
         dataType: 'QT',
-        orderNumber: orderNumber,
+        orderNumber: submitDtmOrderNumber,
         lineNumber: 1001,
         soldTo: _userController.rxUserDetail.value.soldToNumber,
         emailAddresses: emails,
@@ -793,7 +794,7 @@ class DtmEntryController extends GetxController {
     }
 
     final isSubmitted = await orderReviewController.submitDtmOrder(
-      b2bOrderNumber: b2bOrderNumber,
+      b2bOrderNumber: 'B2BD$submitDtmOrderNumber',
       merchandiserName: rxMerchandiser.value,
       dtmEntryLines: rxDtmOrderLines,
     );

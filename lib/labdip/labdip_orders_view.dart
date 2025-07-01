@@ -44,7 +44,7 @@ class LabdipOrdersView extends StatelessWidget {
             trailing: PrimaryButton(
               text: 'New Order',
               onPressed: () async {
-                final newOrderNumber = await Api.fetchOrderNumber();
+                final newOrderNumber = await Api.fetchDraftOrderNumber();
 
                 if (newOrderNumber != null) {
                   if (Get.isRegistered<LabdipEntryController>()) {
