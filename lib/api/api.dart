@@ -2201,7 +2201,7 @@ class Api {
   }) async {
     return await _downloadFileWeb(
       folderName: 'Invoices',
-      fileName: '${invoiceNumber}_$invoiceType.pdf',
+      fileName: '${invoiceNumber}_${invoiceType}.pdf',
     );
   }
 
@@ -2513,7 +2513,8 @@ class Api {
   static Future<List<OrderSummary>> fetchOrderCustomersByDate({
     required List<String> salsemanCustomerList,
     required Map<String, String> orderCustomersNameMap,
-    required DateTime date,
+    required DateTime fromDate,
+    required DateTime throughDate,
   }) async {
     var orderSummaryList = <OrderSummary>[];
 
@@ -2531,10 +2532,20 @@ class Api {
             "condition": [
               {
                 "controlId": "F47011.EDDT",
-                "operator": "EQUAL",
+                "operator": "GREATER_EQUAL",
                 "value": [
                   {
-                    "content": DateFormat('MM/dd/yyyy').format(date),
+                    "content": DateFormat('MM/dd/yyyy').format(fromDate),
+                    "specialValueId": "LITERAL"
+                  }
+                ]
+              },
+              {
+                "controlId": "F47011.EDDT",
+                "operator": "LESS_EQUAL",
+                "value": [
+                  {
+                    "content": DateFormat('MM/dd/yyyy').format(throughDate),
                     "specialValueId": "LITERAL"
                   }
                 ]
