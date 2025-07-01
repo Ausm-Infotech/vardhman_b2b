@@ -180,7 +180,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                                             insetPadding: EdgeInsets.all(80),
                                             clipBehavior: Clip.antiAlias,
                                             child: SizedBox(
-                                              width: 500,
+                                              width: 560,
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
