@@ -540,6 +540,70 @@ class Api {
     return '';
   }
 
+  static Future<String> fetchReportEmailAddress(String userID) async {
+    String email = '';
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F01151",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F01151.EMAL",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "E", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.ETP",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": 1, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.RCK7",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": 0, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.IDLN",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": userID, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F01151.AN8",
+                "operator": "EQUAL"
+              },
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F01151']['data']['gridData']
+            ['rowset'] as List;
+
+        if (rowset.isNotEmpty) {
+          email = rowset[0]['F01151_EMAL'];
+        }
+        // email = rowset.map((row) => row['F01151_EMAL']);
+        return email;
+      }
+    } catch (e) {
+      log('fetchEmailAddresses error - $e');
+    }
+
+    return '';
+  }
+
   static Future<UserAddress?> fetchBillingAddress(
     String addressNumber,
   ) async {
