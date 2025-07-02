@@ -917,7 +917,7 @@ class LabdipEntryController extends GetxController {
         dataType: 'QT',
         orderNumber: submitLabdipOrderNumber!,
         lineNumber: 1001,
-        b2bOrderNumber: b2bOrderNumber,
+        b2bOrderNumber: 'B2BL$submitLabdipOrderNumber',
         soldToNumber: _userController.rxUserDetail.value.soldToNumber,
         userName: _userController.rxUserDetail.value.name,
       );
