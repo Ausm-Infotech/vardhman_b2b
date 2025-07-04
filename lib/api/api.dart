@@ -2237,7 +2237,7 @@ class Api {
       }
 
       final response = await _fileDio.get(
-        '/download/MobileApp/$folderName/$fileName',
+        '/download/CAMSInvoicing/$folderName/$fileName',
         options: Options(responseType: ResponseType.bytes),
       );
 
@@ -2262,7 +2262,7 @@ class Api {
   }) async {
     try {
       final response = await _fileDio.get(
-        '/download/MobileApp/$folderName/$fileName',
+        '/download/CAMSInvoicing/$folderName/$fileName',
         options: Options(responseType: ResponseType.bytes),
       );
 
