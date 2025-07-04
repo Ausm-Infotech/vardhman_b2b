@@ -36011,7 +36011,7 @@ l=A.bej(m.a+"/"+a)
 if(l.HW()){q=l
 s=1
 break}s=8
-return A.p($.bhy().KJ(0,"/download/CAMSInvoicing/"+b+"/"+a,A.a1W(null,null,B.kh),t.z),$async$HM)
+return A.p($.bhy().KJ(0,"/download/CAMSInvoicing/"+a,A.a1W(null,null,B.kh),t.z),$async$HM)
 case 8:k=d
 s=k.c===200?9:10
 break
@@ -36042,7 +36042,7 @@ bwq(a,b){var s=0,r=A.n(t.nc),q,p=2,o=[],n,m,l,k,j
 var $async$ak3=A.o(function(c,d){if(c===1){o.push(d)
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.p($.bhy().KJ(0,"/download/CAMSInvoicing/"+b+"/"+a,A.a1W(null,null,B.kh),t.z),$async$ak3)
+return A.p($.bhy().KJ(0,"/download/CAMSInvoicing/"+a,A.a1W(null,null,B.kh),t.z),$async$ak3)
 case 7:n=d
 if(n.c===200){l=n.a
 q=l
