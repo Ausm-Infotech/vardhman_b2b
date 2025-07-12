@@ -29,6 +29,11 @@ class Api {
       // baseUrl: 'https://localhost:8081',
       baseUrl: 'https://b2b.amefird.in:8081',
       headers: {'Authorization': 'Basic dnl0bDpPQUlJSkRvaWpmQCM='},
+      // sendTimeout: Duration(seconds: 60),
+      // connectTimeout: Duration(seconds: 60),
+      // receiveTimeout: Duration(seconds: 60),
+      validateStatus: (status) => true,
+      receiveDataWhenStatusError: true,
     ),
   );
   // ..httpClientAdapter = IOHttpClientAdapter(

@@ -156,8 +156,8 @@ class LoginController extends GetxController {
 
       if (userDetailsCompanion != null) {
         if (!userDetailsCompanion.isMobileUser.value) {
-          // otp = await Api.generateAndSendOtp(
-          //     _userDetailsCompanion!.mobileNumber.value);
+          // _otp = await Api.generateAndSendOtp(
+          //     userDetailsCompanion.mobileNumber.value);
 
           _otp = "1234";
 
