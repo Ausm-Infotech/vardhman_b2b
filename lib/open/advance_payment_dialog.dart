@@ -95,42 +95,42 @@ class AdvancePaymentDialog extends StatelessWidget {
                             if (paymentEntryCreated) {
                               var encryptedString =
                                   await Api.encryptInputString(
-                                'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.rxAdvancePaymentAmount.value.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b/|cancel-url=https://ausm-infotech.github.io/vardhman_b2b/|',
+                                'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.rxAdvancePaymentAmount.value.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://www.vardhmanthreads.com|cancel-url=https://www.vardhmanthreads.com|',
                               );
 
                               log('Encrypted payment string: $encryptedString');
 
                               if (encryptedString != null) {
                                 // for PD
-                                // final paymentFormElement = html.document
-                                //     .createElement('form')
-                                //   ..setAttribute('id', 'paymentForm')
-                                //   ..setAttribute('method', "POST")
-                                //   ..setAttribute(
-                                //       'action', "https://b2biz.co.in/ws/payment")
-                                //   ..setAttribute('target', '_self');
-
-                                // final walletClientCodeInput =
-                                //     html.document.createElement('input')
-                                //       ..setAttribute('type', 'text')
-                                //       ..setAttribute('name', 'walletClientCode')
-                                //       ..setAttribute('value', 'WT-1573');
-                                // for PD
-
-                                // for PY
                                 final paymentFormElement =
                                     html.document.createElement('form')
                                       ..setAttribute('id', 'paymentForm')
                                       ..setAttribute('method', "POST")
                                       ..setAttribute('action',
-                                          "https://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
+                                          "https://b2biz.co.in/ws/payment")
                                       ..setAttribute('target', '_self');
 
                                 final walletClientCodeInput =
                                     html.document.createElement('input')
                                       ..setAttribute('type', 'text')
                                       ..setAttribute('name', 'walletClientCode')
-                                      ..setAttribute('value', 'WT-1474');
+                                      ..setAttribute('value', 'WT-1573');
+                                // for PD
+
+                                // for PY
+                                // final paymentFormElement =
+                                //     html.document.createElement('form')
+                                //       ..setAttribute('id', 'paymentForm')
+                                //       ..setAttribute('method', "POST")
+                                //       ..setAttribute('action',
+                                //           "https://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
+                                //       ..setAttribute('target', '_self');
+
+                                // final walletClientCodeInput =
+                                //     html.document.createElement('input')
+                                //       ..setAttribute('type', 'text')
+                                //       ..setAttribute('name', 'walletClientCode')
+                                //       ..setAttribute('value', 'WT-1474');
                                 // for PY
 
                                 paymentFormElement

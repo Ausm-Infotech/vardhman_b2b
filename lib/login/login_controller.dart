@@ -156,10 +156,10 @@ class LoginController extends GetxController {
 
       if (userDetailsCompanion != null) {
         if (!userDetailsCompanion.isMobileUser.value) {
-          // _otp = await Api.generateAndSendOtp(
-          //     userDetailsCompanion.mobileNumber.value);
+          _otp = await Api.generateAndSendOtp(
+              userDetailsCompanion.mobileNumber.value);
 
-          _otp = "1234";
+          // _otp = "1234";
 
           toastification.show(
             autoCloseDuration: Duration(seconds: 3),

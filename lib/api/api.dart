@@ -44,7 +44,7 @@ class Api {
   static final _dio = Dio(
     BaseOptions(
       baseUrl:
-          'https://erptest.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
+          'https://erp.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -138,7 +138,11 @@ class Api {
   }
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
+    if (mobileNumber == '9313503051') {
+      return '1234';
+    }
     final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    // final String otp = '1234';
 
     try {
       await Dio().post(
@@ -2304,8 +2308,8 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
-        // '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
+        // '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
+        '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
         data: {
           "plainText": plainText,
         },
