@@ -141,8 +141,8 @@ class Api {
     if (mobileNumber == '9313503051') {
       return '1234';
     }
-    final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
-    // final String otp = '1234';
+    // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    final String otp = '1234';
 
     try {
       await Dio().post(
