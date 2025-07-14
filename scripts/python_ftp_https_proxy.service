@@ -7,7 +7,7 @@ ExecStart=/usr/bin/python3 /home/vytl/ausm/scripts/ftp_http_server.py
 WorkingDirectory=/home/vytl/ausm/scripts
 Restart=always
 RestartSec=10
-RuntimeMaxSec=43200  # 12 hours
+RuntimeMaxSec=120
 
 [Install]
 WantedBy=multi-user.target
