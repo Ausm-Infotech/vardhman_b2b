@@ -63,22 +63,26 @@ class LoginController extends GetxController {
   }
 
   Future<void> _init() async {
-    videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
-      videoPlayerOptions: VideoPlayerOptions(
-        webOptions: VideoPlayerWebOptions(
-          allowRemotePlayback: true,
+    try {
+      videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse('https://b2b.amefird.in/vytlold/assets/img/B2B.mp4'),
+        videoPlayerOptions: VideoPlayerOptions(
+          webOptions: VideoPlayerWebOptions(
+            allowRemotePlayback: true,
+          ),
         ),
-      ),
-    );
+      );
 
-    await videoPlayerController.initialize();
+      await videoPlayerController.initialize();
 
-    await videoPlayerController.setVolume(0);
+      await videoPlayerController.setVolume(0);
 
-    await videoPlayerController.setLooping(true);
+      await videoPlayerController.setLooping(true);
 
-    await videoPlayerController.play();
+      await videoPlayerController.play();
+    } catch (e, stack) {
+      log('Video initialization error: $e', stackTrace: stack);
+    }
 
     _checkUser();
   }
