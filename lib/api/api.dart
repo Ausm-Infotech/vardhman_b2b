@@ -44,7 +44,7 @@ class Api {
   static final _dio = Dio(
     BaseOptions(
       baseUrl:
-          'https://erp.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
+          'https://erptest.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -65,7 +65,29 @@ class Api {
     // )
     ..interceptors.add(
       InterceptorsWrapper(
+        onRequest: (requestOptions, handler) {
+          log(
+            '******************************  START CALL   *************************************',
+          );
+          log(
+            'REQUEST => [${requestOptions.method}]  PATH: ${requestOptions.baseUrl}${requestOptions.path}',
+          );
+          if ((requestOptions.headers != null)) {
+            log('REQUEST => HEADERS:');
+            requestOptions.headers.forEach((key, value) {
+              log('$key: $value');
+            });
+          }
+          // if ((requestOptions.data)) {
+          log('REQUEST => BODY: ${requestOptions.data}');
+          // }
+          return handler.next(requestOptions);
+        },
         onResponse: (response, handler) {
+          log('RESPONSE => [${response.statusCode}] =>  ${response.data}');
+          log(
+            '##############################  END SUCCESS  ######################################\n',
+          );
           if (response.statusCode == 444) {
             log('Token expired');
 
@@ -126,7 +148,7 @@ class Api {
       if (response.statusCode == 200) {
         _dio.options.headers.remove('JDE-AIS-Auth');
         _dio.options.headers.remove('JDE-AIS-Auth-Device');
-        sharedPrefs.clear();
+        // sharedPrefs.clear();
 
         return true;
       }
@@ -2308,8 +2330,8 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        // '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
-        '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
+        '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
+        // '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
         data: {
           "plainText": plainText,
         },

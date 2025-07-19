@@ -242,7 +242,8 @@ class LoginController extends GetxController {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
 
-    await sharedPreferences.setString('password', rxConfirmPassword.value);
+    var data =
+        await sharedPreferences.setString('password', rxConfirmPassword.value);
 
     if (rxUserDetail.value != null) {
       _logIn(rxUserDetail.value!);
