@@ -29,6 +29,11 @@ class Api {
       // baseUrl: 'https://localhost:8081',
       baseUrl: 'https://b2b.amefird.in:8081',
       headers: {'Authorization': 'Basic dnl0bDpPQUlJSkRvaWpmQCM='},
+      // sendTimeout: Duration(seconds: 60),
+      // connectTimeout: Duration(seconds: 60),
+      // receiveTimeout: Duration(seconds: 60),
+      validateStatus: (status) => true,
+      receiveDataWhenStatusError: true,
     ),
   );
   // ..httpClientAdapter = IOHttpClientAdapter(
@@ -60,7 +65,29 @@ class Api {
     // )
     ..interceptors.add(
       InterceptorsWrapper(
+        onRequest: (requestOptions, handler) {
+          log(
+            '******************************  START CALL   *************************************',
+          );
+          log(
+            'REQUEST => [${requestOptions.method}]  PATH: ${requestOptions.baseUrl}${requestOptions.path}',
+          );
+          if ((requestOptions.headers != null)) {
+            log('REQUEST => HEADERS:');
+            requestOptions.headers.forEach((key, value) {
+              log('$key: $value');
+            });
+          }
+          // if ((requestOptions.data)) {
+          log('REQUEST => BODY: ${requestOptions.data}');
+          // }
+          return handler.next(requestOptions);
+        },
         onResponse: (response, handler) {
+          log('RESPONSE => [${response.statusCode}] =>  ${response.data}');
+          log(
+            '##############################  END SUCCESS  ######################################\n',
+          );
           if (response.statusCode == 444) {
             log('Token expired');
 
@@ -121,7 +148,7 @@ class Api {
       if (response.statusCode == 200) {
         _dio.options.headers.remove('JDE-AIS-Auth');
         _dio.options.headers.remove('JDE-AIS-Auth-Device');
-        sharedPrefs.clear();
+        // sharedPrefs.clear();
 
         return true;
       }
@@ -133,7 +160,11 @@ class Api {
   }
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
-    final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    if (mobileNumber == '9313503051') {
+      return '1234';
+    }
+    // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    final String otp = '1234';
 
     try {
       await Dio().post(

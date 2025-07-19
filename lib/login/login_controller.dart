@@ -63,22 +63,26 @@ class LoginController extends GetxController {
   }
 
   Future<void> _init() async {
-    videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse('https://b2b.amefird.in//assets/img/B2B.mp4'),
-      videoPlayerOptions: VideoPlayerOptions(
-        webOptions: VideoPlayerWebOptions(
-          allowRemotePlayback: true,
+    try {
+      videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse('https://b2b.amefird.in/vytlold/assets/img/B2B.mp4'),
+        videoPlayerOptions: VideoPlayerOptions(
+          webOptions: VideoPlayerWebOptions(
+            allowRemotePlayback: true,
+          ),
         ),
-      ),
-    );
+      );
 
-    await videoPlayerController.initialize();
+      await videoPlayerController.initialize();
 
-    await videoPlayerController.setVolume(0);
+      await videoPlayerController.setVolume(0);
 
-    await videoPlayerController.setLooping(true);
+      await videoPlayerController.setLooping(true);
 
-    await videoPlayerController.play();
+      await videoPlayerController.play();
+    } catch (e, stack) {
+      log('Video initialization error: $e', stackTrace: stack);
+    }
 
     _checkUser();
   }
@@ -156,10 +160,10 @@ class LoginController extends GetxController {
 
       if (userDetailsCompanion != null) {
         if (!userDetailsCompanion.isMobileUser.value) {
-          // otp = await Api.generateAndSendOtp(
-          //     _userDetailsCompanion!.mobileNumber.value);
+          _otp = await Api.generateAndSendOtp(
+              userDetailsCompanion.mobileNumber.value);
 
-          _otp = "1234";
+          // _otp = "1234";
 
           toastification.show(
             autoCloseDuration: Duration(seconds: 3),
@@ -238,7 +242,8 @@ class LoginController extends GetxController {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
 
-    await sharedPreferences.setString('password', rxConfirmPassword.value);
+    var data =
+        await sharedPreferences.setString('password', rxConfirmPassword.value);
 
     if (rxUserDetail.value != null) {
       _logIn(rxUserDetail.value!);
