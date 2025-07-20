@@ -385,7 +385,7 @@ class Api {
           "Item_Number": itemNumber,
           "Business_Unit": businessUnit,
           "Price_Effective": DateFormat('MM/dd/yyyy').format(effectiveDate),
-          "P4074_Version": "ZJDE0001"
+          "P4074_Version": "VYTL2001"
         },
       );
 
