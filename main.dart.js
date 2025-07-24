@@ -34689,7 +34689,7 @@ var $async$Bc=A.o(function(c,d){if(c===1){p.push(d)
 s=q}while(true)switch(s){case 0:q=3
 n=t.N
 s=6
-return A.p($.cP().cf("/orchestrator/ORCH55_SendSMSNotification",A.J(["orderNumber",b,"Mobilenumber",a],n,n),t.z),$async$Bc)
+return A.p($.cP().cf("/orchestrator/ORCH55_SendSMSNotification",A.J(["OrderNumber",b,"Mobilenumber",a],n,n),t.z),$async$Bc)
 case 6:q=1
 s=5
 break
