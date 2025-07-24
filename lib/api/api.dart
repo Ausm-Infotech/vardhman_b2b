@@ -159,35 +159,57 @@ class Api {
     return false;
   }
 
+  // static Future<String> generateAndSendOtp(String mobileNumber) async {
+  //   if (mobileNumber == '9313503051') {
+  //     return '1234';
+  //   }
+  //   // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+  //   final String otp = '1234';
+
+  //   try {
+  //     await Dio().post(
+  //       'https://digimate.airtel.in:15443/BULK_API/InstantJsonPushV2',
+  //       data: {
+  //         "keyword": "OTP - VYTL Mobile App",
+  //         "timeStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+  //         "dataSet": [
+  //           {
+  //             "UNIQUE_ID": "AIR8409265571",
+  //             "OA": "VYTLMA",
+  //             "MESSAGE":
+  //                 "use <$otp>  as one time password  (OTP) to login to Vardhman MobileApp account.  Do not share this OTP to anyone for security reason.  Valid for 15 minutes.",
+  //             "MSISDN": mobileNumber,
+  //             "CHANNEL": "SMS",
+  //             "CAMPAIGN_NAME": "vardhmant_hu",
+  //             "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",
+  //             "USER_NAME": "vardhmant_hse",
+  //             "DLT_TM_ID": "1001096933494158",
+  //             "DLT_CT_ID": "1007356769817351570",
+  //             "DLT_PE_ID": "1001749328801829990"
+  //           }
+  //         ]
+  //       },
+  //     );
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+
+  //   return otp;
+  // }
+
   static Future<String> generateAndSendOtp(String mobileNumber) async {
     if (mobileNumber == '9313503051') {
       return '1234';
     }
-    // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
-    final String otp = '1234';
+    final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    // final String otp = '1234';
 
     try {
-      await Dio().post(
-        'https://digimate.airtel.in:15443/BULK_API/InstantJsonPushV2',
+      await _dio.post(
+        '/orchestrator/ORCH55_SendOTPB2BPortal',
         data: {
-          "keyword": "OTP - VYTL Mobile App",
-          "timeStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-          "dataSet": [
-            {
-              "UNIQUE_ID": "AIR8409265571",
-              "OA": "VYTLMA",
-              "MESSAGE":
-                  "use <$otp>  as one time password  (OTP) to login to Vardhman MobileApp account.  Do not share this OTP to anyone for security reason.  Valid for 15 minutes.",
-              "MSISDN": mobileNumber,
-              "CHANNEL": "SMS",
-              "CAMPAIGN_NAME": "vardhmant_hu",
-              "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",
-              "USER_NAME": "vardhmant_hse",
-              "DLT_TM_ID": "1001096933494158",
-              "DLT_CT_ID": "1007356769817351570",
-              "DLT_PE_ID": "1001749328801829990"
-            }
-          ]
+          "OTP": otp,
+          "Mobilenumber": mobileNumber,
         },
       );
     } catch (e) {
@@ -197,30 +219,45 @@ class Api {
     return otp;
   }
 
+  // static Future<void> sendOrderEntrySMS(
+  //     {required String orderNumber, required String mobileNumber}) async {
+  //   try {
+  //     await Dio().post(
+  //       'https://digimate.airtel.in:15443/BULK_API/InstantJsonPushV2',
+  //       data: {
+  //         "keyword": "New Order - VYTL Mobile App",
+  //         "timeStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+  //         "dataSet": [
+  //           {
+  //             "UNIQUE_ID": "AIR8409265571",
+  //             "OA": "VYTLMA",
+  //             "MESSAGE":
+  //                 "Your order with Order No.<$orderNumber> has been successfully placed. Thank you for using Vardhman MobileApp",
+  //             "MSISDN": mobileNumber,
+  //             "CHANNEL": "SMS",
+  //             "CAMPAIGN_NAME": "vardhmant_hu",
+  //             "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",
+  //             "USER_NAME": "vardhmant_hse",
+  //             "DLT_TM_ID": "1001096933494158",
+  //             "DLT_CT_ID": "1007532797482167224",
+  //             "DLT_PE_ID": "1001749328801829990"
+  //           }
+  //         ]
+  //       },
+  //     );
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+
   static Future<void> sendOrderEntrySMS(
       {required String orderNumber, required String mobileNumber}) async {
     try {
-      await Dio().post(
-        'https://digimate.airtel.in:15443/BULK_API/InstantJsonPushV2',
+      await _dio.post(
+        '/orchestrator/ORCH55_SendSMSNotification',
         data: {
-          "keyword": "New Order - VYTL Mobile App",
-          "timeStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-          "dataSet": [
-            {
-              "UNIQUE_ID": "AIR8409265571",
-              "OA": "VYTLMA",
-              "MESSAGE":
-                  "Your order with Order No.<$orderNumber> has been successfully placed. Thank you for using Vardhman MobileApp",
-              "MSISDN": mobileNumber,
-              "CHANNEL": "SMS",
-              "CAMPAIGN_NAME": "vardhmant_hu",
-              "CIRCLE_NAME": "DLT_SERVICE_EXPLICT",
-              "USER_NAME": "vardhmant_hse",
-              "DLT_TM_ID": "1001096933494158",
-              "DLT_CT_ID": "1007532797482167224",
-              "DLT_PE_ID": "1001749328801829990"
-            }
-          ]
+          "orderNumber": orderNumber,
+          "Mobilenumber": mobileNumber,
         },
       );
     } catch (e) {

@@ -75,7 +75,7 @@ class CatalogController extends GetxController
     List<ItemCatalogInfo> industryItems = [];
 
     for (ItemCatalogInfo item in _items) {
-      if (item.category == 'IND') {
+      if (item.category == 'IND' || item.category == 'SPE') {
         industryItems.add(item);
       }
     }
