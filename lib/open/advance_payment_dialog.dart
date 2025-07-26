@@ -93,12 +93,20 @@ class AdvancePaymentDialog extends StatelessWidget {
                             );
 
                             if (paymentEntryCreated) {
-                              var encryptedString =
-                                  await Api.encryptInputString(
-                                'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.rxAdvancePaymentAmount.value.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://www.vardhmanthreads.com|cancel-url=https://www.vardhmanthreads.com|',
-                              );
+                              // for PD
+                              // final plainText =
+                              //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in|cancel-url=https://b2b.amefird.in|';
+                              // for PY
+                              // final plainText =
+                              //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in/vytldev|cancel-url=https://b2b.amefird.in/vytldev|';
+                              // for GITHUB
+                              final plainText =
+                                  'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b|cancel-url=https://ausm-infotech.github.io/vardhman_b2b|';
 
-                              log('Encrypted payment string: $encryptedString');
+                              final encryptedString =
+                                  await Api.encryptInputString(plainText);
+
+                              log('Encrypted String: $encryptedString');
 
                               if (encryptedString != null) {
                                 // for PD
