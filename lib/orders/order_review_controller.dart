@@ -69,7 +69,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 3),
+        autoCloseDuration: Duration(seconds: 7),
         primaryColor: VardhmanColors.green,
         title: Text(
           'Order $b2bOrderNumber placed successfully!',
@@ -130,7 +130,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-          autoCloseDuration: Duration(seconds: 3),
+          autoCloseDuration: Duration(seconds: 7),
           primaryColor: VardhmanColors.green,
           title: Text('Order $b2bOrderNumber placed successfully!'));
 
@@ -186,7 +186,7 @@ class OrderReviewController extends GetxController {
 
     if (isSubmitted) {
       toastification.show(
-        autoCloseDuration: Duration(seconds: 3),
+        autoCloseDuration: Duration(seconds: 7),
         primaryColor: VardhmanColors.green,
         title: Text('Order $b2bOrderNumber placed successfully!'),
       );

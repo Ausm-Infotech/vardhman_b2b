@@ -208,7 +208,7 @@ class LabdipController extends GetxController {
         rxOrderDetailFeedbackMap.clear();
 
         toastification.show(
-          autoCloseDuration: Duration(seconds: 3),
+          autoCloseDuration: Duration(seconds: 7),
           primaryColor: VardhmanColors.green,
           title: Text(
             'Rematch order $b2bRejectionOrderNumber placed successfully!',
