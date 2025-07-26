@@ -162,10 +162,9 @@ class Api {
   }
 
   // static Future<String> generateAndSendOtp(String mobileNumber) async {
-  //   if (mobileNumber == '9313503051') {
-  //     return '1234';
-  //   }
+  //   // for PD
   //   // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+  //   // for PY
   //   final String otp = '1234';
 
   //   try {
