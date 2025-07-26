@@ -97,11 +97,11 @@ class AdvancePaymentDialog extends StatelessWidget {
                               // final plainText =
                               //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in|cancel-url=https://b2b.amefird.in|';
                               // for PY
-                              // final plainText =
-                              //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in/vytldev|cancel-url=https://b2b.amefird.in/vytldev|';
-                              // for GITHUB
                               final plainText =
-                                  'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b|cancel-url=https://ausm-infotech.github.io/vardhman_b2b|';
+                                  'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in/vytldev|cancel-url=https://b2b.amefird.in/vytldev|';
+                              // for GITHUB
+                              // final plainText =
+                              //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b|cancel-url=https://ausm-infotech.github.io/vardhman_b2b|';
 
                               final encryptedString =
                                   await Api.encryptInputString(plainText);

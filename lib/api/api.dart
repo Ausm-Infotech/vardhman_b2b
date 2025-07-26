@@ -41,6 +41,8 @@ class Api {
   //         HttpClient()..badCertificateCallback = (_, __, ___) => true,
   //   );
 
+  // for PD
+  // for PY
   static final _dio = Dio(
     BaseOptions(
       baseUrl:
@@ -201,8 +203,11 @@ class Api {
     if (mobileNumber == '9313503051') {
       return '1234';
     }
+    // for PD
     // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+    // for PY
     final String otp = '1234';
+    return otp;
 
     try {
       await _dio.post(
