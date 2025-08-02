@@ -56,6 +56,14 @@ class InvoiceReviewDialog extends StatelessWidget {
                   iconData: Icons.done_outlined,
                   text: 'Proceed',
                   onPressed: () async {
+                    toastification.show(
+                      autoCloseDuration: Duration(seconds: 3),
+                      primaryColor: VardhmanColors.green,
+                      title: Text(
+                        'Redirecting you to the payment gateway.',
+                      ),
+                    );
+                    Future.delayed(Duration(seconds: 3));
                     final batchNumber = await Api.fetchPaymentBatchNumber();
 
                     if (batchNumber != null) {
