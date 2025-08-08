@@ -85,8 +85,9 @@ class InvoiceReviewDialog extends StatelessWidget {
                                 "Receipt_Number": receiptNumber,
                                 "Payment_Amount": invoiceInfo.status ==
                                         InvoiceStatus.discounted
-                                    ? invoiceInfo.discountAmount.toString()
-                                    : invoiceInfo.openAmount.toString(),
+                                    ? invoiceInfo.discountAmount
+                                        .toStringAsFixed(2)
+                                    : invoiceInfo.openAmount.toStringAsFixed(2),
                                 "Payment_Reference": "",
                                 "Payment_Remark": "",
                                 "Bank_Account": "",

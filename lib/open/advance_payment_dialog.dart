@@ -85,7 +85,8 @@ class AdvancePaymentDialog extends StatelessWidget {
                                       .rxCustomerDetail.value.soldToNumber,
                                   "Receipt_Number": receiptNumber,
                                   "Payment_Amount": invoicesController
-                                      .rxAdvancePaymentAmount.value,
+                                      .rxAdvancePaymentAmount.value
+                                      .toStringAsFixed(2),
                                   "Payment_Date": DateFormat('MM/dd/yyyy')
                                       .format(DateTime.now()),
                                 },
