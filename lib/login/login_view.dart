@@ -306,8 +306,10 @@ class LoginView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Expanded(
+                        Flexible(
+                          flex: 1,
                           child: Row(
                             children: <Widget>[
                               Icon(
@@ -323,32 +325,53 @@ class LoginView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.phone,
-                                color: VardhmanColors.red,
-                              ),
-                              SizedBox(width: 8),
-                              const Text(
-                                '+91 124-4981600 , +91 124-4981601',
-                              ),
-                            ],
+                        Flexible(
+                          flex: 1,
+                          child: SizedBox(
+                            width: 20,
                           ),
                         ),
                         Expanded(
+                          flex: 1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.phone,
+                                    color: VardhmanColors.red,
+                                  ),
+                                  SizedBox(width: 8),
+                                  const Text(
+                                    '+91 124-4981600 , +91 124-4981601',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.email,
+                                    color: VardhmanColors.red,
+                                  ),
+                                  SizedBox(width: 8),
+                                  const Text(
+                                    'info@vardhmanthreads.in',
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Icon(
-                                Icons.email,
-                                color: VardhmanColors.red,
-                              ),
-                              SizedBox(width: 8),
-                              const Text(
-                                'info@vardhmanthreads.in',
+                              Text(
+                                'Designed and Developed by\nAUSM INFOTECH Pvt. Ltd.',
                               ),
                             ],
                           ),
