@@ -579,6 +579,12 @@ class LabdipEntryController extends GetxController {
           rxFirstLightSource.hashCode,
           rxSecondLightSource.hashCode,
           rxEndUse.hashCode,
+          rxArticle.hashCode,
+          rxUomWithDesc.hashCode,
+          rxTicket.hashCode,
+          rxBrand.hashCode,
+          rxTex.hashCode,
+          rxSubstrate.hashCode,
         ],
       );
     }
