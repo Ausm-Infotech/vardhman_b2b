@@ -81,7 +81,7 @@ class App extends StatelessWidget {
         ),
         home: Obx(
           () => loginController.rxLoginState.value != LoginState.loggedIn
-              ? const LoginView()
+              ? LoginView()
               : const HomeScaffold(),
         ),
       ),
