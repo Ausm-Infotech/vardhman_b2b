@@ -571,12 +571,12 @@ class BulkEntryController extends GetxController {
           rxRequestedDate.hashCode,
           rxPoNumber.hashCode,
           rxPoFileName.hashCode,
-          rxArticle.hashCode,
-          rxUomWithDesc.hashCode,
-          rxTicket.hashCode,
-          rxBrand.hashCode,
-          rxTex.hashCode,
-          rxSubstrate.hashCode,
+          // rxArticle.hashCode,
+          // rxUomWithDesc.hashCode,
+          // rxTicket.hashCode,
+          // rxBrand.hashCode,
+          // rxTex.hashCode,
+          // rxSubstrate.hashCode,
         ],
       );
     }

@@ -18,6 +18,7 @@ class NewOrderTextField extends StatelessWidget {
     this.trailingWidget,
     this.maxLength,
     this.obscureText = false,
+    this.focusNode,
   });
 
   final String labelText;
@@ -31,6 +32,7 @@ class NewOrderTextField extends StatelessWidget {
   final Widget? trailingWidget;
   final int? maxLength;
   final bool obscureText;
+  final FocusNode? focusNode;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -100,6 +102,7 @@ class NewOrderTextField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        focusNode: focusNode,
                         obscureText: obscureText,
                         maxLength: maxLength,
                         textAlignVertical: TextAlignVertical.center,

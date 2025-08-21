@@ -9,11 +9,13 @@ import 'package:vardhman_b2b/login/login_controller.dart';
 import 'package:video_player/video_player.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  LoginView({super.key});
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     final loginController = Get.find<LoginController>();
+    FocusScope.of(context).requestFocus(_focusNode);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -142,6 +144,7 @@ class LoginView extends StatelessWidget {
                                 SizedBox(
                                   width: 150,
                                   child: NewOrderTextField(
+                                    focusNode: _focusNode,
                                     inputFormatters: [UpperCaseTextFormatter()],
                                     isEnabled:
                                         loginController.rxLoginState.value ==
