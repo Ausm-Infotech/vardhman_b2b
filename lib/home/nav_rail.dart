@@ -15,12 +15,12 @@ class NavRail extends StatelessWidget {
 
     return Obx(
       () {
-        final ordersNavSelectedIndex = homeController.rxNavRailIndex.value < 3
+        final ordersNavSelectedIndex = homeController.rxNavRailIndex.value < 4
             ? homeController.rxNavRailIndex.value
             : null;
 
-        final paymentsNavSelectedIndex = homeController.rxNavRailIndex.value > 2
-            ? homeController.rxNavRailIndex.value - 3
+        final paymentsNavSelectedIndex = homeController.rxNavRailIndex.value > 3
+            ? homeController.rxNavRailIndex.value - 4
             : null;
 
         return DefaultTextStyle(
@@ -50,7 +50,7 @@ class NavRail extends StatelessWidget {
                       height: 24,
                     ),
                     Container(
-                      height: 255,
+                      height: 310,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: VardhmanColors.darkGrey,
@@ -95,6 +95,13 @@ class NavRail extends StatelessWidget {
                                 color: VardhmanColors.darkGrey,
                               ),
                               destinations: const [
+                                NavigationRailDestination(
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.droplet,
+                                    size: 13,
+                                  ),
+                                  label: Text('Sampling'),
+                                ),
                                 NavigationRailDestination(
                                   icon: FaIcon(
                                     FontAwesomeIcons.droplet,

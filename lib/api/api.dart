@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as math;
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:get/get.dart' as getx;
@@ -16,6 +15,8 @@ import 'package:vardhman_b2b/api/labdip_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/api/order_summary.dart';
+import 'package:vardhman_b2b/api/sampling_feedback.dart';
+import 'package:vardhman_b2b/api/sampling_table_row.dart';
 import 'package:vardhman_b2b/api/user_address.dart';
 import 'package:vardhman_b2b/constants.dart';
 import 'package:vardhman_b2b/drift/database.dart';
@@ -511,6 +512,67 @@ class Api {
     return '';
   }
 
+  static Future<String> fetchSamplingEmailAddresses() async {
+    String emails = '';
+    final sharedPrefs = getx.Get.find<SharedPreferences>();
+    var ac01 = sharedPrefs.getString('rxZoneAC01');
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F5501002",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F5501002.EMAL",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "P", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.FLAG",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LAB", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.DL011",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "BRANCH", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.A100",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": ac01, "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F5501002.AA10",
+                "operator": "EQUAL"
+              },
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F5501002']['data']
+            ['gridData']['rowset'] as List;
+        emails = rowset.map((row) => row['F5501002_EMAL']).join(',');
+        return emails;
+      }
+    } catch (e) {
+      log('fetchSamplingEmailAddresses error - $e');
+    }
+
+    return '';
+  }
+
   static Future<String> fetchBulkDtmEmailAddresses() async {
     String emails = '';
     final sharedPrefs = getx.Get.find<SharedPreferences>();
@@ -796,6 +858,72 @@ class Api {
     return labdipFeedbacks;
   }
 
+  static Future<List<SamplingFeedback>> fetchSamplingFeedback(
+      List<int> orderNumbers) async {
+    final samplingFeedbacks = <SamplingFeedback>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.SBN1|F00092.SBA1|F00092.SBA2|F00092.RMK",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "LDF", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LD", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": orderNumbers
+                    .map(
+                      (orderNumber) =>
+                          {"content": orderNumber, "specialValueId": "LITERAL"},
+                    )
+                    .toList(),
+                "controlId": "F00092.SBN1",
+                "operator": "LIST"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          samplingFeedbacks.add(
+            SamplingFeedback(
+              orderNumber: row['F00092_SBN1'],
+              lineNumber: double.tryParse(row['F00092_SBA2']) ?? 0.0,
+              reason: row['F00092_RMK'],
+              isPositive: row['F00092_SBA1'] == 'A',
+              shouldRematch: false,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchSamplingFeedback error - $e');
+    }
+
+    return samplingFeedbacks;
+  }
+
   static Future<List<LabdipFeedback>> fetchLabdipRejectionCount(
       String b2bOrderReference) async {
     final labdipRejections = <LabdipFeedback>[];
@@ -859,6 +987,72 @@ class Api {
     return labdipRejections;
   }
 
+  static Future<List<SamplingFeedback>> fetchSamplingRejectionCount(
+      String samplingOrderReference) async {
+    final samplingRejections = <SamplingFeedback>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.RMK2",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "LDF", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "LD", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {
+                    "content": samplingOrderReference,
+                    "specialValueId": "LITERAL"
+                  }
+                ],
+                "controlId": "F00092.RMK2",
+                "operator": "EQUAL"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          samplingRejections.add(
+            SamplingFeedback(
+              reason: row['F00092_RMK2'],
+              orderNumber: 0,
+              lineNumber: 0,
+              isPositive: false,
+              shouldRematch: false,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchSamplingRejectionCount error - $e');
+    }
+
+    return samplingRejections;
+  }
+
   static Future<List<OrderHeaderLine>> fetchOrders({
     required String soldToNumber,
   }) async {
@@ -893,7 +1087,9 @@ class Api {
             orderStatus: orderStatus['OrderStatus'],
             orderAmount:
                 double.tryParse(orderStatus['OrderAmount'].toString()) ?? 0.0,
-            isDTM: orderStatus['DTMOrderYN'].toString().trim() == 'Y',
+            isDTM: (orderStatus['DTMOrderYN'].toString().trim() == 'Y' ||
+                orderStatus['DTMOrderYN'].toString().trim() == '1' ||
+                orderStatus['DTMOrderYN'].toString().trim() == '2'),
             canIndent: orderStatus['InderntOrderYN'].toString().trim() == 'Y',
             quantityBackOrdered: orderStatus['QuantityBackOrder'],
             poNumber: orderStatus['CustomerPO'],
@@ -1106,6 +1302,60 @@ class Api {
     return labdipTableRows;
   }
 
+  static Future<List<SamplingTableRow>> fetchSamplingTableRows(
+      {required List<int> workOrderNumbers}) async {
+    final samplingTableRows = <SamplingTableRow>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "maxPageSize": "No Max",
+          "targetName": "F5630111",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F5630111.WCP3|F5630111.REFERENC|F5630111.DOCO",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "controlId": "F5630111.DOCO",
+                "operator": "LIST",
+                "value": workOrderNumbers
+                    .map(
+                      (workOrderNumber) => {
+                        "specialValueId": "LITERAL",
+                        "content": workOrderNumber
+                      },
+                    )
+                    .toList()
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F5630111']['data']
+            ['gridData']['rowset'] as List;
+
+        for (var row in rowset) {
+          samplingTableRows.add(
+            SamplingTableRow(
+              reference: row['F5630111_REFERENC'],
+              workOrderNumber: row['F5630111_DOCO'],
+              permanentShade: row['F5630111_WCP3'],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchSamplingTableRows error - $e');
+    }
+
+    return samplingTableRows;
+  }
+
   static Future<List<ItemCatalogInfo>> fetchItemCatalogInfo() async {
     final itemCatalogInfos = <ItemCatalogInfo>[];
 
@@ -1284,6 +1534,33 @@ class Api {
       }
     } catch (e) {
       log('fetchLabdipOrderNumber error - $e');
+    }
+
+    return nextNumber;
+  }
+
+  static Future<int?> fetchSamplingOrderNumber() async {
+    int? nextNumber;
+
+    try {
+      final response = await _dio.post(
+        '/v2/bsfnservice',
+        data: {
+          "name": "X0010GetNextNumber",
+          "isAsync": false,
+          "inParams": [
+            {"id": 1, "value": "47"},
+            {"id": 2, "value": "6"}
+          ],
+          "outputIds": [8]
+        },
+      );
+
+      if (response.statusCode == 200) {
+        nextNumber = response.data["result"]["output"][0]["value"];
+      }
+    } catch (e) {
+      log('fetchSamplingOrderNumber error - $e');
     }
 
     return nextNumber;
@@ -1876,6 +2153,72 @@ class Api {
     return false;
   }
 
+  static Future<bool> submitSamplingOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required String soldTo,
+    required String shipTo,
+    required String branchPlant,
+    required String company,
+    required String orderTakenBy,
+    required List<DraftTableData> samplingOrderLines,
+  }) async {
+    final payload = {
+      "Detail": samplingOrderLines.map(
+        (samplingOrderLine) {
+          final isOtherBuyer = samplingOrderLine.buyerCode.isEmpty;
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": getItemNumber(
+              article: samplingOrderLine.article,
+              uom: samplingOrderLine.uom,
+              shade: samplingOrderLine.shade,
+            ),
+            "Quantity": 1,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber":
+                (samplingOrderLines.indexOf(samplingOrderLine) + 1) + 1000,
+            "DocumentType": "SA",
+            "SourceFlag": "B",
+            "MerchandiserName": '$merchandiserName|$b2bOrderNumber',
+            "LightSourceRemark": samplingOrderLine.firstLightSource,
+            "ColorRemark": samplingOrderLine.colorRemark,
+            "EndUse": isOtherBuyer ? 'OTH' : samplingOrderLine.buyerCode,
+            "RelatedOrder":
+                "| | | |${isOtherBuyer ? 'OTH-${samplingOrderLine.buyer}' : ''}",
+            "BillingType":
+                samplingOrderLine.billingType == "Branch" ? "B" : "D",
+          };
+        },
+      ).toList(),
+    };
+
+    log(jsonEncode(payload));
+
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55CreateStagingData',
+        data: payload,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log(
+        'submitSamplingOrder error',
+        error: e,
+      );
+    }
+
+    return false;
+  }
+
   static Future<bool> submitLabdipFeedback({
     required OrderDetailLine orderDetailLine,
     required LabdipFeedback labdipFeedback,
@@ -1897,6 +2240,31 @@ class Api {
       return response.statusCode == 200;
     }).catchError((e) {
       log('submitFeedback error - $e');
+      return false;
+    });
+  }
+
+  static Future<bool> submitSamplingFeedback({
+    required OrderDetailLine orderDetailLine,
+    required SamplingFeedback samplingFeedback,
+    required String orderReferenceNumber,
+  }) async {
+    return await _dio.post(
+      '/orchestrator/ORCH5500092_SupplementalDataEntry',
+      data: {
+        "szSupplementalDatabaseCode": "LDF",
+        "cActionCode": "A",
+        "mnNumericKey1": "${orderDetailLine.orderNumber}",
+        "szAlphaKey1": samplingFeedback.isPositive ? 'A' : 'N',
+        "szAlphaKey2": "${orderDetailLine.lineNumber}",
+        "szDataType": "LD",
+        "szRemark1": samplingFeedback.reason,
+        "szRemark2": orderReferenceNumber,
+      },
+    ).then((response) {
+      return response.statusCode == 200;
+    }).catchError((e) {
+      log('submitSamplingFeedback error - $e');
       return false;
     });
   }
