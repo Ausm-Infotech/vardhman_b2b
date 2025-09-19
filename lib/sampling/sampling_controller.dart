@@ -104,20 +104,6 @@ class SamplingController extends GetxController {
     rxSelectedOrderHeaderLine.value = orderHeaderLine;
 
     await refreshSelectedOrderDetails();
-
-    _refreshSamplingTableRows();
-  }
-
-  Future<void> _refreshSamplingTableRows() async {
-    rxSamplingTableRows.clear();
-
-    final samplingTableRows = await Api.fetchSamplingTableRows(
-      workOrderNumbers: rxOrderDetailLines
-          .map((orderDetailLine) => orderDetailLine.workOrderNumber)
-          .toList(),
-    );
-
-    rxSamplingTableRows.addAll(samplingTableRows);
   }
 
   Future<void> refreshSelectedOrderDetails() async {
@@ -179,7 +165,7 @@ class SamplingController extends GetxController {
       (orderDetailLine, samplingFeedback) => !samplingFeedback.shouldRematch,
     );
 
-    if (nextOrderNumber != null && rxOrderDetailFeedbackMap.isNotEmpty) {
+    if (rxOrderDetailFeedbackMap.isNotEmpty) {
       final orderDetailLinesReasonMap = rxOrderDetailFeedbackMap.map(
         (orderDetailLine, samplingFeedback) => MapEntry(
           orderDetailLine,
@@ -244,21 +230,42 @@ class SamplingController extends GetxController {
     Get.back();
   }
 
+  List<OrderDetailLine> get primaryOrderDetailLines {
+    for (var rxOrderDetailLine in rxOrderDetailLines) {
+      debugPrint(rxOrderDetailLine.workOrderNumber.toString());
+      debugPrint(rxOrderDetailLine.catalogName.toString());
+    }
+    return rxOrderDetailLines.where(
+      (orderDetailLine) {
+        return orderDetailLine.workOrderNumber > 0 &&
+            orderDetailLine.catalogName.trim().isEmpty;
+      },
+    ).toList();
+  }
+
+  OrderDetailLine? getPermanentShadeLine(int workOrderNumber) {
+    return rxOrderDetailLines.firstWhereOrNull(
+      (detailLine) =>
+          detailLine.catalogName.endsWith(workOrderNumber.toString()),
+    );
+  }
+
+  List<OrderDetailLine> getInvoicedLines(String itemNumber) {
+    return rxOrderDetailLines
+        .where(
+          (detailLine) =>
+              detailLine.item == itemNumber && detailLine.invoiceNumber > 0,
+        )
+        .toList();
+  }
+
   List<SamplingTableRow> getSamplingTableRows(int workOrderNumber) {
-    return rxSamplingTableRows;
-
-    // rxOrderDetailLines.where(
-    //     (orderDetailLine) {
-    //       final itemParts = orderDetailLine.item.split(RegExp('\\s+'));
-
-    //       return itemParts.length == 3 && itemParts[2].startsWith('SWT');
-    //     },
-    //   ).toList();
-    // .where(
-    //   (samplingTableRow) =>
-    //       samplingTableRow.workOrderNumber == workOrderNumber,
-    // )
-    // .toList();
+    return rxSamplingTableRows
+        .where(
+          (samplingTableRow) =>
+              samplingTableRow.workOrderNumber == workOrderNumber,
+        )
+        .toList();
   }
 
   List<OrderHeaderLine> get samplingOrders => ordersController

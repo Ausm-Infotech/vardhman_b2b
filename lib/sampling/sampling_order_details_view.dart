@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/sampling_feedback.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
 import 'package:vardhman_b2b/common/header_view.dart';
@@ -129,80 +130,94 @@ class SamplingOrderDetailsView extends StatelessWidget {
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: '#'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
-                            label:
-                                OrderDetailColumnLabel(labelText: 'Article1'),
+                            label: OrderDetailColumnLabel(labelText: 'Article'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'UOM'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Ticket'),
                             fixedWidth: 60,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Brand'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Tex'),
                             fixedWidth: 60,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label:
                                 OrderDetailColumnLabel(labelText: 'Substrate'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Shade'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(
                                 labelText: 'Final Shade'),
                             fixedWidth: 70,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label:
+                                OrderDetailColumnLabel(labelText: 'Quantity'),
+                            fixedWidth: 70,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(
+                                labelText: 'Quantity Shipped'),
+                            fixedWidth: 70,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label:
+                                OrderDetailColumnLabel(labelText: 'Unit Price'),
+                            fixedWidth: 80,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(
+                                labelText: 'Total Price'),
+                            fixedWidth: 80,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Status'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
+                          ),
+                          DataColumn2(
+                            label: OrderDetailColumnLabel(labelText: 'Invoice'),
+                            fixedWidth: 100,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
                           DataColumn2(
                             label: OrderDetailColumnLabel(labelText: 'Remark'),
                             size: ColumnSize.S,
-                            headingRowAlignment: MainAxisAlignment.center,
+                            headingRowAlignment: MainAxisAlignment.end,
                           ),
-                          if (hasDispatchedLine &&
-                              samplingController.rxSelectedOrderHeaderLine.value
-                                      ?.orderReference !=
-                                  null &&
-                              samplingController.rxSelectedOrderHeaderLine
-                                  .value!.orderReference
-                                  .trim()
-                                  .isNotEmpty)
-                            DataColumn2(
-                              label:
-                                  OrderDetailColumnLabel(labelText: 'Feedback'),
-                              size: ColumnSize.S,
-                              headingRowAlignment: MainAxisAlignment.center,
-                            ),
                         ],
-                        rows: samplingController.rxOrderDetailLines.map(
-                          (orderDetailLine) {
+                        rows: samplingController.primaryOrderDetailLines.map(
+                          (orderDetail) {
                             final itemParts =
-                                orderDetailLine.item.split(RegExp('\\s+'));
+                                orderDetail.item.split(RegExp('\\s+'));
 
                             final String article = itemParts[0];
                             final String uom = itemParts[1];
@@ -215,29 +230,61 @@ class SamplingOrderDetailsView extends StatelessWidget {
                                   itemCatalogInfo.uom == uom,
                             );
 
-                            final samplingTableRows =
-                                samplingController.getSamplingTableRows(
-                                    orderDetailLine.workOrderNumber);
-
                             final index = samplingController.rxOrderDetailLines
-                                .indexOf(orderDetailLine);
+                                .indexOf(orderDetail);
 
-                            final isDispatchedLine =
-                                orderDetailLine.status == 'Dispatched By Plant';
+                            final permanentShadeLine =
+                                samplingController.getPermanentShadeLine(
+                              orderDetail.workOrderNumber,
+                            );
 
-                            final feedback = samplingController
-                                .rxSamplingFeedbacks
-                                .firstWhereOrNull((samplingFeedback) =>
-                                    samplingFeedback.orderNumber ==
-                                        orderDetailLine.orderNumber &&
-                                    samplingFeedback.lineNumber ==
-                                        orderDetailLine.lineNumber);
+                            var permanentShade = '';
 
-                            final textColor = feedback == null
-                                ? VardhmanColors.darkGrey
-                                : feedback.isPositive
-                                    ? VardhmanColors.green
-                                    : VardhmanColors.red;
+                            var status = orderDetail.status;
+
+                            var quantityShipped = 0;
+
+                            double unitPrice = 0, extendedPrice = 0;
+
+                            var invoicedLines = <OrderDetailLine>[];
+
+                            if (permanentShadeLine != null) {
+                              final permanentShadeParts =
+                                  permanentShadeLine.item.split(RegExp('\\s+'));
+
+                              if (permanentShadeParts.length == 3) {
+                                permanentShade = permanentShadeParts[2];
+                              }
+
+                              invoicedLines = samplingController
+                                  .getInvoicedLines(permanentShadeLine.item);
+
+                              quantityShipped = invoicedLines.fold(
+                                quantityShipped,
+                                (previousValue, orderDetailLine) =>
+                                    previousValue +
+                                    orderDetailLine.quantityShipped,
+                              );
+
+                              unitPrice =
+                                  invoicedLines.firstOrNull?.unitPrice ??
+                                      orderDetail.unitPrice;
+
+                              extendedPrice = invoicedLines.fold(
+                                extendedPrice,
+                                (previousValue, orderDetailLine) =>
+                                    previousValue +
+                                    orderDetailLine.extendedPrice,
+                              );
+
+                              if (invoicedLines.isNotEmpty) {
+                                status = 'Dispatched';
+                              } else {
+                                status = permanentShadeLine.status;
+                              }
+                            } else {
+                              unitPrice = orderDetail.unitPrice;
+                            }
 
                             final uomDesc =
                                 orderReviewController.getUomDescription(uom);
@@ -251,135 +298,79 @@ class SamplingOrderDetailsView extends StatelessWidget {
                               cells: [
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText:
-                                        orderDetailLine.lineNumber.toString(),
-                                    textColor: textColor,
+                                    cellText: orderDetail.lineNumber.toString(),
                                   ),
                                 ),
                                 DataCell(
-                                  OrderDetailCell(
-                                    cellText: article,
-                                    textColor: textColor,
-                                  ),
+                                  OrderDetailCell(cellText: article),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
                                     cellText: "$uom - $uomDesc",
-                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
                                     cellText: catalogItem?.ticket ?? '',
-                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
                                     cellText: catalogItem?.brandDesc ?? '',
-                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
                                     cellText: catalogItem?.tex ?? '',
-                                    textColor: textColor,
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
                                     cellText: catalogItem?.substrateDesc ?? '',
-                                    textColor: textColor,
+                                  ),
+                                ),
+                                DataCell(
+                                  OrderDetailCell(cellText: shade),
+                                ),
+                                DataCell(
+                                  OrderDetailCell(cellText: permanentShade),
+                                ),
+                                DataCell(
+                                  OrderDetailCell(
+                                    cellText:
+                                        orderDetail.quantityOrdered.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: shade,
-                                    textColor: textColor,
+                                    cellText: quantityShipped.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: samplingTableRows
-                                        .map((samplingTableRow) {
-                                      return '${samplingTableRow.permanentShade} ${samplingTableRow.reference}';
-                                    }).join(', '),
-                                    textColor: textColor,
+                                    cellText: unitPrice.toStringAsFixed(2),
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: orderDetailLine.status,
-                                    textColor: textColor,
+                                    cellText: extendedPrice.toStringAsFixed(2),
+                                  ),
+                                ),
+                                DataCell(
+                                  OrderDetailCell(cellText: status),
+                                ),
+                                DataCell(
+                                  OrderDetailCell(
+                                    cellText: invoicedLines.firstOrNull != null
+                                        ? "${invoicedLines.first.invoiceNumber} ${invoicedLines.first.invoiceType}"
+                                        : '',
                                   ),
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: orderDetailLine.userComment,
-                                    textColor: textColor,
+                                    cellText: orderDetail.userComment,
                                   ),
                                 ),
-                                if (hasDispatchedLine &&
-                                    samplingController.rxSelectedOrderHeaderLine
-                                            .value?.orderReference !=
-                                        null &&
-                                    samplingController.rxSelectedOrderHeaderLine
-                                        .value!.orderReference
-                                        .trim()
-                                        .isNotEmpty)
-                                  DataCell(
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: !isDispatchedLine
-                                          ? SizedBox()
-                                          : feedback != null
-                                              ? OrderDetailCell(
-                                                  cellText: feedback.reason,
-                                                  textColor: textColor,
-                                                )
-                                              : Checkbox(
-                                                  fillColor:
-                                                      WidgetStatePropertyAll(
-                                                    Colors.white,
-                                                  ),
-                                                  checkColor:
-                                                      VardhmanColors.red,
-                                                  side: BorderSide(
-                                                    color:
-                                                        VardhmanColors.darkGrey,
-                                                    width: 0.5,
-                                                  ),
-                                                  value: samplingController
-                                                      .rxOrderDetailFeedbackMap
-                                                      .keys
-                                                      .contains(
-                                                          orderDetailLine),
-                                                  onChanged: (bool? value) {
-                                                    if (value == true) {
-                                                      samplingController
-                                                                  .rxOrderDetailFeedbackMap[
-                                                              orderDetailLine] =
-                                                          SamplingFeedback(
-                                                        orderNumber:
-                                                            orderDetailLine
-                                                                .orderNumber,
-                                                        lineNumber:
-                                                            orderDetailLine
-                                                                .lineNumber,
-                                                        reason: '',
-                                                        isPositive: false,
-                                                        shouldRematch: false,
-                                                      );
-                                                    } else {
-                                                      samplingController
-                                                          .rxOrderDetailFeedbackMap
-                                                          .remove(
-                                                              orderDetailLine);
-                                                    }
-                                                  },
-                                                ),
-                                    ),
-                                  ),
                               ],
                             );
                           },
