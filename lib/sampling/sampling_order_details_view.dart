@@ -333,7 +333,10 @@ class SamplingOrderDetailsView extends StatelessWidget {
                                   OrderDetailCell(cellText: shade),
                                 ),
                                 DataCell(
-                                  OrderDetailCell(cellText: permanentShade),
+                                  OrderDetailCell(
+                                      cellText: permanentShade == 'SWT'
+                                          ? ''
+                                          : permanentShade),
                                 ),
                                 DataCell(
                                   OrderDetailCell(

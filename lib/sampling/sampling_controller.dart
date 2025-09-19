@@ -231,10 +231,6 @@ class SamplingController extends GetxController {
   }
 
   List<OrderDetailLine> get primaryOrderDetailLines {
-    for (var rxOrderDetailLine in rxOrderDetailLines) {
-      debugPrint(rxOrderDetailLine.workOrderNumber.toString());
-      debugPrint(rxOrderDetailLine.catalogName.toString());
-    }
     return rxOrderDetailLines.where(
       (orderDetailLine) {
         return orderDetailLine.workOrderNumber > 0 &&
