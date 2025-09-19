@@ -1089,7 +1089,8 @@ class Api {
                 double.tryParse(orderStatus['OrderAmount'].toString()) ?? 0.0,
             isDTM: (orderStatus['DTMOrderYN'].toString().trim() == 'Y' ||
                 orderStatus['DTMOrderYN'].toString().trim() == '1' ||
-                orderStatus['DTMOrderYN'].toString().trim() == '2'),
+                orderStatus['DTMOrderYN'].toString().trim() == '2' ||
+                orderStatus['DTMOrderYN'].toString().trim() == '3'),
             canIndent: orderStatus['InderntOrderYN'].toString().trim() == 'Y',
             quantityBackOrdered: orderStatus['QuantityBackOrder'],
             poNumber: orderStatus['CustomerPO'],
