@@ -244,9 +244,20 @@ class SamplingController extends GetxController {
   }
 
   OrderDetailLine? getPermanentShadeLine(int workOrderNumber) {
-    return rxOrderDetailLines.firstWhereOrNull(
+    var tempA = rxOrderDetailLines.firstWhereOrNull(
       (detailLine) =>
           detailLine.catalogName.endsWith(workOrderNumber.toString()),
+    );
+    if (tempA != null) {
+      return tempA;
+    }
+
+    var tempB = rxOrderDetailLines.firstWhereOrNull(
+      (detailLine) => detailLine.workOrderNumber == workOrderNumber,
+    );
+
+    return rxOrderDetailLines.firstWhereOrNull(
+      (detailLine) => detailLine.item == tempB?.item,
     );
   }
 
