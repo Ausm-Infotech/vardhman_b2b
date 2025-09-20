@@ -1004,14 +1004,14 @@ class Api {
             "condition": [
               {
                 "value": [
-                  {"content": "LDF", "specialValueId": "LITERAL"}
+                  {"content": "SAF", "specialValueId": "LITERAL"}
                 ],
                 "controlId": "F00092.SDB",
                 "operator": "EQUAL"
               },
               {
                 "value": [
-                  {"content": "LD", "specialValueId": "LITERAL"}
+                  {"content": "SA", "specialValueId": "LITERAL"}
                 ],
                 "controlId": "F00092.TYDT",
                 "operator": "EQUAL"
@@ -2253,12 +2253,12 @@ class Api {
     return await _dio.post(
       '/orchestrator/ORCH5500092_SupplementalDataEntry',
       data: {
-        "szSupplementalDatabaseCode": "LDF",
+        "szSupplementalDatabaseCode": "SAF",
         "cActionCode": "A",
         "mnNumericKey1": "${orderDetailLine.orderNumber}",
         "szAlphaKey1": samplingFeedback.isPositive ? 'A' : 'N',
         "szAlphaKey2": "${orderDetailLine.lineNumber}",
-        "szDataType": "LD",
+        "szDataType": "SA",
         "szRemark1": samplingFeedback.reason,
         "szRemark2": orderReferenceNumber,
       },

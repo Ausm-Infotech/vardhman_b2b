@@ -31,7 +31,7 @@ class SamplingOrderDetailsView extends StatelessWidget {
     return Obx(
       () {
         final hasDispatchedLine = samplingController.rxOrderDetailLines.any(
-          (element) => element.status == 'Dispatched By Plant',
+          (element) => element.invoiceNumber > 0,
         );
 
         return Container(
@@ -213,11 +213,25 @@ class SamplingOrderDetailsView extends StatelessWidget {
                             size: ColumnSize.S,
                             headingRowAlignment: MainAxisAlignment.end,
                           ),
+                          if (hasDispatchedLine &&
+                              samplingController.rxSelectedOrderHeaderLine.value
+                                      ?.orderReference !=
+                                  null &&
+                              samplingController.rxSelectedOrderHeaderLine
+                                  .value!.orderReference
+                                  .trim()
+                                  .isNotEmpty)
+                            DataColumn2(
+                              label:
+                                  OrderDetailColumnLabel(labelText: 'Feedback'),
+                              size: ColumnSize.S,
+                              headingRowAlignment: MainAxisAlignment.center,
+                            ),
                         ],
                         rows: samplingController.primaryOrderDetailLines.map(
-                          (orderDetail) {
+                          (orderDetailLine) {
                             final itemParts =
-                                orderDetail.item.split(RegExp('\\s+'));
+                                orderDetailLine.item.split(RegExp('\\s+'));
 
                             final String article = itemParts[0];
                             final String uom = itemParts[1];
@@ -231,16 +245,36 @@ class SamplingOrderDetailsView extends StatelessWidget {
                             );
 
                             final index = samplingController.rxOrderDetailLines
-                                .indexOf(orderDetail);
+                                .indexOf(orderDetailLine);
+
+                            var isDispatchedLine = false;
+                            // orderDetailLine.status == 'Dispatched By Plant';
+
+                            final feedback = samplingController
+                                .rxSamplingFeedbacks
+                                .firstWhereOrNull((samplingFeedback) =>
+                                    samplingFeedback.orderNumber ==
+                                        orderDetailLine.orderNumber &&
+                                    samplingFeedback.lineNumber ==
+                                        orderDetailLine.lineNumber);
+
+                            final textColor = feedback == null
+                                ? VardhmanColors.darkGrey
+                                : feedback.isPositive
+                                    ? VardhmanColors.green
+                                    : VardhmanColors.red;
+
+                            final uomDesc =
+                                orderReviewController.getUomDescription(uom);
 
                             final permanentShadeLine =
                                 samplingController.getPermanentShadeLine(
-                              orderDetail.workOrderNumber,
+                              orderDetailLine.workOrderNumber,
                             );
 
                             var permanentShade = '';
 
-                            var status = orderDetail.status;
+                            var status = orderDetailLine.status;
 
                             var quantityShipped = 0;
 
@@ -268,7 +302,7 @@ class SamplingOrderDetailsView extends StatelessWidget {
 
                               unitPrice =
                                   invoicedLines.firstOrNull?.unitPrice ??
-                                      orderDetail.unitPrice;
+                                      orderDetailLine.unitPrice;
 
                               extendedPrice = invoicedLines.fold(
                                 extendedPrice,
@@ -279,15 +313,13 @@ class SamplingOrderDetailsView extends StatelessWidget {
 
                               if (invoicedLines.isNotEmpty) {
                                 status = 'Dispatched';
+                                isDispatchedLine = true;
                               } else {
                                 status = permanentShadeLine.status;
                               }
                             } else {
-                              unitPrice = orderDetail.unitPrice;
+                              unitPrice = orderDetailLine.unitPrice;
                             }
-
-                            final uomDesc =
-                                orderReviewController.getUomDescription(uom);
 
                             return DataRow(
                               color: WidgetStatePropertyAll(
@@ -298,7 +330,8 @@ class SamplingOrderDetailsView extends StatelessWidget {
                               cells: [
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: orderDetail.lineNumber.toString(),
+                                    cellText:
+                                        orderDetailLine.lineNumber.toString(),
                                   ),
                                 ),
                                 DataCell(
@@ -340,8 +373,8 @@ class SamplingOrderDetailsView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText:
-                                        orderDetail.quantityOrdered.toString(),
+                                    cellText: orderDetailLine.quantityOrdered
+                                        .toString(),
                                   ),
                                 ),
                                 DataCell(
@@ -371,9 +404,70 @@ class SamplingOrderDetailsView extends StatelessWidget {
                                 ),
                                 DataCell(
                                   OrderDetailCell(
-                                    cellText: orderDetail.userComment,
+                                    cellText: orderDetailLine.userComment,
                                   ),
                                 ),
+                                if (hasDispatchedLine &&
+                                    samplingController.rxSelectedOrderHeaderLine
+                                            .value?.orderReference !=
+                                        null &&
+                                    samplingController.rxSelectedOrderHeaderLine
+                                        .value!.orderReference
+                                        .trim()
+                                        .isNotEmpty)
+                                  DataCell(
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: !isDispatchedLine
+                                          ? SizedBox()
+                                          : feedback != null
+                                              ? OrderDetailCell(
+                                                  cellText: feedback.reason,
+                                                  textColor: textColor,
+                                                )
+                                              : Checkbox(
+                                                  fillColor:
+                                                      WidgetStatePropertyAll(
+                                                    Colors.white,
+                                                  ),
+                                                  checkColor:
+                                                      VardhmanColors.red,
+                                                  side: BorderSide(
+                                                    color:
+                                                        VardhmanColors.darkGrey,
+                                                    width: 0.5,
+                                                  ),
+                                                  value: samplingController
+                                                      .rxOrderDetailFeedbackMap
+                                                      .keys
+                                                      .contains(
+                                                          orderDetailLine),
+                                                  onChanged: (bool? value) {
+                                                    if (value == true) {
+                                                      samplingController
+                                                                  .rxOrderDetailFeedbackMap[
+                                                              orderDetailLine] =
+                                                          SamplingFeedback(
+                                                        orderNumber:
+                                                            orderDetailLine
+                                                                .orderNumber,
+                                                        lineNumber:
+                                                            orderDetailLine
+                                                                .lineNumber,
+                                                        reason: '',
+                                                        isPositive: false,
+                                                        shouldRematch: false,
+                                                      );
+                                                    } else {
+                                                      samplingController
+                                                          .rxOrderDetailFeedbackMap
+                                                          .remove(
+                                                              orderDetailLine);
+                                                    }
+                                                  },
+                                                ),
+                                    ),
+                                  ),
                               ],
                             );
                           },
