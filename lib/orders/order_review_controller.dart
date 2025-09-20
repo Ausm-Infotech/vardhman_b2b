@@ -104,6 +104,67 @@ class OrderReviewController extends GetxController {
     return isSubmitted;
   }
 
+  Future<bool> submitSamplingOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required List<DraftTableData> samplingOrderLines,
+  }) async {
+    bool isSubmitted = false;
+
+    isSubmitted = await Api.submitSamplingOrder(
+      b2bOrderNumber: b2bOrderNumber,
+      merchandiserName: merchandiserName,
+      branchPlant: _userController.branchPlant,
+      soldTo: _userController.rxCustomerDetail.value.soldToNumber,
+      shipTo: (_userController.rxDeliveryAddress.value?.deliveryAddressNumber ==
+                  0
+              ? _userController.rxCustomerDetail.value.soldToNumber
+              : _userController.rxDeliveryAddress.value?.deliveryAddressNumber)
+          .toString(),
+      company: _userController.rxCustomerDetail.value.companyCode,
+      orderTakenBy: _userController.rxUserDetail.value.role,
+      samplingOrderLines: samplingOrderLines,
+    );
+
+    rxIsProcessing.value = false;
+
+    if (isSubmitted) {
+      toastification.show(
+        autoCloseDuration: Duration(minutes: 15),
+        primaryColor: VardhmanColors.green,
+        title: Text(
+          'Order $b2bOrderNumber placed successfully!',
+        ),
+      );
+
+      if (_userController.rxCustomerDetail.value.canSendSMS) {
+        Api.sendOrderEntrySMS(
+          orderNumber: b2bOrderNumber,
+          mobileNumber: _userController.rxCustomerDetail.value.mobileNumber,
+        );
+      }
+
+      if (_userController.rxCustomerDetail.value.canSendWhatsApp) {
+        Api.sendOrderEntryWhatsApp(
+          orderNumber: b2bOrderNumber,
+          mobileNumber: _userController.rxCustomerDetail.value.mobileNumber,
+        );
+      }
+
+      fetchDraftOrderNumber();
+    } else {
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 3),
+        primaryColor: VardhmanColors.red,
+        title: Text(
+          'Some error placing the order!',
+        ),
+      );
+    }
+
+    return isSubmitted;
+  }
+
   Future<bool> submitDtmOrder({
     required String merchandiserName,
     required String b2bOrderNumber,

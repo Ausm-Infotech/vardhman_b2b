@@ -73,6 +73,19 @@ class OrderDetailLine with _$OrderDetailLine {
       }
     }
 
+    // Sampling
+    if (orderType == 'SA' && workOrderType == 'W8') {
+      switch (woStatus) {
+        case '10':
+          return 'Order Received By Branch';
+        case '15':
+        case '20':
+          return 'Order Received By Plant';
+        default:
+          return 'In Progress';
+      }
+    }
+
     return 'Unknown';
   }
 

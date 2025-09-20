@@ -19,6 +19,7 @@ import 'package:vardhman_b2b/home/order_summary_view.dart';
 import 'package:vardhman_b2b/labdip/labdip_view.dart';
 import 'package:vardhman_b2b/open/open_view.dart';
 import 'package:vardhman_b2b/paid/paid_view.dart';
+import 'package:vardhman_b2b/sampling/sampling_view.dart';
 import 'package:vardhman_b2b/user/user_controller.dart';
 
 class HomeScaffold extends StatefulWidget {
@@ -90,14 +91,17 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                       ),
                       Expanded(
                         child: homeController.rxNavRailIndex.value == 0
-                            ? const LabdipView()
+                            ? const SamplingView()
                             : homeController.rxNavRailIndex.value == 1
-                                ? const DtmView()
+                                ? const LabdipView()
                                 : homeController.rxNavRailIndex.value == 2
-                                    ? const BulkView()
+                                    ? const DtmView()
                                     : homeController.rxNavRailIndex.value == 3
-                                        ? const OpenView()
-                                        : const PaidView(),
+                                        ? const BulkView()
+                                        : homeController.rxNavRailIndex.value ==
+                                                4
+                                            ? const OpenView()
+                                            : const PaidView(),
                       ),
                     ],
                   ),
