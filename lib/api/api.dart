@@ -23,6 +23,7 @@ import 'package:vardhman_b2b/drift/database.dart';
 import 'package:vardhman_b2b/labdip/labdip_controller.dart';
 import 'dart:developer';
 import 'package:vardhman_b2b/sample_data.dart';
+import 'package:vardhman_b2b/sampling/sampling_controller.dart';
 
 class Api {
   static final _fileDio = Dio(
@@ -875,14 +876,14 @@ class Api {
             "condition": [
               {
                 "value": [
-                  {"content": "LDF", "specialValueId": "LITERAL"}
+                  {"content": "SAF", "specialValueId": "LITERAL"}
                 ],
                 "controlId": "F00092.SDB",
                 "operator": "EQUAL"
               },
               {
                 "value": [
-                  {"content": "LD", "specialValueId": "LITERAL"}
+                  {"content": "SA", "specialValueId": "LITERAL"}
                 ],
                 "controlId": "F00092.TYDT",
                 "operator": "EQUAL"
@@ -2270,7 +2271,7 @@ class Api {
     });
   }
 
-  static Future<bool> submitRematchOrder({
+  static Future<bool> submitLabDipRematchOrder({
     required String merchandiserName,
     required String b2bOrderNumber,
     required String soldTo,
@@ -2311,6 +2312,85 @@ class Api {
             "LightSourceRemark": orderDetailLine.lightSource1,
             "ColorRemark":
                 '${orderDetailLine.orderNumber}-$finalShades-${orderDetailLinesReasonMap[orderDetailLine]!}',
+            "EndUse": orderDetailLine.buyerCode,
+            "BillingType": "B",
+            "RelatedOrder":
+                "${orderDetailLine.orderNumber}|${orderDetailLine.orderType}|${orderDetailLine.company}|${orderDetailLine.lineNumber}|${orderDetailLine.shipToAttention}",
+          };
+        },
+      ).toList(),
+    };
+
+    log(jsonEncode(payload));
+
+    try {
+      final response = await _dio.post(
+        '/orchestrator/ORCH55CreateStagingData',
+        data: payload,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      log(
+        'Submit order error',
+        error: e,
+      );
+    }
+
+    return false;
+  }
+
+  static Future<bool> submitSamplingRematchOrder({
+    required String merchandiserName,
+    required String b2bOrderNumber,
+    required String soldTo,
+    required String shipTo,
+    required String branchPlant,
+    required String company,
+    required String orderTakenBy,
+    required Map<OrderDetailLine, String> orderDetailLinesReasonMap,
+  }) async {
+    final orderDetailLines = orderDetailLinesReasonMap.keys.toList();
+
+    final SamplingController samplingController = getx.Get.find();
+
+    final payload = {
+      "Detail": orderDetailLines.map(
+        (orderDetailLine) {
+          final permanentShadeLine = samplingController.getPermanentShadeLine(
+            orderDetailLine.workOrderNumber,
+          );
+
+          var permanentShade = '';
+
+          if (permanentShadeLine != null) {
+            final permanentShadeParts =
+                permanentShadeLine.item.split(RegExp('\\s+'));
+
+            if (permanentShadeParts.length == 3) {
+              permanentShade = permanentShadeParts[2];
+            }
+          }
+
+          return {
+            "BatchNumber": b2bOrderNumber,
+            "Company": company,
+            "SoldTo": soldTo,
+            "ShipTo": shipTo,
+            "BranchPlant": branchPlant,
+            "ItemNumber": orderDetailLine.item,
+            "Quantity": 1,
+            "OrderTakenBy": orderTakenBy,
+            "LineNumber":
+                (orderDetailLines.indexOf(orderDetailLine) + 1) + 1000,
+            "DocumentType": "SA",
+            "SourceFlag": "B",
+            "MerchandiserName": '$merchandiserName|$b2bOrderNumber',
+            "LightSourceRemark": orderDetailLine.lightSource1,
+            "ColorRemark":
+                '${orderDetailLine.orderNumber}-$permanentShade-${orderDetailLinesReasonMap[orderDetailLine]!}',
             "EndUse": orderDetailLine.buyerCode,
             "BillingType": "B",
             "RelatedOrder":

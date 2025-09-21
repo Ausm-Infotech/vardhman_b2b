@@ -89,7 +89,7 @@ class SamplingOrderDetailsView extends StatelessWidget {
                         child: Text('No Order Selected'),
                       )
                     : DataTable2(
-                        minWidth: 1200,
+                        minWidth: 1600,
                         columnSpacing: 0,
                         showBottomBorder: true,
                         isHorizontalScrollBarVisible: true,
@@ -248,7 +248,6 @@ class SamplingOrderDetailsView extends StatelessWidget {
                                 .indexOf(orderDetailLine);
 
                             var isDispatchedLine = false;
-                            // orderDetailLine.status == 'Dispatched By Plant';
 
                             final feedback = samplingController
                                 .rxSamplingFeedbacks
@@ -314,8 +313,6 @@ class SamplingOrderDetailsView extends StatelessWidget {
                               if (invoicedLines.isNotEmpty) {
                                 status = 'Dispatched';
                                 isDispatchedLine = true;
-                              } else {
-                                status = permanentShadeLine.status;
                               }
                             } else {
                               unitPrice = orderDetailLine.unitPrice;

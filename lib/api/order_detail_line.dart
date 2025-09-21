@@ -74,7 +74,9 @@ class OrderDetailLine with _$OrderDetailLine {
     }
 
     // Sampling
-    if (orderType == 'SA' && workOrderType == 'W8') {
+    if (orderType == 'SA' &&
+        workOrderType == 'W8' &&
+        catalogName.trim() == '') {
       switch (woStatus) {
         case '10':
           return 'Order Received By Branch';
