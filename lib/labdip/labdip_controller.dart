@@ -187,7 +187,7 @@ class LabdipController extends GetxController {
         ),
       );
 
-      final isSubmitted = await Api.submitRematchOrder(
+      final isSubmitted = await Api.submitLabDipRematchOrder(
         merchandiserName: rxSelectedOrderHeaderLine.value!.merchandiser,
         b2bOrderNumber: b2bRejectionOrderNumber,
         branchPlant: userController.branchPlant,

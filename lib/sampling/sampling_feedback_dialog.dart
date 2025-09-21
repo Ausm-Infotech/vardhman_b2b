@@ -143,9 +143,19 @@ class SamplingFeedbackDialog extends StatelessWidget {
                       final String uom = itemParts[1];
                       final String shade = itemParts[2];
 
-                      final samplingTableRows =
-                          samplingController.getSamplingTableRows(
-                              orderDetailLine.workOrderNumber);
+                      final permanentShadeLine =
+                          samplingController.getPermanentShadeLine(
+                        orderDetailLine.workOrderNumber,
+                      );
+                      var permanentShade = '';
+                      if (permanentShadeLine != null) {
+                        final permanentShadeParts =
+                            permanentShadeLine.item.split(RegExp('\\s+'));
+
+                        if (permanentShadeParts.length == 3) {
+                          permanentShade = permanentShadeParts[2];
+                        }
+                      }
 
                       final feedback = mapEntry.value;
 
@@ -163,9 +173,7 @@ class SamplingFeedbackDialog extends StatelessWidget {
                           DataCell(Text(article)),
                           DataCell(Text(shade)),
                           DataCell(
-                            Text(samplingTableRows.map((samplingTableRow) {
-                              return '${samplingTableRow.permanentShade} ${samplingTableRow.reference}';
-                            }).join(', ')),
+                            Text(permanentShade),
                           ),
                           DataCell(
                             Row(

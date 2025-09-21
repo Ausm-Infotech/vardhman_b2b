@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/api.dart';
 import 'package:vardhman_b2b/api/sampling_feedback.dart';
-import 'package:vardhman_b2b/api/sampling_table_row.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/order_header_line.dart';
 import 'package:vardhman_b2b/constants.dart';
@@ -37,8 +36,6 @@ class SamplingController extends GetxController {
   ];
 
   final rxDraftOrders = <DraftTableData>[].obs;
-
-  final rxSamplingTableRows = <SamplingTableRow>[].obs;
 
   final rxSelectedOrderHeaderLine = Rxn<OrderHeaderLine>();
 
@@ -173,7 +170,7 @@ class SamplingController extends GetxController {
         ),
       );
 
-      final isSubmitted = await Api.submitRematchOrder(
+      final isSubmitted = await Api.submitSamplingRematchOrder(
         merchandiserName: rxSelectedOrderHeaderLine.value!.merchandiser,
         b2bOrderNumber: b2bRejectionOrderNumber,
         branchPlant: userController.branchPlant,
@@ -262,15 +259,6 @@ class SamplingController extends GetxController {
         .where(
           (detailLine) =>
               detailLine.item == itemNumber && detailLine.invoiceNumber > 0,
-        )
-        .toList();
-  }
-
-  List<SamplingTableRow> getSamplingTableRows(int workOrderNumber) {
-    return rxSamplingTableRows
-        .where(
-          (samplingTableRow) =>
-              samplingTableRow.workOrderNumber == workOrderNumber,
         )
         .toList();
   }
