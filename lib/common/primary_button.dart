@@ -31,27 +31,29 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             : VardhmanColors.red;
 
     return GestureDetector(
-      onTap: () async {
-        if (widget.onPressed != null) {
-          setState(() {
-            isProcessing = true;
-          });
+      onTap: isProcessing
+          ? null
+          : () async {
+              if (widget.onPressed != null) {
+                setState(() {
+                  isProcessing = true;
+                });
 
-          if (widget.wait) {
-            await Future.delayed(
-              const Duration(
-                milliseconds: 500,
-              ),
-            );
-          }
+                if (widget.wait) {
+                  await Future.delayed(
+                    const Duration(
+                      milliseconds: 500,
+                    ),
+                  );
+                }
 
-          await widget.onPressed!();
+                await widget.onPressed!();
 
-          setState(() {
-            isProcessing = false;
-          });
-        }
-      },
+                setState(() {
+                  isProcessing = false;
+                });
+              }
+            },
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 12,
