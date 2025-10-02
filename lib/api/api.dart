@@ -925,6 +925,82 @@ class Api {
     return samplingFeedbacks;
   }
 
+  static Future<List<SamplingFeedback>> fetchIndividualSamplingOrderFeedback(
+      List<int> orderNumbers, List<double> lineNumbers) async {
+    final samplingFeedbacks = <SamplingFeedback>[];
+
+    try {
+      final response = await _dio.post(
+        '/v2/dataservice',
+        data: {
+          "targetName": "F00092",
+          "targetType": "table",
+          "dataServiceType": "BROWSE",
+          "returnControlIDs": "F00092.SBN1|F00092.SBA1|F00092.SBA2|F00092.RMK",
+          "query": {
+            "autoFind": true,
+            "condition": [
+              {
+                "value": [
+                  {"content": "SAF", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.SDB",
+                "operator": "EQUAL"
+              },
+              {
+                "value": [
+                  {"content": "SA", "specialValueId": "LITERAL"}
+                ],
+                "controlId": "F00092.TYDT",
+                "operator": "EQUAL"
+              },
+              {
+                "value": orderNumbers
+                    .map(
+                      (orderNumber) =>
+                          {"content": orderNumber, "specialValueId": "LITERAL"},
+                    )
+                    .toList(),
+                "controlId": "F00092.SBN1",
+                "operator": "LIST"
+              },
+              {
+                "value": lineNumbers
+                    .map(
+                      (lineNumber) =>
+                          {"content": lineNumber, "specialValueId": "LITERAL"},
+                    )
+                    .toList(),
+                "controlId": "F00092.SBA2",
+                "operator": "LIST"
+              }
+            ]
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final rowset = response.data['fs_DATABROWSE_F00092']['data']['gridData']
+            ['rowset'] as List;
+        for (var row in rowset) {
+          samplingFeedbacks.add(
+            SamplingFeedback(
+              orderNumber: row['F00092_SBN1'],
+              lineNumber: double.tryParse(row['F00092_SBA2']) ?? 0.0,
+              reason: row['F00092_RMK'],
+              isPositive: row['F00092_SBA1'] == 'A',
+              shouldRematch: false,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('fetchSamplingFeedback error - $e');
+    }
+
+    return samplingFeedbacks;
+  }
+
   static Future<List<LabdipFeedback>> fetchLabdipRejectionCount(
       String b2bOrderReference) async {
     final labdipRejections = <LabdipFeedback>[];
