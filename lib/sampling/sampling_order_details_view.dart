@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
 import 'package:vardhman_b2b/api/order_detail_line.dart';
 import 'package:vardhman_b2b/api/sampling_feedback.dart';
 import 'package:vardhman_b2b/catalog/catalog_controller.dart';
@@ -48,7 +49,20 @@ class SamplingOrderDetailsView extends StatelessWidget {
                     : PrimaryButton(
                         text: 'Submit Feedback',
                         onPressed: () async {
-                          Get.dialog(SamplingFeedbackDialog());
+                          var hasFeedbacks = await samplingController
+                              .fetchSelectedOrderFeedbacks();
+
+                          if (!hasFeedbacks) {
+                            Get.dialog(SamplingFeedbackDialog());
+                          } else {
+                            toastification.show(
+                              autoCloseDuration: Duration(seconds: 10),
+                              primaryColor: VardhmanColors.red,
+                              title: Text(
+                                'Feedbacks already submitted.',
+                              ),
+                            );
+                          }
                         },
                       ),
                 title: DefaultTextStyle(
@@ -312,7 +326,9 @@ class SamplingOrderDetailsView extends StatelessWidget {
 
                               if (invoicedLines.isNotEmpty) {
                                 status = 'Dispatched';
-                                isDispatchedLine = true;
+                                if (shade.startsWith('SWT')) {
+                                  isDispatchedLine = true;
+                                }
                               }
                             } else {
                               unitPrice = orderDetailLine.unitPrice;

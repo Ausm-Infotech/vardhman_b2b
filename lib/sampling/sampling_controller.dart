@@ -133,6 +133,21 @@ class SamplingController extends GetxController {
     rxSamplingFeedbacks.addAll(samplingFeedbacks);
   }
 
+  Future<bool> fetchSelectedOrderFeedbacks() async {
+    var orderNumbers = rxOrderDetailFeedbackMap.keys
+        .map((orderDetailLine) => orderDetailLine.orderNumber)
+        .toList();
+    var lineNumbers = rxOrderDetailFeedbackMap.keys
+        .map((orderDetailLine) => orderDetailLine.lineNumber)
+        .toList();
+    final samplingFeedbacks = await Api.fetchIndividualSamplingOrderFeedback(
+        orderNumbers, lineNumbers);
+    if (samplingFeedbacks.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
   Future<void> submitFeedback() async {
     final UserController userController =
         Get.find<UserController>(tag: 'userController');
