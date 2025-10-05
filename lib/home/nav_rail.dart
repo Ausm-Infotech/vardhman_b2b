@@ -152,7 +152,7 @@ class NavRail extends StatelessWidget {
                             child: NavigationRail(
                               selectedIndex: paymentsNavSelectedIndex,
                               onDestinationSelected: (value) => homeController
-                                  .rxNavRailIndex.value = value + 3,
+                                  .rxNavRailIndex.value = value + 4,
                               groupAlignment: 0,
                               labelType: NavigationRailLabelType.all,
                               useIndicator: true,
