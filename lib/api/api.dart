@@ -39,6 +39,7 @@ class Api {
       receiveDataWhenStatusError: true,
     ),
   );
+
   // ..httpClientAdapter = IOHttpClientAdapter(
   //     createHttpClient: () =>
   //         HttpClient()..badCertificateCallback = (_, __, ___) => true,
@@ -48,8 +49,8 @@ class Api {
   // for PY
   static final _dio = Dio(
     BaseOptions(
-      baseUrl:
-          'https://erptest.vardhmanthreads.in/jderest', // TODO - Change this as per environment - erpdev / erptest / erp
+      baseUrl: 'https://erp.vardhmanthreads.in/jderest',
+      // TODO - Change this as per environment - erpdev / erptest / erp
       headers: {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -166,10 +167,10 @@ class Api {
 
   static Future<String> generateAndSendOtp(String mobileNumber) async {
     // for PD
-    // final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
+     final String otp = math.Random().nextInt(9999).toString().padLeft(4, '0');
     // for PY
-    final String otp = '1234';
-    return otp;
+   // final String otp = '1234';
+   // return otp;
 
     try {
       await _dio.post(
@@ -2793,12 +2794,12 @@ class Api {
       if (localFile.existsSync()) {
         return localFile;
       }
-
+      print("https://b2b.amefird.in:8081/download/CAMSInvoicing/$fileName");
       final response = await _fileDio.get(
         '/download/CAMSInvoicing/$fileName',
         options: Options(responseType: ResponseType.bytes),
       );
-
+      print("${response.statusCode}  ${response.statusMessage}");
       if (response.statusCode == 200) {
         await localFile.writeAsBytes(
           response.data,
@@ -2857,8 +2858,8 @@ class Api {
   static Future<String?> encryptInputString(String plainText) async {
     try {
       final response = await _dio.post(
-        '/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
-        // '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
+        //'/orchestrator/ORCH55_ICICIEncrypt', // for PY payments
+         '/orchestrator/ORCH55_ICICIEncryptProd', // for PD payments
         data: {
           "plainText": plainText,
         },

@@ -58,7 +58,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Vardhman B2B Portal v1.0',
+                              'Vardhman B2B Portal v2.0',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
