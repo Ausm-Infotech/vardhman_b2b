@@ -95,14 +95,14 @@ class AdvancePaymentDialog extends StatelessWidget {
 
                             if (paymentEntryCreated) {
                               // for PD
-                               final plainText =
-                                   'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in|cancel-url=https://b2b.amefird.in|';
+                              /*final plainText =
+                                   'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in|cancel-url=https://b2b.amefird.in|';*/
                               // for PY
-                              // final plainText =
-                              //     'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in/vytldev|cancel-url=https://b2b.amefird.in/vytldev|';
+                              final plainText =
+                                  'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://b2b.amefird.in/vytldev|cancel-url=https://b2b.amefird.in/vytldev|';
                               // for GITHUB
-                             // final plainText =
-                               //   'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b|cancel-url=https://ausm-infotech.github.io/vardhman_b2b|';
+                              // final plainText =
+                              //   'txn-id=$receiptNumber|txn-datetime=${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}|txn-amount=${invoicesController.selectedDiscountedAmount.toStringAsFixed(2)}|txn-for=payment|wallet-payment-mode=2|return-url=https://ausm-infotech.github.io/vardhman_b2b|cancel-url=https://ausm-infotech.github.io/vardhman_b2b|';
 
                               final encryptedString =
                                   await Api.encryptInputString(plainText);
@@ -111,35 +111,35 @@ class AdvancePaymentDialog extends StatelessWidget {
 
                               if (encryptedString != null) {
                                 // for PD
-                                 final paymentFormElement =
-                                     html.document.createElement('form')
-                                       ..setAttribute('id', 'paymentForm')
-                                       ..setAttribute('method', "POST")
-                                       ..setAttribute('action',
-                                           "https://generic.ipay2corp.icicibank.com/gp2c-api/ws/payment")
-                                       ..setAttribute('target', '_self');
-
-                                 final walletClientCodeInput =
-                                     html.document.createElement('input')
-                                       ..setAttribute('type', 'text')
-                                       ..setAttribute('name', 'walletClientCode')
-                                       ..setAttribute('value', 'WT-1573');
-                                // for PD
-
-                                // for PY
                                 /*final paymentFormElement =
                                     html.document.createElement('form')
                                       ..setAttribute('id', 'paymentForm')
                                       ..setAttribute('method', "POST")
                                       ..setAttribute('action',
-                                          "https://generic.ipay2corpuat.icicibank.com/gp2c-api/ws/payment")
+                                          "https://generic.ipay2corp.icici.bank.in/gp2c-api/ws/payment") // "https://generic.ipay2corp.icicibank.com/gp2c-api/ws/payment"
                                       ..setAttribute('target', '_self');
 
                                 final walletClientCodeInput =
                                     html.document.createElement('input')
                                       ..setAttribute('type', 'text')
                                       ..setAttribute('name', 'walletClientCode')
-                                      ..setAttribute('value', 'WT-1474');*/
+                                      ..setAttribute('value', 'WT-1573');*/
+                                // for PD
+
+                                // for PY
+                                final paymentFormElement =
+                                    html.document.createElement('form')
+                                      ..setAttribute('id', 'paymentForm')
+                                      ..setAttribute('method', "POST")
+                                      ..setAttribute('action',
+                                          "https://generic.ipay2corpuat.icici.bank.in/gp2c-api/ws/payment")
+                                      ..setAttribute('target', '_self');
+
+                                final walletClientCodeInput =
+                                    html.document.createElement('input')
+                                      ..setAttribute('type', 'text')
+                                      ..setAttribute('name', 'walletClientCode')
+                                      ..setAttribute('value', 'WT-1474');
                                 // for PY
 
                                 paymentFormElement

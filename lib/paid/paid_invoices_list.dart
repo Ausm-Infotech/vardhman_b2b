@@ -44,12 +44,12 @@ class PaidInvoicesList extends StatelessWidget {
             color: Colors.white,
           ),
           columns: [
-            DataColumn(
-              label: SizedBox(
-                width: constraints.maxWidth * .06,
-                child: const Text(' Download '),
-              ),
-            ),
+            // DataColumn(
+            //   label: SizedBox(
+            //     width: constraints.maxWidth * .06,
+            //     child: const Text(' Download '),
+            //   ),
+            // ),
             DataColumn(
               label: SizedBox(
                 width: constraints.maxWidth * .16,
@@ -115,7 +115,7 @@ class PaidInvoicesList extends StatelessWidget {
               return DataRow(
                 color: const WidgetStatePropertyAll(Colors.white),
                 cells: [
-                  DataCell(
+                 /* DataCell(
                     Align(
                       child: SizedBox(
                         width: constraints.maxWidth * .04,
@@ -143,7 +143,7 @@ class PaidInvoicesList extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   DataCell(
                     SizedBox(
                       width: constraints.maxWidth * .16,

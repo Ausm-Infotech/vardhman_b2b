@@ -154,7 +154,7 @@ class OpenInvoicesList extends StatelessWidget {
                   DataCell(
                     SizedBox(
                       width: 50,
-                      child: SecondaryButton(
+                      /*child: SecondaryButton(
                         text: '',
                         iconData: FontAwesomeIcons.filePdf,
                         onPressed: () async {
@@ -198,7 +198,7 @@ class OpenInvoicesList extends StatelessWidget {
                             }
                           }
                         },
-                      ),
+                      ),*/
                     ),
                   ),
                   DataCell(
